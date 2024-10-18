@@ -9,7 +9,7 @@ services:
       - .env
   naturblick-django:
     build: .
-    command: gunicorn naturblick.wsgi
+    command: gunicorn --bind 0.0.0.0:8000 naturblick.wsgi
     container_name: naturblick-django
     volumes:
       - .:/app
