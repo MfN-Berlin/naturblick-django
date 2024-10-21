@@ -8,6 +8,20 @@ SECRET_KEY = 'django-insecure-x#f7$+n+n^n!ynhb9lrym_k#$kc@b1v0kr9_rwvf0@%$4pz3r8
 
 ALLOWED_HOSTS = []
 
+# Database
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('DJANGO_POSTGRES'),
+        'USER': os.getenv('DJANGO_POSTGRES_USER'),
+        'PASSWORD': os.getenv('DJANGO_POSTGRES_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '5558',
+    }
+}
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,

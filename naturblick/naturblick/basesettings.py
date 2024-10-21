@@ -62,20 +62,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'naturblick.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv('DJANGO_POSTGRES'),
-        'USER': os.getenv('DJANGO_POSTGRES_USER'),
-        'PASSWORD': os.getenv('DJANGO_POSTGRES_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '5558',
-    }
-}
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
