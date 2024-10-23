@@ -4,15 +4,19 @@ This is the CMS for naturblick. We use WSGI/Gunicorn.
 
 ## Setup for local development
 
-* once: `sudo pip install virtualenv` and clone repo
-* export environment variables: DJANGO_POSTGRES_PASSWORD, DJANGO_ENV, DJANGO_POSTGRES_DATA, DJANGO_POSTGRES, DJANGO_POSTGRES_USER
+* once: `sudo pip install virtualenv`
+* `export DJANGO_ENV="development"`
 * `cd naturblick-django`
 * `virtualenv env`
 * `source env/bin/activate` 
-* `cd naturblick` and `python manage.py runserver`
+* `cd naturblick` and `pip install --no-cache-dir -r requirements.txt`
+* `python manage.py migrate`
+* `python manage.py runserver`
 
-## Adding new requirements and example commands
+## Some sample dev tasks and corresponding commands
 
-* `pip freeze > requirements.txt`
-* `docker compose exec django python manage.py migrate`
-* `docker compose exec django python manage.py createsuperuser
+* changing models: `python manage.py makemigrations` -> `python manage.py migrate`
+* changing dependencies `pip freeze > requirements.txt`
+* create superuser `python manage.py createsuperuser`
+* Execute command in production `docker compose exec django python manage.py COMMAND`
+
