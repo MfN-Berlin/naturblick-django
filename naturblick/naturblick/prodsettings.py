@@ -46,3 +46,8 @@ LOGGING = {
 FORCE_SCRIPT_NAME = '/django/'
 STATIC_URL = '/django/static/'
 # MEDIA_URL = '/django/media/'
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = ['https://staging.naturblick.museumfuernaturkunde.berlin', 'https://naturblick.museumfuernaturkunde.berlin']
+
