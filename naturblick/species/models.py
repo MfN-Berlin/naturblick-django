@@ -28,25 +28,29 @@ class SpeciesName(models.Model):
     name = models.CharField(max_length=255)
 
 class Portrait(models.Model):
-    species = models.ForeignKey(Species, on_delete=models.CASCADE, related_name='portraits')
     short_description = models.CharField(max_length=255)
     city_habitat = models.CharField(max_length=255)
     human_interaction = models.CharField(max_length=255, blank=True, null=True)
     link_to_wikipedia = models.CharField(max_length=255, blank=True, null=True)
 
+
+
     class Meta:
         abstract = True
 
 class Floraportrait(Portrait):
+    species = models.ForeignKey(Species, on_delete=models.CASCADE, related_name='floraportrait')
     leaf_description = models.CharField(max_length=255)
     stem_axis_description = models.CharField(max_length=255)
     flower_description = models.CharField(max_length=255)
     fruit_description = models.CharField(max_length=255)
 
 class Faunaportrait(Portrait):
+    species = models.ForeignKey(Species, on_delete=models.CASCADE, related_name='faunaportraits')
     male_description = models.CharField(max_length=255, blank=True, null=True)
     female_description = models.CharField(max_length=255, blank=True, null=True)
     juvenile_description = models.CharField(max_length=255, blank=True, null=True)
+
 
 
 
