@@ -1,5 +1,22 @@
 from django.contrib import admin
 
-from .models import Species
+from .models import Species, Group, Floraportrait, Faunaportrait, SpeciesName
 
-admin.site.register(Species)
+
+class SpeciesNameInline(admin.TabularInline):
+    model = SpeciesName
+    extra = 1
+
+class SpeciesAdmin(admin.ModelAdmin):
+    inlines = [
+        SpeciesNameInline,
+    ]
+    exclude = ["created_by"]
+    readonly_fields = ["speciesid"]
+
+
+
+admin.site.register(Group)
+admin.site.register(Species, SpeciesAdmin)
+admin.site.register(Floraportrait)
+admin.site.register(Faunaportrait)
