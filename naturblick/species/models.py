@@ -6,7 +6,13 @@ from django_currentuser.db.models import CurrentUserField
 # check portraitfields
 
 class Group(models.Model):
+    NATURE_CHOICES = [
+        ('Fauna', 'Fauna'),
+        ('Flora', 'Flora'),
+    ]
+
     name = models.CharField(max_length=255, unique=True)
+    nature = models.CharField(max_length=5, choices=NATURE_CHOICES)
 
     def __str__(self):
         return self.name
