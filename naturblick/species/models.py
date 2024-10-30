@@ -5,11 +5,6 @@ from django_currentuser.db.models import CurrentUserField
 # todos: Portrait, Flora/ Fauna -> multilingual, Names, Avatar, ..., speciesid autogenerate ffff
 # check portraitfields
 
-import logging
-
-logger = logging.getLogger(__name__)
-
-
 class Group(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
@@ -119,9 +114,7 @@ class Species(models.Model):
             prefix = f'{self.group}_ffff'
             try:
                 last_insert_id = Species.objects.filter(speciesid__startswith=prefix).order_by("-speciesid")[0].speciesid
-                logger.info(self, f'last insert id {last_insert_id}')
                 next_insert_id = int(last_insert_id[len(last_insert_id) - 4: len(last_insert_id)], 16) + 1
-                logger.info(self, f'next insert id {next_insert_id}')
                 self.speciesid = f'{self.group}_ffff{next_insert_id:04x}'
             except:
                 self.speciesid = f'{self.group}_ffff0000'
