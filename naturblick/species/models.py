@@ -130,9 +130,15 @@ class Species(models.Model):
         db_table = 'species'
 
 class SpeciesName(models.Model):
+    LANGUAGE_CHOICES = [
+        ('en', 'English'),
+        ('de', 'German'),
+        ('er', 'Easy Read'),
+    ]
+
     species = models.ForeignKey(Species, on_delete=models.CASCADE, related_name='species_names')
     name = models.CharField(max_length=255)
-    # LANGUAGE ?!
+    language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES)
 
     def __str__(self):
         return self.name

@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'species',
+    'modeltranslation',
 ]
 
 MIDDLEWARE = [
@@ -90,6 +91,14 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
+gettext = lambda s: s
+LANGUAGES = [
+    ('en', gettext('English')),
+    ('de', gettext('German')),
+    ('er', gettext('Easy Read')),
+]
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'de'
+
 
 USE_TZ = True
 
