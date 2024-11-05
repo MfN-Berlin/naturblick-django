@@ -20,37 +20,6 @@ class Group(models.Model):
     class Meta:
         db_table = 'group'
 
- # id                 | integer                  |           | not null | nextval('species_id_seq'::regclass)
- # speciesid          | character varying(255)   |           | not null |
- # sciname            | character varying(255)   |           | not null |
- # gername            | character varying(255)   |           |          |
- # ? pageName           | character varying(255)   |           | not null |
- # ! scinamesynonym     | character varying(255)   |           |          |
- # -> names gernamesynonym     | character varying(255)   |           |          |
- # ! group              | character varying(255)   |           | not null |
- # ! phenotypefemaleid  | character varying(255)   |           |          |
- # naturblickidkey    | boolean                  |           | not null |
- # portrait           | boolean                  |           | not null |
- # imageexists        | boolean                  |           | not null |
- # wikipedia          | character varying(255)   |           |          |
- # autoid             | boolean                  |           | not null |
- # ! nbclassid          | character varying(255)   |           |          |
- # innaturblick       | boolean                  |           | not null |
- # -> namesengname            | character varying(255)   |           |          |
- # -> names easyname           | character varying(255)   |           |          |
- # ! scientificAuthors  | character varying(255)   |           |          |
- # ! order              | character varying(255)   |           |          |
- # ! family             | character varying(255)   |           |          |
- # ! genus              | character varying(255)   |           |          |
- # ! redListGermany     | character varying(255)   |           |          |
- # ! iucncategory       | character varying(255)   |           |          |
- # ! activityStartMonth | character varying(255)   |           |          |
- # ! activityEndMonth   | character varying(255)   |           |          |
- # ! activityStartHour  | integer                  |           |          |
- # ! activityEndHour    | integer                  |           |          |
- # ! gbifusagekey       | integer                  |           |          |
- # ! accepted           | integer                  |           |          |
-
 class Species(models.Model):
     MONTH_CHOICES = [
         ('January', 'January'),
@@ -155,24 +124,6 @@ class Portrait(models.Model):
     class Meta:
         abstract = True
 
-# ! shortDescription    | text                     |           | not null |
-# ! leafDescription     | text                     |           | not null |
-# ! stemAxisDescription | text                     |           | not null |
-# ! flowerDescription   | text                     |           | not null |
-# ! fruitDescription    | text                     |           | not null |
-# ! cityHabitat         | text                     |           | not null |
-# ! humanInteraction    | text                     |           |          |
-# ! linkToWikipedia     | character varying(255)   |           |          |
-# ? language            | integer                  |           |          |
-# ! created_by          | integer                  |           |          |
-# ! updated_by          | integer                  |           |          |
-# ! created_at          | timestamp with time zone |           |          | CURRENT_TIMESTAMP
-# ! updated_at          | timestamp with time zone |           |          | CURRENT_TIMESTAMP
-#  preview             | boolean                  |           | not null |
-#  ! name                | character varying(255)   |           |          |
-#  images              | integer                  |           |          |
-#  published_at        | timestamp with time zone |           |          |
-
 class Floraportrait(Portrait):
     species = models.OneToOneField(
         Species,
@@ -189,21 +140,6 @@ class Floraportrait(Portrait):
 
     class Meta:
         db_table = 'flora_portrait'
-
- # ! shortDescription    | text                     |           | not null |
- # ! maleDescription     | text                     |           |          |
- # ! femaleDescription   | text                     |           |          |
- # ! juvenileDescription | text                     |           |          |
- # ! cityHabitat         | text                     |           | not null |
- # ! humanInteraction    | text                     |           |          |
- # ! linkToWikipedia     | character varying(255)   |           |          |
- # ! preview             | boolean                  |           | not null |
- # ! tracks              | text                     |           |          |
- # ! name                | character varying(255)   |           |          |
- # images              | integer                  |           |          |
- # published_at        | timestamp with time zone |           |          |
- # ! audioTitle          | character varying(255)   |           |          |
- # ! audioLicense        | character varying(255)   |           |          |
 
 class Faunaportrait(Portrait):
     species = models.OneToOneField(
@@ -223,4 +159,3 @@ class Faunaportrait(Portrait):
 
     class Meta:
         db_table = 'fauna_portrait'
-
