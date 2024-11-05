@@ -8,12 +8,16 @@ class SpeciesNameInline(admin.TabularInline):
     model = SpeciesName
     extra = 1
 
+@admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
     inlines = [
         SpeciesNameInline,
     ]
     exclude = ["created_by"]
     readonly_fields = ["speciesid"]
+    list_display = ["sciname", "name", "group", "group__nature"]
+    list_filter = ('group__nature', 'group')
+    search_fields = ["sciname", "name"]
 
 #
 # Flora
@@ -55,4 +59,3 @@ class FaunaportraitAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Group)
-admin.site.register(Species, SpeciesAdmin)

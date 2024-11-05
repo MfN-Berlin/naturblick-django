@@ -97,6 +97,7 @@ class Species(models.Model):
 
     class Meta:
         db_table = 'species'
+        verbose_name_plural = "species"
 
 class SpeciesName(models.Model):
     LANGUAGE_CHOICES = [
