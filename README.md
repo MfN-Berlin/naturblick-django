@@ -19,4 +19,4 @@ This is the CMS for naturblick. We use WSGI/Gunicorn.
 * changing dependencies `pip freeze > requirements.txt`
 * create superuser `python manage.py createsuperuser`
 * Execute command in production `docker compose exec django python manage.py COMMAND`
-
+* running tests `python manage.py test species`

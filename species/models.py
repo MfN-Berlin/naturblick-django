@@ -1,0 +1,162 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db import models
+from django_currentuser.db.models import CurrentUserField
+
+# todos: Portrait, Flora/ Fauna -> multilingual, Names, Avatar, ..., speciesid autogenerate ffff
+# check portraitfields
+
+class Group(models.Model):
+    NATURE_CHOICES = [
+        ('Fauna', 'Fauna'),
+        ('Flora', 'Flora'),
+    ]
+
+    name = models.CharField(max_length=255, unique=True)
+    nature = models.CharField(max_length=5, choices=NATURE_CHOICES)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'group'
+
+class Species(models.Model):
+    MONTH_CHOICES = [
+        ('January', 'January'),
+        ('February', 'February'),
+        ('March', 'March'),
+        ('April', 'April'),
+        ('May', 'May'),
+        ('June', 'June'),
+        ('July', 'July'),
+        ('August', 'August'),
+        ('September', 'September'),
+        ('October', 'October'),
+        ('November', 'November'),
+        ('December', 'December'),
+    ]
+
+    IUCN_CHOICES = [
+        ('NE', 'NE'),
+        ('DD', 'DD'),
+        ('LC', 'LC'),
+        ('NT', 'NT'),
+        ('VU', 'VU'),
+        ('EN', 'EN'),
+        ('CR', 'CR'),
+        ('EW', 'EW'),
+        ('EX', 'EX'),
+    ]
+
+    REDLIST_CHOICES = [
+        ('gefahrdet', 'gefährdet'),
+        ('Vorwarnliste', 'Vorwarnliste'),
+        ('ausgestorben oder verschollen', 'ausgestorben oder verschollen'),
+        ('vomAussterbenBedroht', 'vom Aussterben bedroht'),
+        ('starkGefahrdet', 'stark gefährdet'),
+        ('GefahrdungUnbekanntenAusmasses', 'Gefährdung unbekannten Ausmasses'),
+        ('extremSelten', 'extrem selten'),
+        ('DatenUnzureichend', 'Daten unzureichend'),
+        ('ungefahrdet', 'ungefährdet'),
+        ('nichtBewertet', 'nicht bewertet'),
+        ('keinNachweis', 'kein Nachweis'),
+    ]
+
+    speciesid = models.CharField(max_length=255, unique=True)   # in ktor
+    sciname = models.CharField(max_length=255)                  # in ktor
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='species') # in ktor
+    wikipedia = models.URLField(max_length=255, blank=True, null=True) # in ktor
+    name = models.CharField(max_length=255, blank=True, null=True) # in ktor
+    nbclassid = models.CharField(max_length=255, blank=True, null=True) # playback
+    red_list_germany = models.CharField(max_length=255, blank=True, null=True, choices=REDLIST_CHOICES)     # in ktor
+    iucncategory = models.CharField(max_length=2, blank=True, null=True, choices=IUCN_CHOICES)              # in ktor
+    activity_start_month = models.CharField(blank=True, null=True, max_length=9, choices=MONTH_CHOICES)     # playback
+    activity_end_month = models.CharField(blank=True, null=True, max_length=9, choices=MONTH_CHOICES)       # playback
+    activity_start_hour = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(23)])  # playback
+    activity_end_hour = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(23)])    # playback
+    gbifusagekey = models.IntegerField(blank=True, null=True)  # orga
+    accepted = models.IntegerField(blank=True, null=True)  # in ktor
+    created_by = CurrentUserField(related_name='species_created_by')  # orga
+    updated_by = CurrentUserField(on_update=True, related_name='species_updated_by')  # orga
+    created_at = models.DateTimeField(auto_now_add=True)  # orga
+    updated_at = models.DateTimeField(auto_now=True)  # orga
+
+    def __str__(self):
+        return self.sciname
+
+    def save(self, *args, **kwargs):
+        if not self.speciesid:
+            prefix = f'{self.group}_ffff'
+            try:
+                last_insert_id = Species.objects.filter(speciesid__startswith=prefix).order_by("-speciesid")[0].speciesid
+                next_insert_id = int(last_insert_id[len(last_insert_id) - 4: len(last_insert_id)], 16) + 1
+                self.speciesid = f'{self.group}_ffff{next_insert_id:04x}'
+            except:
+                self.speciesid = f'{self.group}_ffff0000'
+        super().save(*args, **kwargs)
+
+    class Meta:
+        db_table = 'species'
+        verbose_name_plural = "species"
+
+class SpeciesName(models.Model):
+    LANGUAGE_CHOICES = [
+        ('en', 'English'),
+        ('de', 'German'),
+        ('er', 'Easy Read'),
+    ]
+
+    species = models.ForeignKey(Species, on_delete=models.CASCADE, related_name='species_names')
+    name = models.CharField(max_length=255)
+    language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'species_name'
+
+class Portrait(models.Model):
+    short_description = models.TextField
+    city_habitat = models.TextField
+    human_interaction = models.TextField(blank=True, null=True)
+    published = models.BooleanField(default=False)
+
+    class Meta:
+        abstract = True
+
+class Floraportrait(Portrait):
+    species = models.OneToOneField(
+        Species,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    leaf_description = models.TextField
+    stem_axis_description = models.TextField
+    flower_description = models.TextField
+    fruit_description = models.TextField
+
+    def __str__(self):
+        return self.species.name
+
+    class Meta:
+        db_table = 'flora_portrait'
+
+class Faunaportrait(Portrait):
+    species = models.OneToOneField(
+        Species,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    male_description = models.TextField(blank=True, null=True)
+    female_description = models.TextField(blank=True, null=True)
+    juvenile_description = models.TextField(blank=True, null=True)
+    tracks = models.TextField(blank=True, null=True)
+    audioTitle = models.CharField(max_length=255, blank=True, null=True)
+    audioLicense = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.species.name
+
+    class Meta:
+        db_table = 'fauna_portrait'

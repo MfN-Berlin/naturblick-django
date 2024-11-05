@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'species',
+    'modeltranslation',
 ]
 
 MIDDLEWARE = [
@@ -40,6 +41,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_currentuser.middleware.ThreadLocalUserMiddleware',
 ]
 
 ROOT_URLCONF = 'naturblick.urls'
@@ -89,6 +91,14 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
+gettext = lambda s: s
+LANGUAGES = [
+    ('de', gettext('German')),
+    ('en', gettext('English')),
+    ('er', gettext('Easy Read')),
+]
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'de'
+
 
 USE_TZ = True
 
