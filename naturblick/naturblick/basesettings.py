@@ -93,8 +93,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 gettext = lambda s: s
 LANGUAGES = [
-    ('en', gettext('English')),
     ('de', gettext('German')),
+    ('en', gettext('English')),
     ('er', gettext('Easy Read')),
 ]
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'de'
