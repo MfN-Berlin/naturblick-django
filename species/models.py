@@ -1,6 +1,6 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.db.models import ForeignKey
+from django.db.models import ForeignKey, URLField, CASCADE
 from django_currentuser.db.models import CurrentUserField
 
 # todos: Portrait, Flora/ Fauna -> multilingual, Names, Avatar, ..., speciesid autogenerate ffff
@@ -20,6 +20,16 @@ class Group(models.Model):
 
     class Meta:
         db_table = 'group'
+
+class Avatar(models.Model):
+    image = models.ImageField(upload_to="avatars")
+    image_owner = models.CharField(max_length=256)
+    image_ownerLink = URLField(blank=True, null=True)
+    image_source = URLField()
+    image_license = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.image.name
 
 class Species(models.Model):
     MONTH_CHOICES = [
@@ -63,24 +73,26 @@ class Species(models.Model):
         ('keinNachweis', 'kein Nachweis'),
     ]
 
-    speciesid = models.CharField(max_length=255, unique=True)   # in ktor
-    sciname = models.CharField(max_length=255)                  # in ktor
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='species') # in ktor
-    wikipedia = models.URLField(max_length=255, blank=True, null=True) # in ktor
-    name = models.CharField(max_length=255, blank=True, null=True) # in ktor
-    nbclassid = models.CharField(max_length=255, blank=True, null=True) # playback
-    red_list_germany = models.CharField(max_length=255, blank=True, null=True, choices=REDLIST_CHOICES)     # in ktor
-    iucncategory = models.CharField(max_length=2, blank=True, null=True, choices=IUCN_CHOICES)              # in ktor
-    activity_start_month = models.CharField(blank=True, null=True, max_length=9, choices=MONTH_CHOICES)     # playback
-    activity_end_month = models.CharField(blank=True, null=True, max_length=9, choices=MONTH_CHOICES)       # playback
-    activity_start_hour = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(23)])  # playback
-    activity_end_hour = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(23)])    # playback
-    gbifusagekey = models.IntegerField(blank=True, null=True)  # orga
-    accepted = models.IntegerField(blank=True, null=True)  # in ktor
-    created_by = CurrentUserField(related_name='species_created_by')  # orga
-    updated_by = CurrentUserField(on_update=True, related_name='species_updated_by')  # orga
-    created_at = models.DateTimeField(auto_now_add=True)  # orga
-    updated_at = models.DateTimeField(auto_now=True)  # orga
+    speciesid = models.CharField(max_length=255, unique=True)
+    sciname = models.CharField(max_length=255)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='species')
+    wikipedia = models.URLField(max_length=255, blank=True, null=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
+    nbclassid = models.CharField(max_length=255, blank=True, null=True)
+    red_list_germany = models.CharField(max_length=255, blank=True, null=True, choices=REDLIST_CHOICES)
+    iucncategory = models.CharField(max_length=2, blank=True, null=True, choices=IUCN_CHOICES)
+    activity_start_month = models.CharField(blank=True, null=True, max_length=9, choices=MONTH_CHOICES)
+    activity_end_month = models.CharField(blank=True, null=True, max_length=9, choices=MONTH_CHOICES)
+    activity_start_hour = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(23)])
+    activity_end_hour = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(23)])
+    male_avatar = models.ForeignKey(Avatar, on_delete=models.CASCADE, related_name='male_avatar', null="True", blank="True")
+    female_avatar = models.ForeignKey(Avatar, on_delete=models.CASCADE, related_name='female_avatar', null="True", blank="True")
+    gbifusagekey = models.IntegerField(blank=True, null=True)
+    accepted = models.IntegerField(blank=True, null=True)
+    created_by = CurrentUserField(related_name='species_created_by')
+    updated_by = CurrentUserField(on_update=True, related_name='species_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.sciname
@@ -159,7 +171,7 @@ class Source(models.Model):
         return self.text
 
 class GoodToKnow(models.Model):
-    GOOD_TO_KNOW_TYPE = [
+    GOOD_TO_KNOW_CHOICES = [
         ('use', 'usage'),
         ('mnc', 'mnemonic'),
         ('cuy', 'culturalhistory'),
@@ -172,8 +184,9 @@ class GoodToKnow(models.Model):
         ('otr', 'other'),
     ]
     fact = models.TextField(default="")
-    type = models.CharField(max_length=3, choices=GOOD_TO_KNOW_TYPE)
+    type = models.CharField(max_length=3, choices=GOOD_TO_KNOW_CHOICES)
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.fact
+
