@@ -1,8 +1,6 @@
-from django.http import HttpResponse
 from .models import Species
 from rest_framework import generics
 from .serializers import SpeciesSerializer, SpeciesDetailSerializer
-from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView

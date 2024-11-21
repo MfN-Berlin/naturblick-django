@@ -2,6 +2,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import ForeignKey, URLField, CASCADE
 from django_currentuser.db.models import CurrentUserField
+from image_cropping import ImageRatioField
+
 
 # todos: Portrait, Flora/ Fauna -> multilingual, Names, Avatar, ..., speciesid autogenerate ffff
 # check portraitfields
@@ -27,6 +29,7 @@ class Avatar(models.Model):
     image_ownerLink = URLField(blank=True, null=True)
     image_source = URLField()
     image_license = models.CharField(max_length=64)
+    cropping = ImageRatioField('image', '400x400', size_warning=True)
 
     def __str__(self):
         return self.image.name
@@ -85,7 +88,7 @@ class Species(models.Model):
     activity_end_month = models.CharField(blank=True, null=True, max_length=9, choices=MONTH_CHOICES)
     activity_start_hour = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(23)])
     activity_end_hour = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(23)])
-    male_avatar = models.ForeignKey(Avatar, on_delete=models.CASCADE, related_name='male_avatar', null="True", blank="True")
+    avatar = models.ForeignKey(Avatar, on_delete=models.CASCADE, related_name='avatar', null="True", blank="True")
     female_avatar = models.ForeignKey(Avatar, on_delete=models.CASCADE, related_name='female_avatar', null="True", blank="True")
     gbifusagekey = models.IntegerField(blank=True, null=True)
     accepted = models.IntegerField(blank=True, null=True)

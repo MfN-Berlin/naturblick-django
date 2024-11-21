@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'species',
     'modeltranslation',
+    'easy_thumbnails',
+    'image_cropping',
 ]
 
 MIDDLEWARE = [
@@ -119,3 +121,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+from easy_thumbnails.conf import Settings as thumbnail_settings
+THUMBNAIL_PROCESSORS = (
+    'image_cropping.thumbnail_processors.crop_corners',
+) + thumbnail_settings.THUMBNAIL_PROCESSORS
+
+THUMBNAIL_ALIASES = {
+    '': {
+        'cropped_image': {'size': (400, 400), 'crop': True},
+    },
+}

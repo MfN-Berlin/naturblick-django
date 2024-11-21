@@ -3,7 +3,7 @@ from django import forms
 from django.utils.html import format_html
 
 from .models import Species, Group, Floraportrait, Faunaportrait, SpeciesName, Source, GoodToKnow, Avatar
-
+from image_cropping import ImageCroppingMixin
 
 class SpeciesNameInline(admin.TabularInline):
     model = SpeciesName
@@ -80,7 +80,7 @@ class FaunaportraitAdmin(admin.ModelAdmin):
 admin.site.register(Group)
 
 @admin.register(Avatar)
-class AvatarAdmin(admin.ModelAdmin):
+class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
     list_display = ['image_tag', 'image', 'image_owner']
 
     def image_tag(self, obj):
