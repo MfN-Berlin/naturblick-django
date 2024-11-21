@@ -1,5 +1,6 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import ForeignKey
 from django_currentuser.db.models import CurrentUserField
 
 # todos: Portrait, Flora/ Fauna -> multilingual, Names, Avatar, ..., speciesid autogenerate ffff
@@ -117,46 +118,62 @@ class SpeciesName(models.Model):
         db_table = 'species_name'
 
 class Portrait(models.Model):
+    species = models.OneToOneField(
+        Species,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
     short_description = models.TextField
     city_habitat = models.TextField
     human_interaction = models.TextField(blank=True, null=True)
     published = models.BooleanField(default=False)
 
-    class Meta:
-        abstract = True
+    def __str__(self):
+        return self.species.sciname
 
 class Floraportrait(Portrait):
-    species = models.OneToOneField(
-        Species,
-        on_delete=models.CASCADE,
-        primary_key=True,
-    )
-    leaf_description = models.TextField
-    stem_axis_description = models.TextField
-    flower_description = models.TextField
-    fruit_description = models.TextField
-
-    def __str__(self):
-        return self.species.name
+    leaf_description = models.TextField(default="")
+    stem_axis_description = models.TextField(default="")
+    flower_description = models.TextField(default="")
+    fruit_description = models.TextField(default="")
 
     class Meta:
         db_table = 'flora_portrait'
 
 class Faunaportrait(Portrait):
-    species = models.OneToOneField(
-        Species,
-        on_delete=models.CASCADE,
-        primary_key=True,
-    )
     male_description = models.TextField(blank=True, null=True)
     female_description = models.TextField(blank=True, null=True)
     juvenile_description = models.TextField(blank=True, null=True)
-    tracks = models.TextField(blank=True, null=True)
+    tracks = models.TextField(blank=True, null=True)  # seems unused
     audioTitle = models.CharField(max_length=255, blank=True, null=True)
     audioLicense = models.CharField(max_length=255, blank=True, null=True)
 
-    def __str__(self):
-        return self.species.name
-
     class Meta:
         db_table = 'fauna_portrait'
+
+class Source(models.Model):
+    text = models.TextField(default="")
+    portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.text
+
+class GoodToKnow(models.Model):
+    GOOD_TO_KNOW_TYPE = [
+        ('use', 'usage'),
+        ('mnc', 'mnemonic'),
+        ('cuy', 'culturalhistory'),
+        ('art', 'art'),
+        ('muc', 'music'),
+        ('lie', 'literature'),
+        ('ore', 'originofname'),
+        ('orn', 'origin'),
+        ('toe', 'toxicityorusage'),
+        ('otr', 'other'),
+    ]
+    fact = models.TextField(default="")
+    type = models.CharField(max_length=3, choices=GOOD_TO_KNOW_TYPE)
+    portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.fact
