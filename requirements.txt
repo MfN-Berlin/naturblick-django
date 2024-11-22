@@ -1,10 +1,14 @@
 asgiref==3.8.1
 Django==5.1.2
+django-appconf==1.0.6
 django-currentuser==0.8.0
+django-image-cropping==1.7
 django-modeltranslation==0.19.10
 djangorestframework==3.15.2
+easy-thumbnails==2.10
 gunicorn==23.0.0
 packaging==24.1
+pillow==11.0.0
 psycopg2-binary==2.9.10
 sqlparse==0.5.1
 typing_extensions==4.12.2
