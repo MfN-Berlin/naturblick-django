@@ -124,7 +124,10 @@ dmypy.json
 cython_debug/
 
 .idea/
+
 static-root/
 media/
 
 .run/
+media-root/
+docker-compose.yml
