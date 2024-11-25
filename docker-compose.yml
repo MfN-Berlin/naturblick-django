@@ -11,3 +11,22 @@ services:
       POSTGRES_PASSWORD: ${DJANGO_POSTGRES_PASSWORD}
       POSTGRES_USER: ${DJANGO_POSTGRES_USER}
       POSTGRES_DB: ${DJANGO_POSTGRES}
+  django:
+    image: django-test-2
+    container_name: django
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    depends_on:
+      - django-db
+    environment:
+      DJANGO_POSTGRES_PASSWORD: ${DJANGO_POSTGRES_PASSWORD}
+      DJANGO_POSTGRES_USER: ${DJANGO_POSTGRES_USER}
+      DJANGO_POSTGRES: ${DJANGO_POSTGRES}
+      DJANGO_ENV: ${DJANGO_ENV}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+    volumes:
+      - ${DJANGO_LOGS}:/logs
+      - ${DJANGO_STATIC}:/app/static-root
+      - ${DJANGO_MEDIA}:/app/media-root
+
