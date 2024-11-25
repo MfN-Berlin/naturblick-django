@@ -14,6 +14,7 @@ COPY . /app/
 
 ENV DJANGO_ENV=production
 EXPOSE 8000
-ENTRYPOINT [ "sh", "-c", "./scripts/run.sh" ]
+# ENTRYPOINT [ "sh", "-c", "./scripts/run.sh" ]
+ENTRYPOINT ["sh", "./scripts/run.sh"]
 
 
