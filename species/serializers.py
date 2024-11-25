@@ -6,13 +6,13 @@ class SpeciesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Species
-        fields = ['pk', 'sciname']
+        fields = ['pk', 'speciesid']
 
 
 class SpeciesNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = SpeciesName
-        fields = ['name', 'language']
+        fields = ['name', 'language', 'isPrimary']
 
 class AvatarSerializer(serializers.ModelSerializer):
     avatar_url = serializers.SerializerMethodField('generate_avatar_url')
@@ -40,8 +40,7 @@ class SpeciesDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Species
         fields = [
-            'speciesid', 'sciname', 'group', 'wikipedia', 'name_de', 'name_en',
-            'name_er', 'red_list_germany', 'iucncategory', 'activity_start_month',
+            'speciesid', 'group', 'wikipedia', 'red_list_germany', 'iucncategory', 'activity_start_month',
             'activity_end_month', 'activity_start_hour', 'activity_end_hour',
             'accepted', 'species_names', 'avatar', 'female_avatar'
         ]

@@ -126,3 +126,5 @@ cython_debug/
 .idea/
 static-root/
 media/
+
+.run/
