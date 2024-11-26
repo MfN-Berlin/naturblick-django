@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'species',
-    'modeltranslation',
     'easy_thumbnails',
     'image_cropping',
 ]
@@ -89,21 +88,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
-USE_I18N = True
-gettext = lambda s: s
-LANGUAGES = [
-    ('de', gettext('German')),
-    ('en', gettext('English')),
-    ('er', gettext('Easy Read')),
-]
-MODELTRANSLATION_DEFAULT_LANGUAGE = 'de'
-
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
