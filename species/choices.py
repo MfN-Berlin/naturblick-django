@@ -48,8 +48,9 @@ LANGUAGE_CHOICES = [
     ('en', 'English'),
     ('de', 'German'),
     ('er', 'Easy Read'),
-    ('sf', 'Scientific'),
 ]
+
+NAME_LANGUAGE_CHOICES = LANGUAGE_CHOICES + [('sf', 'Scientific')]
 
 GOOD_TO_KNOW_CHOICES = [
     ('use', 'usage'),

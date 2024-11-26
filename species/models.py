@@ -1,8 +1,9 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.db.models import ForeignKey, URLField
+from django.db.models import ForeignKey, URLField, OneToOneField
 from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
+
 from .choices import *
 
 
@@ -18,9 +19,10 @@ class Group(models.Model):
     class Meta:
         db_table = 'group'
 
+
 class Avatar(models.Model):
     image = models.ImageField(upload_to="avatars")
-    image_owner = models.CharField(max_length=256)
+    image_owner = models.CharField(max_length=255)
     image_ownerLink = URLField(blank=True, null=True)
     image_source = URLField()
     image_license = models.CharField(max_length=64)
@@ -76,7 +78,7 @@ class Species(models.Model):
 class SpeciesName(models.Model):
     species = models.ForeignKey(Species, on_delete=models.CASCADE, related_name='species_names')
     name = models.CharField(max_length=255)
-    language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES)
+    language = models.CharField(max_length=2, choices=NAME_LANGUAGE_CHOICES)
     isPrimary = models.BooleanField()
 
     def __str__(self):
@@ -87,6 +89,7 @@ class SpeciesName(models.Model):
 
 
 class Portrait(models.Model):
+    language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES)
     species = models.OneToOneField(
         Species,
         on_delete=models.CASCADE,
@@ -97,6 +100,7 @@ class Portrait(models.Model):
     city_habitat = models.TextField
     human_interaction = models.TextField(blank=True, null=True)
     published = models.BooleanField(default=False)
+
 
     def __str__(self):
         return self.species.speciesid
@@ -139,3 +143,49 @@ class GoodToKnow(models.Model):
 
     def __str__(self):
         return self.fact
+
+
+class UnambigousFeature(models.Model):
+    description = models.CharField(max_length=255)
+    portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.description
+
+
+class AdditionalLink(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    url = models.URLField(max_length=255)
+    portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+
+
+class SimilarSpecies(models.Model):
+    differences = models.TextField()
+    portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
+    species = OneToOneField(Species,
+                            on_delete=models.CASCADE,
+                            parent_link=False)
+
+    def __str__(self):
+        return self.title
+
+
+class PortraitImage(models.Model):
+    Description / InTheCity / InTheCity
+    ImageOrientation
+    horizontal
+    DisplayRatio
+    GridRatio
+    FocusPointVertical
+    FocusPointHorizontal
+    Image
+        ImageOwner
+        ImageOwnerLink
+        ImageSource
+        ImageText (lang)
+        ImageFile
+        ImageLicense
