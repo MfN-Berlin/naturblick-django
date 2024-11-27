@@ -53,14 +53,32 @@ LANGUAGE_CHOICES = [
 NAME_LANGUAGE_CHOICES = LANGUAGE_CHOICES + [('sf', 'Scientific')]
 
 GOOD_TO_KNOW_CHOICES = [
-    ('use', 'usage'),
-    ('mnc', 'mnemonic'),
-    ('cuy', 'culturalhistory'),
+    ('usage', 'usage'),
+    ('mnemonic', 'mnemonic'),
+    ('culturalhistory', 'culturalhistory'),
     ('art', 'art'),
-    ('muc', 'music'),
-    ('lie', 'literature'),
-    ('ore', 'originofname'),
-    ('orn', 'origin'),
-    ('toe', 'toxicityorusage'),
-    ('otr', 'other'),
+    ('music', 'music'),
+    ('literature', 'literature'),
+    ('originofname', 'originofname'),
+    ('origin', 'origin'),
+    ('toxicityorusage', 'toxicityorusage'),
+    ('other', 'other'),
+]
+
+IMAGE_ORIENTATION_CHOICES = [
+    ('horizontal', 'horizontal'),
+    ('vertical', 'vertical'),
+]
+
+DISPLAY_RATIO_CHOICES = [
+    ('4-3', '4-3'),
+    ('3-4', '3-4'),
+]
+
+GRID_RATIO_CHOICES = [
+    ('1-2', '1-2'),
+    ('5-7', '5-7'),
+    ('1-1', '1-1'),
+    ('7-5', '7-5'),
+    ('2-1', '2-1'),
 ]

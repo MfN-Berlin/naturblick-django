@@ -1,6 +1,6 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.db.models import ForeignKey, URLField, OneToOneField
+from django.db.models import ForeignKey, URLField, OneToOneField, CharField, CASCADE
 from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
 
@@ -34,7 +34,7 @@ class Avatar(models.Model):
 
 class Species(models.Model):
     speciesid = models.CharField(max_length=255, unique=True)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='species')
+    group = models.ForeignKey(Group, on_delete=models.PROTECT, related_name='species')
     wikipedia = models.URLField(max_length=255, blank=True, null=True)
     nbclassid = models.CharField(max_length=255, blank=True, null=True)
     red_list_germany = models.CharField(max_length=255, blank=True, null=True, choices=REDLIST_CHOICES)
@@ -45,8 +45,8 @@ class Species(models.Model):
                                               validators=[MinValueValidator(0), MaxValueValidator(23)])
     activity_end_hour = models.IntegerField(blank=True, null=True,
                                             validators=[MinValueValidator(0), MaxValueValidator(23)])
-    avatar = models.ForeignKey(Avatar, on_delete=models.CASCADE, related_name='avatar', null="True", blank="True")
-    female_avatar = models.ForeignKey(Avatar, on_delete=models.CASCADE, related_name='female_avatar', null="True",
+    avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name='avatar', null="True", blank="True")
+    female_avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name='female_avatar', null="True",
                                       blank="True")
     gbifusagekey = models.IntegerField(blank=True, null=True)
     accepted = models.IntegerField(blank=True, null=True)
@@ -93,14 +93,12 @@ class Portrait(models.Model):
     species = models.OneToOneField(
         Species,
         on_delete=models.CASCADE,
-        primary_key=True,
         related_name="species"
     )
     short_description = models.TextField
     city_habitat = models.TextField
     human_interaction = models.TextField(blank=True, null=True)
     published = models.BooleanField(default=False)
-
 
     def __str__(self):
         return self.species.speciesid
@@ -138,7 +136,7 @@ class Source(models.Model):
 
 class GoodToKnow(models.Model):
     fact = models.TextField(default="")
-    type = models.CharField(max_length=3, choices=GOOD_TO_KNOW_CHOICES)
+    type = models.CharField(max_length=15, choices=GOOD_TO_KNOW_CHOICES)
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -171,21 +169,33 @@ class SimilarSpecies(models.Model):
                             parent_link=False)
 
     def __str__(self):
-        return self.title
+        return self.species.speciesid
+
+
+class Image(models.Model):
+    image = models.ImageField(upload_to="portrait_images")
+    image_owner = models.CharField(max_length=255)
+    image_ownerLink = URLField(blank=True, null=True)
+    image_source = URLField()
+    image_license = models.CharField(max_length=64)
+    text = CharField(max_length=255)
+
+
+class PortraitImageInfo(models.Model):
+    image_orientation = models.CharField(max_length=10, choices=IMAGE_ORIENTATION_CHOICES)
+    display_ratio = models.CharField(max_length=3, choices=DISPLAY_RATIO_CHOICES)
+    grid_ratio = models.CharField(max_length=3, choices=GRID_RATIO_CHOICES)
+    focus_point_vertical = models.FloatField()
+    focus_point_horizontal = models.FloatField()
+    image = models.OneToOneField(Image, on_delete=CASCADE)
 
 
 class PortraitImage(models.Model):
-    Description / InTheCity / InTheCity
-    ImageOrientation
-    horizontal
-    DisplayRatio
-    GridRatio
-    FocusPointVertical
-    FocusPointHorizontal
-    Image
-        ImageOwner
-        ImageOwnerLink
-        ImageSource
-        ImageText (lang)
-        ImageFile
-        ImageLicense
+    species = models.OneToOneField(
+        Species,
+        on_delete=models.CASCADE,
+        related_name="portrait_image"
+    )
+    description = models.OneToOneField(PortraitImageInfo, on_delete=models.SET_NULL, related_name="description", null=True)
+    in_the_city = models.OneToOneField(PortraitImageInfo, on_delete=models.SET_NULL, related_name="in_the_city", null=True)
+    fun_fact = models.OneToOneField(PortraitImageInfo, on_delete=models.SET_NULL, related_name="fun_fact", null=True)
