@@ -27,6 +27,10 @@ from .models import Species, Group, Floraportrait, Faunaportrait, SpeciesName, S
 #@admin.register(PortraitImage)
 #class PortraitImageAdmin(admin.ModelAdmin)
 
+@admin.register(PortraitImage, PortraitImageInfo)
+class PortraitImageAdmin(admin.ModelAdmin):
+    pass
+
 
 class SpeciesNameInlineFormSet(BaseInlineFormSet):
     def clean(self):
@@ -150,7 +154,9 @@ class FaunaportraitAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Group)
+@admin.register(Group)
+class GroupAdmin(admin.ModelAdmin):
+    radio_fields = {"nature": admin.VERTICAL}
 
 
 @admin.register(Avatar)
