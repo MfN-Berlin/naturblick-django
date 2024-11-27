@@ -82,3 +82,9 @@ GRID_RATIO_CHOICES = [
     ('7-5', '7-5'),
     ('2-1', '2-1'),
 ]
+
+PORTRAIT_IMAGE_TYPE_CHOICES = [
+    ('description', 'Description'),
+    ('in_the_city', 'In the city'),
+    ('fun_fact', 'Fun fact'),
+]

@@ -6,30 +6,28 @@ from django.utils.html import format_html
 from image_cropping import ImageCroppingMixin
 
 from .models import Species, Group, Floraportrait, Faunaportrait, SpeciesName, Source, GoodToKnow, Avatar, \
-    PortraitImageInfo, Image, PortraitImage, ImageText
+    PortraitImageInfo, ImageText, Image
 
 
-#class ImageTextInline(admin.TabularInline):
-#    model = ImageText
-#
-#
-#class ImageInline(admin.StackedInline):
-#    model = Image
-#    max_num = 1
-#    inlines = [ImageTextInline]
-#
-#
-#class PortraitImageInfoInline(admin.TabularInline):
-#    model = PortraitImageInfo
-#    max_num = 1
-#    inlines = [ImageInline]
-#
-#@admin.register(PortraitImage)
-#class PortraitImageAdmin(admin.ModelAdmin)
+class ImageTextInline(admin.TabularInline):
+    model = ImageText
 
-@admin.register(PortraitImage, PortraitImageInfo)
+
+class ImageInline(admin.StackedInline):
+    model = Image
+    max_num = 1
+    inlines = [ImageTextInline]
+
+
+class PortraitImageInfoInline(admin.TabularInline):
+    model = PortraitImageInfo
+    max_num = 1
+    inlines = [ImageInline]
+
+
+@admin.register(PortraitImage)
 class PortraitImageAdmin(admin.ModelAdmin):
-    pass
+    inlines = [PortraitImageInfoInline, ImageInline, ImageTextInline]
 
 
 class SpeciesNameInlineFormSet(BaseInlineFormSet):
@@ -74,11 +72,25 @@ class SpeciesAdmin(admin.ModelAdmin):
     inlines = [
         SpeciesNameInline
     ]
-    exclude = ["created_by"]
-    readonly_fields = ["speciesid"]
-    list_display = ["speciesid", 'get_primary_name', 'get_gername', 'group', 'group__nature']
+    readonly_fields = ['speciesid']
+    list_display = ['speciesid', 'get_primary_name', 'get_gername', 'group', 'group__nature']
     list_filter = ('group__nature', 'group')
     search_fields = ["species_names__name"]
+    fields = ['speciesid',
+              'group',
+              'wikipedia',
+              'nbclassid',
+              ('red_list_germany',
+               'iucncategory'),
+              ('activity_start_month',
+               'activity_end_month'),
+              ('activity_start_hour',
+               'activity_end_hour'),
+              'avatar',
+              'female_avatar',
+              'gbifusagekey',
+              'accepted',
+              ]
 
     def get_primary_name(self, obj):
         primary_name = obj.species_names.filter(isPrimary=True, language="sf").first()
@@ -124,6 +136,7 @@ class FloraportraitAdmin(admin.ModelAdmin):
     form = FloraportraitForm
     list_display = ["species__speciesid", "species__group"]
     search_fields = ('species__species_names__name',)
+    search_help_text = 'Sucht über alle Artnamen'
     list_filter = ('published',)
     inlines = [
         SourceInline, GoodToKnowInline
@@ -148,6 +161,7 @@ class FaunaportraitAdmin(admin.ModelAdmin):
     form = FaunaportraitForm
     list_display = ["species__speciesid", "species__group"]
     search_fields = ('species__species_names__name',)
+    search_help_text = 'Sucht über alle Artnamen'
     list_filter = ('published',)
     inlines = [
         SourceInline, GoodToKnowInline

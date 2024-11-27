@@ -59,6 +59,8 @@ class Species(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    speciesid.short_description = "Species ID"
+
     def save(self, *args, **kwargs):
         if not self.speciesid:
             prefix = f'{self.group}_ffff'
@@ -210,12 +212,33 @@ class SimilarSpecies(models.Model):
         db_table = 'similar_species'
 
 
+class PortraitImageInfo(models.Model):
+    species = models.OneToOneField(
+        Species,
+        on_delete=models.CASCADE,
+        related_name="portrait_image"
+    )
+    image_orientation = models.CharField(max_length=10, choices=IMAGE_ORIENTATION_CHOICES)
+    display_ratio = models.CharField(max_length=3, choices=DISPLAY_RATIO_CHOICES)
+    grid_ratio = models.CharField(max_length=3, choices=GRID_RATIO_CHOICES)
+    focus_point_vertical = models.FloatField(validators=min_max(0.0, 100.0))
+    focus_point_horizontal = models.FloatField(validators=min_max(0.0, 100.0))
+    portrait_image_type = models.CharField(max_length=10, choices=PORTRAIT_IMAGE_TYPE_CHOICES)
+
+    def __str__(self):
+        return f"PortraitImageInfo {self.image.image_source}"
+
+    class Meta:
+        db_table = 'portrait_image_info'
+
+
 class Image(models.Model):
     image = models.ImageField(upload_to="portrait_images")
     image_owner = models.CharField(max_length=255)
     image_ownerLink = URLField(blank=True, null=True)
     image_source = URLField()
     image_license = models.CharField(max_length=64)
+    portrait_image_info = OneToOneField(PortraitImageInfo, on_delete=CASCADE)
 
     def __str__(self):
         return f"Image {self.image_source}"
@@ -234,37 +257,3 @@ class ImageText(models.Model):
 
     class Meta:
         db_table = 'image_text'
-
-
-class PortraitImageInfo(models.Model):
-    image_orientation = models.CharField(max_length=10, choices=IMAGE_ORIENTATION_CHOICES)
-    display_ratio = models.CharField(max_length=3, choices=DISPLAY_RATIO_CHOICES)
-    grid_ratio = models.CharField(max_length=3, choices=GRID_RATIO_CHOICES)
-    focus_point_vertical = models.FloatField(validators=min_max(0.0, 100.0))
-    focus_point_horizontal = models.FloatField(validators=min_max(0.0, 100.0))
-    image = models.OneToOneField(Image, on_delete=CASCADE)
-
-    def __str__(self):
-        return f"PortraitImageInfo {self.image.image_source}"
-
-    class Meta:
-        db_table = 'portrait_image_info'
-
-
-class PortraitImage(models.Model):
-    species = models.OneToOneField(
-        Species,
-        on_delete=models.CASCADE,
-        related_name="portrait_image"
-    )
-    description = models.OneToOneField(PortraitImageInfo, on_delete=models.SET_NULL, related_name="description",
-                                       null=True)
-    in_the_city = models.OneToOneField(PortraitImageInfo, on_delete=models.SET_NULL, related_name="in_the_city",
-                                       null=True)
-    fun_fact = models.OneToOneField(PortraitImageInfo, on_delete=models.SET_NULL, related_name="fun_fact", null=True)
-
-    def __str__(self):
-        return f"PortraitImage {self.species.speciesid}"
-
-    class Meta:
-        db_table = 'portrait_image'
