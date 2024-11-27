@@ -1,11 +1,31 @@
-from django.contrib import admin
 from django import forms
+from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
 from django.utils.html import format_html
-
-from .models import Species, Group, Floraportrait, Faunaportrait, SpeciesName, Source, GoodToKnow, Avatar
 from image_cropping import ImageCroppingMixin
+
+from .models import Species, Group, Floraportrait, Faunaportrait, SpeciesName, Source, GoodToKnow, Avatar, \
+    PortraitImageInfo, Image, PortraitImage, ImageText
+
+
+#class ImageTextInline(admin.TabularInline):
+#    model = ImageText
+#
+#
+#class ImageInline(admin.StackedInline):
+#    model = Image
+#    max_num = 1
+#    inlines = [ImageTextInline]
+#
+#
+#class PortraitImageInfoInline(admin.TabularInline):
+#    model = PortraitImageInfo
+#    max_num = 1
+#    inlines = [ImageInline]
+#
+#@admin.register(PortraitImage)
+#class PortraitImageAdmin(admin.ModelAdmin)
 
 
 class SpeciesNameInlineFormSet(BaseInlineFormSet):
