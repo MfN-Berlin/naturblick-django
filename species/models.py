@@ -176,13 +176,11 @@ class UnambigousFeature(models.Model):
     description = models.CharField(max_length=255)
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"UnambigousFeature {self.description}"
 
-def __str__(self):
-    return f"UnambigousFeature {self.description}"
-
-
-class Meta:
-    db_table = 'unambigous_feature'
+    class Meta:
+        db_table = 'unambigous_feature'
 
 
 class AdditionalLink(models.Model):
