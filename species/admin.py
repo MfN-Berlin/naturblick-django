@@ -6,28 +6,7 @@ from django.utils.html import format_html
 from image_cropping import ImageCroppingMixin
 
 from .models import Species, Group, Floraportrait, Faunaportrait, SpeciesName, Source, GoodToKnow, Avatar, \
-    PortraitImageInfo, ImageText, Image
-
-
-class ImageTextInline(admin.TabularInline):
-    model = ImageText
-
-
-class ImageInline(admin.StackedInline):
-    model = Image
-    max_num = 1
-    inlines = [ImageTextInline]
-
-
-class PortraitImageInfoInline(admin.TabularInline):
-    model = PortraitImageInfo
-    max_num = 1
-    inlines = [ImageInline]
-
-
-@admin.register(PortraitImage)
-class PortraitImageAdmin(admin.ModelAdmin):
-    inlines = [PortraitImageInfoInline, ImageInline, ImageTextInline]
+    SimilarSpecies, AdditionalLink, UnambigousFeature
 
 
 class SpeciesNameInlineFormSet(BaseInlineFormSet):
@@ -118,6 +97,19 @@ class GoodToKnowInline(admin.TabularInline):
     extra = 0
 
 
+class SimilarSpeciesInline(admin.TabularInline):
+    model = SimilarSpecies
+    extra = 0
+
+class AdditionalLinkInline(admin.TabularInline):
+    model = AdditionalLink
+    extra = 0
+
+class UnambigousFeatureInline(admin.TabularInline):
+    model = UnambigousFeature
+    extra = 0
+
+
 #
 # Flora
 #
@@ -139,7 +131,7 @@ class FloraportraitAdmin(admin.ModelAdmin):
     search_help_text = 'Sucht über alle Artnamen'
     list_filter = ('published',)
     inlines = [
-        SourceInline, GoodToKnowInline
+        SourceInline, GoodToKnowInline, SimilarSpeciesInline, AdditionalLinkInline, UnambigousFeatureInline
     ]
 
 
@@ -164,7 +156,7 @@ class FaunaportraitAdmin(admin.ModelAdmin):
     search_help_text = 'Sucht über alle Artnamen'
     list_filter = ('published',)
     inlines = [
-        SourceInline, GoodToKnowInline
+        SourceInline, GoodToKnowInline, SimilarSpeciesInline, AdditionalLinkInline, UnambigousFeatureInline
     ]
 
 
