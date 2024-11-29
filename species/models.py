@@ -19,6 +19,7 @@ class Group(models.Model):
 
     class Meta:
         db_table = 'group'
+        ordering = ['name']
 
 
 class Avatar(models.Model):
@@ -213,22 +214,30 @@ class SimilarSpecies(models.Model):
         db_table = 'similar_species'
 
 
-class DescriptionImage(models.Model):
-    species = models.OneToOneField(
-        Species,
-        on_delete=models.CASCADE,
-        related_name="description_image"
-    )
+class PortraitImage(models.Model):
     image_orientation = models.CharField(max_length=10, choices=IMAGE_ORIENTATION_CHOICES)
     display_ratio = models.CharField(max_length=3, choices=DISPLAY_RATIO_CHOICES)
     grid_ratio = models.CharField(max_length=3, choices=GRID_RATIO_CHOICES)
     focus_point_vertical = models.FloatField(validators=min_max(0.0, 100.0))
     focus_point_horizontal = models.FloatField(validators=min_max(0.0, 100.0))
-    image = models.ImageField(upload_to="description_images")
+    image = models.ImageField(upload_to="images")
     image_owner = models.CharField(max_length=255)
     image_ownerLink = URLField(blank=True, null=True)
     image_source = URLField()
     image_license = models.CharField(max_length=64)
+    text_de = models.CharField(max_length=64)
+    text_en = models.CharField(max_length=64)
+
+    class Meta:
+        abstract = True
+
+
+class DescriptionImage(PortraitImage):
+    species = models.OneToOneField(
+        Species,
+        on_delete=models.CASCADE,
+        related_name="description_image"
+    )
 
     def __str__(self):
         return f"DescriptionImage {self.species.speciesid}"
@@ -237,22 +246,12 @@ class DescriptionImage(models.Model):
         db_table = 'description_image'
 
 
-class InTheCityImage(models.Model):
+class InTheCityImage(PortraitImage):
     species = models.OneToOneField(
         Species,
         on_delete=models.CASCADE,
         related_name="in_the_city_image"
     )
-    image_orientation = models.CharField(max_length=10, choices=IMAGE_ORIENTATION_CHOICES)
-    display_ratio = models.CharField(max_length=3, choices=DISPLAY_RATIO_CHOICES)
-    grid_ratio = models.CharField(max_length=3, choices=GRID_RATIO_CHOICES)
-    focus_point_vertical = models.FloatField(validators=min_max(0.0, 100.0))
-    focus_point_horizontal = models.FloatField(validators=min_max(0.0, 100.0))
-    image = models.ImageField(upload_to="in_the_city_images")
-    image_owner = models.CharField(max_length=255)
-    image_ownerLink = URLField(blank=True, null=True)
-    image_source = URLField()
-    image_license = models.CharField(max_length=64)
 
     def __str__(self):
         return f"InTheCityImage {self.species.speciesid}"
@@ -261,63 +260,15 @@ class InTheCityImage(models.Model):
         db_table = 'in_the_city_image'
 
 
-class FunFactImage(models.Model):
+class FunFactImage(PortraitImage):
     species = models.OneToOneField(
         Species,
         on_delete=models.CASCADE,
         related_name="fun_fact_image"
     )
-    image_orientation = models.CharField(max_length=10, choices=IMAGE_ORIENTATION_CHOICES)
-    display_ratio = models.CharField(max_length=3, choices=DISPLAY_RATIO_CHOICES)
-    grid_ratio = models.CharField(max_length=3, choices=GRID_RATIO_CHOICES)
-    focus_point_vertical = models.FloatField(validators=min_max(0.0, 100.0))
-    focus_point_horizontal = models.FloatField(validators=min_max(0.0, 100.0))
-    image = models.ImageField(upload_to="fun_fact_images")
-    image_owner = models.CharField(max_length=255)
-    image_ownerLink = URLField(blank=True, null=True)
-    image_source = URLField()
-    image_license = models.CharField(max_length=64)
 
     def __str__(self):
         return f"FunFactImage {self.species.speciesid}"
 
     class Meta:
         db_table = 'fun_fact_image'
-
-
-class DescriptionImageText(models.Model):
-    description_image = models.ForeignKey(DescriptionImage, on_delete=models.CASCADE,
-                                          related_name='description_image_text')
-    text = models.CharField(max_length=255)
-    language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES)
-
-    def __str__(self):
-        return f"DescriptionImageText {self.text}"
-
-    class Meta:
-        db_table = 'description_image_text'
-
-
-class InTheCityImageText(models.Model):
-    in_the_city_image = models.ForeignKey(InTheCityImage, on_delete=models.CASCADE,
-                                          related_name='in_the_city_image_text')
-    text = models.CharField(max_length=255)
-    language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES)
-
-    def __str__(self):
-        return f"InTheCityImageText {self.text}"
-
-    class Meta:
-        db_table = 'in_the_city_image_text'
-
-
-class FuncFactImageText(models.Model):
-    fun_fact_image = models.ForeignKey(FunFactImage, on_delete=models.CASCADE, related_name='fun_fact_image_text')
-    text = models.CharField(max_length=255)
-    language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES)
-
-    def __str__(self):
-        return f"FuncFactImageText {self.text}"
-
-    class Meta:
-        db_table = 'fun_fact_image_text'

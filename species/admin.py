@@ -2,11 +2,12 @@ from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
+from django.urls import reverse
 from django.utils.html import format_html
 from image_cropping import ImageCroppingMixin
 
 from .models import Species, Group, Floraportrait, Faunaportrait, SpeciesName, Source, GoodToKnow, Avatar, \
-    SimilarSpecies, AdditionalLink, UnambigousFeature
+    SimilarSpecies, AdditionalLink, UnambigousFeature, DescriptionImage
 
 
 class SpeciesNameInlineFormSet(BaseInlineFormSet):
@@ -52,7 +53,7 @@ class SpeciesAdmin(admin.ModelAdmin):
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid']
-    list_display = ['speciesid', 'get_primary_name', 'get_gername', 'group', 'group__nature']
+    list_display = ['speciesid', 'get_primary_name', 'get_gername', 'group', 'group__nature', 'foobar']
     list_filter = ('group__nature', 'group')
     search_fields = ["species_names__name"]
     fields = ['speciesid',
@@ -82,6 +83,16 @@ class SpeciesAdmin(admin.ModelAdmin):
         return gername.name if gername else "N/A"
 
     get_gername.short_description = "German name"
+
+    def foobar(self, obj):
+        if isinstance(obj.portrait, Floraportrait):
+            app_label = obj.portrait._meta.app_label
+            return reverse(f"admin:{app_label}_Floraportrait_change", args=[obj.portrait.pk])
+        elif isinstance(obj.portrait, Faunaportrait):
+            app_label = obj.portrait._meta.app_label
+            return reverse(f"admin:{app_label}_Faunaportrait_change", args=[obj.portrait.pk])
+        else:
+            return "N/A"
 
 
 #
@@ -147,7 +158,7 @@ class FaunaportraitForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        #TODO johannes maybe i should use another manager, then i could use this one in the views as well
+        # TODO johannes maybe i should use a custom manager, then i could use this one in the views as well
         self.fields['species'].queryset = Species.objects.filter(group__nature='Fauna')
 
 
@@ -166,6 +177,8 @@ class FaunaportraitAdmin(admin.ModelAdmin):
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     radio_fields = {"nature": admin.VERTICAL}
+    list_display = ['name', 'nature']
+    list_filter = ['nature']
 
 
 @admin.register(Avatar)
@@ -174,3 +187,8 @@ class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
 
     def image_tag(self, obj):
         return format_html('<img src="{}" style="max-width:200px; max-height:200px"/>'.format(obj.image.url))
+
+
+@admin.register(DescriptionImage)
+class DescriptionImageAdmin(admin.ModelAdmin):
+    pass

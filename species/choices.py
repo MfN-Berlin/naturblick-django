@@ -40,8 +40,8 @@ REDLIST_CHOICES = [
 ]
 
 NATURE_CHOICES = [
-    ('Fauna', 'Fauna'),
-    ('Flora', 'Flora'),
+    ('fauna', 'Fauna'),
+    ('flora', 'Flora'),
 ]
 
 LANGUAGE_CHOICES = [
