@@ -139,6 +139,8 @@ class Faunaportrait(Portrait):
     tracks = models.TextField(blank=True, null=True)  # seems unused
     audioTitle = models.CharField(max_length=255, blank=True, null=True)
     audioLicense = models.CharField(max_length=255, blank=True, null=True)
+    #TODO johannes audioFile
+    #TODO johannes audioSpectrogram
 
     male_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Männchen."
     female_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Weibchen."

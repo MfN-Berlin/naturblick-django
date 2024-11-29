@@ -101,9 +101,11 @@ class SimilarSpeciesInline(admin.TabularInline):
     model = SimilarSpecies
     extra = 0
 
+
 class AdditionalLinkInline(admin.TabularInline):
     model = AdditionalLink
     extra = 0
+
 
 class UnambigousFeatureInline(admin.TabularInline):
     model = UnambigousFeature
@@ -131,7 +133,7 @@ class FloraportraitAdmin(admin.ModelAdmin):
     search_help_text = 'Sucht über alle Artnamen'
     list_filter = ('published',)
     inlines = [
-        SourceInline, GoodToKnowInline, SimilarSpeciesInline, AdditionalLinkInline, UnambigousFeatureInline
+        UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline
     ]
 
 
@@ -145,6 +147,7 @@ class FaunaportraitForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        #TODO johannes maybe i should use another manager, then i could use this one in the views as well
         self.fields['species'].queryset = Species.objects.filter(group__nature='Fauna')
 
 
@@ -156,7 +159,7 @@ class FaunaportraitAdmin(admin.ModelAdmin):
     search_help_text = 'Sucht über alle Artnamen'
     list_filter = ('published',)
     inlines = [
-        SourceInline, GoodToKnowInline, SimilarSpeciesInline, AdditionalLinkInline, UnambigousFeatureInline
+        UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline
     ]
 
 
