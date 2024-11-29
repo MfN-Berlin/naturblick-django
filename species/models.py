@@ -5,7 +5,7 @@ from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
 
 from .choices import *
-from .validators import min_max
+from .validators import min_max, validate_png, validate_mp3
 
 
 class Group(models.Model):
@@ -98,7 +98,7 @@ class Portrait(models.Model):
     species = models.OneToOneField(
         Species,
         on_delete=models.CASCADE,
-        related_name="species"
+        related_name="portrait"
     )
     language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES)
     short_description = models.TextField
@@ -139,8 +139,9 @@ class Faunaportrait(Portrait):
     tracks = models.TextField(blank=True, null=True)  # seems unused
     audioTitle = models.CharField(max_length=255, blank=True, null=True)
     audioLicense = models.CharField(max_length=255, blank=True, null=True)
-    #TODO johannes audioFile
-    #TODO johannes audioSpectrogram
+    audio_file = models.FileField(upload_to="audio_file", null=True, blank=True, validators=[validate_png])
+    audio_spectrogram = models.ImageField(upload_to="audio_spectrogram", null=True, blank=True,
+                                          validators=[validate_mp3])
 
     male_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Männchen."
     female_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Weibchen."
