@@ -119,10 +119,10 @@ class Portrait(models.Model):
 
 
 class Floraportrait(Portrait):
-    leaf_description = models.TextField(default="")
-    stem_axis_description = models.TextField(default="")
-    flower_description = models.TextField(default="")
-    fruit_description = models.TextField(default="")
+    leaf_description = models.TextField()
+    stem_axis_description = models.TextField()
+    flower_description = models.TextField()
+    fruit_description = models.TextField()
 
     leaf_description.help_text = "Beschreibung Laubblatt: z.B. Form, Farbe, Blattstellung, besondere Merkmale."
     stem_axis_description.help_text = "Beschreibung Stängel/Stamm: z.B. Wuchsrichtung, Verzweigung, Farbe, besondere Merkmale."
@@ -154,7 +154,7 @@ class Faunaportrait(Portrait):
 
 
 class Source(models.Model):
-    text = models.TextField(default="")
+    text = models.TextField()
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -165,7 +165,7 @@ class Source(models.Model):
 
 
 class GoodToKnow(models.Model):
-    fact = models.TextField(default="")
+    fact = models.TextField()
     type = models.CharField(max_length=15, choices=GOOD_TO_KNOW_CHOICES)
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
 
