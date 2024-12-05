@@ -86,7 +86,6 @@ class SpeciesName(models.Model):
     species = models.ForeignKey(Species, on_delete=models.CASCADE, related_name='species_names')
     name = models.CharField(max_length=255)
     language = models.CharField(max_length=2, choices=NAME_LANGUAGE_CHOICES)
-    isPrimary = models.BooleanField()
 
     def __str__(self):
         return self.name
