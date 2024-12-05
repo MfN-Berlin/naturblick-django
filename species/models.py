@@ -10,7 +10,7 @@ from .validators import min_max, validate_png, validate_mp3
 
 class Group(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    nature = models.CharField(max_length=5, choices=NATURE_CHOICES)
+    nature = models.CharField(max_length=5, choices=NATURE_CHOICES, null=True)
 
     nature.short_description = "Nature"
 
@@ -55,8 +55,8 @@ class Species(models.Model):
                                       blank="True")
     gbifusagekey = models.IntegerField(blank=True, null=True)
     accepted = models.IntegerField(blank=True, null=True)
-    created_by = CurrentUserField(related_name='species_created_by')
-    updated_by = CurrentUserField(on_update=True, related_name='species_updated_by')
+    created_by = CurrentUserField(related_name='species_created_by', null=True)
+    updated_by = CurrentUserField(on_update=True, related_name='species_updated_by', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

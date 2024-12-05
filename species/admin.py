@@ -158,7 +158,6 @@ class FaunaportraitForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # TODO johannes maybe i should use a custom manager, then i could use this one in the views as well
         self.fields['species'].queryset = Species.objects.filter(group__nature='Fauna')
 
 

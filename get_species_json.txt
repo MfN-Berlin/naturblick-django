@@ -1,0 +1,34 @@
+\COPY (SELECT ROW_TO_JSON(t) FROM (SELECT id, speciesid, "group", wikipedia, nbclassid, "redListGermany" as red_list_germany, iucncategory, "activityStartMonth" as activity_start_month, "activityEndMonth" as activity_end_month, "activityStartHour" as activity_start_hour, "activityEndHour" as activity_end_hour,gbifusagekey, accepted, created_at, updated_at FROM species) t) TO '/species.json';
+
+
+
+
+avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name='avatar', null="True", blank="True")
+female_avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name='female_avatar', null="True",
+                                blank="True")
+created_by = CurrentUserField(related_name='species_created_by')
+updated_by = CurrentUserField(on_update=True, related_name='species_updated_by')
+created_at = models.DateTimeField(auto_now_add=True)
+updated_at
+
+---------------------
+ sciname            | character varying(255)   |           | not null |
+ gername            | character varying(255)   |           |          |
+ pageName           | character varying(255)   |           | not null |
+ scinamesynonym     | character varying(255)   |           |          |
+ gernamesynonym     | character varying(255)   |           |          |
+ phenotypefemaleid  | character varying(255)   |           |          |
+ naturblickidkey    | boolean                  |           | not null |
+ portrait           | boolean                  |           | not null |
+ imageexists        | boolean                  |           | not null |
+ autoid             | boolean                  |           | not null |
+ innaturblick       | boolean                  |           | not null |
+ created_by         | integer                  |           |          |
+ updated_by         | integer                  |           |          |
+ engname            | character varying(255)   |           |          |
+ easyname           | character varying(255)   |           |          |
+ scientificAuthors  | character varying(255)   |           |          |
+ order              | character varying(255)   |           |          |
+ family             | character varying(255)   |           |          |
+ genus              | character varying(255)   |           |          |
+

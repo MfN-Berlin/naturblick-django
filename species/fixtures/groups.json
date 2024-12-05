@@ -3,24 +3,21 @@
     "model": "species.group",
     "pk": 1,
     "fields": {
-      "name": "acarida",
-      "nature": "fauna"
+      "name": "acarida"
     }
   },
   {
     "model": "species.group",
     "pk": 2,
     "fields": {
-      "name": "actinopterygii",
-      "nature": "fauna"
+      "name": "actinopterygii"
     }
   },
   {
     "model": "species.group",
     "pk": 3,
     "fields": {
-      "name": "algae",
-      "nature": "flora"
+      "name": "algae"
     }
   },
   {
@@ -35,64 +32,56 @@
     "model": "species.group",
     "pk": 5,
     "fields": {
-      "name": "amphipoda",
-      "nature": "fauna"
+      "name": "amphipoda"
     }
   },
   {
     "model": "species.group",
     "pk": 6,
     "fields": {
-      "name": "anaspidea",
-      "nature": "fauna"
+      "name": "anaspidea"
     }
   },
   {
     "model": "species.group",
     "pk": 7,
     "fields": {
-      "name": "anopla",
-      "nature": "fauna"
+      "name": "anopla"
     }
   },
   {
     "model": "species.group",
     "pk": 8,
     "fields": {
-      "name": "anthozoa",
-      "nature": "fauna"
+      "name": "anthozoa"
     }
   },
   {
     "model": "species.group",
     "pk": 9,
     "fields": {
-      "name": "arachnid",
-      "nature": "fauna"
+      "name": "arachnid"
     }
   },
   {
     "model": "species.group",
     "pk": 10,
     "fields": {
-      "name": "araneae",
-      "nature": "fauna"
+      "name": "araneae"
     }
   },
   {
     "model": "species.group",
     "pk": 11,
     "fields": {
-      "name": "ascidiacea",
-      "nature": "fauna"
+      "name": "ascidiacea"
     }
   },
   {
     "model": "species.group",
     "pk": 12,
     "fields": {
-      "name": "asteroidea",
-      "nature": "fauna"
+      "name": "asteroidea"
     }
   },
   {
@@ -107,40 +96,35 @@
     "model": "species.group",
     "pk": 14,
     "fields": {
-      "name": "bivalvia",
-      "nature": "fauna"
+      "name": "bivalvia"
     }
   },
   {
     "model": "species.group",
     "pk": 15,
     "fields": {
-      "name": "blattodea",
-      "nature": "fauna"
+      "name": "blattodea"
     }
   },
   {
     "model": "species.group",
     "pk": 16,
     "fields": {
-      "name": "branchiobdellida",
-      "nature": "fauna"
+      "name": "branchiobdellida"
     }
   },
   {
     "model": "species.group",
     "pk": 17,
     "fields": {
-      "name": "branchiopoda",
-      "nature": "fauna"
+      "name": "branchiopoda"
     }
   },
   {
     "model": "species.group",
     "pk": 18,
     "fields": {
-      "name": "bryozoa",
-      "nature": "fauna"
+      "name": "bryozoa"
     }
   },
   {
@@ -163,88 +147,77 @@
     "model": "species.group",
     "pk": 21,
     "fields": {
-      "name": "calcarea",
-      "nature": "fauna"
+      "name": "calcarea"
     }
   },
   {
     "model": "species.group",
     "pk": 22,
     "fields": {
-      "name": "cephalaspidea",
-      "nature": "fauna"
+      "name": "cephalaspidea"
     }
   },
   {
     "model": "species.group",
     "pk": 23,
     "fields": {
-      "name": "cephalaspidomorphi",
-      "nature": "fauna"
+      "name": "cephalaspidomorphi"
     }
   },
   {
     "model": "species.group",
     "pk": 24,
     "fields": {
-      "name": "cephalopoda",
-      "nature": "fauna"
+      "name": "cephalopoda"
     }
   },
   {
     "model": "species.group",
     "pk": 25,
     "fields": {
-      "name": "cestoda",
-      "nature": "fauna"
+      "name": "cestoda"
     }
   },
   {
     "model": "species.group",
     "pk": 26,
     "fields": {
-      "name": "chilopoda",
-      "nature": "fauna"
+      "name": "chilopoda"
     }
   },
   {
     "model": "species.group",
     "pk": 27,
     "fields": {
-      "name": "chondrichthyes",
-      "nature": "fauna"
+      "name": "chondrichthyes"
     }
   },
   {
     "model": "species.group",
     "pk": 28,
     "fields": {
-      "name": "ciliatea",
-      "nature": "fauna"
+      "name": "ciliatea"
     }
   },
   {
     "model": "species.group",
     "pk": 29,
     "fields": {
-      "name": "coelenterata",
-      "nature": "fauna"
+      "name": "coelenterata"
     }
   },
   {
     "model": "species.group",
     "pk": 30,
     "fields": {
-      "name": "coleoptera",
-      "nature": "fauna"
+      "name": "coleoptera"
     }
   },
   {
     "model": "species.group",
     "pk": 31,
     "fields": {
-      "name": "collembola",
-      "nature": "fauna"
+      "name": "collembola"
     }
   },
   {
@@ -259,56 +232,49 @@
     "model": "species.group",
     "pk": 33,
     "fields": {
-      "name": "coscinodiscophyceae",
-      "nature": "flora"
+      "name": "coscinodiscophyceae"
     }
   },
   {
     "model": "species.group",
     "pk": 34,
     "fields": {
-      "name": "crustacea",
-      "nature": "fauna"
+      "name": "crustacea"
     }
   },
   {
     "model": "species.group",
     "pk": 35,
     "fields": {
-      "name": "cryptophyceae",
-      "nature": "flora"
+      "name": "cryptophyceae"
     }
   },
   {
     "model": "species.group",
     "pk": 36,
     "fields": {
-      "name": "demospongiae",
-      "nature": "fauna"
+      "name": "demospongiae"
     }
   },
   {
     "model": "species.group",
     "pk": 37,
     "fields": {
-      "name": "dermaptera",
-      "nature": "fauna"
+      "name": "dermaptera"
     }
   },
   {
     "model": "species.group",
     "pk": 38,
     "fields": {
-      "name": "diatoms",
-      "nature": "flora"
+      "name": "diatoms"
     }
   },
   {
     "model": "species.group",
     "pk": 39,
     "fields": {
-      "name": "diplopoda",
-      "nature": "fauna"
+      "name": "diplopoda"
     }
   },
   {
@@ -331,48 +297,42 @@
     "model": "species.group",
     "pk": 42,
     "fields": {
-      "name": "echinoidea",
-      "nature": "fauna"
+      "name": "echinoidea"
     }
   },
   {
     "model": "species.group",
     "pk": 43,
     "fields": {
-      "name": "entognatha",
-      "nature": "fauna"
+      "name": "entognatha"
     }
   },
   {
     "model": "species.group",
     "pk": 44,
     "fields": {
-      "name": "ephemeroptera",
-      "nature": "fauna"
+      "name": "ephemeroptera"
     }
   },
   {
     "model": "species.group",
     "pk": 45,
     "fields": {
-      "name": "euglenida",
-      "nature": "flora"
+      "name": "euglenida"
     }
   },
   {
     "model": "species.group",
     "pk": 46,
     "fields": {
-      "name": "eurotatoria",
-      "nature": "fauna"
+      "name": "eurotatoria"
     }
   },
   {
     "model": "species.group",
     "pk": 47,
     "fields": {
-      "name": "fungi",
-      "nature": "flora"
+      "name": "fungi"
     }
   },
   {
@@ -395,16 +355,14 @@
     "model": "species.group",
     "pk": 50,
     "fields": {
-      "name": "gymnolaemata",
-      "nature": "fauna"
+      "name": "gymnolaemata"
     }
   },
   {
     "model": "species.group",
     "pk": 51,
     "fields": {
-      "name": "halicryptomorphida",
-      "nature": "fauna"
+      "name": "halicryptomorphida"
     }
   },
   {
@@ -427,32 +385,28 @@
     "model": "species.group",
     "pk": 54,
     "fields": {
-      "name": "hirudinea",
-      "nature": "fauna"
+      "name": "hirudinea"
     }
   },
   {
     "model": "species.group",
     "pk": 55,
     "fields": {
-      "name": "hormogoneae",
-      "nature": "flora"
+      "name": "hormogoneae"
     }
   },
   {
     "model": "species.group",
     "pk": 56,
     "fields": {
-      "name": "hydrachnidia",
-      "nature": "fauna"
+      "name": "hydrachnidia"
     }
   },
   {
     "model": "species.group",
     "pk": 57,
     "fields": {
-      "name": "hydrozoa",
-      "nature": "fauna"
+      "name": "hydrozoa"
     }
   },
   {
@@ -467,16 +421,14 @@
     "model": "species.group",
     "pk": 59,
     "fields": {
-      "name": "kamptozoa",
-      "nature": "fauna"
+      "name": "kamptozoa"
     }
   },
   {
     "model": "species.group",
     "pk": 60,
     "fields": {
-      "name": "lepidoptera",
-      "nature": "fauna"
+      "name": "lepidoptera"
     }
   },
   {
@@ -499,64 +451,56 @@
     "model": "species.group",
     "pk": 63,
     "fields": {
-      "name": "maxillopoda",
-      "nature": "fauna"
+      "name": "maxillopoda"
     }
   },
   {
     "model": "species.group",
     "pk": 64,
     "fields": {
-      "name": "mecoptera",
-      "nature": "fauna"
+      "name": "mecoptera"
     }
   },
   {
     "model": "species.group",
     "pk": 65,
     "fields": {
-      "name": "megaloptera",
-      "nature": "fauna"
+      "name": "megaloptera"
     }
   },
   {
     "model": "species.group",
     "pk": 66,
     "fields": {
-      "name": "moss",
-      "nature": "flora"
+      "name": "moss"
     }
   },
   {
     "model": "species.group",
     "pk": 67,
     "fields": {
-      "name": "nematoda",
-      "nature": "fauna"
+      "name": "nematoda"
     }
   },
   {
     "model": "species.group",
     "pk": 68,
     "fields": {
-      "name": "nematomorpha",
-      "nature": "fauna"
+      "name": "nematomorpha"
     }
   },
   {
     "model": "species.group",
     "pk": 69,
     "fields": {
-      "name": "nemertini",
-      "nature": "fauna"
+      "name": "nemertini"
     }
   },
   {
     "model": "species.group",
     "pk": 70,
     "fields": {
-      "name": "neuroptera",
-      "nature": "fauna"
+      "name": "neuroptera"
     }
   },
   {
@@ -571,80 +515,70 @@
     "model": "species.group",
     "pk": 72,
     "fields": {
-      "name": "oligochaeta",
-      "nature": "fauna"
+      "name": "oligochaeta"
     }
   },
   {
     "model": "species.group",
     "pk": 73,
     "fields": {
-      "name": "ophiuroidea",
-      "nature": "fauna"
+      "name": "ophiuroidea"
     }
   },
   {
     "model": "species.group",
     "pk": 74,
     "fields": {
-      "name": "phylactolaemata",
-      "nature": "fauna"
+      "name": "phylactolaemata"
     }
   },
   {
     "model": "species.group",
     "pk": 75,
     "fields": {
-      "name": "phyllopharyngea",
-      "nature": "fauna"
+      "name": "phyllopharyngea"
     }
   },
   {
     "model": "species.group",
     "pk": 76,
     "fields": {
-      "name": "planipennia",
-      "nature": "fauna"
+      "name": "planipennia"
     }
   },
   {
     "model": "species.group",
     "pk": 77,
     "fields": {
-      "name": "plecoptera",
-      "nature": "fauna"
+      "name": "plecoptera"
     }
   },
   {
     "model": "species.group",
     "pk": 78,
     "fields": {
-      "name": "polychaeta",
-      "nature": "fauna"
+      "name": "polychaeta"
     }
   },
   {
     "model": "species.group",
     "pk": 79,
     "fields": {
-      "name": "porifera",
-      "nature": "fauna"
+      "name": "porifera"
     }
   },
   {
     "model": "species.group",
     "pk": 80,
     "fields": {
-      "name": "psocoptera",
-      "nature": "fauna"
+      "name": "psocoptera"
     }
   },
   {
     "model": "species.group",
     "pk": 81,
     "fields": {
-      "name": "raphidioptera",
-      "nature": "fauna"
+      "name": "raphidioptera"
     }
   },
   {
@@ -659,64 +593,56 @@
     "model": "species.group",
     "pk": 83,
     "fields": {
-      "name": "rotatoria",
-      "nature": "fauna"
+      "name": "rotatoria"
     }
   },
   {
     "model": "species.group",
     "pk": 84,
     "fields": {
-      "name": "scyphozoa",
-      "nature": "fauna"
+      "name": "scyphozoa"
     }
   },
   {
     "model": "species.group",
     "pk": 85,
     "fields": {
-      "name": "stonewort",
-      "nature": "flora"
+      "name": "stonewort"
     }
   },
   {
     "model": "species.group",
     "pk": 86,
     "fields": {
-      "name": "strigeida",
-      "nature": "fauna"
+      "name": "strigeida"
     }
   },
   {
     "model": "species.group",
     "pk": 87,
     "fields": {
-      "name": "tardigrada",
-      "nature": "fauna"
+      "name": "tardigrada"
     }
   },
   {
     "model": "species.group",
     "pk": 88,
     "fields": {
-      "name": "tentaculata",
-      "nature": "fauna"
+      "name": "tentaculata"
     }
   },
   {
     "model": "species.group",
     "pk": 89,
     "fields": {
-      "name": "terebellida",
-      "nature": "fauna"
+      "name": "terebellida"
     }
   },
   {
     "model": "species.group",
     "pk": 90,
     "fields": {
-      "name": "thysanoptera",
-      "nature": "fauna"
+      "name": "thysanoptera"
     }
   },
   {
@@ -731,16 +657,14 @@
     "model": "species.group",
     "pk": 92,
     "fields": {
-      "name": "trematoda",
-      "nature": "fauna"
+      "name": "trematoda"
     }
   },
   {
     "model": "species.group",
     "pk": 93,
     "fields": {
-      "name": "trichoptera",
-      "nature": "fauna"
+      "name": "trichoptera"
     }
   },
   {
@@ -755,16 +679,14 @@
     "model": "species.group",
     "pk": 95,
     "fields": {
-      "name": "turbellaria",
-      "nature": "fauna"
+      "name": "turbellaria"
     }
   },
   {
     "model": "species.group",
     "pk": 96,
     "fields": {
-      "name": "zygentoma",
-      "nature": "fauna"
+      "name": "zygentoma"
     }
   }
 ]
