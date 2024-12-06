@@ -39,6 +39,9 @@ class Avatar(models.Model):
 
 class Species(models.Model):
     speciesid = models.CharField(max_length=255, unique=True)
+    gername = models.CharField(max_length=255, null=True, blank=True)
+    sciname = models.CharField(max_length=255, unique=True)
+    engname = models.CharField(max_length=255, null=True, blank=True)
     group = models.ForeignKey(Group, on_delete=models.PROTECT, related_name='species')
     wikipedia = models.URLField(max_length=255, blank=True, null=True)
     nbclassid = models.CharField(max_length=255, blank=True, null=True)
