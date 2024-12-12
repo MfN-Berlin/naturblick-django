@@ -92,7 +92,7 @@ class FloraportraitForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['species'].queryset = Species.objects.filter(group__nature='Flora')
+        self.fields['species'].queryset = Species.objects.filter(group__nature='flora')
 
 
 @admin.register(Floraportrait)
@@ -117,7 +117,7 @@ class FaunaportraitForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['species'].queryset = Species.objects.filter(group__nature='Fauna')
+        self.fields['species'].queryset = Species.objects.filter(group__nature='fauna')
 
 
 @admin.register(Faunaportrait)

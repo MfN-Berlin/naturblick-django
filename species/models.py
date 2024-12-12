@@ -98,14 +98,14 @@ class SpeciesName(models.Model):
 
 
 class Portrait(models.Model):
-    species = models.OneToOneField(
+    species = models.ForeignKey(
         Species,
         on_delete=models.CASCADE,
         related_name="portrait"
     )
     language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES)
-    short_description = models.TextField
-    city_habitat = models.TextField
+    short_description = models.TextField()
+    city_habitat = models.TextField()
     human_interaction = models.TextField(blank=True, null=True)
     published = models.BooleanField(default=False)
 
@@ -140,8 +140,8 @@ class Faunaportrait(Portrait):
     female_description = models.TextField(blank=True, null=True)
     juvenile_description = models.TextField(blank=True, null=True)
     tracks = models.TextField(blank=True, null=True)  # seems unused
-    audioTitle = models.CharField(max_length=255, blank=True, null=True)
-    audioLicense = models.CharField(max_length=255, blank=True, null=True)
+    audio_title = models.CharField(max_length=255, blank=True, null=True)
+    audio_license = models.CharField(max_length=255, blank=True, null=True)
     audio_file = models.FileField(upload_to="audio_file", null=True, blank=True, validators=[validate_png])
     audio_spectrogram = models.ImageField(upload_to="audio_spectrogram", null=True, blank=True,
                                           validators=[validate_mp3])
