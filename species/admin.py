@@ -23,7 +23,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     readonly_fields = ['speciesid']
     list_display = ['speciesid', 'gername', 'sciname', 'group', 'group__nature', 'portrait']
     list_filter = ('group__nature', 'group')
-    search_fields = ["species_names__name"]
+    search_fields = ["species_names__name", 'gername']
     fields = ['speciesid',
               'group',
               'gername',
@@ -123,8 +123,8 @@ class FaunaportraitForm(forms.ModelForm):
 @admin.register(Faunaportrait)
 class FaunaportraitAdmin(admin.ModelAdmin):
     form = FaunaportraitForm
-    list_display = ["species__speciesid", "species__group"]
-    search_fields = ('species__species_names__name',)
+    list_display = ["species__speciesid", "species__group", "language"]
+    search_fields = ('species__species_names__name', 'species__gername', )
     search_help_text = 'Sucht über alle Artnamen'
     list_filter = ('published',)
     inlines = [

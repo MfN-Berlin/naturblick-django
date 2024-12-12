@@ -158,6 +158,7 @@ class Faunaportrait(Portrait):
 class Source(models.Model):
     text = models.TextField()
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
+    order = models.IntegerField()
 
     def __str__(self):
         return f"Source {self.text}"
@@ -170,6 +171,7 @@ class GoodToKnow(models.Model):
     fact = models.TextField()
     type = models.CharField(max_length=15, choices=GOOD_TO_KNOW_CHOICES)
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
+    order = models.IntegerField()
 
     def __str__(self):
         return f"GoodToKnow {self.fact}"
@@ -179,8 +181,9 @@ class GoodToKnow(models.Model):
 
 
 class UnambigousFeature(models.Model):
-    description = models.CharField(max_length=255)
+    description = models.TextField()
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
+    order = models.IntegerField()
 
     def __str__(self):
         return f"UnambigousFeature {self.description}"
@@ -194,6 +197,7 @@ class AdditionalLink(models.Model):
     description = models.TextField()
     url = models.URLField(max_length=255)
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
+    order = models.IntegerField()
 
     def __str__(self):
         return f"AdditionalLink {self.title}"
@@ -205,9 +209,10 @@ class AdditionalLink(models.Model):
 class SimilarSpecies(models.Model):
     differences = models.TextField()
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
-    species = OneToOneField(Species,
+    species = ForeignKey(Species,
                             on_delete=models.CASCADE,
                             parent_link=False)
+    order = models.IntegerField()
 
     def __str__(self):
         return f"SimilarSpecies {self.species.speciesid}"
