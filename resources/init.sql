@@ -1,9 +1,3 @@
--- Prepare data in strapi-db
--- docker exec strapi-db pg_dump -U strapi -t 'species*|faunaportraits*|floraportrait*|components_species*' --schema-only strapi | sed s'/public\./strapi_/g' | sed '/^SET/d' | sed '/^SELECT pg_catalog\.set/d' | sed '/^--/d' | sed '/.*OWNED.*/d' | sed '/.*OWNER.*/d' | sed '/^ALTER TABLE ONLY.*regclass);/d' | sed '/^GRANT SELECT.*/d' | awk '!/CREATE SEQUENCE/ && !p {print} /CREATE SEQUENCE/ {p=1} /;/ {p=0}' | sed 's/strapi_components_speciesportrait_species_portrait_images_components/strapi_components_speciesportrait_species_portrait_images_compo/g' | sed 's/species_pkey/strapi_species_pkey/g' | sed '/^$/d' > schema.sql
--- docker exec strapi-db pg_dump -U strapi -t 'species*|faunaportraits*|floraportrait*|components_species*' --column-inserts --data-only strapi | sed s'/public\./strapi_/g' | sed '/^SET/d' | sed '/^SELECT pg_catalog\.set/d' | sed '/^--/d' | sed '/.*OWNED.*/d' | sed '/.*OWNER.*/d' | sed '/^ALTER TABLE ONLY.*regclass);/d' | sed '/^GRANT SELECT.*/d' | awk '!/CREATE SEQUENCE/ && !p {print} /CREATE SEQUENCE/ {p=1} /;/ {p=0}' | sed 's/strapi_components_speciesportrait_species_portrait_images_components/strapi_components_speciesportrait_species_portrait_images_compo/g' | sed 's/species_pkey/strapi_species_pkey/g' | sed '/^$/d' > data.sql
--- docker exec django-db psql -U naturblick species -f /schema.sql
--- docker exec django-db psql -U naturblick species -f /data.sql
-
 insert into species (id,speciesid,gername,sciname,engname,wikipedia,nbclassid,red_list_germany,iucncategory ,activity_start_month ,activity_end_month, activity_start_hour, activity_end_hour, gbifusagekey, accepted, created_at, updated_at, group_id)
 select s.id, s.speciesid, s.gername, s.sciname, s.engname, s.wikipedia, s.nbclassid, s."redListGermany", s.iucncategory, s."activityStartMonth", s."activityEndMonth", s."activityStartHour", s."activityEndHour", s.gbifusagekey, s.accepted, s.created_at, s.updated_at, g.id
 from strapi_species as s
