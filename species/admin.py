@@ -1,48 +1,18 @@
-from django.contrib import admin
 from django import forms
-from django.core.exceptions import ValidationError
-from django.forms import BaseInlineFormSet
+from django.contrib import admin
+from django.urls import reverse
 from django.utils.html import format_html
-
-from .models import Species, Group, Floraportrait, Faunaportrait, SpeciesName, Source, GoodToKnow, Avatar
+from django.utils.safestring import SafeString
 from image_cropping import ImageCroppingMixin
+from reportlab.lib.pagesizes import portrait
 
-
-class SpeciesNameInlineFormSet(BaseInlineFormSet):
-    def clean(self):
-        super().clean()
-        primary_counts = dict()
-        lang_counts = dict()
-
-        for form in self.forms:
-            # Skip forms marked for deletion
-            if form.cleaned_data.get('DELETE', False):
-                continue
-
-            language = form.cleaned_data.get('language')
-            is_primary = form.cleaned_data.get('isPrimary')
-            lang_counts[language] = lang_counts.get(language) or 0
-
-            if is_primary:
-                primary_counts[language] = (primary_counts.get(language) or 0) + 1
-
-        sf_count = primary_counts.get('sf')
-        if not sf_count or sf_count < 1:
-            raise ValidationError("Es muss mind. einen primären wissenschaftlichen Namen geben")
-
-        if any(value > 1 for value in primary_counts.values()):
-            raise ValidationError("Es darf immer nur einen primären Namen pro Sprache geben")
-
-        for lang in lang_counts.keys():
-            count = primary_counts.get(lang)
-            if not count or count < 1:
-                raise ValidationError("Für jede vorhandene Sprache muss mind. ein primärer Name vergeben seien")
+from .models import Species, Group, Floraportrait, Faunaportrait, SpeciesName, Source, GoodToKnow, Avatar, \
+    SimilarSpecies, AdditionalLink, UnambigousFeature, DescriptionImage, Portrait
 
 
 class SpeciesNameInline(admin.TabularInline):
     model = SpeciesName
     extra = 1
-    formset = SpeciesNameInlineFormSet
 
 
 @admin.register(Species)
@@ -50,24 +20,49 @@ class SpeciesAdmin(admin.ModelAdmin):
     inlines = [
         SpeciesNameInline
     ]
-    exclude = ["created_by"]
-    readonly_fields = ["speciesid"]
-    list_display = ["speciesid", 'get_primary_name', 'get_gername', 'group', 'group__nature']
+    readonly_fields = ['speciesid']
+    list_display = ['speciesid', 'group', 'gername', 'sciname', 'portrait']
     list_filter = ('group__nature', 'group')
-    search_fields = ["species_names__name"]
+    search_fields = ["species_names__name", 'gername']
+    fields = ['speciesid',
+              'group',
+              'gername',
+              'sciname',
+              'engname',
+              'wikipedia',
+              'nbclassid',
+              ('red_list_germany',
+               'iucncategory'),
+              ('activity_start_month',
+               'activity_end_month'),
+              ('activity_start_hour',
+               'activity_end_hour'),
+              'avatar',
+              'female_avatar',
+              'gbifusagekey',
+              'accepted',
+              ]
+    ordering = ('gername',)
 
-    def get_primary_name(self, obj):
-        primary_name = obj.species_names.filter(isPrimary=True, language="sf").first()
-        return primary_name.name if primary_name else "N/A"
+    def portrait(self, obj):
+        if obj.group.nature is None:
+            return "-"
+        else:
+            links = []
+            urls = []
+            for lang in ['de', 'en']:
+                portrait = obj.portrait.filter(language=lang)
 
-    get_primary_name.short_description = "Scientific name"
+                if portrait.exists():
+                    url = reverse(f'admin:species_{obj.group.nature}portrait_change', args=(portrait.first().id,))
+                    links.append(f'<a href="{{}}">{lang}</a>')
+                    urls.append(url)
+                else:
+                    url_with_params = f"reverse(f'admin:species_{obj.group.nature}portrait_add')?species={obj.id}&language=de"
+                    links.append(f'<a href="{{}}" class="addlink">{lang}</a>')
+                    urls.append(url_with_params)
 
-    def get_gername(self, obj):
-        gername = obj.species_names.filter(isPrimary=True, language="de").first()
-        return gername.name if gername else "N/A"
-
-    get_gername.short_description = "German name"
-
+            return format_html(' | '.join(links), urls[0], urls[1])
 
 #
 # Portrait
@@ -82,6 +77,21 @@ class GoodToKnowInline(admin.TabularInline):
     extra = 0
 
 
+class SimilarSpeciesInline(admin.TabularInline):
+    model = SimilarSpecies
+    extra = 0
+
+
+class AdditionalLinkInline(admin.TabularInline):
+    model = AdditionalLink
+    extra = 0
+
+
+class UnambigousFeatureInline(admin.TabularInline):
+    model = UnambigousFeature
+    extra = 0
+
+
 #
 # Flora
 #
@@ -92,18 +102,20 @@ class FloraportraitForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['species'].queryset = Species.objects.filter(group__nature='Flora')
+        self.fields['species'].queryset = Species.objects.filter(group__nature='flora')
 
 
 @admin.register(Floraportrait)
 class FloraportraitAdmin(admin.ModelAdmin):
     form = FloraportraitForm
-    list_display = ["species__speciesid", "species__group"]
+    list_display = ["species__speciesid", "species__group", "species__gername", "language"]
     search_fields = ('species__species_names__name',)
-    list_filter = ('published',)
+    search_help_text = 'Sucht über alle Artnamen'
+    list_filter = ('published', 'language')
     inlines = [
-        SourceInline, GoodToKnowInline
+        UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline
     ]
+    ordering = ('species__gername',)
 
 
 #
@@ -116,21 +128,27 @@ class FaunaportraitForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['species'].queryset = Species.objects.filter(group__nature='Fauna')
+        self.fields['species'].queryset = Species.objects.filter(group__nature='fauna')
 
 
 @admin.register(Faunaportrait)
 class FaunaportraitAdmin(admin.ModelAdmin):
     form = FaunaportraitForm
-    list_display = ["species__speciesid", "species__group"]
-    search_fields = ('species__species_names__name',)
-    list_filter = ('published',)
+    list_display = ["species__speciesid", "species__group", "species__gername", "language"]
+    search_fields = ('species__species_names__name', 'species__gername',)
+    search_help_text = 'Sucht über alle Artnamen'
+    list_filter = ('published', 'language')
     inlines = [
-        SourceInline, GoodToKnowInline
+        UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline
     ]
+    ordering = ["species__gername"]
 
 
-admin.site.register(Group)
+@admin.register(Group)
+class GroupAdmin(admin.ModelAdmin):
+    radio_fields = {"nature": admin.VERTICAL}
+    list_display = ['name', 'nature']
+    list_filter = ['nature']
 
 
 @admin.register(Avatar)
@@ -139,3 +157,8 @@ class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
 
     def image_tag(self, obj):
         return format_html('<img src="{}" style="max-width:200px; max-height:200px"/>'.format(obj.image.url))
+
+
+@admin.register(DescriptionImage)
+class DescriptionImageAdmin(admin.ModelAdmin):
+    pass

@@ -1,4 +1,6 @@
 asgiref==3.8.1
+chardet==5.2.0
+cssselect2==0.7.0
 Django==5.1.2
 django-appconf==1.0.6
 django-currentuser==0.8.0
@@ -7,8 +9,13 @@ django-modeltranslation==0.19.10
 djangorestframework==3.15.2
 easy-thumbnails==2.10
 gunicorn==23.0.0
+lxml==5.3.0
 packaging==24.1
 pillow==11.0.0
 psycopg2-binary==2.9.10
+reportlab==4.2.5
 sqlparse==0.5.1
+svglib==1.5.1
+tinycss2==1.4.0
 typing_extensions==4.12.2
+webencodings==0.5.1
