@@ -1,6 +1,6 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.db.models import ForeignKey, URLField, OneToOneField
+from django.db.models import ForeignKey, URLField
 from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
 
@@ -64,6 +64,11 @@ class Species(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     speciesid.short_description = "Species ID"
+
+    @property
+    def portrait(self):
+        # Fetch the polymorphic subclass
+        return Portrait.objects.get(id=self.portrait_set.first().id)
 
     def save(self, *args, **kwargs):
         if not self.speciesid:
@@ -210,8 +215,8 @@ class SimilarSpecies(models.Model):
     differences = models.TextField()
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
     species = ForeignKey(Species,
-                            on_delete=models.CASCADE,
-                            parent_link=False)
+                         on_delete=models.CASCADE,
+                         parent_link=False)
     order = models.IntegerField()
 
     def __str__(self):

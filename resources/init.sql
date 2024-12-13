@@ -21,7 +21,7 @@ select CASE
     WHEN language = 2 THEN 'en'
     WHEN language = 3 THEN 'sf'
     WHEN language = 4 THEN 'er'
-END, "shortDescription", "cityHabitat", "humanInteraction", preview, species
+END, "shortDescription", "cityHabitat", "humanInteraction", published_at is not null, species
 from strapi_floraportrait;
 
 insert into flora_portrait (portrait_ptr_id, leaf_description, stem_axis_description, flower_description, fruit_description)
@@ -41,7 +41,7 @@ select CASE
     WHEN language = 2 THEN 'en'
     WHEN language = 3 THEN 'sf'
     WHEN language = 4 THEN 'er'
-END, "shortDescription", "cityHabitat", "humanInteraction", preview, species
+END, "shortDescription", "cityHabitat", "humanInteraction", published_at is not null, species
 from strapi_faunaportraits;
 
 -- missing: audio_file, audio_spectrogram

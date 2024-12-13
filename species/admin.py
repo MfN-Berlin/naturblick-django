@@ -1,13 +1,13 @@
 from django import forms
 from django.contrib import admin
-from django.core.exceptions import ValidationError
-from django.forms import BaseInlineFormSet
 from django.urls import reverse
 from django.utils.html import format_html
+from django.utils.safestring import SafeString
 from image_cropping import ImageCroppingMixin
+from reportlab.lib.pagesizes import portrait
 
 from .models import Species, Group, Floraportrait, Faunaportrait, SpeciesName, Source, GoodToKnow, Avatar, \
-    SimilarSpecies, AdditionalLink, UnambigousFeature, DescriptionImage
+    SimilarSpecies, AdditionalLink, UnambigousFeature, DescriptionImage, Portrait
 
 
 class SpeciesNameInline(admin.TabularInline):
@@ -21,7 +21,7 @@ class SpeciesAdmin(admin.ModelAdmin):
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid']
-    list_display = ['speciesid', 'gername', 'sciname', 'group', 'group__nature', 'portrait']
+    list_display = ['speciesid', 'group', 'gername', 'sciname', 'portrait']
     list_filter = ('group__nature', 'group')
     search_fields = ["species_names__name", 'gername']
     fields = ['speciesid',
@@ -42,17 +42,27 @@ class SpeciesAdmin(admin.ModelAdmin):
               'gbifusagekey',
               'accepted',
               ]
+    ordering = ('gername',)
 
     def portrait(self, obj):
-        if isinstance(obj.portrait, Floraportrait):
-            app_label = obj.portrait._meta.app_label
-            return reverse(f"admin:{app_label}_Floraportrait_change", args=[obj.portrait.pk])
-        elif isinstance(obj.portrait, Faunaportrait):
-            app_label = obj.portrait._meta.app_label
-            return reverse(f"admin:{app_label}_Faunaportrait_change", args=[obj.portrait.pk])
+        if obj.group.nature is None:
+            return "-"
         else:
-            return "N/A"
+            links = []
+            urls = []
+            for lang in ['de', 'en']:
+                portrait = obj.portrait.filter(language=lang)
 
+                if portrait.exists():
+                    url = reverse(f'admin:species_{obj.group.nature}portrait_change', args=(portrait.first().id,))
+                    links.append(f'<a href="{{}}">{lang}</a>')
+                    urls.append(url)
+                else:
+                    url_with_params = f"reverse(f'admin:species_{obj.group.nature}portrait_add')?species={obj.id}&language=de"
+                    links.append(f'<a href="{{}}" class="addlink">{lang}</a>')
+                    urls.append(url_with_params)
+
+            return format_html(' | '.join(links), urls[0], urls[1])
 
 #
 # Portrait
@@ -98,13 +108,14 @@ class FloraportraitForm(forms.ModelForm):
 @admin.register(Floraportrait)
 class FloraportraitAdmin(admin.ModelAdmin):
     form = FloraportraitForm
-    list_display = ["species__speciesid", "species__group"]
+    list_display = ["species__speciesid", "species__group", "species__gername", "language"]
     search_fields = ('species__species_names__name',)
     search_help_text = 'Sucht über alle Artnamen'
-    list_filter = ('published',)
+    list_filter = ('published', 'language')
     inlines = [
         UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline
     ]
+    ordering = ('species__gername',)
 
 
 #
@@ -123,13 +134,14 @@ class FaunaportraitForm(forms.ModelForm):
 @admin.register(Faunaportrait)
 class FaunaportraitAdmin(admin.ModelAdmin):
     form = FaunaportraitForm
-    list_display = ["species__speciesid", "species__group", "language"]
-    search_fields = ('species__species_names__name', 'species__gername', )
+    list_display = ["species__speciesid", "species__group", "species__gername", "language"]
+    search_fields = ('species__species_names__name', 'species__gername',)
     search_help_text = 'Sucht über alle Artnamen'
-    list_filter = ('published',)
+    list_filter = ('published', 'language')
     inlines = [
         UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline
     ]
+    ordering = ["species__gername"]
 
 
 @admin.register(Group)
