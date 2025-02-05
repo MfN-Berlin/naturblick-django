@@ -24,10 +24,10 @@ class Group(models.Model):
 
 
 class Avatar(models.Model):
-    image = models.ImageField(upload_to="avatar_images")
+    image = models.ImageField(upload_to="avatar_images", max_length=255)
     owner = models.CharField(max_length=255)
-    owner_link = URLField(blank=True, null=True)
-    source = URLField()
+    owner_link = URLField(blank=True, null=True, max_length=255)
+    source = URLField(max_length=1024)
     license = models.CharField(max_length=64)
     cropping = ImageRatioField('image', '400x400', size_warning=True)
 
@@ -106,7 +106,7 @@ class PortraitImageFile(models.Model):
     owner_link = URLField(blank=True, null=True, max_length=255)
     source = URLField(max_length=1024)
     license = models.CharField(max_length=64)
-    image = models.ImageField(upload_to="portrait_images")
+    image = models.ImageField(upload_to="portrait_images", max_length=255)
 
     def __str__(self):
         return f"{self.owner} {self.image.name[self.image.name.index('/') + 1:]}"
@@ -176,7 +176,7 @@ class Portrait(models.Model):
 
 class DescMeta(PortraitImageMeta):
     portrait = models.OneToOneField(Portrait, on_delete=CASCADE)
-    portrait_image_file = models.OneToOneField(PortraitImageFile, on_delete=CASCADE)
+    portrait_image_file = models.ForeignKey(PortraitImageFile, on_delete=CASCADE)
 
     def clean(self):
         super().clean()
@@ -192,7 +192,7 @@ class DescMeta(PortraitImageMeta):
 
 class FunFactMeta(PortraitImageMeta):
     portrait = models.OneToOneField(Portrait, on_delete=CASCADE)
-    portrait_image_file = models.OneToOneField(PortraitImageFile, on_delete=CASCADE)
+    portrait_image_file = models.ForeignKey(PortraitImageFile, on_delete=CASCADE)
 
     def clean(self):
         super().clean()
@@ -208,7 +208,7 @@ class FunFactMeta(PortraitImageMeta):
 
 class InTheCityMeta(PortraitImageMeta):
     portrait = models.OneToOneField(Portrait, on_delete=CASCADE)
-    portrait_image_file = models.OneToOneField(PortraitImageFile, on_delete=CASCADE)
+    portrait_image_file = models.ForeignKey(PortraitImageFile, on_delete=CASCADE)
 
     def clean(self):
         super().clean()
