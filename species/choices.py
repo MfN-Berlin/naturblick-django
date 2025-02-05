@@ -40,26 +40,51 @@ REDLIST_CHOICES = [
 ]
 
 NATURE_CHOICES = [
-    ('Fauna', 'Fauna'),
-    ('Flora', 'Flora'),
+    ('fauna', 'Fauna'),
+    ('flora', 'Flora'),
 ]
 
 LANGUAGE_CHOICES = [
     ('en', 'English'),
     ('de', 'German'),
     ('er', 'Easy Read'),
-    ('sf', 'Scientific'),
 ]
 
+NAME_LANGUAGE_CHOICES = LANGUAGE_CHOICES + [('sf', 'Scientific')]
+
 GOOD_TO_KNOW_CHOICES = [
-    ('use', 'usage'),
-    ('mnc', 'mnemonic'),
-    ('cuy', 'culturalhistory'),
-    ('art', 'art'),
-    ('muc', 'music'),
-    ('lie', 'literature'),
-    ('ore', 'originofname'),
-    ('orn', 'origin'),
-    ('toe', 'toxicityorusage'),
-    ('otr', 'other'),
+    ('usage', 'Usage'),
+    ('mnemonic', 'Mnemonic'),
+    ('culturalhistory', 'Culturalhistory'),
+    ('art', 'Art'),
+    ('music', 'Music'),
+    ('literature', 'Literature'),
+    ('originofname', 'Origin of name'),
+    ('origin', 'Origin'),
+    ('toxicityorusage', 'Toxicity or usage'),
+    ('other', 'Other'),
+]
+
+IMAGE_ORIENTATION_CHOICES = [
+    ('horizontal', 'horizontal'),
+    ('vertical', 'vertical'),
+]
+
+DISPLAY_RATIO_CHOICES = [
+    ('4-3', '4-3'),
+    ('3-4', '3-4'),
+]
+
+GRID_RATIO_CHOICES = [
+    ('1-2', '1-2'),
+    ('5-7', '5-7'),
+    ('1-1', '1-1'),
+    ('7-5', '7-5'),
+    ('2-1', '2-1'),
+]
+
+PORTRAIT_IMAGE_TYPE_CHOICES = [
+    ('description', 'Description'),
+    ('in_the_city', 'In the city'),
+    ('fun_fact', 'Fun fact'),
 ]
