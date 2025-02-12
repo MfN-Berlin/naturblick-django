@@ -1,9 +1,11 @@
 import logging
 
 from django.contrib import admin
+from django.forms import Textarea
 from django.urls import reverse
 from django.utils.html import format_html
 from image_cropping import ImageCroppingMixin
+from django.db import models
 
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     AudioFile, PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
@@ -28,9 +30,9 @@ class SpeciesAdmin(admin.ModelAdmin):
         SpeciesNameInline, PortraitImageFileInline
     ]
     readonly_fields = ['speciesid']
-    list_display = ['speciesid', 'group', 'gername', 'sciname', 'portrait']
+    list_display = ['id', 'speciesid', 'sciname', 'gername', 'portrait']
     list_filter = ('group__nature', 'group')
-    search_fields = ['gername', 'sciname', 'speciesid']
+    search_fields = ['id', 'speciesid', 'sciname', 'gername']
     fields = ['speciesid',
               'group',
               'gername',
@@ -52,6 +54,7 @@ class SpeciesAdmin(admin.ModelAdmin):
               ]
     ordering = ('gername',)
     filter_horizontal = ['tag']
+    ordering = ('speciesid',)
 
     def portrait(self, obj):
         if obj.group.nature is None:
@@ -80,26 +83,41 @@ class SpeciesAdmin(admin.ModelAdmin):
 class SourceInline(admin.TabularInline):
     model = Source
     extra = 0
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
+    }
 
 
 class GoodToKnowInline(admin.TabularInline):
     model = GoodToKnow
     extra = 0
+    formfield_overrides = {
+        models.TextField: { 'widget': Textarea(attrs={'rows': 3, 'cols': 60}) }
+    }
 
 
 class SimilarSpeciesInline(admin.TabularInline):
     model = SimilarSpecies
     extra = 0
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
+    }
 
 
 class AdditionalLinkInline(admin.TabularInline):
     model = AdditionalLink
     extra = 0
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
+    }
 
 
 class UnambigousFeatureInline(admin.TabularInline):
     model = UnambigousFeature
     extra = 0
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
+    }
 
 
 @admin.register(AudioFile)
@@ -133,30 +151,36 @@ class InTheCityMetaInline(admin.StackedInline):
 
 @admin.register(Floraportrait)
 class FloraportraitAdmin(admin.ModelAdmin):
-    list_display = ['species__speciesid', 'species__group', 'species__gername', 'language']
-    search_fields = ('species__species_names__name',)
+    list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
+    search_fields = ('id', 'species__speciesid', 'species__sciname', 'species__gername')
     search_help_text = 'Sucht über alle Artnamen'
     list_filter = ('published', 'language')
     inlines = [
         UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline,
         DescMetaInline, FunFactMetaInline, InTheCityMetaInline
     ]
-    ordering = ('species__gername',)
+    ordering = ('species__speciesid',)
     autocomplete_fields = ['species']
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 80})}
+    }
 
 
 @admin.register(Faunaportrait)
 class FaunaportraitAdmin(admin.ModelAdmin):
-    list_display = ['species__speciesid', 'species__group', 'species__gername', 'language', 'audiofile']
-    search_fields = ('species__species_names__name', 'species__gername',)
+    list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
+    search_fields = ('id', 'species__speciesid', 'species__sciname', 'species__gername')
     search_help_text = 'Sucht über alle Artnamen'
     list_filter = ('published', 'language')
     inlines = [
         UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline,
         DescMetaInline, FunFactMetaInline, InTheCityMetaInline
     ]
-    ordering = ["species__gername"]
+    ordering = ["species__speciesid"]
     autocomplete_fields = ['species']
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 80})}
+    }
 
     def audiofile(self, obj):
         if hasattr(obj.species, 'audio_file'):

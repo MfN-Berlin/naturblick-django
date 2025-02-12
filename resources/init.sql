@@ -31,6 +31,8 @@ from strapi_species as s
 join "group" as g on s."group" = g.name
 left join avatar as a on a.strapi_species = s.speciesid and a.id not in (select female_avatar_id from species);
 
+select setval('species_id_seq', (select max(id) from species));
+
 -- female avatar
 with rows as (
     insert into avatar (image, owner, owner_link, source, license, cropping, strapi_species)
@@ -448,6 +450,5 @@ select CASE
     WHEN language = 4 THEN 'er'
 END, 'part', part
 from strapi_sources_translations;
-
 
 drop view if exists strapi_file;

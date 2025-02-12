@@ -197,7 +197,7 @@ class DescMeta(PortraitImageMeta):
             raise ValidationError("DescriptionImage species must be same as portrait species")
 
     def __str__(self):
-        return f"DescMeta {self.portrait.species.id}"
+        return f"{self.id}"
 
     class Meta:
         db_table = 'desc_meta'
@@ -213,7 +213,7 @@ class FunFactMeta(PortraitImageMeta):
             raise ValidationError("FunFactImage species must be same as portrait species")
 
     def __str__(self):
-        return f"FunFactMeta {self.portrait.species.id}"
+        return f"{self.id}"
 
     class Meta:
         db_table = 'funfact_meta'
@@ -229,7 +229,7 @@ class InTheCityMeta(PortraitImageMeta):
             raise ValidationError("InTheCityImage species must be same as portrait species")
 
     def __str__(self):
-        return f"InTheCityMeta {self.portrait.species.id}"
+        return f"{self.id}"
 
     class Meta:
         db_table = 'inthecity_meta'
