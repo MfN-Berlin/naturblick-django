@@ -1,7 +1,53 @@
-insert into species (id,speciesid,gername,sciname,engname,wikipedia,nbclassid,red_list_germany,iucncategory ,activity_start_month ,activity_end_month, activity_start_hour, activity_end_hour, gbifusagekey, accepted_id, created_at, updated_at, group_id)
-select s.id, s.speciesid, s.gername, s.sciname, s.engname, s.wikipedia, s.nbclassid, s."redListGermany", s.iucncategory, s."activityStartMonth", s."activityEndMonth", s."activityStartHour", s."activityEndHour", s.gbifusagekey, s.accepted, s.created_at, s.updated_at, g.id
+-- helpers
+
+create view strapi_file as
+select m.related_id, m.related_type, substr(f.url , 10) as url
+from strapi_upload_file_morph as m
+join strapi_upload_file as f on f.id = m.upload_file_id;
+
+alter table avatar add column strapi_species varchar not null;
+
+-- avatar
+DELETE FROM strapi_species_avatars AS a USING (
+    SELECT MIN(id) as id, species
+    FROM strapi_species_avatars
+    GROUP BY species HAVING COUNT(*) > 1
+) AS b
+WHERE a.species = b.species
+AND a.id <> b.id;
+
+insert into avatar (image, owner, owner_link, source, license, cropping, strapi_species)
+select 'avatar_images/' || f.url,  scsp."imageOwner", scsp."imageOwnerLink", scsp."imageSource", scsp."imageLicense", '0,0,400,400', s.speciesid
+from strapi_species_avatars as ssa
+join strapi_species as s on s.id = ssa.species
+join strapi_species_avatars_components as ssac on ssac.species_avatar_id = ssa.id and ssac.component_type = 'components_speciesportrait_species_pictures'
+join strapi_components_speciesportrait_species_pictures as scsp on scsp.id = ssac.component_id
+join strapi_file as f on f.related_type = 'components_speciesportrait_species_pictures' and f.related_id = ssac.component_id
+where ssa.published_at is not null;
+
+insert into species (id,speciesid,gername,sciname,engname,wikipedia,nbclassid,red_list_germany,iucncategory ,activity_start_month ,activity_end_month, activity_start_hour, activity_end_hour, gbifusagekey, accepted_id, created_at, updated_at, avatar_id, group_id)
+select s.id, s.speciesid, s.gername, s.sciname, s.engname, s.wikipedia, s.nbclassid, s."redListGermany", s.iucncategory, s."activityStartMonth", s."activityEndMonth", s."activityStartHour", s."activityEndHour", s.gbifusagekey, s.accepted, s.created_at, s.updated_at, a.id, g.id
 from strapi_species as s
-join "group" as g on s."group" = g.name;
+join "group" as g on s."group" = g.name
+left join avatar as a on a.strapi_species = s.speciesid and a.id not in (select female_avatar_id from species);
+
+-- female avatar
+with rows as (
+    insert into avatar (image, owner, owner_link, source, license, cropping, strapi_species)
+    select 'avatar_images/' || f.url,  a."imageOwner", a."imageOwnerLink", a."imageSource", a."imageLicense", '0,0,400,400', s.speciesid
+    from strapi_species_components as sc
+    join strapi_species as s on s.id = sc.species_id
+    join strapi_components_speciesportrait_species_avatars as a on a.id = sc.component_id
+    join strapi_file as f on f.related_id = a.id and f.related_type = 'components_speciesportrait_species_avatars'
+    where sc.component_type = 'components_speciesportrait_species_avatars'
+    returning *
+)
+update species set female_avatar_id = rows.id
+from rows
+where species.speciesid = rows.strapi_species;
+
+-- drop helper column
+alter table avatar drop column strapi_species;
 
 delete from strapi_speciesnames where species is null;
 delete from strapi_speciesnames where language is null;
@@ -199,9 +245,28 @@ END
 join strapi_components_speciesportrait_features as f on f.id = fpc.component_id
 where fpc.component_type = 'components_speciesportrait_features';
 
--- portrait images description
-insert into description_image_file (owner, owner_link, source, license, text, image, species_id)
-select scp."imageOwner", scp."imageOwnerLink", scp."imageSource", scp."imageLicense", scp."imageText", 'portrait_images/' || substr(su.url, 10), p.species_id
+-- portrait images
+insert into portrait_image_file (owner, owner_link, source, license, image, species_id)
+select distinct scp."imageOwner", scp."imageOwnerLink", scp."imageSource", scp."imageLicense", 'portrait_images/' || f.url, sil.species
+from strapi_species_image_lists as sil
+join strapi_species_image_lists_components as silc
+    on silc.species_image_list_id = sil.id and silc.component_type = 'components_speciesportrait_species_pictures'
+join strapi_components_speciesportrait_species_pictures as scp on scp.id = silc.component_id
+join strapi_file as f on f.related_type = 'components_speciesportrait_species_pictures' and f.related_id = scp.id
+where sil.published_at is not null;
+
+-- delete double entries for the same image-url.
+DELETE FROM portrait_image_file AS a USING (
+    SELECT MIN(id) as id, image
+    FROM portrait_image_file
+    GROUP BY image HAVING COUNT(*) > 1
+) AS b
+WHERE a.image = b.image
+AND a.id <> b.id;
+
+--  DESC
+insert into desc_meta (image_orientation, display_ratio, grid_ratio, focus_point_vertical, focus_point_horizontal, text, portrait_id, portrait_image_file_id)
+select sci."imageOrientation", sci."displayRatio", sci."gridRatio", sci."focusPointVertical", sci."focusPointHorizontal", scp."imageText", p.id, pif.id
 from strapi_species_image_lists as sil
 join portrait as p on sil.species = p.species_id and sil.language = CASE
     WHEN p.language = 'de' THEN 1
@@ -215,13 +280,13 @@ join strapi_components_speciesportrait_species_portrait_images as sci on sci.id 
 join strapi_species_image_lists_components as silc
     on silc.species_image_list_id = sil.id and silc.component_type = 'components_speciesportrait_species_pictures' and silc."order" = sci."imageFromList"
 join strapi_components_speciesportrait_species_pictures as scp on scp.id = silc.component_id
-join strapi_upload_file_morph as sm on sm.related_type = 'components_speciesportrait_species_pictures' and sm.related_id = scp.id
-join strapi_upload_file as su on su.id = sm.upload_file_id;
+join strapi_file as f on f.related_type = 'components_speciesportrait_species_pictures' and f.related_id = scp.id
+join portrait_image_file as pif on pif.species_id = sil.species and 'portrait_images/' || f.url = pif.image
+where sil.published_at is not null;
 
--- there is a failure in the data, i delete the older one of the duplicates
-delete from strapi_components_speciesportrait_species_portrait_images where id = 215;
-insert into description_image_meta (image_orientation, display_ratio, grid_ratio, focus_point_vertical, focus_point_horizontal, portrait_id)
-select sci."imageOrientation", sci."displayRatio", sci."gridRatio", sci."focusPointVertical", sci."focusPointHorizontal", p.id
+--  FUN_FACT
+insert into funfact_meta (image_orientation, display_ratio, grid_ratio, focus_point_vertical, focus_point_horizontal, text, portrait_id, portrait_image_file_id)
+select sci."imageOrientation", sci."displayRatio", sci."gridRatio", sci."focusPointVertical", sci."focusPointHorizontal", scp."imageText", p.id, pif.id
 from strapi_species_image_lists as sil
 join portrait as p on sil.species = p.species_id and sil.language = CASE
     WHEN p.language = 'de' THEN 1
@@ -230,17 +295,19 @@ join portrait as p on sil.species = p.species_id and sil.language = CASE
     WHEN p.language = 'er' THEN 4
 END
 join strapi_species_image_lists_components as silc2
-    on silc2.species_image_list_id = sil.id and silc2.component_type = 'components_speciesportrait_species_portrait_images' and silc2.field = 'description'
+    on silc2.species_image_list_id = sil.id and silc2.component_type = 'components_speciesportrait_species_portrait_images' and silc2.field = 'funFacts'
 join strapi_components_speciesportrait_species_portrait_images as sci on sci.id = silc2.component_id
 join strapi_species_image_lists_components as silc
     on silc.species_image_list_id = sil.id and silc.component_type = 'components_speciesportrait_species_pictures' and silc."order" = sci."imageFromList"
 join strapi_components_speciesportrait_species_pictures as scp on scp.id = silc.component_id
-join strapi_upload_file_morph as sm on sm.related_type = 'components_speciesportrait_species_pictures' and sm.related_id = scp.id
-join strapi_upload_file as su on su.id = sm.upload_file_id;
+join strapi_file as f on f.related_type = 'components_speciesportrait_species_pictures' and f.related_id = scp.id
+join portrait_image_file as pif on pif.species_id = sil.species and 'portrait_images/' || f.url = pif.image
+where sil.published_at is not null;
 
--- portrait images fun_fact
-insert into fun_fact_image_file (owner, owner_link, source, license, text, image, species_id)
-select scp."imageOwner", scp."imageOwnerLink", scp."imageSource", scp."imageLicense", scp."imageText", 'portrait_images/' || substr(su.url, 10), p.species_id
+
+-- IN THE CITY
+insert into inthecity_meta (image_orientation, display_ratio, grid_ratio, focus_point_vertical, focus_point_horizontal, text, portrait_id, portrait_image_file_id)
+select sci."imageOrientation", sci."displayRatio", sci."gridRatio", sci."focusPointVertical", sci."focusPointHorizontal", scp."imageText", p.id, pif.id
 from strapi_species_image_lists as sil
 join portrait as p on sil.species = p.species_id and sil.language = CASE
     WHEN p.language = 'de' THEN 1
@@ -248,52 +315,14 @@ join portrait as p on sil.species = p.species_id and sil.language = CASE
     WHEN p.language = 'sf' THEN 3
     WHEN p.language = 'er' THEN 4
 END
-join strapi_species_image_lists_components as silc2 on silc2.species_image_list_id = sil.id and silc2.component_type = 'components_speciesportrait_species_portrait_images' and silc2.field = 'funFacts'
+join strapi_species_image_lists_components as silc2
+    on silc2.species_image_list_id = sil.id and silc2.component_type = 'components_speciesportrait_species_portrait_images' and silc2.field = 'inTheCity'
 join strapi_components_speciesportrait_species_portrait_images as sci on sci.id = silc2.component_id
-join strapi_species_image_lists_components as silc on silc.species_image_list_id = sil.id and silc.component_type = 'components_speciesportrait_species_pictures' and silc."order" = sci."imageFromList"
+join strapi_species_image_lists_components as silc
+    on silc.species_image_list_id = sil.id and silc.component_type = 'components_speciesportrait_species_pictures' and silc."order" = sci."imageFromList"
 join strapi_components_speciesportrait_species_pictures as scp on scp.id = silc.component_id
-join strapi_upload_file_morph as sm on sm.related_type = 'components_speciesportrait_species_pictures' and sm.related_id = scp.id
-join strapi_upload_file as su on su.id = sm.upload_file_id;
+join strapi_file as f on f.related_type = 'components_speciesportrait_species_pictures' and f.related_id = scp.id
+join portrait_image_file as pif on pif.species_id = sil.species and 'portrait_images/' || f.url = pif.image
+where sil.published_at is not null;
 
--- there is a failure in the data, i delete the older entry
-delete from strapi_components_speciesportrait_species_portrait_images where id = 217;
-insert into fun_fact_image_meta (image_orientation, display_ratio, grid_ratio, focus_point_vertical, focus_point_horizontal, portrait_id)
-select sci."imageOrientation", sci."displayRatio", sci."gridRatio", sci."focusPointVertical", sci."focusPointHorizontal", p.id
-from strapi_species_image_lists as sil
-join portrait as p on sil.species = p.species_id and sil.language = CASE
-    WHEN p.language = 'de' THEN 1
-    WHEN p.language = 'en' THEN 2
-    WHEN p.language = 'sf' THEN 3
-    WHEN p.language = 'er' THEN 4
-END
-join strapi_species_image_lists_components as silc on silc.species_image_list_id = sil.id and silc.component_type = 'components_speciesportrait_species_portrait_images' and silc.field = 'funFacts'
-join strapi_components_speciesportrait_species_portrait_images as sci on sci.id = silc.component_id;
-
--- portrait images in_the_city
-insert into in_the_city_image_file (owner, owner_link, source, license, text, image, species_id)
-select scp."imageOwner", scp."imageOwnerLink", scp."imageSource", scp."imageLicense", scp."imageText", 'portrait_images/' || substr(su.url, 10), p.species_id
-from strapi_species_image_lists as sil
-join portrait as p on sil.species = p.species_id and sil.language = CASE
-    WHEN p.language = 'de' THEN 1
-    WHEN p.language = 'en' THEN 2
-    WHEN p.language = 'sf' THEN 3
-    WHEN p.language = 'er' THEN 4
-END
-join strapi_species_image_lists_components as silc2 on silc2.species_image_list_id = sil.id and silc2.component_type = 'components_speciesportrait_species_portrait_images' and silc2.field = 'inTheCity'
-join strapi_components_speciesportrait_species_portrait_images as sci on sci.id = silc2.component_id
-join strapi_species_image_lists_components as silc on silc.species_image_list_id = sil.id and silc.component_type = 'components_speciesportrait_species_pictures' and silc."order" = sci."imageFromList"
-join strapi_components_speciesportrait_species_pictures as scp on scp.id = silc.component_id
-join strapi_upload_file_morph as sm on sm.related_type = 'components_speciesportrait_species_pictures' and sm.related_id = scp.id
-join strapi_upload_file as su on su.id = sm.upload_file_id;
-
-insert into in_the_city_image_meta (image_orientation, display_ratio, grid_ratio, focus_point_vertical, focus_point_horizontal, portrait_id)
-select distinct sci."imageOrientation", sci."displayRatio", sci."gridRatio", sci."focusPointVertical", sci."focusPointHorizontal", p.id
-from strapi_species_image_lists as sil
-join portrait as p on sil.species = p.species_id and sil.language = CASE
-    WHEN p.language = 'de' THEN 1
-    WHEN p.language = 'en' THEN 2
-    WHEN p.language = 'sf' THEN 3
-    WHEN p.language = 'er' THEN 4
-END
-join strapi_species_image_lists_components as silc on silc.species_image_list_id = sil.id and silc.component_type = 'components_speciesportrait_species_portrait_images' and silc.field = 'inTheCity'
-join strapi_components_speciesportrait_species_portrait_images as sci on sci.id = silc.component_id;
+drop view if exists strapi_file;
