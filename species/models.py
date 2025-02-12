@@ -269,7 +269,7 @@ class Faunaportrait(Portrait):
 
 
 class AudioFile(models.Model):
-    species = models.OneToOneField(Species, on_delete=models.RESTRICT)
+    portrait = models.OneToOneField(Portrait, on_delete=CASCADE)
     audio_license = models.CharField(max_length=255, blank=True, null=True)
     audio_file = models.FileField(upload_to="audio_files", null=True, blank=True, validators=[validate_mp3])
     audio_spectrogram = models.ImageField(upload_to="spectrogram_files", null=True, blank=True,

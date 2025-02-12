@@ -55,6 +55,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     ordering = ('gername',)
     filter_horizontal = ['tag']
     ordering = ('speciesid',)
+    autocomplete_fields = ['avatar', 'female_avatar']
 
     def portrait(self, obj):
         if obj.group.nature is None:
@@ -203,6 +204,7 @@ class GroupAdmin(admin.ModelAdmin):
 @admin.register(Avatar)
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
     list_display = ['image_tag', 'image', 'owner']
+    search_fields = ['image', 'owner']
 
     def image_tag(self, obj):
         return format_html('<img src="{}" style="max-width:200px; max-height:200px"/>'.format(obj.image.url))
