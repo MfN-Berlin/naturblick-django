@@ -9,6 +9,17 @@ from .choices import *
 from .validators import min_max, validate_png, validate_mp3
 
 
+class Tag(models.Model):
+    # species = models.ManyToManyField(Species, related_name='tag_set')
+    name = models.CharField(max_length=255, unique=True)
+    english_name = models.CharField(max_length=255, unique=True)
+
+    class Meta:
+        db_table = 'tag'
+
+    def __str__(self):
+        return self.name
+
 class Group(models.Model):
     name = models.CharField(max_length=255, unique=True)
     nature = models.CharField(max_length=5, choices=NATURE_CHOICES, null=True)
@@ -63,6 +74,8 @@ class Species(models.Model):
     updated_by = CurrentUserField(on_update=True, related_name='species_updated_by_set', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    tag = models.ManyToManyField(Tag)
 
     speciesid.short_description = "Species ID"
 
@@ -329,16 +342,6 @@ class SimilarSpecies(models.Model):
         db_table = 'similar_species'
 
 
-class Tag(models.Model):
-    species = models.ManyToManyField(Species)
-    name = models.CharField(max_length=255, unique=True)
-    english_name = models.CharField(max_length=255, unique=True)
-
-    class Meta:
-        db_table = 'tag'
-
-    def __str__(self):
-        return self.name
 
 
 class Character(models.Model):

@@ -48,8 +48,10 @@ class SpeciesAdmin(admin.ModelAdmin):
               'female_avatar',
               'gbifusagekey',
               'accepted_id',
+              'tag'
               ]
     ordering = ('gername',)
+    filter_horizontal = ['tag']
 
     def portrait(self, obj):
         if obj.group.nature is None:
@@ -197,4 +199,6 @@ class SourcesImprintAdmin(admin.ModelAdmin):
 class SourcesTranslationAdmin(admin.ModelAdmin):
     pass
 
-# class Tag(models.Model):
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    search_fields = ['name']
