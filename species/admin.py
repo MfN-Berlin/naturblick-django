@@ -6,7 +6,8 @@ from django.utils.html import format_html
 from image_cropping import ImageCroppingMixin
 
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
-    AudioFile, PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait
+    AudioFile, PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
+    Tag, Character, CharacterValue, SourcesImprint, SourcesTranslation
 
 logger = logging.getLogger(__name__)
 
@@ -179,3 +180,21 @@ class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
 
     def image_tag(self, obj):
         return format_html('<img src="{}" style="max-width:200px; max-height:200px"/>'.format(obj.image.url))
+
+class CharacterValueInline(admin.TabularInline):
+    model = CharacterValue
+    extra = 0
+
+@admin.register(Character)
+class CharacterAdmin(admin.ModelAdmin):
+    inlines = [ CharacterValueInline ]
+
+@admin.register(SourcesImprint)
+class SourcesImprintAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(SourcesTranslation)
+class SourcesTranslationAdmin(admin.ModelAdmin):
+    pass
+
+# class Tag(models.Model):

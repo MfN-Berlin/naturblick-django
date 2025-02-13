@@ -325,4 +325,129 @@ join strapi_file as f on f.related_type = 'components_speciesportrait_species_pi
 join portrait_image_file as pif on pif.species_id = sil.species and 'portrait_images/' || f.url = pif.image
 where sil.published_at is not null;
 
+insert into character (id, gername, engname, display_name, weight, single_choice, gerdescription, engdescription, group_id)
+select c.id, c.gername, c.engname, c."displayName", c.weight, c."singleChoice", c.gerdescription, c.engdescription, g.id
+from strapi_characters as c
+join "group" as g on g.name = c."group";
+
+insert into character_value (id, gername, engname, colors, dots, image, character_id)
+select v.id, v.gername, v.engname, v.colors, v.dots, 'character_images/' || f.url, v.character
+from strapi_character_values as v
+left join strapi_file f on f.related_id = v.id and f.related_type = 'character_values';
+
+insert into tag (id, name, english_name)
+select t.id, t.name, t."englishName"
+from strapi_tags as t;
+
+insert into tag_species (tag_id, species_id)
+select st.tag_id, st.species_id
+from strapi_species__tags as st
+where exists (select * from tag where id = st.tag_id);
+
+insert into sources_imprint (id, name, scie_name, scie_name_eng, image_source, image_link, licence, author)
+select i.id, CASE
+    WHEN i.name = 'Lauterkennung Bilder' THEN 'sound_recogniotion_images'
+    WHEN i.name = 'Lauterkennung Tonaufnahmen' THEN 'sound_recogniotion_sounds'
+    WHEN i.name = 'Bestimmungsschlüssel' THEN 'ident_keys'
+END, i.scie_name, i.scie_name_eng, i.image_source, i.image_link, i.licence, i.author
+from strapi_sources_impressum as i;
+
+
+insert into sources_translation (language, key, value)
+select CASE
+    WHEN language = 1 THEN 'de'
+    WHEN language = 2 THEN 'en'
+    WHEN language = 4 THEN 'er'
+END, 'page', page
+from strapi_sources_translations;
+
+insert into sources_translation (language, key, value)
+select CASE
+    WHEN language = 1 THEN 'de'
+    WHEN language = 2 THEN 'en'
+    WHEN language = 4 THEN 'er'
+END, 'wiki', wiki
+from strapi_sources_translations;
+
+insert into sources_translation (language, key, value)
+select CASE
+    WHEN language = 1 THEN 'de'
+    WHEN language = 2 THEN 'en'
+    WHEN language = 4 THEN 'er'
+END, 'revision', revision
+from strapi_sources_translations;
+
+insert into sources_translation (language, key, value)
+select CASE
+    WHEN language = 1 THEN 'de'
+    WHEN language = 2 THEN 'en'
+    WHEN language = 4 THEN 'er'
+END, 'accessed', accessed
+from strapi_sources_translations;
+
+insert into sources_translation (language, key, value)
+select CASE
+    WHEN language = 1 THEN 'de'
+    WHEN language = 2 THEN 'en'
+    WHEN language = 4 THEN 'er'
+END, 'version', version
+from strapi_sources_translations;
+
+insert into sources_translation (language, key, value)
+select CASE
+    WHEN language = 1 THEN 'de'
+    WHEN language = 2 THEN 'en'
+    WHEN language = 4 THEN 'er'
+END, 'volume', volume
+from strapi_sources_translations;
+
+insert into sources_translation (language, key, value)
+select CASE
+    WHEN language = 1 THEN 'de'
+    WHEN language = 2 THEN 'en'
+    WHEN language = 4 THEN 'er'
+END, 'editors', editors
+from strapi_sources_translations;
+
+insert into sources_translation (language, key, value)
+select CASE
+    WHEN language = 1 THEN 'de'
+    WHEN language = 2 THEN 'en'
+    WHEN language = 4 THEN 'er'
+END, 'nodate', nodate
+from strapi_sources_translations;
+
+insert into sources_translation (language, key, value)
+select CASE
+    WHEN language = 1 THEN 'de'
+    WHEN language = 2 THEN 'en'
+    WHEN language = 4 THEN 'er'
+END, 'in', "in"
+from strapi_sources_translations;
+
+insert into sources_translation (language, key, value)
+select CASE
+    WHEN language = 1 THEN 'de'
+    WHEN language = 2 THEN 'en'
+    WHEN language = 4 THEN 'er'
+END, 'published', published
+from strapi_sources_translations;
+
+insert into sources_translation (language, key, value)
+select CASE
+    WHEN language = 1 THEN 'de'
+    WHEN language = 2 THEN 'en'
+    WHEN language = 4 THEN 'er'
+END, 'edition', edition
+from strapi_sources_translations;
+
+insert into sources_translation (language, key, value)
+select CASE
+    WHEN language = 1 THEN 'de'
+    WHEN language = 2 THEN 'en'
+    WHEN language = 4 THEN 'er'
+END, 'part', part
+from strapi_sources_translations;
+
+
 drop view if exists strapi_file;

@@ -40,9 +40,9 @@ class Avatar(models.Model):
 
 class Species(models.Model):
     speciesid = models.CharField(max_length=255, unique=True)
-    gername = models.CharField(max_length=255, null=True, blank=True)
-    sciname = models.CharField(max_length=255, unique=True)
-    engname = models.CharField(max_length=255, null=True, blank=True)
+    gername = models.CharField(max_length=255, null=True, blank=True, db_index=True)
+    sciname = models.CharField(max_length=255, unique=True, db_index=True)
+    engname = models.CharField(max_length=255, null=True, blank=True, db_index=True)
     group = models.ForeignKey(Group, on_delete=models.PROTECT)
     wikipedia = models.URLField(max_length=255, blank=True, null=True)
     nbclassid = models.CharField(max_length=255, blank=True, null=True)
@@ -327,3 +327,77 @@ class SimilarSpecies(models.Model):
 
     class Meta:
         db_table = 'similar_species'
+
+
+class Tag(models.Model):
+    species = models.ManyToManyField(Species)
+    name = models.CharField(max_length=255, unique=True)
+    english_name = models.CharField(max_length=255, unique=True)
+
+    class Meta:
+        db_table = 'tag'
+
+    def __str__(self):
+        return self.name
+
+
+class Character(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    gername = models.CharField(max_length=255)
+    engname = models.CharField(max_length=255)
+    group = models.ForeignKey(Group, on_delete=models.PROTECT)
+    display_name = models.CharField(max_length=255, null=True, blank=True)
+    weight = models.IntegerField()
+    single_choice = models.BooleanField(null=True, blank=True)
+    gerdescription = models.TextField(null=True, blank=True)
+    engdescription = models.TextField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'character'
+
+    def __str__(self):
+        return self.gername
+
+
+class CharacterValue(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    character = models.ForeignKey(Character, on_delete=CASCADE)
+    gername = models.CharField(max_length=255)
+    engname = models.CharField(max_length=255)
+    colors = models.CharField(max_length=255, null=True, blank=True)
+    dots = models.CharField(max_length=255, null=True, blank=True)
+    image = models.ImageField(upload_to="character_images", max_length=255, null=True)
+
+    class Meta:
+        db_table = 'character_value'
+
+    def __str__(self):
+        return self.gername
+
+class SourcesImprint(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    name = models.CharField(max_length=32, choices=SOURCES_IMPRINT_CHOICES)
+    scie_name = models.CharField(max_length=255)
+    scie_name_eng = models.CharField(max_length=255, null=True, blank=True)
+    image_source = models.CharField(max_length=255, null=True, blank=True)
+    image_link = models.CharField(max_length=255, null=True, blank=True)
+    licence = models.CharField(max_length=255, null=True, blank=True)
+    author = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        db_table = 'sources_imprint'
+
+    def __str__(self):
+        return self.scie_name
+
+class SourcesTranslation(models.Model):
+    language = models.CharField(max_length=2, choices=NAME_LANGUAGE_CHOICES)
+    key = models.CharField(max_length=255, choices=SOURCES_TRANSLATION_CHOICES)
+    value = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'sources_translation'
+
+    def __str__(self):
+        return f"{self.key} - {self.value}"
+
