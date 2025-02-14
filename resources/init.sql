@@ -25,13 +25,11 @@ join strapi_components_speciesportrait_species_pictures as scsp on scsp.id = ssa
 join strapi_file as f on f.related_type = 'components_speciesportrait_species_pictures' and f.related_id = ssac.component_id
 where ssa.published_at is not null;
 
-insert into species (id,speciesid,gername,sciname,engname,wikipedia,nbclassid,red_list_germany,iucncategory ,activity_start_month ,activity_end_month, activity_start_hour, activity_end_hour, gbifusagekey, accepted_id, created_at, updated_at, avatar_id, group_id)
+insert into species (id,speciesid,gername,sciname,engname,wikipedia,nbclassid,red_list_germany,iucncategory ,activity_start_month ,activity_end_month, activity_start_hour, activity_end_hour, gbifusagekey, accepted_species_id, created_at, updated_at, avatar_id, group_id)
 select s.id, s.speciesid, s.gername, s.sciname, s.engname, s.wikipedia, s.nbclassid, s."redListGermany", s.iucncategory, s."activityStartMonth", s."activityEndMonth", s."activityStartHour", s."activityEndHour", s.gbifusagekey, s.accepted, s.created_at, s.updated_at, a.id, g.id
 from strapi_species as s
 join "group" as g on s."group" = g.name
 left join avatar as a on a.strapi_species = s.speciesid and a.id not in (select female_avatar_id from species);
-
-select setval('species_id_seq', (select max(id) from species));
 
 -- female avatar
 with rows as (
@@ -474,3 +472,25 @@ where p.id = portrait_ptr_id
     and p.species_id = r.species_id;
 
 drop view if exists strapi_file;
+
+select setval('additional_link_id_seq', (select max(id) from additional_link));
+select setval('avatar_id_seq', (select max(id) from avatar));
+select setval('character_id_seq', (select max(id) from character));
+select setval('character_value_id_seq', (select max(id) from character_value));
+select setval('desc_meta_id_seq', (select max(id) from desc_meta));
+select setval('faunaportrait_audio_file_id_seq', (select max(id) from faunaportrait_audio_file));
+select setval('funfact_meta_id_seq', (select max(id) from funfact_meta));
+select setval('good_to_know_id_seq', (select max(id) from good_to_know));
+select setval('group_id_seq', (select max(id) from "group"));
+select setval('inthecity_meta_id_seq', (select max(id) from inthecity_meta));
+select setval('portrait_id_seq', (select max(id) from portrait));
+select setval('portrait_image_file_id_seq', (select max(id) from portrait_image_file));
+select setval('similar_species_id_seq', (select max(id) from similar_species));
+select setval('source_id_seq', (select max(id) from source));
+select setval('sources_imprint_id_seq', (select max(id) from sources_imprint));
+select setval('sources_translation_id_seq', (select max(id) from sources_translation));
+select setval('species_id_seq', (select max(id) from species));
+select setval('species_name_id_seq', (select max(id) from species_name));
+select setval('species_tag_id_seq', (select max(id) from species_tag));
+select setval('tag_id_seq', (select max(id) from tag));
+select setval('unambigous_feature_id_seq', (select max(id) from unambigous_feature));

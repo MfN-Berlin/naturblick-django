@@ -54,12 +54,11 @@ class SpeciesAdmin(admin.ModelAdmin):
               'avatar',
               'female_avatar',
               'gbifusagekey',
-              'accepted_id',
+              'accepted_species',
               'tag'
               ]
     ordering = ('gername',)
     filter_horizontal = ['tag']
-    ordering = ('speciesid',)
     autocomplete_fields = ['avatar', 'female_avatar']
 
     def portrait(self, obj):
@@ -129,6 +128,15 @@ class UnambigousFeatureInline(admin.TabularInline):
 @admin.register(PortraitImageFile)
 class PortraitImageFileAdmin(admin.ModelAdmin):
     search_fields = ['owner', 'image']
+    fields = ['species', 'image_tag', 'image', 'owner', 'owner_link', 'source', 'license']
+    readonly_fields = ['image_tag']
+    list_display = ['id', 'image_tag', 'image']
+    autocomplete_fields = ['species']
+
+    def image_tag(self, obj):
+        return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
+
+    image_tag.short_description = 'Image'
 
 
 class DescMetaInline(admin.StackedInline):
@@ -192,11 +200,25 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Avatar)
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
-    list_display = ['image_tag', 'image', 'owner']
+    list_display = ['id', 'list_thumbnail', 'image', 'owner']
     search_fields = ['image', 'owner']
+    fields = ['thumbnail', 'image', 'owner', 'owner_link', 'source', 'license', 'cropping']
+    readonly_fields = ['thumbnail']
 
-    def image_tag(self, obj):
-        return format_html('<img src="{}" style="max-width:200px; max-height:200px"/>'.format(obj.image.url))
+    def list_thumbnail(self, obj):
+        return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
+
+
+@admin.register(CharacterValue)
+class CharacterValueAdmin(admin.ModelAdmin):
+    fields = ['character', 'gername', 'engname', 'colors', 'dots', 'image', 'thumbnail']
+    list_display = ['character', 'gername', 'engname']
+    readonly_fields = ['thumbnail']
+
+    def thumbnail       (self, obj):
+        return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
+
+        thumbnail.short_description = 'Image'
 
 
 class CharacterValueInline(admin.TabularInline):
@@ -207,18 +229,33 @@ class CharacterValueInline(admin.TabularInline):
 @admin.register(Character)
 class CharacterAdmin(admin.ModelAdmin):
     inlines = [CharacterValueInline]
-
+    list_display = ['gername', 'engname', 'group']
+    list_filter = ['group']
+    ordering = ['gername']
+    search_fields = ['gername']
+    fields = [('gername', 'engname'), 'group', 'display_name', 'weight', 'single_choice',
+              ('gerdescription', 'engdescription')]
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 8, 'cols': 40})}
+    }
 
 @admin.register(SourcesImprint)
 class SourcesImprintAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ['name']
+    ordering = ['scie_name']
+    search_fields = ['scie_name']
 
 
 @admin.register(SourcesTranslation)
 class SourcesTranslationAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ['key', 'language']
+    ordering = ['value']
+    search_fields = ['key', 'value']
+    list_display = ['key', 'value', 'language']
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    search_fields = ['name']
+    ordering = ['name']
+    search_fields = ['name', 'english_name']
+    list_display = ['name', 'english_name']

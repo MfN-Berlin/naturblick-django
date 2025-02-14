@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import ForeignKey, URLField, CASCADE
+from django.utils.safestring import mark_safe
 from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
 
@@ -42,6 +43,12 @@ class Avatar(models.Model):
     license = models.CharField(max_length=64)
     cropping = ImageRatioField('image', '400x400', size_warning=True)
 
+    def thumbnail(self):
+        return mark_safe('<img src="/media/%s" width="150" height="150" />' % (self.image))
+
+    thumbnail.short_description = 'Thumbnail'
+    thumbnail.allow_tags = True
+
     def __str__(self):
         return self.image.name
 
@@ -69,7 +76,7 @@ class Species(models.Model):
     female_avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name='+', null="True",
                                       blank="True")
     gbifusagekey = models.IntegerField(blank=True, null=True)
-    accepted_id = models.IntegerField(blank=True, null=True)
+    accepted_species = models.ForeignKey("self", on_delete=models.SET_NULL, blank=True, null=True)
     created_by = CurrentUserField(related_name='species_created_by_set', null=True)
     updated_by = CurrentUserField(on_update=True, related_name='species_updated_by_set', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -263,10 +270,10 @@ class FaunaportraitAudioFile(models.Model):
 
     def clean(self):
         super().clean()
-        faunaportrait = Faunaportrait.objects.filter(faunaportrait_audio_file=self.id).first()
-        if faunaportrait and faunaportrait.species != self.species:
-            raise ValidationError(
-                f"This Audiofile is already set as an 'audiofile' in the portrait of {faunaportrait}. The species can not be changed until it's unset")
+        # faunaportrait = Faunaportrait.objects.filter(faunaportrait_audio_file=self.id).first()
+        # if faunaportrait and faunaportrait.species != self.species:
+        #     raise ValidationError(
+        #         f"This Audiofile is already set as an 'audiofile' in the portrait of {faunaportrait}. The species can not be changed until it's unset")
 
     def __str__(self):
         return f"{self.owner} {self.audio_file.name[self.audio_file.name.index('/') + 1:]}"
@@ -281,7 +288,7 @@ class Faunaportrait(Portrait):
     juvenile_description = models.TextField(blank=True, null=True)
     tracks = models.TextField(blank=True, null=True)  # seems unused
     audio_title = models.CharField(max_length=255, blank=True, null=True)
-    faunaportrait_audio_file = models.ForeignKey(FaunaportraitAudioFile, on_delete=CASCADE, null=True)
+    faunaportrait_audio_file = models.ForeignKey(FaunaportraitAudioFile, on_delete=models.SET_NULL, null=True, blank=True)
 
     male_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Männchen."
     female_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Weibchen."
@@ -384,7 +391,7 @@ class Character(models.Model):
         return self.gername
 
 
-class CharacterValue(models.Model):
+class  CharacterValue(models.Model):
     id = models.BigAutoField(primary_key=True)
     character = models.ForeignKey(Character, on_delete=CASCADE)
     gername = models.CharField(max_length=255)

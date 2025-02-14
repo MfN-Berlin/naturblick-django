@@ -1,4 +1,4 @@
-# naturblick-django
+_# naturblick-django
 
 This is the CMS for naturblick. We use WSGI/Gunicorn.
 
@@ -21,7 +21,7 @@ This is the CMS for naturblick. We use WSGI/Gunicorn.
 * Execute command in production `docker compose exec django python manage.py COMMAND`
 * running tests `python manage.py test species`
 
-## settings up database
+## setting up database
 
 1.) Get data from existing Strapi-DB
 
@@ -51,12 +51,24 @@ docker cp data.sql django-db:/ && docker cp schema.sql django-db:/ && docker exe
 docker cp init.sql django-db:/ && docker exec django-db psql -U naturblick species -f /init.sql
 ```
 
-=== TODO ===  
+## Copy media files into directories
 
-5.) copy strapi-upload images to `media-root/portrait_images` (only needed once)
+base directory is `media-root/`
 
-character_images
-portrait_images
-audio_files
-spectrogram_images
-avatar_images
+### avatar_images, portrait_images, audio_files, spectrogram_images, character_images
+
+Directories should already be created.
+
+```
+docker exec django-db psql -U naturblick species -c "select 'scp worker:/data/strapi/upload/' || substr(image, 15) || ' avatar_images' from avatar;" | tail -n+3 | head -n-2 >> copy_files.sh
+
+docker exec django-db psql -U naturblick species -c "select 'scp worker:/data/strapi/upload/' || substr(image, 17) || ' portrait_images' from portrait_image_file;" | tail -n+3 | head -n-2 >> copy_files.sh
+
+docker exec django-db psql -U naturblick species -c "select 'scp worker:/data/strapi/upload/' || substr(audio_file,13) || ' audio_files'  from faunaportrait_audio_file;" | tail -n+3 | head -n-2 >> copy_files.sh
+
+docker exec django-db psql -U naturblick species -c "select 'scp worker:/data/strapi/upload/' || substr(audio_spectrogram,20) || ' spectrogram_images' from faunaportrait_audio_file;" | tail -n+3 | head -n-2 >> copy_files.sh
+
+docker exec django-db psql -U naturblick species -c "select 'scp worker:/data/strapi/upload/' || substr(image,18) || ' character_images' from character_value where image is not null;" | tail -n+3 | head -n-2 >> copy_files.sh
+```
+
+
