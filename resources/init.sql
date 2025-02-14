@@ -1,7 +1,7 @@
 -- helpers
 
 create view strapi_file as
-select m.related_id, m.related_type, substr(f.url , 10) as url
+select m.related_id, m.related_type, substr(f.url , 10) as url, m.field
 from strapi_upload_file_morph as m
 join strapi_upload_file as f on f.id = m.upload_file_id;
 
@@ -72,7 +72,7 @@ select CASE
 END, "shortDescription", "cityHabitat", "humanInteraction", published_at is not null, species
 from strapi_floraportrait;
 
-insert into flora_portrait (portrait_ptr_id, leaf_description, stem_axis_description, flower_description, fruit_description)
+insert into floraportrait (portrait_ptr_id, leaf_description, stem_axis_description, flower_description, fruit_description)
 select p.id, "leafDescription", "stemAxisDescription", "flowerDescription", "fruitDescription"
 from strapi_floraportrait as sf
 join portrait as p on p.species_id = sf.species and p.language = CASE
@@ -93,7 +93,7 @@ END, "shortDescription", "cityHabitat", "humanInteraction", published_at is not 
 from strapi_faunaportraits;
 
 -- missing: audio_file, audio_spectrogram
-insert into fauna_portrait (portrait_ptr_id, male_description, female_description, juvenile_description, tracks, audio_title)
+insert into faunaportrait (portrait_ptr_id, male_description, female_description, juvenile_description, tracks, audio_title)
 select p.id, sf."maleDescription", sf."femaleDescription", sf."juvenileDescription", sf.tracks, sf."audioTitle"
 from strapi_faunaportraits as sf
 join portrait as p on p.species_id = sf.species and p.language = CASE
@@ -450,5 +450,27 @@ select CASE
     WHEN language = 4 THEN 'er'
 END, 'part', part
 from strapi_sources_translations;
+
+with rows as (
+    insert into faunaportrait_audio_file (owner, owner_link, source, license, audio_file, audio_spectrogram, species_id)
+    select 'todo', null, 'todo', COALESCE(sf."audioLicense", 'todo'),
+        case
+            when f1.url is not null then 'audio_files/' || f1.url
+            else null
+        end,
+        case
+            when f2.url is not null then 'spectrogram_images/' || f2.url
+            else null
+        end,
+        sf.species
+    from strapi_faunaportraits as sf
+    left join strapi_file as f1 on f1.related_id = sf.id and f1.field = 'audioFile'
+    left join strapi_file as f2 on f2.related_id = sf.id and f2.field = 'audioSpectrogram'
+    where f1.url is not null or f2.url is not null returning *
+)
+update faunaportrait set faunaportrait_audio_file_id = r.id
+from portrait as p, rows as r
+where p.id = portrait_ptr_id
+    and p.species_id = r.species_id;
 
 drop view if exists strapi_file;

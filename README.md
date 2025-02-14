@@ -58,5 +58,5 @@ docker cp init.sql django-db:/ && docker exec django-db psql -U naturblick speci
 character_images
 portrait_images
 audio_files
-spectrogram_files
+spectrogram_images
 avatar_images

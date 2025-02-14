@@ -20,6 +20,7 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+
 class Group(models.Model):
     name = models.CharField(max_length=255, unique=True)
     nature = models.CharField(max_length=5, choices=NATURE_CHOICES, null=True)
@@ -247,7 +248,32 @@ class Floraportrait(Portrait):
     fruit_description.help_text = "Bechreibung Frucht/Fruchstand: z.B. Form, Farbe, Oberfläche, besondere Merkmale."
 
     class Meta:
-        db_table = 'flora_portrait'
+        db_table = 'floraportrait'
+
+
+class FaunaportraitAudioFile(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    species = models.ForeignKey(Species, on_delete=models.CASCADE)
+    owner = models.CharField(max_length=255)
+    owner_link = URLField(blank=True, null=True, max_length=255)
+    source = URLField(max_length=1024)
+    license = models.CharField(max_length=64)
+    audio_file = models.FileField(upload_to="audio_files", null=True, blank=True, validators=[validate_mp3])
+    audio_spectrogram = models.ImageField(upload_to="spectrogram_images", null=True, blank=True,
+                                          validators=[validate_png])
+
+    def clean(self):
+        super().clean()
+        faunaportrait = Faunaportrait.objects.filter(faunaportrait_audio_file=self.id).first()
+        if faunaportrait and faunaportrait.species != self.species:
+            raise ValidationError(
+                f"This Audiofile is already set as an 'audiofile' in the portrait of {faunaportrait}. The species can not be changed until it's unset")
+
+    def __str__(self):
+        return f"{self.owner} {self.audio_file.name[self.audio_file.name.index('/') + 1:]}"
+
+    class Meta:
+        db_table = 'faunaportrait_audio_file'
 
 
 class Faunaportrait(Portrait):
@@ -256,24 +282,37 @@ class Faunaportrait(Portrait):
     juvenile_description = models.TextField(blank=True, null=True)
     tracks = models.TextField(blank=True, null=True)  # seems unused
     audio_title = models.CharField(max_length=255, blank=True, null=True)
+    faunaportrait_audio_file = models.ForeignKey(FaunaportraitAudioFile, on_delete=CASCADE, null=True)
+
     male_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Männchen."
     female_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Weibchen."
     juvenile_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Jugendstadien."
     tracks.help_text = "Kurze Beschreibung zur Bestimmung anhand der Trittsiegel."
 
+    def clean(self):
+        super().clean()
+        if self.faunaportrait_audio_file and self.species.speciesid != self.faunaportrait_audio_file.species.speciesid:
+            raise ValidationError("Audiofile species must be same as faunaportrait species")
+
     def nav_bar_no_add(self):
         return True
 
     class Meta:
-        db_table = 'fauna_portrait'
+        db_table = 'faunaportrait'
 
 
-class AudioFile(models.Model):
-    portrait = models.OneToOneField(Portrait, on_delete=CASCADE)
-    audio_license = models.CharField(max_length=255, blank=True, null=True)
-    audio_file = models.FileField(upload_to="audio_files", null=True, blank=True, validators=[validate_mp3])
-    audio_spectrogram = models.ImageField(upload_to="spectrogram_files", null=True, blank=True,
-                                          validators=[validate_png])
+# class AudioFile(models.Model):
+#     faunaportrait = models.OneToOneField(Faunaportrait, on_delete=CASCADE, primary_key=True)
+#     owner = models.CharField(max_length=255)
+#     owner_link = URLField(blank=True, null=True, max_length=255)
+#     source = URLField(max_length=1024)
+#     license = models.CharField(max_length=64)
+#     audio_file = models.FileField(upload_to="audio_files", null=True, blank=True, validators=[validate_mp3])
+#     audio_spectrogram = models.ImageField(upload_to="spectrogram_images", null=True, blank=True,
+#                                           validators=[validate_png])
+#
+#     class Meta:
+#         db_table = 'audio_file'
 
 
 class Source(models.Model):
@@ -342,8 +381,6 @@ class SimilarSpecies(models.Model):
         db_table = 'similar_species'
 
 
-
-
 class Character(models.Model):
     id = models.BigAutoField(primary_key=True)
     gername = models.CharField(max_length=255)
@@ -377,6 +414,7 @@ class CharacterValue(models.Model):
     def __str__(self):
         return self.gername
 
+
 class SourcesImprint(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=32, choices=SOURCES_IMPRINT_CHOICES)
@@ -393,6 +431,7 @@ class SourcesImprint(models.Model):
     def __str__(self):
         return self.scie_name
 
+
 class SourcesTranslation(models.Model):
     language = models.CharField(max_length=2, choices=NAME_LANGUAGE_CHOICES)
     key = models.CharField(max_length=255, choices=SOURCES_TRANSLATION_CHOICES)
@@ -403,4 +442,3 @@ class SourcesTranslation(models.Model):
 
     def __str__(self):
         return f"{self.key} - {self.value}"
-
