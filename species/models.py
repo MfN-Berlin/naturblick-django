@@ -10,7 +10,6 @@ from .validators import min_max, validate_png, validate_mp3
 
 
 class Tag(models.Model):
-    # species = models.ManyToManyField(Species, related_name='tag_set')
     name = models.CharField(max_length=255, unique=True)
     english_name = models.CharField(max_length=255, unique=True)
 
