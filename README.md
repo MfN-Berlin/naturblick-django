@@ -57,7 +57,7 @@ base directory is `media-root/`
 
 ### avatar_images, portrait_images, audio_files, spectrogram_images, character_images
 
-Directories should already be there
+Directories should already be created.
 
 ```
 docker exec django-db psql -U naturblick species -c "select 'scp worker:/data/strapi/upload/' || substr(image, 15) || ' avatar_images' from avatar;" | tail -n+3 | head -n-2 >> copy_files.sh

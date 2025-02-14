@@ -128,7 +128,16 @@ class UnambigousFeatureInline(admin.TabularInline):
 
 @admin.register(PortraitImageFile)
 class PortraitImageFileAdmin(admin.ModelAdmin):
-    search_fields = ['owner', 'image']
+    search_fields = ['owner', 'image', 'species__species_id']
+    fields = ['species', 'image_tag', 'image', 'owner', 'owner_link', 'source', 'license']
+    readonly_fields = ['image_tag']
+    list_display = ['id', 'image_tag', 'image']
+    autocomplete_fields = ['species']
+
+    def image_tag(self, obj):
+        return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
+
+    image_tag.short_description = 'Image'
 
 
 class DescMetaInline(admin.StackedInline):
@@ -192,11 +201,13 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Avatar)
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
-    list_display = ['image_tag', 'image', 'owner']
+    list_display = ['id', 'thumbnail', 'image', 'owner']
     search_fields = ['image', 'owner']
+    fields = ['thumbnail', 'image', 'owner', 'owner_link', 'source', 'license', 'cropping']
+    readonly_fields = ['thumbnail']
 
-    def image_tag(self, obj):
-        return format_html('<img src="{}" style="max-width:200px; max-height:200px"/>'.format(obj.image.url))
+    def thumbnail(self, obj):
+        return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
 
 
 class CharacterValueInline(admin.TabularInline):
