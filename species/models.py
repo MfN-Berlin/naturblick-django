@@ -301,20 +301,6 @@ class Faunaportrait(Portrait):
         db_table = 'faunaportrait'
 
 
-# class AudioFile(models.Model):
-#     faunaportrait = models.OneToOneField(Faunaportrait, on_delete=CASCADE, primary_key=True)
-#     owner = models.CharField(max_length=255)
-#     owner_link = URLField(blank=True, null=True, max_length=255)
-#     source = URLField(max_length=1024)
-#     license = models.CharField(max_length=64)
-#     audio_file = models.FileField(upload_to="audio_files", null=True, blank=True, validators=[validate_mp3])
-#     audio_spectrogram = models.ImageField(upload_to="spectrogram_images", null=True, blank=True,
-#                                           validators=[validate_png])
-#
-#     class Meta:
-#         db_table = 'audio_file'
-
-
 class Source(models.Model):
     text = models.TextField()
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
