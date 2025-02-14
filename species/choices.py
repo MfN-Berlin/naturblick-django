@@ -88,3 +88,27 @@ PORTRAIT_IMAGE_TYPE_CHOICES = [
     ('in_the_city', 'In the city'),
     ('fun_fact', 'Fun fact'),
 ]
+
+SOURCES_IMPRINT_CHOICES = [
+    ('sound_recogniotion_images', 'Lauterkennung Bilder'),
+    ('sound_recogniotion_sounds', 'Lauterkennung Tonaufnahmen'),
+    ('ident_keys', 'Bestimmungsschlüssel'),
+]
+
+SOURCES_TRANSLATION_CHOICES= [
+    ('page', 'Page'),
+    ('wiki', 'Wiki'),
+    ('revision', 'Revision'),
+    ('accessed', 'Accessed'),
+    ('version', 'Version'),
+    ('volume', 'Volume'),
+    ('editors', 'Editors'),
+    ('nodate', 'Nodate'),
+    ('in', 'In'),
+    ('published', 'Published'),
+    ('edition', 'Edition'),
+    ('part', 'Part'),
+]
+
+
+
