@@ -76,7 +76,7 @@ class Species(models.Model):
     female_avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name='+', null="True",
                                       blank="True")
     gbifusagekey = models.IntegerField(blank=True, null=True)
-    accepted_id = models.IntegerField(blank=True, null=True)
+    accepted_species = models.ForeignKey("self", on_delete=models.SET_NULL, blank=True, null=True)
     created_by = CurrentUserField(related_name='species_created_by_set', null=True)
     updated_by = CurrentUserField(on_update=True, related_name='species_updated_by_set', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -288,7 +288,7 @@ class Faunaportrait(Portrait):
     juvenile_description = models.TextField(blank=True, null=True)
     tracks = models.TextField(blank=True, null=True)  # seems unused
     audio_title = models.CharField(max_length=255, blank=True, null=True)
-    faunaportrait_audio_file = models.ForeignKey(FaunaportraitAudioFile, on_delete=CASCADE, null=True)
+    faunaportrait_audio_file = models.ForeignKey(FaunaportraitAudioFile, on_delete=models.SET_NULL, null=True, blank=True)
 
     male_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Männchen."
     female_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Weibchen."
@@ -399,6 +399,12 @@ class CharacterValue(models.Model):
     colors = models.CharField(max_length=255, null=True, blank=True)
     dots = models.CharField(max_length=255, null=True, blank=True)
     image = models.ImageField(upload_to="character_images", max_length=255, null=True)
+
+    def thumbnail(self):
+        return mark_safe('<img src="/media/%s" width="150" height="150" />' % (self.image))
+
+    thumbnail.short_description = 'Thumbnail'
+    thumbnail.allow_tags = True
 
     class Meta:
         db_table = 'character_value'

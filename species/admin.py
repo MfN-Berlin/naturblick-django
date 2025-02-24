@@ -59,7 +59,6 @@ class SpeciesAdmin(admin.ModelAdmin):
               ]
     ordering = ('gername',)
     filter_horizontal = ['tag']
-    ordering = ('speciesid',)
     autocomplete_fields = ['avatar', 'female_avatar']
 
     def portrait(self, obj):
@@ -128,7 +127,7 @@ class UnambigousFeatureInline(admin.TabularInline):
 
 @admin.register(PortraitImageFile)
 class PortraitImageFileAdmin(admin.ModelAdmin):
-    search_fields = ['owner', 'image', 'species__species_id']
+    search_fields = ['owner', 'image']
     fields = ['species', 'image_tag', 'image', 'owner', 'owner_link', 'source', 'license']
     readonly_fields = ['image_tag']
     list_display = ['id', 'image_tag', 'image']
@@ -201,23 +200,40 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Avatar)
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
-    list_display = ['id', 'thumbnail', 'image', 'owner']
+    list_display = ['id', 'list_thumbnail', 'image', 'owner']
     search_fields = ['image', 'owner']
     fields = ['thumbnail', 'image', 'owner', 'owner_link', 'source', 'license', 'cropping']
     readonly_fields = ['thumbnail']
 
-    def thumbnail(self, obj):
+    def list_thumbnail(self, obj):
         return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
 
+
+@admin.register(CharacterValue)
+class CharacterValueAdmin(admin.ModelAdmin):
+    fields = ['character', 'gername', 'engname', 'colors', 'dots', 'image', 'thumbnail']
 
 class CharacterValueInline(admin.TabularInline):
     model = CharacterValue
     extra = 0
 
 
+
 @admin.register(Character)
 class CharacterAdmin(admin.ModelAdmin):
     inlines = [CharacterValueInline]
+    list_display = ['id', 'gername', 'group']
+    ordering = ['gername']
+
+  #  id = models.BigAutoField(primary_key=True)
+  #  gername = models.CharField(max_length=255)
+  #  engname = models.CharField(max_length=255)
+  #  group = models.ForeignKey(Group, on_delete=models.PROTECT)
+  #  display_name = models.CharField(max_length=255, null=True, blank=True)
+  #  weight = models.IntegerField()
+  #  single_choice = models.BooleanField(null=True, blank=True)
+  #  gerdescription = models.TextField(null=True, blank=True)
+  #  engdescription = models.TextField(null=True, blank=True)
 
 
 @admin.register(SourcesImprint)
