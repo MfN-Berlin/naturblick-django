@@ -270,10 +270,11 @@ class FaunaportraitAudioFile(models.Model):
 
     def clean(self):
         super().clean()
-        # faunaportrait = Faunaportrait.objects.filter(faunaportrait_audio_file=self.id).first()
-        # if faunaportrait and faunaportrait.species != self.species:
-        #     raise ValidationError(
-        #         f"This Audiofile is already set as an 'audiofile' in the portrait of {faunaportrait}. The species can not be changed until it's unset")
+        if self.id is not None:
+            faunaportrait = Faunaportrait.objects.filter(faunaportrait_audio_file=self.id).first()
+            if faunaportrait and faunaportrait.species != self.species:
+                raise ValidationError(
+                    f"This Audiofile is already set as an 'audiofile' in the portrait of {faunaportrait}. The species can not be changed until it's unset")
 
     def __str__(self):
         return f"{self.owner} {self.audio_file.name[self.audio_file.name.index('/') + 1:]}"
