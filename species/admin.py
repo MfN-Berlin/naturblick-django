@@ -53,6 +53,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     ]
     readonly_fields = ['speciesid']
     list_display = ['id', 'speciesid', 'sciname', 'gername', 'portrait']
+    list_display_links = ['id', 'speciesid']
     list_filter = ('group__nature', 'group')
     search_fields = ['id', 'speciesid', 'sciname', 'gername']
     fields = ['speciesid',
@@ -201,15 +202,16 @@ class UnambigousFeatureInline(admin.TabularInline):
 @admin.register(PortraitImageFile)
 class PortraitImageFileAdmin(admin.ModelAdmin):
     search_fields = ['owner', 'image']
-    fields = ['species', 'image_tag', 'image', 'owner', 'owner_link', 'source', 'license']
-    readonly_fields = ['image_tag']
-    list_display = ['id', 'image_tag', 'image']
+    fields = ['species', 'image_thumbnail', 'image', 'owner', 'owner_link', 'source', 'license']
+    readonly_fields = ['image_thumbnail']
+    list_display = ['id', 'image_thumbnail', 'image']
+    list_display_links = ['id', 'image_thumbnail']
     autocomplete_fields = ['species']
 
-    def image_tag(self, obj):
+    def image_thumbnail(self, obj):
         return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
 
-    image_tag.short_description = 'Image'
+    image_thumbnail.short_description = 'Image'
 
 
 class DescMetaInline(admin.StackedInline):
@@ -233,6 +235,7 @@ class InTheCityMetaInline(admin.StackedInline):
 @admin.register(Floraportrait)
 class FloraportraitAdmin(admin.ModelAdmin):
     list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
+    # list_display_links = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
     search_fields = ('id', 'species__speciesid', 'species__sciname', 'species__gername')
     search_help_text = 'Sucht über alle Artnamen'
     list_filter = ('published', 'language')
@@ -279,6 +282,7 @@ class GroupAdmin(admin.ModelAdmin):
 @admin.register(Avatar)
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
     list_display = ['id', 'list_thumbnail', 'image', 'owner']
+    list_display_links = ['id', 'list_thumbnail']
     search_fields = ['image', 'owner']
     fields = ['thumbnail', 'image', 'owner', 'owner_link', 'source', 'license', 'cropping']
     readonly_fields = ['thumbnail']
@@ -290,13 +294,17 @@ class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
 @admin.register(CharacterValue)
 class CharacterValueAdmin(admin.ModelAdmin):
     fields = ['character', 'gername', 'engname', 'colors', 'dots', 'image', 'thumbnail']
-    list_display = ['character', 'gername', 'engname']
+    list_display = ['character', 'thumbnail', 'gername', 'engname']
+    list_display_links = ['character', 'thumbnail']
     readonly_fields = ['thumbnail']
 
     def thumbnail(self, obj):
-        return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
+        if obj.image:
+            return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
+        else:
+            return "-"
 
-        thumbnail.short_description = 'Image'
+    thumbnail.short_description = 'Image'
 
 
 class CharacterValueInline(admin.TabularInline):
