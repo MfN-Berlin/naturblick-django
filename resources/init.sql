@@ -451,7 +451,7 @@ from strapi_sources_translations;
 
 with rows as (
     insert into faunaportrait_audio_file (owner, owner_link, source, license, audio_file, audio_spectrogram, species_id)
-    select 'todo', null, 'todo', COALESCE(sf."audioLicense", 'todo'),
+    select distinct 'todo', null, 'todo', COALESCE(sf."audioLicense", 'todo'),
         case
             when f1.url is not null then 'audio_files/' || f1.url
             else null

@@ -1,4 +1,4 @@
-_# naturblick-django
+# naturblick-django
 
 This is the CMS for naturblick. We use WSGI/Gunicorn.
 

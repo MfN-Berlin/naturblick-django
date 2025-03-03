@@ -1,8 +1,10 @@
 import logging
 
+from django import forms
 from django.contrib import admin
 from django.db import models
 from django.forms import Textarea
+from django.forms.models import BaseInlineFormSet
 from django.urls import reverse
 from django.utils.html import format_html
 from image_cropping import ImageCroppingMixin
@@ -12,6 +14,21 @@ from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, Ad
     Tag, Character, CharacterValue, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile
 
 logger = logging.getLogger(__name__)
+
+
+def validate_order(theforms, name):
+    order_numbers = set()
+    for form in theforms:
+        if form.cleaned_data and not form.cleaned_data.get('DELETE', False):
+            order_number = form.cleaned_data.get('order')
+            if order_number in order_numbers:
+                raise forms.ValidationError(f"Two {name} could not have same order.")
+            order_numbers.add(order_number)
+
+    for i, _ in enumerate(order_numbers):
+        if i + 1 not in order_numbers:
+            raise forms.ValidationError(
+                f"The order numbers of {name} must be consecutive numbers from 1 up to {len(order_numbers)} (in any order)")
 
 
 class SpeciesNameInline(admin.TabularInline):
@@ -85,40 +102,96 @@ class SpeciesAdmin(admin.ModelAdmin):
 #
 # Portrait
 #
+class SourceInlineFormSet(BaseInlineFormSet):
+    class Meta:
+        model = Source
+        fields = '__all__'
+
+    def clean(self):
+        super().clean()
+        validate_order(self.forms, "Source")
+
+
 class SourceInline(admin.TabularInline):
     model = Source
+    formset = SourceInlineFormSet
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
+
+
+class GoodToKnowInlineFormSet(BaseInlineFormSet):
+    class Meta:
+        model = GoodToKnow
+        fields = '__all__'
+
+    def clean(self):
+        super().clean()
+        validate_order(self.forms, "GoodToKnow")
 
 
 class GoodToKnowInline(admin.TabularInline):
     model = GoodToKnow
+    formset = GoodToKnowInlineFormSet
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
+
+
+class SimilarSpeciesFormSet(BaseInlineFormSet):
+    class Meta:
+        model = SimilarSpecies
+        fields = '__all__'
+
+    def clean(self):
+        super().clean()
+        validate_order(self.forms, "SimilarSpecies")
 
 
 class SimilarSpeciesInline(admin.TabularInline):
     model = SimilarSpecies
+    formset = SimilarSpeciesFormSet
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
+    autocomplete_fields = ['species']
+
+
+class AdditionalLinkFormSet(BaseInlineFormSet):
+    class Meta:
+        model = AdditionalLink
+        fields = '__all__'
+
+    def clean(self):
+        super().clean()
+        validate_order(self.forms, "AdditionalLink")
 
 
 class AdditionalLinkInline(admin.TabularInline):
     model = AdditionalLink
+    formset = AdditionalLinkFormSet
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
 
 
+class UnambigousFeatureFormSet(BaseInlineFormSet):
+    class Meta:
+        model = UnambigousFeature
+        fields = '__all__'
+
+    def clean(self):
+        super().clean()
+        validate_order(self.forms, "AdditionalLink")
+
+
 class UnambigousFeatureInline(admin.TabularInline):
     model = UnambigousFeature
+    formset = UnambigousFeatureFormSet
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
@@ -174,6 +247,11 @@ class FloraportraitAdmin(admin.ModelAdmin):
     }
 
 
+@admin.register(FaunaportraitAudioFile)
+class FaunaportraitAudioFileAdmin(admin.ModelAdmin):
+    search_fields = ['owner', 'audio_file', 'audio_spectrogram']
+
+
 @admin.register(Faunaportrait)
 class FaunaportraitAdmin(admin.ModelAdmin):
     list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
@@ -185,7 +263,7 @@ class FaunaportraitAdmin(admin.ModelAdmin):
         DescMetaInline, FunFactMetaInline, InTheCityMetaInline
     ]
     ordering = ["species__speciesid"]
-    autocomplete_fields = ['species']
+    autocomplete_fields = ['species', 'faunaportrait_audio_file']
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 80})}
     }
@@ -215,7 +293,7 @@ class CharacterValueAdmin(admin.ModelAdmin):
     list_display = ['character', 'gername', 'engname']
     readonly_fields = ['thumbnail']
 
-    def thumbnail       (self, obj):
+    def thumbnail(self, obj):
         return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
 
         thumbnail.short_description = 'Image'
@@ -238,6 +316,7 @@ class CharacterAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 8, 'cols': 40})}
     }
+
 
 @admin.register(SourcesImprint)
 class SourcesImprintAdmin(admin.ModelAdmin):

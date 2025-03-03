@@ -82,7 +82,7 @@ class Species(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    tag = models.ManyToManyField(Tag)
+    tag = models.ManyToManyField(Tag, blank=True)
 
     speciesid.short_description = "Species ID"
 
@@ -289,7 +289,8 @@ class Faunaportrait(Portrait):
     juvenile_description = models.TextField(blank=True, null=True)
     tracks = models.TextField(blank=True, null=True)  # seems unused
     audio_title = models.CharField(max_length=255, blank=True, null=True)
-    faunaportrait_audio_file = models.ForeignKey(FaunaportraitAudioFile, on_delete=models.SET_NULL, null=True, blank=True)
+    faunaportrait_audio_file = models.ForeignKey(FaunaportraitAudioFile, on_delete=models.SET_NULL, null=True,
+                                                 blank=True)
 
     male_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Männchen."
     female_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Weibchen."
@@ -300,9 +301,6 @@ class Faunaportrait(Portrait):
         super().clean()
         if self.faunaportrait_audio_file and self.species.speciesid != self.faunaportrait_audio_file.species.speciesid:
             raise ValidationError("Audiofile species must be same as faunaportrait species")
-
-    def nav_bar_no_add(self):
-        return True
 
     class Meta:
         db_table = 'faunaportrait'
@@ -392,7 +390,7 @@ class Character(models.Model):
         return self.gername
 
 
-class  CharacterValue(models.Model):
+class CharacterValue(models.Model):
     id = models.BigAutoField(primary_key=True)
     character = models.ForeignKey(Character, on_delete=CASCADE)
     gername = models.CharField(max_length=255)
