@@ -1,9 +1,24 @@
-from rest_framework import serializers
-from .models import Species, SpeciesName, Avatar
 from image_cropping.utils import get_backend
+from rest_framework import serializers
+
+from .models import Species, SpeciesName, Avatar, CharacterValue
+
+
+class CharacterValueSerializer(serializers.ModelSerializer):
+    character_id = serializers.IntegerField(source='character.id')
+
+    class Meta:
+        model = CharacterValue
+        fields = ['id',
+                  'character_id',
+                  'gername',
+                  'engname',
+                  'colors',
+                  'dots',
+                  'image']
+
 
 class SpeciesSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Species
         fields = ['pk', 'speciesid']
@@ -13,6 +28,7 @@ class SpeciesNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = SpeciesName
         fields = ['name', 'language', 'isPrimary']
+
 
 class AvatarSerializer(serializers.ModelSerializer):
     avatar_url = serializers.SerializerMethodField('generate_avatar_url')
@@ -31,6 +47,7 @@ class AvatarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Avatar
         fields = ['avatar_url', 'image_owner', 'image_ownerLink', 'image_source', 'image_license']
+
 
 class SpeciesDetailSerializer(serializers.ModelSerializer):
     species_names = SpeciesNameSerializer(many=True, read_only=True)
