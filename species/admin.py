@@ -61,7 +61,6 @@ class SpeciesAdmin(admin.ModelAdmin):
               'gername',
               'sciname',
               'engname',
-              'wikipedia',
               'autoid',
               'nbclassid',
               ('red_list_germany',
@@ -262,6 +261,10 @@ class FaunaportraitAudioFileAdmin(admin.ModelAdmin):
     list_display = ['id', 'audio_file', 'species__gername', 'species__sciname']
     search_fields = ['owner', 'audio_file', 'audio_spectrogram']
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        form.base_fields['species'].queryset = Species.objects.filter(group__nature='fauna')
+        return form
 
 @admin.register(Faunaportrait)
 class FaunaportraitAdmin(admin.ModelAdmin):

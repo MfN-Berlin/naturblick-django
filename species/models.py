@@ -86,6 +86,14 @@ class Species(models.Model):
 
     speciesid.short_description = "Species ID"
 
+    def clean(self):
+        super().clean()
+        if self.accepted_species and self.accepted_species == self:
+            raise ValidationError('Accepted species must not be self')
+        if self.accepted_species and self.accepted_species.group != self.group:
+            raise ValidationError('Accepted species must be in the same group')
+
+
     def save(self, *args, **kwargs):
         if not self.speciesid:
             prefix = f'{self.group}_ffff'
@@ -270,11 +278,14 @@ class FaunaportraitAudioFile(models.Model):
 
     def clean(self):
         super().clean()
+        if self.species.group.nature != 'Fauna':
+            raise ValidationError('FaunaPortraitAudioFiles only for fauna')
         if self.id is not None:
             faunaportrait = Faunaportrait.objects.filter(faunaportrait_audio_file=self.id).first()
             if faunaportrait and faunaportrait.species != self.species:
                 raise ValidationError(
                     f"This Audiofile is already set as an 'audiofile' in the portrait of {faunaportrait}. The species can not be changed until it's unset")
+
 
     def __str__(self):
         return f"{self.owner} {self.audio_file.name[self.audio_file.name.index('/') + 1:]}"
@@ -367,6 +378,14 @@ class SimilarSpecies(models.Model):
                          on_delete=models.CASCADE,
                          parent_link=False)
     order = models.IntegerField()
+
+    def clean(self):
+        super().clean()
+        if self.species == self.portrait.species:
+            raise ValidationError('Yes, this species will probably be similar to itself')
+
+        if self.species.group != self.portrait.species.group:
+            raise ValidationError('A similar species should be part of the same group')
 
     def __str__(self):
         return f"SimilarSpecies {self.species.speciesid}"
