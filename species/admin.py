@@ -1,8 +1,10 @@
 import logging
 
+from django import forms
 from django.contrib import admin
 from django.db import models
 from django.forms import Textarea
+from django.forms.models import BaseInlineFormSet
 from django.urls import reverse
 from django.utils.html import format_html
 from image_cropping import ImageCroppingMixin
@@ -12,6 +14,21 @@ from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, Ad
     Tag, Character, CharacterValue, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile
 
 logger = logging.getLogger(__name__)
+
+
+def validate_order(theforms, name):
+    order_numbers = set()
+    for form in theforms:
+        if form.cleaned_data and not form.cleaned_data.get('DELETE', False):
+            order_number = form.cleaned_data.get('order')
+            if order_number in order_numbers:
+                raise forms.ValidationError(f"Two {name} could not have same order.")
+            order_numbers.add(order_number)
+
+    for i, _ in enumerate(order_numbers):
+        if i + 1 not in order_numbers:
+            raise forms.ValidationError(
+                f"The order numbers of {name} must be consecutive numbers from 1 up to {len(order_numbers)} (in any order)")
 
 
 class SpeciesNameInline(admin.TabularInline):
@@ -36,6 +53,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     ]
     readonly_fields = ['speciesid']
     list_display = ['id', 'speciesid', 'sciname', 'gername', 'portrait']
+    list_display_links = ['id', 'speciesid']
     list_filter = ('group__nature', 'group')
     search_fields = ['id', 'speciesid', 'sciname', 'gername']
     fields = ['speciesid',
@@ -54,12 +72,11 @@ class SpeciesAdmin(admin.ModelAdmin):
               'avatar',
               'female_avatar',
               'gbifusagekey',
-              'accepted_id',
+              'accepted_species',
               'tag'
               ]
     ordering = ('gername',)
     filter_horizontal = ['tag']
-    ordering = ('speciesid',)
     autocomplete_fields = ['avatar', 'female_avatar']
 
     def portrait(self, obj):
@@ -86,40 +103,96 @@ class SpeciesAdmin(admin.ModelAdmin):
 #
 # Portrait
 #
+class SourceInlineFormSet(BaseInlineFormSet):
+    class Meta:
+        model = Source
+        fields = '__all__'
+
+    def clean(self):
+        super().clean()
+        validate_order(self.forms, "Source")
+
+
 class SourceInline(admin.TabularInline):
     model = Source
+    formset = SourceInlineFormSet
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
+
+
+class GoodToKnowInlineFormSet(BaseInlineFormSet):
+    class Meta:
+        model = GoodToKnow
+        fields = '__all__'
+
+    def clean(self):
+        super().clean()
+        validate_order(self.forms, "GoodToKnow")
 
 
 class GoodToKnowInline(admin.TabularInline):
     model = GoodToKnow
+    formset = GoodToKnowInlineFormSet
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
+
+
+class SimilarSpeciesFormSet(BaseInlineFormSet):
+    class Meta:
+        model = SimilarSpecies
+        fields = '__all__'
+
+    def clean(self):
+        super().clean()
+        validate_order(self.forms, "SimilarSpecies")
 
 
 class SimilarSpeciesInline(admin.TabularInline):
     model = SimilarSpecies
+    formset = SimilarSpeciesFormSet
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
+    autocomplete_fields = ['species']
+
+
+class AdditionalLinkFormSet(BaseInlineFormSet):
+    class Meta:
+        model = AdditionalLink
+        fields = '__all__'
+
+    def clean(self):
+        super().clean()
+        validate_order(self.forms, "AdditionalLink")
 
 
 class AdditionalLinkInline(admin.TabularInline):
     model = AdditionalLink
+    formset = AdditionalLinkFormSet
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
 
 
+class UnambigousFeatureFormSet(BaseInlineFormSet):
+    class Meta:
+        model = UnambigousFeature
+        fields = '__all__'
+
+    def clean(self):
+        super().clean()
+        validate_order(self.forms, "AdditionalLink")
+
+
 class UnambigousFeatureInline(admin.TabularInline):
     model = UnambigousFeature
+    formset = UnambigousFeatureFormSet
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
@@ -129,6 +202,16 @@ class UnambigousFeatureInline(admin.TabularInline):
 @admin.register(PortraitImageFile)
 class PortraitImageFileAdmin(admin.ModelAdmin):
     search_fields = ['owner', 'image']
+    fields = ['species', 'image_thumbnail', 'image', 'owner', 'owner_link', 'source', 'license']
+    readonly_fields = ['image_thumbnail']
+    list_display = ['id', 'image_thumbnail', 'image']
+    list_display_links = ['id', 'image_thumbnail']
+    autocomplete_fields = ['species']
+
+    def image_thumbnail(self, obj):
+        return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
+
+    image_thumbnail.short_description = 'Image'
 
 
 class DescMetaInline(admin.StackedInline):
@@ -152,6 +235,7 @@ class InTheCityMetaInline(admin.StackedInline):
 @admin.register(Floraportrait)
 class FloraportraitAdmin(admin.ModelAdmin):
     list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
+    # list_display_links = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
     search_fields = ('id', 'species__speciesid', 'species__sciname', 'species__gername')
     search_help_text = 'Sucht über alle Artnamen'
     list_filter = ('published', 'language')
@@ -166,6 +250,11 @@ class FloraportraitAdmin(admin.ModelAdmin):
     }
 
 
+@admin.register(FaunaportraitAudioFile)
+class FaunaportraitAudioFileAdmin(admin.ModelAdmin):
+    search_fields = ['owner', 'audio_file', 'audio_spectrogram']
+
+
 @admin.register(Faunaportrait)
 class FaunaportraitAdmin(admin.ModelAdmin):
     list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
@@ -177,7 +266,7 @@ class FaunaportraitAdmin(admin.ModelAdmin):
         DescMetaInline, FunFactMetaInline, InTheCityMetaInline
     ]
     ordering = ["species__speciesid"]
-    autocomplete_fields = ['species']
+    autocomplete_fields = ['species', 'faunaportrait_audio_file']
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 80})}
     }
@@ -192,11 +281,30 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Avatar)
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
-    list_display = ['image_tag', 'image', 'owner']
+    list_display = ['id', 'list_thumbnail', 'image', 'owner']
+    list_display_links = ['id', 'list_thumbnail']
     search_fields = ['image', 'owner']
+    fields = ['thumbnail', 'image', 'owner', 'owner_link', 'source', 'license', 'cropping']
+    readonly_fields = ['thumbnail']
 
-    def image_tag(self, obj):
-        return format_html('<img src="{}" style="max-width:200px; max-height:200px"/>'.format(obj.image.url))
+    def list_thumbnail(self, obj):
+        return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
+
+
+@admin.register(CharacterValue)
+class CharacterValueAdmin(admin.ModelAdmin):
+    fields = ['character', 'gername', 'engname', 'colors', 'dots', 'image', 'thumbnail']
+    list_display = ['character', 'thumbnail', 'gername', 'engname']
+    list_display_links = ['character', 'thumbnail']
+    readonly_fields = ['thumbnail']
+
+    def thumbnail(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
+        else:
+            return "-"
+
+    thumbnail.short_description = 'Image'
 
 
 class CharacterValueInline(admin.TabularInline):
@@ -207,18 +315,34 @@ class CharacterValueInline(admin.TabularInline):
 @admin.register(Character)
 class CharacterAdmin(admin.ModelAdmin):
     inlines = [CharacterValueInline]
+    list_display = ['gername', 'engname', 'group']
+    list_filter = ['group']
+    ordering = ['gername']
+    search_fields = ['gername']
+    fields = [('gername', 'engname'), 'group', 'display_name', 'weight', 'single_choice',
+              ('gerdescription', 'engdescription')]
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 8, 'cols': 40})}
+    }
 
 
 @admin.register(SourcesImprint)
 class SourcesImprintAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ['name']
+    ordering = ['scie_name']
+    search_fields = ['scie_name']
 
 
 @admin.register(SourcesTranslation)
 class SourcesTranslationAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ['key', 'language']
+    ordering = ['value']
+    search_fields = ['key', 'value']
+    list_display = ['key', 'value', 'language']
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    search_fields = ['name']
+    ordering = ['name']
+    search_fields = ['name', 'english_name']
+    list_display = ['name', 'english_name']
