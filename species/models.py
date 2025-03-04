@@ -62,8 +62,8 @@ class Species(models.Model):
     sciname = models.CharField(max_length=255, unique=True, db_index=True)
     engname = models.CharField(max_length=255, null=True, blank=True, db_index=True)
     group = models.ForeignKey(Group, on_delete=models.PROTECT)
-    wikipedia = models.URLField(max_length=255, blank=True, null=True)
     nbclassid = models.CharField(max_length=255, blank=True, null=True)
+    autoid = models.BooleanField(default=False)
     red_list_germany = models.CharField(max_length=255, blank=True, null=True, choices=REDLIST_CHOICES)
     iucncategory = models.CharField(max_length=2, blank=True, null=True, choices=IUCN_CHOICES)
     activity_start_month = models.CharField(blank=True, null=True, max_length=9, choices=MONTH_CHOICES)
@@ -301,6 +301,9 @@ class Faunaportrait(Portrait):
         super().clean()
         if self.faunaportrait_audio_file and self.species.speciesid != self.faunaportrait_audio_file.species.speciesid:
             raise ValidationError("Audiofile species must be same as faunaportrait species")
+
+        if (self.faunaportrait_audio_file and not self.audio_title) or (not self.faunaportrait_audio_file and self.audio_title):
+            raise ValidationError("Audiofile and audiotitle must be both set or not")
 
     class Meta:
         db_table = 'faunaportrait'
