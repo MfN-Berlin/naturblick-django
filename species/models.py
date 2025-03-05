@@ -62,8 +62,8 @@ class Species(models.Model):
     sciname = models.CharField(max_length=255, unique=True, db_index=True)
     engname = models.CharField(max_length=255, null=True, blank=True, db_index=True)
     group = models.ForeignKey(Group, on_delete=models.PROTECT)
-    wikipedia = models.URLField(max_length=255, blank=True, null=True)
     nbclassid = models.CharField(max_length=255, blank=True, null=True)
+    autoid = models.BooleanField(default=False)
     red_list_germany = models.CharField(max_length=255, blank=True, null=True, choices=REDLIST_CHOICES)
     iucncategory = models.CharField(max_length=2, blank=True, null=True, choices=IUCN_CHOICES)
     activity_start_month = models.CharField(blank=True, null=True, max_length=9, choices=MONTH_CHOICES)
@@ -85,6 +85,14 @@ class Species(models.Model):
     tag = models.ManyToManyField(Tag, blank=True)
 
     speciesid.short_description = "Species ID"
+
+    def clean(self):
+        super().clean()
+        if self.accepted_species and self.accepted_species == self:
+            raise ValidationError('Accepted species must not be self')
+        if self.accepted_species and self.accepted_species.group != self.group:
+            raise ValidationError('Accepted species must be in the same group')
+
 
     def save(self, *args, **kwargs):
         if not self.speciesid:
@@ -270,11 +278,14 @@ class FaunaportraitAudioFile(models.Model):
 
     def clean(self):
         super().clean()
+        if self.species.group.nature != 'Fauna':
+            raise ValidationError('FaunaPortraitAudioFiles only for fauna')
         if self.id is not None:
             faunaportrait = Faunaportrait.objects.filter(faunaportrait_audio_file=self.id).first()
             if faunaportrait and faunaportrait.species != self.species:
                 raise ValidationError(
                     f"This Audiofile is already set as an 'audiofile' in the portrait of {faunaportrait}. The species can not be changed until it's unset")
+
 
     def __str__(self):
         return f"{self.owner} {self.audio_file.name[self.audio_file.name.index('/') + 1:]}"
@@ -301,6 +312,9 @@ class Faunaportrait(Portrait):
         super().clean()
         if self.faunaportrait_audio_file and self.species.speciesid != self.faunaportrait_audio_file.species.speciesid:
             raise ValidationError("Audiofile species must be same as faunaportrait species")
+
+        if (self.faunaportrait_audio_file and not self.audio_title) or (not self.faunaportrait_audio_file and self.audio_title):
+            raise ValidationError("Audiofile and audiotitle must be both set or not")
 
     class Meta:
         db_table = 'faunaportrait'
@@ -364,6 +378,14 @@ class SimilarSpecies(models.Model):
                          on_delete=models.CASCADE,
                          parent_link=False)
     order = models.IntegerField()
+
+    def clean(self):
+        super().clean()
+        if self.species == self.portrait.species:
+            raise ValidationError('Yes, this species will probably be similar to itself')
+
+        if self.species.group != self.portrait.species.group:
+            raise ValidationError('A similar species should be part of the same group')
 
     def __str__(self):
         return f"SimilarSpecies {self.species.speciesid}"

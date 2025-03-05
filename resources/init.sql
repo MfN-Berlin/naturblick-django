@@ -25,8 +25,8 @@ join strapi_components_speciesportrait_species_pictures as scsp on scsp.id = ssa
 join strapi_file as f on f.related_type = 'components_speciesportrait_species_pictures' and f.related_id = ssac.component_id
 where ssa.published_at is not null;
 
-insert into species (id,speciesid,gername,sciname,engname,wikipedia,nbclassid,red_list_germany,iucncategory ,activity_start_month ,activity_end_month, activity_start_hour, activity_end_hour, gbifusagekey, accepted_species_id, created_at, updated_at, avatar_id, group_id)
-select s.id, s.speciesid, s.gername, s.sciname, s.engname, s.wikipedia, s.nbclassid, s."redListGermany", s.iucncategory, s."activityStartMonth", s."activityEndMonth", s."activityStartHour", s."activityEndHour", s.gbifusagekey, s.accepted, s.created_at, s.updated_at, a.id, g.id
+insert into species (id, speciesid, gername, sciname, engname, nbclassid, autoid, red_list_germany, iucncategory ,activity_start_month ,activity_end_month, activity_start_hour, activity_end_hour, gbifusagekey, accepted_species_id, created_at, updated_at, avatar_id, group_id)
+select s.id, s.speciesid, s.gername, s.sciname, s.engname, s.nbclassid, s.autoid, s."redListGermany", s.iucncategory, s."activityStartMonth", s."activityEndMonth", s."activityStartHour", s."activityEndHour", s.gbifusagekey, s.accepted, s.created_at, s.updated_at, a.id, g.id
 from strapi_species as s
 join "group" as g on s."group" = g.name
 left join avatar as a on a.strapi_species = s.speciesid and a.id not in (select female_avatar_id from species);

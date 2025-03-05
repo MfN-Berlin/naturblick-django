@@ -61,7 +61,7 @@ class SpeciesAdmin(admin.ModelAdmin):
               'gername',
               'sciname',
               'engname',
-              'wikipedia',
+              'autoid',
               'nbclassid',
               ('red_list_germany',
                'iucncategory'),
@@ -75,7 +75,7 @@ class SpeciesAdmin(admin.ModelAdmin):
               'accepted_species',
               'tag'
               ]
-    ordering = ('gername',)
+    ordering = ('sciname',)
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar', 'female_avatar']
 
@@ -235,7 +235,6 @@ class InTheCityMetaInline(admin.StackedInline):
 @admin.register(Floraportrait)
 class FloraportraitAdmin(admin.ModelAdmin):
     list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
-    # list_display_links = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
     search_fields = ('id', 'species__speciesid', 'species__sciname', 'species__gername')
     search_help_text = 'Sucht über alle Artnamen'
     list_filter = ('published', 'language')
@@ -243,17 +242,29 @@ class FloraportraitAdmin(admin.ModelAdmin):
         UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline,
         DescMetaInline, FunFactMetaInline, InTheCityMetaInline
     ]
-    ordering = ('species__speciesid',)
+    ordering = ('species__sciname',)
     autocomplete_fields = ['species']
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 80})}
     }
 
+    def get_fields(self, request, obj=None, **kwargs):
+        fields = super().get_fields(request, obj, **kwargs)
+        fields.remove('published')
+        fields.remove('species')
+        fields.insert(0, ('species', 'published'))
+        return fields
+
 
 @admin.register(FaunaportraitAudioFile)
 class FaunaportraitAudioFileAdmin(admin.ModelAdmin):
+    list_display = ['id', 'audio_file', 'species__gername', 'species__sciname']
     search_fields = ['owner', 'audio_file', 'audio_spectrogram']
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        form.base_fields['species'].queryset = Species.objects.filter(group__nature='fauna')
+        return form
 
 @admin.register(Faunaportrait)
 class FaunaportraitAdmin(admin.ModelAdmin):
@@ -265,11 +276,18 @@ class FaunaportraitAdmin(admin.ModelAdmin):
         UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline,
         DescMetaInline, FunFactMetaInline, InTheCityMetaInline
     ]
-    ordering = ["species__speciesid"]
+    ordering = ["species__sciname"]
     autocomplete_fields = ['species', 'faunaportrait_audio_file']
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 80})}
     }
+
+    def get_fields(self, request, obj=None, **kwargs):
+        fields = super().get_fields(request, obj, **kwargs)
+        fields.remove('published')
+        fields.remove('species')
+        fields.insert(0, ('species', 'published'))
+        return fields
 
 
 @admin.register(Group)
