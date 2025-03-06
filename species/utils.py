@@ -1,7 +1,8 @@
+import logging
 import sqlite3
 import tempfile
 
-from species.models import Species, SpeciesName, PortraitImageFile
+from species.models import Species, SpeciesName, PortraitImageFile, Faunaportrait
 
 
 #
@@ -13,20 +14,32 @@ from species.models import Species, SpeciesName, PortraitImageFile
 #
 #
 
-def insert_portrait_image(sqlite_cursor):
-    #TODO johannes: text fehlt -> War bisher sprachlos, ist jetzt aber je Sprache setzbar.
-    data = list(map(lambda pif: (pif.id, pif.owner, pif.owner_link, pif.source, None, pif.license), PortraitImageFile.objects.all()))
-    sqlite_cursor.executemany("INSERT INTO portrait_image VALUES (?, ?, ?, ?, ?, ?)", data)
+logger = logging.getLogger(__name__)
 
+def insert_portrait_image_and_sizes(sqlite_cursor):
+    #TODO johannes: text fehlt '' -> War bisher sprachlos, ist jetzt aber je Sprache setzbar.
+    id = 1
+    for fp in list(Faunaportrait.objects.all()):
 
-def insert_portrait_image_size(sqlite_cursor):
+        if hasattr(fp, 'descmeta'):
+            text = fp.descmeta.text
+            pif = fp.descmeta.portrait_image_file
+            sqlite_cursor.execute("INSERT INTO portrait_image VALUES (?, ?, ?, ?, ?, ?)", (id, pif.owner, pif.owner_link, pif.source, text, pif.license))
+
+            sqlite_cursor.execute("INSERT INTO portrait_image_size VALUES (?, ?, ? ,?)",
+                                  (id, width, height, url))
+
+            id += 1
+
+    # data = list(map(lambda pif: (pif.id, pif.owner, pif.owner_link, pif.source, '', pif.license), PortraitImageFile.objects.all()))
+    # sqlite_cursor.executemany("INSERT INTO portrait_image VALUES (?, ?, ?, ?, ?, ?)", data)
+
     # TODO johannes
-    #"INSERT INTO portrait_image_size VALUES (?, ?, ? ,?);"
+    # "INSERT INTO portrait_image_size VALUES (?, ?, ? ,?);"
     # setInt(1, portraitImageId)
     # setInt(2, width)
     # setInt(3, height)
     # setString(4, url)
-    pass
 
 
 def insert_portrait(sqlite_cursor):
@@ -72,8 +85,7 @@ def create_sqlite_file():
     create_tables(sqlite_cursor)
 
     insert_species(sqlite_cursor)
-    insert_portrait_image(sqlite_cursor)
-    insert_portrait_image_size(sqlite_cursor)
+    insert_portrait_image_and_sizes(sqlite_cursor)
     insert_portrait(sqlite_cursor)
     insert_similar_species (sqlite_cursor)
     insert_unambiguous_feature(sqlite_cursor)
