@@ -2,8 +2,7 @@ import logging
 import sqlite3
 import tempfile
 
-from species.models import Species, SpeciesName, PortraitImageFile, Faunaportrait
-
+from species.models import Species, SpeciesName, PortraitImageFile, Faunaportrait, Floraportrait
 
 #
 #
@@ -16,30 +15,47 @@ from species.models import Species, SpeciesName, PortraitImageFile, Faunaportrai
 
 logger = logging.getLogger(__name__)
 
+def insert_image_size(sqlite_cursor, img, next_id):
+    if img:
+        sqlite_cursor.execute("INSERT INTO portrait_image_size VALUES (?, ?, ? ,?)",
+                              (next_id, img.width, img.height, img.url))
+
+def insert_image(sqlite_cursor, meta, next_id):
+    text = meta.text
+    pif = meta.portrait_image_file
+    sqlite_cursor.execute("INSERT INTO portrait_image VALUES (?, ?, ?, ?, ?, ?)",
+                          (next_id, pif.owner, pif.owner_link, pif.source, text, pif.license))
+
+    insert_image_size(sqlite_cursor, pif.small, next_id)
+    insert_image_size(sqlite_cursor, pif.medium, next_id)
+    insert_image_size(sqlite_cursor, pif.large, next_id)
+    insert_image_size(sqlite_cursor, pif.thumbnail, next_id)
+
+
 def insert_portrait_image_and_sizes(sqlite_cursor):
-    #TODO johannes: text fehlt '' -> War bisher sprachlos, ist jetzt aber je Sprache setzbar.
-    id = 1
+    next_id = 1
     for fp in list(Faunaportrait.objects.all()):
-
         if hasattr(fp, 'descmeta'):
-            text = fp.descmeta.text
-            pif = fp.descmeta.portrait_image_file
-            sqlite_cursor.execute("INSERT INTO portrait_image VALUES (?, ?, ?, ?, ?, ?)", (id, pif.owner, pif.owner_link, pif.source, text, pif.license))
+            insert_image(sqlite_cursor, fp.descmeta, next_id)
+            next_id += 1
+        if hasattr(fp, 'funfactmeta'):
+            insert_image(sqlite_cursor, fp.funfactmeta, next_id)
+            next_id += 1
+        if hasattr(fp, 'inthecitymeta'):
+            insert_image(sqlite_cursor, fp.inthecitymeta, next_id)
+            next_id += 1
+    for fp in list(Floraportrait.objects.all()):
+        if hasattr(fp, 'descmeta'):
+            insert_image(sqlite_cursor, fp.descmeta, next_id)
+            next_id += 1
+        if hasattr(fp, 'funfactmeta'):
+            insert_image(sqlite_cursor, fp.funfactmeta, next_id)
+            next_id += 1
+        if hasattr(fp, 'inthecitymeta'):
+            insert_image(sqlite_cursor, fp.inthecitymeta, next_id)
+            next_id += 1
 
-            sqlite_cursor.execute("INSERT INTO portrait_image_size VALUES (?, ?, ? ,?)",
-                                  (id, width, height, url))
 
-            id += 1
-
-    # data = list(map(lambda pif: (pif.id, pif.owner, pif.owner_link, pif.source, '', pif.license), PortraitImageFile.objects.all()))
-    # sqlite_cursor.executemany("INSERT INTO portrait_image VALUES (?, ?, ?, ?, ?, ?)", data)
-
-    # TODO johannes
-    # "INSERT INTO portrait_image_size VALUES (?, ?, ? ,?);"
-    # setInt(1, portraitImageId)
-    # setInt(2, width)
-    # setInt(3, height)
-    # setString(4, url)
 
 
 def insert_portrait(sqlite_cursor):
