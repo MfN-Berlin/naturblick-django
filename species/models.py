@@ -16,6 +16,7 @@ MEDIUM_WIDTH = 800
 SMALL_WIDTH = 400
 THUMBNAIL_WIDTH = 245
 
+
 class Tag(models.Model):
     name = models.CharField(max_length=255, unique=True)
     english_name = models.CharField(max_length=255, unique=True)
@@ -167,7 +168,6 @@ class PortraitImageFile(models.Model):
             return self.image_thumbnail
         return self.image
 
-
     image_large = ImageSpecField(
         source='image',
         processors=[ResizeToFit(LARGE_WIDTH, None)],
@@ -314,6 +314,10 @@ class Floraportrait(Portrait):
     flower_description.help_text = "Beschreibung Blüte/Blütenstand: z.B. Farbe, Blütenstandsform, besondere Merkmale."
     fruit_description.help_text = "Bechreibung Frucht/Fruchstand: z.B. Form, Farbe, Oberfläche, besondere Merkmale."
 
+    @property
+    def description(self):
+        return f"{self.short_description}\n\n{self.leaf_description}\n\n{self.stem_axis_description}\n\n{self.flower_description}\n\n{self.fruit_description}"
+
     class Meta:
         db_table = 'floraportrait'
 
@@ -368,6 +372,17 @@ class Faunaportrait(Portrait):
         if (self.faunaportrait_audio_file and not self.audio_title) or (
                 not self.faunaportrait_audio_file and self.audio_title):
             raise ValidationError("Audiofile and audiotitle must be both set or not")
+
+    @property
+    def description(self):
+        description = self.short_description
+        if self.male_description:
+            description += f"\n\n{self.male_description}"
+        if self.female_description:
+            description += f"\n\n{self.female_description}"
+        if self.juvenile_description:
+            description += f"\n\n{self.juvenile_description}"
+        return description
 
     class Meta:
         db_table = 'faunaportrait'
