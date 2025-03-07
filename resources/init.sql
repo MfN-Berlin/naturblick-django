@@ -1,7 +1,7 @@
 -- helpers
 
 create view strapi_file as
-select m.related_id, m.related_type, substr(f.url , 10) as url, m.field
+select m.related_id, m.related_type, substr(f.url , 10) as url, m.field, f.width, f.height
 from strapi_upload_file_morph as m
 join strapi_upload_file as f on f.id = m.upload_file_id;
 
@@ -246,8 +246,8 @@ join strapi_components_speciesportrait_features as f on f.id = fpc.component_id
 where fpc.component_type = 'components_speciesportrait_features';
 
 -- portrait images
-insert into portrait_image_file (owner, owner_link, source, license, image, species_id)
-select distinct scp."imageOwner", scp."imageOwnerLink", scp."imageSource", scp."imageLicense", 'portrait_images/' || f.url, sil.species
+insert into portrait_image_file (owner, owner_link, source, license, image, species_id, width, height)
+select distinct scp."imageOwner", scp."imageOwnerLink", scp."imageSource", scp."imageLicense", 'portrait_images/' || f.url, sil.species, f.width, f.height
 from strapi_species_image_lists as sil
 join strapi_species_image_lists_components as silc
     on silc.species_image_list_id = sil.id and silc.component_type = 'components_speciesportrait_species_pictures'

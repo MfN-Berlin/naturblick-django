@@ -5,9 +5,16 @@ from django.db.models import ForeignKey, URLField, CASCADE
 from django.utils.safestring import mark_safe
 from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFit
 
 from .choices import *
 from .validators import min_max, validate_png, validate_mp3
+
+LARGE_WIDTH = 1200
+MEDIUM_WIDTH = 800
+SMALL_WIDTH = 400
+THUMBNAIL_WIDTH = 245
 
 
 class Tag(models.Model):
@@ -93,7 +100,6 @@ class Species(models.Model):
         if self.accepted_species and self.accepted_species.group != self.group:
             raise ValidationError('Accepted species must be in the same group')
 
-
     def save(self, *args, **kwargs):
         if not self.speciesid:
             prefix = f'{self.group}_ffff'
@@ -134,7 +140,54 @@ class PortraitImageFile(models.Model):
     owner_link = URLField(blank=True, null=True, max_length=255)
     source = URLField(max_length=1024)
     license = models.CharField(max_length=64)
-    image = models.ImageField(upload_to="portrait_images", max_length=255)
+    image = models.ImageField(upload_to="portrait_images", max_length=255, width_field='width', height_field='height')
+    width = models.IntegerField(default=0)
+    height = models.IntegerField(default=0)
+
+    @property
+    def large(self):
+        if self.width > LARGE_WIDTH:
+            return self.image_large
+        return None
+
+    @property
+    def medium(self):
+        if self.width > MEDIUM_WIDTH:
+            return self.image_medium
+        return None
+
+    @property
+    def small(self):
+        if self.width > SMALL_WIDTH:
+            return self.image_small
+        return None
+
+    @property
+    def thumbnail(self):
+        if self.width > THUMBNAIL_WIDTH:
+            return self.image_thumbnail
+        return self.image
+
+    image_large = ImageSpecField(
+        source='image',
+        processors=[ResizeToFit(LARGE_WIDTH, None)],
+        options={'quality': 90}
+    )
+    image_medium = ImageSpecField(
+        source='image',
+        processors=[ResizeToFit(MEDIUM_WIDTH, None)],
+        options={'quality': 90}
+    )
+    image_small = ImageSpecField(
+        source='image',
+        processors=[ResizeToFit(SMALL_WIDTH, None)],
+        options={'quality': 90}
+    )
+    image_thumbnail = ImageSpecField(
+        source='image',
+        processors=[ResizeToFit(THUMBNAIL_WIDTH, None)],
+        options={'quality': 90}
+    )
 
     def __str__(self):
         return f"{self.owner} {self.image.name[self.image.name.index('/') + 1:]}"
@@ -261,6 +314,10 @@ class Floraportrait(Portrait):
     flower_description.help_text = "Beschreibung Blüte/Blütenstand: z.B. Farbe, Blütenstandsform, besondere Merkmale."
     fruit_description.help_text = "Bechreibung Frucht/Fruchstand: z.B. Form, Farbe, Oberfläche, besondere Merkmale."
 
+    @property
+    def description(self):
+        return f"{self.short_description}\n\n{self.leaf_description}\n\n{self.stem_axis_description}\n\n{self.flower_description}\n\n{self.fruit_description}"
+
     class Meta:
         db_table = 'floraportrait'
 
@@ -285,7 +342,6 @@ class FaunaportraitAudioFile(models.Model):
             if faunaportrait and faunaportrait.species != self.species:
                 raise ValidationError(
                     f"This Audiofile is already set as an 'audiofile' in the portrait of {faunaportrait}. The species can not be changed until it's unset")
-
 
     def __str__(self):
         return f"{self.owner} {self.audio_file.name[self.audio_file.name.index('/') + 1:]}"
@@ -313,8 +369,20 @@ class Faunaportrait(Portrait):
         if self.faunaportrait_audio_file and self.species.speciesid != self.faunaportrait_audio_file.species.speciesid:
             raise ValidationError("Audiofile species must be same as faunaportrait species")
 
-        if (self.faunaportrait_audio_file and not self.audio_title) or (not self.faunaportrait_audio_file and self.audio_title):
+        if (self.faunaportrait_audio_file and not self.audio_title) or (
+                not self.faunaportrait_audio_file and self.audio_title):
             raise ValidationError("Audiofile and audiotitle must be both set or not")
+
+    @property
+    def description(self):
+        description = self.short_description
+        if self.male_description:
+            description += f"\n\n{self.male_description}"
+        if self.female_description:
+            description += f"\n\n{self.female_description}"
+        if self.juvenile_description:
+            description += f"\n\n{self.juvenile_description}"
+        return description
 
     class Meta:
         db_table = 'faunaportrait'

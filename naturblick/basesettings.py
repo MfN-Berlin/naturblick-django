@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'species',
     'easy_thumbnails',
     'image_cropping',
+    'imagekit',
 ]
 
 MIDDLEWARE = [
@@ -114,3 +115,6 @@ STATICFILES_DIRS = [
 STATIC_ROOT =  '/static-root'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media-root')
+
+# IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = 'imagekit.cachefiles.strategies.Optimistic' # if we always pre-generate all images
+IMAGEKIT_CACHEFILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
