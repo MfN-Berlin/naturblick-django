@@ -1,8 +1,11 @@
+import json
 import logging
 import sqlite3
 import tempfile
-import requests
 from dataclasses import dataclass, field
+from pathlib import Path
+
+import requests
 
 from species.models import Species, SpeciesName, SourcesTranslation, SourcesImprint
 
@@ -147,7 +150,7 @@ def insert_sources_translations(sqlite_cursor):
 
 def insert_sources_imprint(sqlite_cursor):
     data = list(map(lambda si: (
-    si.id, si.scie_name, si.scie_name_eng if si.scie_name_eng else '', si.image_source, si.licence, si.author),
+        si.id, si.scie_name, si.scie_name_eng if si.scie_name_eng else '', si.image_source, si.licence, si.author),
                     SourcesImprint.objects.all()))
     sqlite_cursor.executemany("INSERT INTO sources_imprint VALUES (?, ?, ?, ?, ?, ?);", data)
 
@@ -159,6 +162,22 @@ def insert_current_version(sqlite_cursor):
         sqlite_cursor.execute("INSERT INTO species_current_version VALUES (?, ?);", (1, response.json()["version"]))
     else:
         logger.error(f"Playback not available: response [ {response.text} ]")
+
+
+def insert_timezone_polygon(sqlite_cursor):
+    # Get the base directory of the project
+    base_dir = Path(__file__).resolve().parent.parent
+    json_path =  base_dir / 'species' / 'data' / '2023b_simplify_0_05.json'
+    from types import SimpleNamespace
+
+    with open(json_path, encoding='utf-8') as j:
+        polygons = json.load(j, object_hook=lambda d: SimpleNamespace(**d))
+        print(polygons)
+
+        # connection.prepareStatement("INSERT INTO time_zone_polygon (rowid, zone_id) VALUES (?, ?);")
+        # sqlite_cursor.execute("INSERT INTO time_zone_polygon VALUES (?, ?)", db_data)
+
+        # connection.prepareStatement("INSERT INTO time_zone_vertex (polygon_id, longitude, latitude) VALUES (?, ?, ?);")
 
 
 
@@ -175,10 +194,12 @@ def create_sqlite_file():
     # portraits = list(Faunaportrait.objects.all()) + list(Faunaportrait.objects.all())
     # insert_portrait_image_and_sizes(sqlite_cursor, portraits)
 
-    insert_sources_translations(sqlite_cursor)
-    insert_sources_imprint(sqlite_cursor)
+    #insert_sources_translations(sqlite_cursor)
+    #insert_sources_imprint(sqlite_cursor)
+#
+    #insert_current_version(sqlite_cursor)
 
-    insert_current_version(sqlite_cursor)
+    insert_timezone_polygon(sqlite_cursor)
 
     sqlite_conn.commit()
     sqlite_conn.close()
