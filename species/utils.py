@@ -1,59 +1,46 @@
 import logging
 import sqlite3
 import tempfile
-from dataclasses import dataclass
+import requests
+from dataclasses import dataclass, field
 
-from species.models import Species, SpeciesName, Faunaportrait
-
-#
-#
-#
-#   INSERT ALL SPECIES !!
-#
-#
-#
-#
+from species.models import Species, SpeciesName, SourcesTranslation, SourcesImprint
 
 logger = logging.getLogger(__name__)
-
-
-# CREATE TABLE `portrait` (`rowid` INTEGER NOT NULL, `species_id` INTEGER NOT NULL, `description` TEXT NOT NULL, `description_image_id` INTEGER, `language` INTEGER NOT NULL, `in_the_city` TEXT NOT NULL, `in_the_city_image_id` INTEGER, `good_to_know_image_id` INTEGER, `sources` TEXT, `audio_url` TEXT,
-# `landscape` INTEGER NOT NULL, `focus` REAL NOT NULL,
-# PRIMARY KEY(`rowid`), FOREIGN KEY(`species_id`) REFERENCES `species`(`rowid`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`description_image_id`) REFERENCES `portrait_image`(`rowid`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`in_the_city_image_id`) REFERENCES `portrait_image`(`rowid`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`good_to_know_image_id`) REFERENCES `portrait_image`(`rowid`) ON UPDATE NO ACTION ON DELETE SET NULL );
 
 
 @dataclass
 class DbPortrait():
     rowid: int
     species_id: int
-    description: str
-    description_image_id: int
     language: int
+    description: str
     in_the_city: str
-    in_the_city_image_id: int
-    good_to_know_image_id: int
-    sources: str
-    audio_url: str
-    landscape: int
-    focus: float
+    description_image_id: int = field(default=None)
+    landscape: int = field(default=True)
+    focus: float = field(default=50.0)
+    in_the_city_image_id: int = field(default=None)
+    good_to_know_image_id: int = field(default=None)
+    sources: str = field(default=None)
+    audio_url: str = field(default=None)
 
 
-def insert_image_size(sqlite_cursor, img, next_id):
+def insert_image_size(sqlite_cursor, img, portrait_image_id):
     if img:
         sqlite_cursor.execute("INSERT INTO portrait_image_size VALUES (?, ?, ? ,?)",
-                              (next_id, img.width, img.height, img.url))
+                              (portrait_image_id, img.width, img.height, img.url))
 
 
-def insert_image(sqlite_cursor, meta, next_id):
+def insert_image(sqlite_cursor, meta, portrait_image_id):
     text = meta.text
     pif = meta.portrait_image_file
     sqlite_cursor.execute("INSERT INTO portrait_image VALUES (?, ?, ?, ?, ?, ?)",
-                          (next_id, pif.owner, pif.owner_link, pif.source, text, pif.license))
+                          (portrait_image_id, pif.owner, pif.owner_link, pif.source, text, pif.license))
 
-    insert_image_size(sqlite_cursor, pif.small, next_id)
-    insert_image_size(sqlite_cursor, pif.medium, next_id)
-    insert_image_size(sqlite_cursor, pif.large, next_id)
-    insert_image_size(sqlite_cursor, pif.thumbnail, next_id)
+    insert_image_size(sqlite_cursor, pif.small, portrait_image_id)
+    insert_image_size(sqlite_cursor, pif.medium, portrait_image_id)
+    insert_image_size(sqlite_cursor, pif.large, portrait_image_id)
+    insert_image_size(sqlite_cursor, pif.thumbnail, portrait_image_id)
 
 
 def lang_to_int(lang):
@@ -73,76 +60,106 @@ def get_focus(descmeta, ratio):
         return descmeta.focus_point_vertical if descmeta.focus_point_vertical else 50.0
 
 
-def insert_portrait_image_and_sizes(sqlite_cursor, portraits, next_id):
+def insert_portrait_image_and_sizes(sqlite_cursor, portraits):
+    portrait_id = 1
+    portrait_image_id = 1
+
     for p in portraits:
+        # TODO johannes audio_url
 
-        if not hasattr(p, 'descmeta'):
-            logger.error("every Portrait must have a description image!")
-            continue
+        db_portrait = DbPortrait(rowid=portrait_id,
+                                 species_id=p.species.id,
+                                 language=lang_to_int(p.language),
+                                 description=p.db_description,
+                                 in_the_city=p.db_in_the_city,
+                                 sources=p.db_sources)
 
-        # sources # sources.joinToString("\n\n")
-        sources = allow_break_on_hyphen('foo')
-
-        # audio_url
-        audio_url = 'foo'
-        landscape = 1 if p.descmeta.display_ratio == '4-3' else 0
-        ratio = 4.0 / 3.0 if (landscape == 1) else 3.0 / 4.0
-        focus = get_focus(descmeta=p.descmeta, ratio=ratio)
-
-        db_portrait = DbPortrait(rowid=p.portrait_ptr_id, species_id=p.species.id, language=lang_to_int(
-            p.language), description_image_id=next_id, description=allow_break_on_hyphen(p.description),
-                                 sources=sources,
-                                 audio_url=audio_url, focus=focus, landscape=landscape, in_the_city_image_id=0,
-                                 in_the_city='', good_to_know_image_id=0)
-        # todo johannes das ist alles ein wenig chaotisch
-
-        insert_image(sqlite_cursor, p.descmeta, next_id)
-
-        next_id += 1
+        if hasattr(p, 'descmeta'):
+            insert_image(sqlite_cursor, p.descmeta, portrait_image_id)
+            db_portrait.description_image_id = portrait_image_id
+            db_portrait.landscape = 1 if p.descmeta.display_ratio == '4-3' else 0
+            ratio = 4.0 / 3.0 if db_portrait.landscape == 1 else 3.0 / 4.0
+            db_portrait.focus = get_focus(descmeta=p.descmeta, ratio=ratio)
+            portrait_image_id += 1
 
         if hasattr(p, 'funfactmeta'):
-            insert_image(sqlite_cursor, p.funfactmeta, next_id)
-            db_portrait.good_to_know_image_id = next_id
-            next_id += 1
+            insert_image(sqlite_cursor, p.funfactmeta, portrait_image_id)
+            db_portrait.good_to_know_image_id = portrait_image_id
+            portrait_image_id += 1
+
         if hasattr(p, 'inthecitymeta'):
-            insert_image(sqlite_cursor, p.inthecitymeta, next_id)
-            db_portrait.in_the_city_image_id = next_id
-            db_portrait.in_the_city = p.inthecitymeta.text
-            next_id += 1
+            insert_image(sqlite_cursor, p.inthecitymeta, portrait_image_id)
+            db_portrait.in_the_city_image_id = portrait_image_id
+            portrait_image_id += 1
+
         insert_portrait(sqlite_cursor, db_portrait)
 
+        insert_similar_species(sqlite_cursor, portrait_id, p)
+        insert_unambiguous_feature(sqlite_cursor, portrait_id, p)
+        insert_good_to_know(sqlite_cursor, portrait_id, p)
 
-def insert_portrait(sqlite_cursor, portrait):
-    data = (portrait.rowid,
-            portrait.species_id,
-            portrait.description,
-            portrait.description_image_id,
-            portrait.language,
-            portrait.in_the_city,
-            portrait.in_the_city_image_id,
-            portrait.good_to_know_image_id,
-            portrait.sources,
-            portrait.audio_url,
-            portrait.landscape,
-            portrait.focus
-            )
-    sqlite_cursor.execute("INSERT INTO portrait VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?)", data)
+        portrait_id += 1
 
 
-def insert_similar_species(sqlite_cursor):
-    # `portrait_id` INTEGER NOT NULL, `similar_to_id` INTEGER NOT NULL, `differences` TEXT NOT NULL
-    # "INSERT INTO similar_species VALUES (?, ?, ?);"
-    pass
+def insert_portrait(sqlite_cursor, db_portrait):
+    db_data = (db_portrait.rowid,
+               db_portrait.species_id,
+               db_portrait.description,
+               db_portrait.description_image_id,
+               db_portrait.language,
+               db_portrait.in_the_city,
+               db_portrait.in_the_city_image_id,
+               db_portrait.good_to_know_image_id,
+               db_portrait.sources,
+               db_portrait.audio_url,
+               db_portrait.landscape,
+               db_portrait.focus
+               )
+    sqlite_cursor.execute("INSERT INTO portrait VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?)", db_data)
 
 
-def insert_unambiguous_feature(sqlite_cursor):
-    # "INSERT INTO unambiguous_feature VALUES (?, ?);"
-    pass
+def insert_similar_species(sqlite_cursor, portrait_id, portrait):
+    if hasattr(portrait, 'similarspecies_set'):
+        data = list(map(lambda s: (portrait_id, s.species.id, s.differences),
+                        portrait.similarspecies_set.all()))
+        sqlite_cursor.executemany("INSERT INTO similar_species VALUES (?, ?, ?);", data)
 
 
-def insert_good_to_know(sqlite_cursor):
-    # "INSERT INTO good_to_know VALUES (?, ?);"
-    pass
+def insert_unambiguous_feature(sqlite_cursor, portrait_id, portrait):
+    if hasattr(portrait, 'unambigousfeature_set'):
+        data = list(map(lambda u: (portrait_id, u.description),
+                        portrait.unambigousfeature_set.all()))
+        sqlite_cursor.executemany("INSERT INTO unambiguous_feature VALUES (?, ?);", data)
+
+
+def insert_good_to_know(sqlite_cursor, portrait_id, portrait):
+    if hasattr(portrait, 'goodtoknow_set'):
+        data = list(map(lambda gtk: (portrait_id, gtk.fact),
+                        portrait.goodtoknow_set.all()))
+        sqlite_cursor.executemany("INSERT INTO good_to_know VALUES (?, ?);", data)
+
+
+def insert_sources_translations(sqlite_cursor):
+    data = list(map(lambda st: (st.language, st.key, st.value),
+                    SourcesTranslation.objects.all()))
+    sqlite_cursor.executemany("INSERT INTO sources_translations VALUES (?, ?, ?);", data)
+
+
+def insert_sources_imprint(sqlite_cursor):
+    data = list(map(lambda si: (
+    si.id, si.scie_name, si.scie_name_eng if si.scie_name_eng else '', si.image_source, si.licence, si.author),
+                    SourcesImprint.objects.all()))
+    sqlite_cursor.executemany("INSERT INTO sources_imprint VALUES (?, ?, ?, ?, ?, ?);", data)
+
+
+def insert_current_version(sqlite_cursor):
+    url = "https://naturblick.museumfuernaturkunde.berlin/api/speciesdbversion"
+    response = requests.get(url)
+    if response.status_code == 200:
+        sqlite_cursor.execute("INSERT INTO species_current_version VALUES (?, ?);", (1, response.json()["version"]))
+    else:
+        logger.error(f"Playback not available: response [ {response.text} ]")
+
 
 
 def create_sqlite_file():
@@ -153,18 +170,15 @@ def create_sqlite_file():
     sqlite_cursor = sqlite_conn.cursor()
 
     create_tables(sqlite_cursor)
+    # insert_species(sqlite_cursor)
 
-    insert_species(sqlite_cursor)
+    # portraits = list(Faunaportrait.objects.all()) + list(Faunaportrait.objects.all())
+    # insert_portrait_image_and_sizes(sqlite_cursor, portraits)
 
-    next_id = 0
-    faunaportraits = list(Faunaportrait.objects.all())
-    next_id = insert_portrait_image_and_sizes(sqlite_cursor, faunaportraits, next_id)
-    floraportraits = list(Faunaportrait.objects.all())
-    insert_portrait_image_and_sizes(sqlite_cursor, floraportraits, next_id)
+    insert_sources_translations(sqlite_cursor)
+    insert_sources_imprint(sqlite_cursor)
 
-    insert_similar_species(sqlite_cursor)
-    insert_unambiguous_feature(sqlite_cursor)
-    insert_good_to_know(sqlite_cursor)
+    insert_current_version(sqlite_cursor)
 
     sqlite_conn.commit()
     sqlite_conn.close()
@@ -182,7 +196,7 @@ def allow_break_on_hyphen(s):
 
 def insert_species(sqlite_cursor):
     data = list(map(map_species(),
-                    Species.objects.all()[:100]))
+                    Species.objects.all()))  # [:100]
     sqlite_cursor.executemany("INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
 
     # could be done on insert level

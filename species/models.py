@@ -245,6 +245,18 @@ class Portrait(models.Model):
     city_habitat.help_text = "Beschreibung Lebensraum in der Stadt, besondere Anpassungen an die Stadt."
     human_interaction.help_text = "Typische Interaktion mit dem Menschen, z.B. gestalterische Nutzung, Gefährdung durch menschliche Aktivität, Verbreitung."
 
+    @property
+    def db_in_the_city(self):
+        in_the_city = self.city_habitat
+        if self.human_interaction:
+            in_the_city += f"\n\n{self.human_interaction}"
+        return in_the_city
+
+    @property
+    def db_sources(self):
+        source_texts = self.source_set.all().values_list('text', flat=True)
+        return '\n\n'.join(source_texts) if source_texts else None
+
     def __str__(self):
         return self.species.speciesid
 
@@ -315,7 +327,7 @@ class Floraportrait(Portrait):
     fruit_description.help_text = "Bechreibung Frucht/Fruchstand: z.B. Form, Farbe, Oberfläche, besondere Merkmale."
 
     @property
-    def description(self):
+    def db_description(self):
         return f"{self.short_description}\n\n{self.leaf_description}\n\n{self.stem_axis_description}\n\n{self.flower_description}\n\n{self.fruit_description}"
 
     class Meta:
@@ -374,7 +386,7 @@ class Faunaportrait(Portrait):
             raise ValidationError("Audiofile and audiotitle must be both set or not")
 
     @property
-    def description(self):
+    def db_description(self):
         description = self.short_description
         if self.male_description:
             description += f"\n\n{self.male_description}"
