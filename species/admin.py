@@ -8,12 +8,28 @@ from django.forms.models import BaseInlineFormSet
 from django.urls import reverse
 from django.utils.html import format_html
 from image_cropping import ImageCroppingMixin
+from imagekit import ImageSpec
+from imagekit.admin import AdminThumbnail
+from imagekit.cachefiles import ImageCacheFile
+from imagekit.processors import ResizeToFit
 
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
     Tag, Character, CharacterValue, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile
 
 logger = logging.getLogger(__name__)
+
+
+class AdminThumbnailSpec(ImageSpec):
+    processors = [ResizeToFit(150, None)]
+    format = 'JPEG'
+    options = {'quality': 60}
+
+
+def cached_admin_thumb(instance):
+    cached = ImageCacheFile(AdminThumbnailSpec(instance.image))
+    cached.generate()
+    return cached
 
 
 def validate_order(theforms, name):
@@ -202,16 +218,14 @@ class UnambigousFeatureInline(admin.TabularInline):
 @admin.register(PortraitImageFile)
 class PortraitImageFileAdmin(admin.ModelAdmin):
     search_fields = ['owner', 'image']
-    fields = ['species', 'image_thumbnail', 'image', 'owner', 'owner_link', 'source', 'license']
-    readonly_fields = ['image_thumbnail']
-    list_display = ['id', 'image_thumbnail', 'image']
-    list_display_links = ['id', 'image_thumbnail']
+    fields = ['species', 'admin_thumbnail', 'image', 'owner', 'owner_link', 'source', 'license', 'width', 'height']
+    readonly_fields = ['admin_thumbnail', 'width', 'height']
+    list_display = ['id', 'admin_thumbnail', 'image']
+    list_display_links = ['id', 'admin_thumbnail']
     autocomplete_fields = ['species']
 
-    def image_thumbnail(self, obj):
-        return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
-
-    image_thumbnail.short_description = 'Image'
+    admin_thumbnail = AdminThumbnail(image_field=cached_admin_thumb)
+    admin_thumbnail.short_description = 'Image'
 
 
 class DescMetaInline(admin.StackedInline):
@@ -266,6 +280,7 @@ class FaunaportraitAudioFileAdmin(admin.ModelAdmin):
         form.base_fields['species'].queryset = Species.objects.filter(group__nature='fauna')
         return form
 
+
 @admin.register(Faunaportrait)
 class FaunaportraitAdmin(admin.ModelAdmin):
     list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
@@ -299,14 +314,11 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Avatar)
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
-    list_display = ['id', 'list_thumbnail', 'image', 'owner']
-    list_display_links = ['id', 'list_thumbnail']
+    list_display = ['id', 'thumbnail', 'image', 'owner']
+    list_display_links = ['id', 'thumbnail']
     search_fields = ['image', 'owner']
     fields = ['thumbnail', 'image', 'owner', 'owner_link', 'source', 'license', 'cropping']
     readonly_fields = ['thumbnail']
-
-    def list_thumbnail(self, obj):
-        return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
 
 
 @admin.register(CharacterValue)
