@@ -110,7 +110,7 @@ THUMBNAIL_ALIASES = {
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static-root'),
 ]
 STATIC_ROOT =  '/static-root'
 MEDIA_URL = '/media/'
