@@ -14,7 +14,6 @@ from .validators import min_max, validate_png, validate_mp3
 LARGE_WIDTH = 1200
 MEDIUM_WIDTH = 800
 SMALL_WIDTH = 400
-THUMBNAIL_WIDTH = 245
 
 
 class Tag(models.Model):
@@ -162,12 +161,6 @@ class PortraitImageFile(models.Model):
             return self.image_small
         return None
 
-    @property
-    def thumbnail(self):
-        if self.width > THUMBNAIL_WIDTH:
-            return self.image_thumbnail
-        return self.image
-
     image_large = ImageSpecField(
         source='image',
         processors=[ResizeToFit(LARGE_WIDTH, None)],
@@ -181,11 +174,6 @@ class PortraitImageFile(models.Model):
     image_small = ImageSpecField(
         source='image',
         processors=[ResizeToFit(SMALL_WIDTH, None)],
-        options={'quality': 90}
-    )
-    image_thumbnail = ImageSpecField(
-        source='image',
-        processors=[ResizeToFit(THUMBNAIL_WIDTH, None)],
         options={'quality': 90}
     )
 

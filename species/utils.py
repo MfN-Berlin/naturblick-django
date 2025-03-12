@@ -45,7 +45,6 @@ def insert_image(sqlite_cursor, meta, portrait_image_id):
     insert_image_size(sqlite_cursor, pif.small, portrait_image_id)
     insert_image_size(sqlite_cursor, pif.medium, portrait_image_id)
     insert_image_size(sqlite_cursor, pif.large, portrait_image_id)
-    insert_image_size(sqlite_cursor, pif.thumbnail, portrait_image_id)
 
 
 def lang_to_int(lang):
