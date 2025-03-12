@@ -1,0 +1,31 @@
+species id,,,,,,,,,,,,,188,160,160,169,162,184,183,161,187,179,186,186,167,167,170,173,166,163,181,175,168,174,177,189,189,178,176,176,171,171,180,164,190,182,185
+species gername,,,,,,,,,,,,,Admiral,Aurorafalter,Aurorafalter,C-Falter,Distelfalter,Kleiner Fuchs,Großer Fuchs,Schachbrett,Schwalbenschwanz,Tagpfauenauge,Zitronenfalter,Zitronenfalter,Hauhechel-Bläuling,Hauhechel-Bläuling,Goldene Acht,Kleiner Kohlweißling,Großer Kohlweißling,Großer Perlmutterfalter,Kaisermantel,Trauermantel,Kleiner Eisvogel,Großer Eisvogel,Kleiner Feuerfalter,Großer Feuerfalter,Großer Feuerfalter,Großes Ochsenauge,Kleiner Schillerfalter,Kleiner Schillerfalter,Großer Schillerfalter,Großer Schillerfalter,Kleines Wiesenvögelchen,Baumweißling,Grünaderweißling,Waldbrettspiel,Heller Wiesenknopf-Ameisenbläuling
+genus,,,,,,,,,,,,,unisex,male,female,unisex,unisex,unisex,unisex,unisex,unisex,unisex,male,female,male,female,unisex,unisex,unisex,unisex,unisex,unisex,unisex,unisex,unisex,male,female,unisex,male,female,male,female,unisex,unisex,unisex,unisex,unisex
+gername,engname,character id,gerdescription,engdescription,weight,singleChoice,value id,value gername,value engname,value colors,value dots,value image,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+dominante Farbe,Dominant colour,1,"Wähle die Farbe, die am meisten zu sehen ist. ",Choose the colour that is most prominent. ,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,1,weiß,White,#fefefe,,,0,100,100,0,0,0,0,40,0,0,20,80,0,0,0,100,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,90,0,0
+,,,,,,,2,gelb,Yellow,#fff09e,,,0,0,0,0,0,0,0,0,60,0,80,20,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0
+,,,,,,,3,orange bis rotbraun,Orange to reddish brown,"#e67f16,#f7b781,#713520",,,0,0,0,100,100,100,100,0,0,100,0,0,0,0,0,0,0,100,100,0,0,0,50,100,100,100,0,0,0,0,100,0,0,0,0
+,,,,,,,4,dunkelbraun bis schwarz,Dark brown to black,"#634f4d,#161c29",,,100,0,0,0,0,0,0,60,40,0,0,0,0,100,0,0,0,0,0,100,100,100,50,0,0,0,30,100,100,100,0,0,0,100,0
+,,,,,,,5,"blau, bläulich","Blue, bluish","#0e98c7,#81c5b2,#94ffff",,,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,70,0,0,0,0,0,0,0,100
+weitere Farben,other colours,2,"Wähle alle weiteren Farben aus, die du siehst.",Select all other colours you see.,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,6,weiß,White,#fefefe,,,35,0,0,10,50,25,0,35,10,0,100,90,0,0,50,0,0,0,0,50,100,30,0,10,10,0,20,30,30,30,10,0,0,0,10
+,,,,,,,7,grau,Grey,"#8c9698,#c0b4be,#b7becf",,,0,15,80,0,0,0,0,30,10,0,0,10,0,0,0,0,0,0,0,0,0,0,80,30,20,0,0,0,0,0,50,30,30,0,20
+,,,,,,,8,cremefarben bis hellbraun,Cream to light brown,"#b18c66,#e8d5c8",,,0,0,0,50,50,0,30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0
+,,,,,,,9,"mittelbraun bis dunkelbraun, rotbraun","Medium brown to dark brown, reddish brown","#713520,#634f4d,#907a76",,,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,40,30,30,20,0,40,10,0,0,0,0
+,,,,,,,10,schwarz,Black,#161c29,,,30,10,20,0,0,25,30,35,0,30,0,0,100,20,20,100,100,100,100,0,0,0,0,40,20,20,0,0,0,0,10,70,0,0,30
+,,,,,,,11,gelb,Yellow,#fff09e,,,0,15,0,40,0,25,30,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,100,0
+,,,,,,,12,orange,Orange,"#e67f16,#f7b781",,,35,50,0,0,0,0,0,0,0,0,0,0,0,80,30,0,0,0,0,0,0,50,0,0,0,50,0,0,20,30,0,0,0,0,40
+,,,,,,,13,"rot bis rötlich, rosa","Red to reddish, pink","#b35948,#e1a49e,#eccadb",,,0,0,0,0,0,0,0,0,40,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,50,50,0,0,0,0,0,0,0
+,,,,,,,14,violett,Violet,#a146ff,,,0,0,0,0,0,0,0,0,0,30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+,,,,,,,15,"blau, bläulich","Blue, bluish","#0e98c7,#81c5b2,#94ffff",,,0,0,0,0,0,25,10,0,40,30,0,0,0,0,0,0,0,0,0,50,0,20,20,10,10,0,0,0,50,0,0,0,0,0,0
+,,,,,,,16,grün oder grünlich,Green or greenish,"#9f9f3c,#6ba286",,,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,70,0,0
+Flügelform,Wing shape,11,,,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,73,ganzrandig,Entire,,,/uploads/Fluegelform_1_22b8bcdfec.svg,30,100,100,0,0,20,20,70,0,30,30,30,100,100,100,100,100,30,0,0,60,60,85,100,100,90,10,90,90,90,100,100,100,30,100
+,,,,,,,74,"gekerbt, gezackt, gebuchtet",Incised,,,/uploads/Fluegelform_2_7f0ab309d0.svg,70,0,0,100,100,80,80,30,0,70,0,0,0,0,0,0,0,70,100,100,40,40,0,0,0,10,90,10,10,10,0,0,0,70,0
+,,,,,,,75,mit Zipfel/Schwänzchen,Tail,,,/uploads/Fluegelform_3_2d71db5a20.svg,0,0,0,0,0,0,0,0,100,0,70,70,0,0,0,0,0,0,0,0,0,0,15,0,0,0,0,0,0,0,0,0,0,0,0
+Muster Oberseite,Pattern top side,12,"Wähle die Beschreibung aus, die am besten passt. Wenn du dir unsicher bist, überspringe einfach dieses Merkmal. ","Select the description that fits best. If you are unsure, just skip this trait. ",1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,76,"Pfauenaugen, Augenflecken",Eyespot,,,/uploads/Muster_Oberseite_1_bb717ea2b3.svg,0,20,25,0,0,0,0,0,20,80,30,30,0,0,50,20,20,30,30,0,0,0,0,0,0,60,50,70,50,50,70,0,0,80,0
+,,,,,,,77,farblich abgesetzte Flügelspitzen,Contrasting wingtips,,,/uploads/Muster_Oberseite_2_84ae066c29.svg,0,80,55,0,0,0,0,0,0,0,0,0,0,0,60,30,50,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+,,,,,,,78,"anders gemustert (Scheckung, Bänder, Gitter etc.)",Other patterns,,,/uploads/Muster_Oberseite_3_188786a1e7.svg,100,0,0,100,100,100,100,100,80,20,0,0,0,0,10,0,0,70,70,100,100,100,100,70,70,0,50,30,50,50,0,40,60,20,80
+,,,,,,,79,praktisch zeichnungslos,Without markings,,,/uploads/Muster_Oberseite_4_5592d8a662.svg,0,0,20,0,0,0,0,0,0,0,70,70,100,100,0,40,30,0,0,0,0,0,0,30,30,40,0,0,0,0,30,60,40,0,20
