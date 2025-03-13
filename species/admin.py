@@ -52,20 +52,10 @@ class SpeciesNameInline(admin.TabularInline):
     extra = 1
 
 
-class PortraitImageFileInline(admin.TabularInline):
-    model = PortraitImageFile
-    extra = 0
-
-
-class FaunaportraitAudioFileInline(admin.TabularInline):
-    model = FaunaportraitAudioFile
-    extra = 0
-
-
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
     inlines = [
-        SpeciesNameInline, PortraitImageFileInline, FaunaportraitAudioFileInline
+        SpeciesNameInline
     ]
     readonly_fields = ['speciesid']
     list_display = ['id', 'speciesid', 'sciname', 'gername', 'portrait']
@@ -91,6 +81,8 @@ class SpeciesAdmin(admin.ModelAdmin):
               'accepted_species',
               'tag'
               ]
+
+    raw_id_fields = ['accepted_species']
     ordering = ('sciname',)
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar', 'female_avatar']
@@ -217,8 +209,8 @@ class UnambigousFeatureInline(admin.TabularInline):
 
 @admin.register(PortraitImageFile)
 class PortraitImageFileAdmin(admin.ModelAdmin):
-    search_fields = ['owner', 'image']
-    fields = ['species', 'admin_thumbnail', 'image', 'owner', 'owner_link', 'source', 'license', 'width', 'height']
+    search_fields = ['owner', 'image', 'species__sciname', 'species__gername', 'species__speciesid']
+    fields = ['image', 'admin_thumbnail', 'species', 'owner', 'owner_link', 'source', 'license', 'width', 'height']
     readonly_fields = ['admin_thumbnail', 'width', 'height']
     list_display = ['id', 'admin_thumbnail', 'image']
     list_display_links = ['id', 'admin_thumbnail']
@@ -274,6 +266,14 @@ class FloraportraitAdmin(admin.ModelAdmin):
 class FaunaportraitAudioFileAdmin(admin.ModelAdmin):
     list_display = ['id', 'audio_file', 'species__gername', 'species__sciname']
     search_fields = ['owner', 'audio_file', 'audio_spectrogram']
+    fields = ['audio_file',
+              'audio_spectrogram',
+              'species',
+              'owner',
+              'owner_link',
+              'source',
+              'license'
+              ]
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
