@@ -8,8 +8,7 @@ from pathlib import Path
 import requests
 
 from species.models import Species, SpeciesName, SourcesTranslation, SourcesImprint, Faunaportrait, Floraportrait
-
-# from utils_characters import insert_characters
+from .utils_characters import insert_characters
 
 logger = logging.getLogger(__name__)
 
@@ -214,7 +213,7 @@ def create_sqlite_file():
     insert_sources_imprint(sqlite_cursor)
     insert_current_version(sqlite_cursor)
     insert_timezone_polygon(sqlite_cursor)
-    #    insert_characters(sqlite_cursor)
+    insert_characters(sqlite_cursor)
 
     sqlite_conn.commit()
     sqlite_conn.close()
