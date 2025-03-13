@@ -41,6 +41,7 @@ def insert_image(sqlite_cursor, meta, portrait_image_id):
     sqlite_cursor.execute("INSERT INTO portrait_image VALUES (?, ?, ?, ?, ?, ?)",
                           (portrait_image_id, pif.owner, pif.owner_link, pif.source, text, pif.license))
 
+    insert_image_size(sqlite_cursor, pif.image, portrait_image_id)
     insert_image_size(sqlite_cursor, pif.small, portrait_image_id)
     insert_image_size(sqlite_cursor, pif.medium, portrait_image_id)
     insert_image_size(sqlite_cursor, pif.large, portrait_image_id)
@@ -52,8 +53,10 @@ def lang_to_int(lang):
             return 1
         case 'en':
             return 2
-        case _:
+        case 'er':
             return 4
+        case _:
+            raise Exception("unknown language during db generation")
 
 
 def get_focus(descmeta, ratio):
@@ -108,13 +111,13 @@ def insert_portrait_image_and_sizes(sqlite_cursor, portraits):
 def insert_portrait(sqlite_cursor, db_portrait):
     db_data = (db_portrait.rowid,
                db_portrait.species_id,
-               db_portrait.description,
+               allow_break_on_hyphen(db_portrait.description),
                db_portrait.description_image_id,
                db_portrait.language,
-               db_portrait.in_the_city,
+               allow_break_on_hyphen(db_portrait.in_the_city),
                db_portrait.in_the_city_image_id,
                db_portrait.good_to_know_image_id,
-               db_portrait.sources,
+               allow_break_on_hyphen(db_portrait.sources),
                db_portrait.audio_url,
                db_portrait.landscape,
                db_portrait.focus
@@ -124,7 +127,7 @@ def insert_portrait(sqlite_cursor, db_portrait):
 
 def insert_similar_species(sqlite_cursor, portrait_id, portrait):
     if hasattr(portrait, 'similarspecies_set'):
-        data = list(map(lambda s: (portrait_id, s.species.id, s.differences),
+        data = list(map(lambda s: (portrait_id, s.species.id, allow_break_on_hyphen(s.differences)),
                         portrait.similarspecies_set.all()))
         sqlite_cursor.executemany("INSERT INTO similar_species VALUES (?, ?, ?);", data)
 
@@ -205,7 +208,8 @@ def create_sqlite_file():
 
     create_tables(sqlite_cursor)
 
-    portraits = list(Faunaportrait.objects.all()) + list(Floraportrait.objects.all())
+    portraits = (list(Faunaportrait.objects.filter(published=True, language__in=['de','en']))
+                 + list(Floraportrait.objects.filter(published=True, language__in=['de','en'])))
 
     insert_species(sqlite_cursor)
     insert_portrait_image_and_sizes(sqlite_cursor, portraits)
@@ -222,8 +226,8 @@ def create_sqlite_file():
 
 
 def get_synonnyms(language, species_id):
-    synonyms = ",".join(
-        SpeciesName.objects.filter(species=species_id, language=language).values_list("name", flat=True))
+    synonyms = ", ".join(
+        SpeciesName.objects.filter(species=species_id, language=language).order_by('name').values_list("name", flat=True))
     return allow_break_on_hyphen(synonyms) or None
 
 
@@ -265,7 +269,7 @@ def map_species():
     return lambda s: (
         s.id, s.group.name, allow_break_on_hyphen(s.sciname), allow_break_on_hyphen(s.gername),
         allow_break_on_hyphen(s.engname),
-        None,  # wikipedia -> None ok
+        s.wikipedia,
         s.avatar.image.url if s.avatar else None,
         s.female_avatar.image.url if s.female_avatar else None,
         get_synonnyms('de', s.id),
