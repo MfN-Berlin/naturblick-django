@@ -24,12 +24,6 @@ class SpeciesSerializer(serializers.ModelSerializer):
         fields = ['pk', 'speciesid']
 
 
-class SpeciesNameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SpeciesName
-        fields = ['name', 'language', 'isPrimary']
-
-
 class AvatarSerializer(serializers.ModelSerializer):
     avatar_url = serializers.SerializerMethodField('generate_avatar_url')
 
@@ -49,15 +43,27 @@ class AvatarSerializer(serializers.ModelSerializer):
         fields = ['avatar_url', 'image_owner', 'image_ownerLink', 'image_source', 'image_license']
 
 
-class SpeciesDetailSerializer(serializers.ModelSerializer):
-    species_names = SpeciesNameSerializer(many=True, read_only=True)
-    avatar = AvatarSerializer(read_only=True)
-    female_avatar = AvatarSerializer(read_only=True)
+# /species/{id}
+# expects `Species`    species/1
+# export interface SpeciesName { name: string, language: number }
+#
+# export interface Species {
+#   id: number;
+#   speciesid: string,
+#   group: string,
+#   sciname: string,
+#   gername: string,
+#   engname: string,
+#   speciesnames: SpeciesName[] }
+
+class SpeciesNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpeciesName
+        fields = ['name', 'language']
+
+class SpeciesSerializer(serializers.ModelSerializer):
+    species_names = SpeciesNameSerializer(source='speciesname_set', many=True, read_only=True)
 
     class Meta:
         model = Species
-        fields = [
-            'speciesid', 'group', 'wikipedia', 'red_list_germany', 'iucncategory', 'activity_start_month',
-            'activity_end_month', 'activity_start_hour', 'activity_end_hour',
-            'accepted', 'species_names', 'avatar', 'female_avatar'
-        ]
+        fields = ['id', 'speciesid', 'group', 'sciname', 'gername', 'engname', 'species_names']
