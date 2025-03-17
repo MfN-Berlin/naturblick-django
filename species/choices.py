@@ -108,6 +108,7 @@ SOURCES_TRANSLATION_CHOICES= [
     ('published', 'Published'),
     ('edition', 'Edition'),
     ('part', 'Part'),
+    ('changedby', 'Changed by'),
 ]
 
 

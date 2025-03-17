@@ -69,6 +69,7 @@ class Species(models.Model):
     engname = models.CharField(max_length=255, null=True, blank=True, db_index=True)
     group = models.ForeignKey(Group, on_delete=models.PROTECT)
     nbclassid = models.CharField(max_length=255, blank=True, null=True)
+    wikipedia = models.CharField(max_length=255, blank=True, null=True)
     autoid = models.BooleanField(default=False)
     red_list_germany = models.CharField(max_length=255, blank=True, null=True, choices=REDLIST_CHOICES)
     iucncategory = models.CharField(max_length=2, blank=True, null=True, choices=IUCN_CHOICES)
@@ -242,7 +243,7 @@ class Portrait(models.Model):
 
     @property
     def db_sources(self):
-        source_texts = self.source_set.all().values_list('text', flat=True)
+        source_texts = [s.strip() for s in self.source_set.all().values_list('text', flat=True)]
         return '\n\n'.join(source_texts) if source_texts else None
 
     def __str__(self):

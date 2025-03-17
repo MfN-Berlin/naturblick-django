@@ -67,6 +67,7 @@ class SpeciesAdmin(admin.ModelAdmin):
               'gername',
               'sciname',
               'engname',
+              'wikipedia',
               'autoid',
               'nbclassid',
               ('red_list_germany',
