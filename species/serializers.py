@@ -61,6 +61,7 @@ class SpeciesNameSerializer(serializers.ModelSerializer):
         model = SpeciesName
         fields = ['name', 'language']
 
+
 class SpeciesSerializer(serializers.ModelSerializer):
     species_names = SpeciesNameSerializer(source='speciesname_set', many=True, read_only=True)
 
