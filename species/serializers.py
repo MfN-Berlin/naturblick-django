@@ -1,7 +1,26 @@
 from image_cropping.utils import get_backend
 from rest_framework import serializers
 
-from .models import Species, SpeciesName, Avatar, CharacterValue
+from .models import Species, SpeciesName, Avatar, CharacterValue, Tag
+
+
+class TagLocalnameField(serializers.Field):
+    def to_representation(self, obj):
+        request = self.context.get('request', None)
+        lang = request.query_params.get('lang') if request else None
+
+        if lang == 'en':
+            return obj.english_name
+        return obj.name
+
+
+class TagSerializer(serializers.ModelSerializer):
+    localname = TagLocalnameField(source='*')
+    tag_id = serializers.IntegerField(source='id')
+
+    class Meta:
+        model = Tag
+        fields = ['tag_id', 'localname']
 
 
 class CharacterValueSerializer(serializers.ModelSerializer):

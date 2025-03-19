@@ -118,3 +118,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media-root')
 
 # IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = 'imagekit.cachefiles.strategies.Optimistic' # if we always pre-generate all images
 IMAGEKIT_CACHEFILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+}

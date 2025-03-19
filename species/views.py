@@ -1,12 +1,9 @@
+from django.db.models import Q
 from django.http import FileResponse
-from django.shortcuts import get_object_or_404
 from rest_framework import generics
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from .models import Species, CharacterValue
-from .serializers import SpeciesSerializer, CharacterValueSerializer
+from .models import Species, Tag
+from .serializers import SpeciesSerializer, TagSerializer
 from .utils import create_sqlite_file
 
 
@@ -35,11 +32,33 @@ def app_content(request):
 #   tags/filter?lang=de&tagsearch=&_limit=-1
 #   [{"tag_id":98,"localname":"Ameisenausbreitung"}, {"tag_id":39,"localname":"Amphibie"}, ...
 
+class TagsList(generics.ListAPIView):
+
+    def get_queryset(self):
+        queryset = Tag.objects.all()
+        query = self.request.query_params.get('tagsearch')
+        lang = self.request.query_params.get('lang')
+
+        if query:
+            if lang and lang == 'de':
+                queryset = queryset.filter(Q(name__icontains=query))
+            elif lang and lang == 'en':
+                queryset = queryset.filter(Q(english_name__icontains=query))
+            else:
+                queryset = queryset.filter(Q(name__icontains=query) | Q(english_name__icontains=query))
+
+        return queryset
+
+    serializer_class = TagSerializer
+
+
 # 3.)
 #   species-image-lists/filter?tag=138&lang=de&_sort=localname:ASC&_start=0&_limit=16
 #   [{"id":370,"speciesid":"herb_47c78ded","synonym":null,"sciname":"Cirsium arvense","group":"herb","species":370,"localname":"Acker-Kratzdistel","formats":{"large":{"ext":".jpg","url":"/uploads/large_ff55038201a052c32e8accc6_2c3084e6d6.jpg","hash":"large_ff55038201a052c32e8accc6_2c3084e6d6","mime":"image/jpeg","name":"large_ff55038201a052c32e8accc6.jpg","path":null,"size":113.26,"width":842,"height":1200},"small":{"ext":".jpg","url":"/uploads/small_ff55038201a052c32e8accc6_2c3084e6d6.jpg","hash":"small_ff55038201a052c32e8accc6_2c3084e6d6","mime":"image/jpeg","name":"small_ff55038201a052c32e8accc6.jpg","path":null,"size":20.96,"width":281,"height":400},"medium":{"ext":".jpg","url":"/uploads/medium_ff55038201a052c32e8accc6_2c3084e6d6.jpg","hash":"medium_ff55038201a052c32e8accc6_2c3084e6d6","mime":"image/jpeg","name":"medium_ff55038201a052c32e8accc6.jpg","path":null,"size":61.66,"width":561,"height":800},"thumbnail":{"ext":".jpg","url":"/uploads/thumbnail_ff55038201a052c32e8accc6_2c3084e6d6.jpg","hash":"thumbnail_ff55038201a052c32e8accc6_2c3084e6d6","mime":"image/jpeg","name":"thumbnail_ff55038201a052c32e8accc6.jpg","path":null,"size":5.02,"width":109,"height":156}}}, ...
 
-
+# 4.)
+# species/portrait?id=1569&lang=de
+# json: siehe https://naturblick.museumfuernaturkunde.berlin/strapi/species/portrait?id=1569&lang=de
 
 class SpeciesList(generics.ListAPIView):
     # queryset = Species.objects.all()
@@ -54,7 +73,6 @@ class SpeciesList(generics.ListAPIView):
         return queryset
 
     serializer_class = SpeciesSerializer
-
 
 # class SpeciesDetail(APIView):
 #     def get(self, request, species_id):
