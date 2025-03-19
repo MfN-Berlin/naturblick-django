@@ -1,12 +1,14 @@
+from django.db.models import Prefetch
 from django.db.models import Q
 from django.http import FileResponse
 from rest_framework import generics
 
-from .models import Species, Tag
+from .models import Species, Tag, SpeciesName
 from .serializers import SpeciesSerializer, TagSerializer
 from .utils import create_sqlite_file
 
 
+# returns sqlite database used by android/ios
 def app_content(request):
     """Django view that generates and serves an SQLite file."""
 
@@ -18,39 +20,70 @@ def app_content(request):
     return response
 
 
-#
-# all requests from platform
-#
+# 1.) This is the 'old' StrapiSpeciesFilter endpoint, callable with
+#  - /species/lang=de&query=&_limit=30
+#  - /species/lang=de&query=amsel&_limit=30
+#  - /species/lang=de&query=&_limit=30&tag=1&tag=42
+# now one has to call atleast '/species/?limit=10&offset=10' to get a paginated result (do not omit the limit and offset parameter)
+# lang, query and tag parameter(s) are still possible
+class SpeciesList(generics.ListAPIView):
+    serializer_class = SpeciesSerializer
 
-# 1.)
-# StrapiSpeciesFilter
-#   species/filter?lang=de&query=&_limit=30
-#   {"count":"690",
-#   "data":[{"id":1,"speciesid":"amphibian_0de18656","localname":"Teichmolch","group":"amphibian","sciname":"Lissotriton vulgaris","synonym":null,"url":"/uploads/crop_d60f7f6c98b0fcf1aa52e7b0_f0b5f2e568.jpg","imageOwner":"Piet Spaans Viridiflavus","imageLicense":"CC BY-SA 2.5","imageSource":"https://commons.wikimedia.org/wiki/File:LissotritonVulgarisMaleWater.JPG"}, ...
+    def get_queryset(self):
 
-# 2.)
-#   tags/filter?lang=de&tagsearch=&_limit=-1
-#   [{"tag_id":98,"localname":"Ameisenausbreitung"}, {"tag_id":39,"localname":"Amphibie"}, ...
+        query = self.request.query_params.get('query')
+        lang = self.request.query_params.get('lang')
+        tag = self.request.query_params.getlist('tag')
+        lang = lang if lang else 'de'
 
+        species_manager = Species.objects.select_related('avatar', 'group').prefetch_related(
+            Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
+                     to_attr="prefetched_speciesnames")
+        )
+
+        if query:
+            if lang and lang == 'de':
+                queryset = species_manager.filter(
+                    Q(sciname__icontains=query) | Q(gername__icontains=query) | Q(speciesname__name__icontains=query))
+            elif lang and lang == 'en':
+                queryset = species_manager.filter(
+                    Q(sciname__icontains=query) | Q(engname__icontains=query) | Q(speciesname__name__icontains=query))
+            else:
+                queryset = species_manager.filter(
+                    Q(sciname__icontains=query) | Q(engname__icontains=query) | Q(gername__icontains=query) | Q(
+                        speciesname__name__icontains=query))
+        else:
+            queryset = species_manager.all()
+
+        if tag:
+            queryset = queryset.filter(tag__in=tag)
+
+        return queryset.filter(Q(portrait__isnull=False) & Q(portrait__published=True) & Q(portrait__language=lang) & Q(
+            avatar__isnull=False))
+
+
+# 2.) This is the 'old' Tag endpoint, callable with
+#  - /tags/filter?lang=de&tagsearch=&_limit=-1
+# now just use /species/tags/?lang=en&tagsearch=ant
+# or /species/tags/ for 'de' without any query
 class TagsList(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Tag.objects.all()
         query = self.request.query_params.get('tagsearch')
+        # defaults to 'de'
         lang = self.request.query_params.get('lang')
 
         if query:
-            if lang and lang == 'de':
-                queryset = queryset.filter(Q(name__icontains=query))
-            elif lang and lang == 'en':
+            if lang and lang == 'en':
                 queryset = queryset.filter(Q(english_name__icontains=query))
             else:
-                queryset = queryset.filter(Q(name__icontains=query) | Q(english_name__icontains=query))
+                queryset = queryset.filter(Q(name__icontains=query))
 
         return queryset
 
     serializer_class = TagSerializer
-
+    pagination_class = None
 
 # 3.)
 #   species-image-lists/filter?tag=138&lang=de&_sort=localname:ASC&_start=0&_limit=16
@@ -60,19 +93,6 @@ class TagsList(generics.ListAPIView):
 # species/portrait?id=1569&lang=de
 # json: siehe https://naturblick.museumfuernaturkunde.berlin/strapi/species/portrait?id=1569&lang=de
 
-class SpeciesList(generics.ListAPIView):
-    # queryset = Species.objects.all()
-
-    def get_queryset(self):
-        queryset = Species.objects.all()
-        lang_filter = self.request.query_params.get('language')
-
-        if lang_filter:
-            queryset = queryset.filter(language=lang_filter)
-
-        return queryset
-
-    serializer_class = SpeciesSerializer
 
 # class SpeciesDetail(APIView):
 #     def get(self, request, species_id):
