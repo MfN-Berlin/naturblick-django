@@ -99,7 +99,9 @@ class PortraitDetail(generics.GenericAPIView):
         species_id = request.query_params.get('id')  # int-id
         lang = request.query_params.get('lang') or 'de'
 
-        species = Species.objects.all().select_related('group').filter(id=species_id).first()
+        species = Species.objects.all().select_related('group', 'avatar').prefetch_related(
+            Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang))).filter(
+            id=species_id).first()
         manager = Faunaportrait.objects if species.group.nature == 'fauna' else Floraportrait.objects
         portrait = manager.prefetch_related('goodtoknow_set', 'unambigousfeature_set', 'similarspecies_set',
                                             'source_set').filter(Q(species__id=species_id) & Q(language=lang)).first()
