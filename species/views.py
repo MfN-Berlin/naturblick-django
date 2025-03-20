@@ -2,8 +2,9 @@ from django.db.models import Prefetch
 from django.db.models import Q
 from django.http import FileResponse
 from rest_framework import generics
+from rest_framework.response import Response
 
-from .models import Species, Tag, SpeciesName
+from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait
 from .serializers import SpeciesSerializer, TagSerializer
 from .utils import create_sqlite_file
 
@@ -32,9 +33,8 @@ class SpeciesList(generics.ListAPIView):
     def get_queryset(self):
 
         query = self.request.query_params.get('query')
-        lang = self.request.query_params.get('lang')
+        lang = self.request.query_params.get('lang') or 'de'
         tag = self.request.query_params.getlist('tag')
-        lang = lang if lang else 'de'
 
         species_manager = Species.objects.select_related('avatar', 'group').prefetch_related(
             Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
@@ -65,7 +65,7 @@ class SpeciesList(generics.ListAPIView):
 # 2.) This is the 'old' Tag endpoint, callable with
 #  - /tags/filter?lang=de&tagsearch=&_limit=-1
 # now just use /species/tags/?lang=en&tagsearch=ant
-# or /species/tags/ for 'de' without any query
+# or /species/tags/ for 'de' as default without any query
 class TagsList(generics.ListAPIView):
 
     def get_queryset(self):
@@ -85,14 +85,37 @@ class TagsList(generics.ListAPIView):
     serializer_class = TagSerializer
     pagination_class = None
 
+
 # 3.)
 #   species-image-lists/filter?tag=138&lang=de&_sort=localname:ASC&_start=0&_limit=16
 #   [{"id":370,"speciesid":"herb_47c78ded","synonym":null,"sciname":"Cirsium arvense","group":"herb","species":370,"localname":"Acker-Kratzdistel","formats":{"large":{"ext":".jpg","url":"/uploads/large_ff55038201a052c32e8accc6_2c3084e6d6.jpg","hash":"large_ff55038201a052c32e8accc6_2c3084e6d6","mime":"image/jpeg","name":"large_ff55038201a052c32e8accc6.jpg","path":null,"size":113.26,"width":842,"height":1200},"small":{"ext":".jpg","url":"/uploads/small_ff55038201a052c32e8accc6_2c3084e6d6.jpg","hash":"small_ff55038201a052c32e8accc6_2c3084e6d6","mime":"image/jpeg","name":"small_ff55038201a052c32e8accc6.jpg","path":null,"size":20.96,"width":281,"height":400},"medium":{"ext":".jpg","url":"/uploads/medium_ff55038201a052c32e8accc6_2c3084e6d6.jpg","hash":"medium_ff55038201a052c32e8accc6_2c3084e6d6","mime":"image/jpeg","name":"medium_ff55038201a052c32e8accc6.jpg","path":null,"size":61.66,"width":561,"height":800},"thumbnail":{"ext":".jpg","url":"/uploads/thumbnail_ff55038201a052c32e8accc6_2c3084e6d6.jpg","hash":"thumbnail_ff55038201a052c32e8accc6_2c3084e6d6","mime":"image/jpeg","name":"thumbnail_ff55038201a052c32e8accc6.jpg","path":null,"size":5.02,"width":109,"height":156}}}, ...
 
-# 4.)
-# species/portrait?id=1569&lang=de
+# 4.) old: species/portrait?id=1569&lang=de (id means species_id not portrait_id)
+#
 # json: siehe https://naturblick.museumfuernaturkunde.berlin/strapi/species/portrait?id=1569&lang=de
 
+class PortraitDetail(generics.GenericAPIView):
+    def get(self, request):
+        species_id = request.query_params.get('id')  # int-id
+        lang = request.query_params.get('lang') or 'de'
+
+        species = Species.objects.all().select_related('group').filter(id=species_id).first()
+        manager = Faunaportrait.objects if species.group.nature == 'fauna' else Floraportrait.objects
+        portrait = manager.prefetch_related('goodtoknow_set', 'unambigousfeature_set', 'similarspecies_set',
+                                            'source_set').filter(Q(species__id=species_id) & Q(language=lang)).first()
+
+        #    data_a = ModelA.objects.all()  # You can apply filters or other logic here
+        #    data_b = ModelB.objects.all()
+
+        # Serialize data for both models
+        #   serializer_a = ModelASerializer(data_a)
+        #   serializer_b = ModelBSerializer(data_b, many=True) #  if many =)
+
+        # Concatenate the two serialized data into a single dictionary
+        combined_data = {}  # {**serializer_a.data, **serializer_b.data}
+
+        # Return the combined data as JSON response
+        return Response(combined_data)
 
 # class SpeciesDetail(APIView):
 #     def get(self, request, species_id):
