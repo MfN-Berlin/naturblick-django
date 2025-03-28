@@ -71,16 +71,15 @@ class SpeciesSerializer(serializers.ModelSerializer):
     localname = SpeciesLocalnameField(source='*')
     group = serializers.CharField(source='group.name', read_only=True)
     synonym = SynonymField(source='*')
-    url = serializers.CharField(source="avatar.image.url", read_only=True)
-    image_owner = serializers.CharField(source="avatar.owner", read_only=True)
-    image_license = serializers.CharField(source="avatar.license", read_only=True)
-    image_source = serializers.CharField(source="avatar.source", read_only=True)
-    avatar = serializers.CharField(source="avatar.image.url", read_only=True)
+    avatar_url = serializers.CharField(source="avatar.image.url", read_only=True)
+    avatar_owner = serializers.CharField(source="avatar.owner", read_only=True)
+    avatar_license = serializers.CharField(source="avatar.license", read_only=True)
+    avatar_source = serializers.CharField(source="avatar.source", read_only=True)
 
     class Meta:
         model = Species
-        fields = ['id', 'speciesid', 'localname', 'group', 'sciname', 'synonym', 'url', 'image_owner',
-                  'image_license', 'image_source', 'avatar']
+        fields = ['id', 'speciesid', 'localname', 'group', 'sciname', 'synonym', 'avatar_url', 'avatar_owner',
+                  'avatar_license', 'avatar_source']
 
 
 class UrlField(serializers.Field):
