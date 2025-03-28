@@ -102,38 +102,52 @@ class SimpleTagsList(generics.ListAPIView):
     pagination_class = None
 
 
-# 4.) old: species/portrait?id=1569&lang=de (id means species_id not portrait_id)
+# 4.)      species/portrait?id=1569&lang=de (id means species_id not portrait_id)
+#       or species/portrait?speciesid=bird_0123abcd&lang=de (speciesid means old fashioned species_id)
 #
 # json: siehe https://naturblick.museumfuernaturkunde.berlin/strapi/species/portrait?id=1569&lang=de
 
 class PortraitDetail(generics.GenericAPIView):
     def get(self, request):
-        species_id = request.query_params.get('id')  # int-id
+        id = request.query_params.get('id')  # int-id
+        speciesid = request.query_params.get('speciesid')  # old fashioned species_id
         lang = request.query_params.get('lang') or 'de'
 
-        species = Species.objects.all().select_related('group', 'avatar').prefetch_related(
+        species_qs = Species.objects.all().select_related('group', 'avatar').prefetch_related(
             Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
-                     to_attr="prefetched_speciesnames")).filter(id=species_id).first()
-        if not species:
+                     to_attr="prefetched_speciesnames"))
+        if id:
+            species_qs.filter(id=id)
+        elif speciesid:
+            species_qs.filter(speciesid=speciesid)
+        species_qs = species_qs.first()
+
+        if not species_qs:
             return Response("no species")
 
-        is_fauna = species.group.nature == 'fauna'
+        is_fauna = species_qs.group.nature == 'fauna'
         manager = Faunaportrait.objects.select_related('faunaportrait_audio_file', 'descmeta', 'funfactmeta',
                                                        'inthecitymeta') if is_fauna else Floraportrait.objects
-        portrait = (
+        portrait_qs = (
             manager.prefetch_related(Prefetch('goodtoknow_set', queryset=GoodToKnow.objects.all().order_by('order')),
                                      Prefetch('unambigousfeature_set',
                                               queryset=UnambigousFeature.objects.all().order_by('order')),
                                      Prefetch('similarspecies_set',
                                               queryset=SimilarSpecies.objects.all().order_by('order')),
                                      Prefetch('source_set', queryset=Source.objects.all().order_by('order')))
-            .filter(Q(species__id=species_id) & Q(language=lang) & Q(published=True)).first())
+            .filter(Q(language=lang) & Q(published=True)))
 
-        if not portrait:
+        if id:
+            portrait_qs.filter(species__id=id)
+        elif speciesid:
+            portrait_qs.filter(species__speciesid=speciesid)
+        portrait_qs = portrait_qs.first()
+
+        if not portrait_qs:
             return Response("no portrait")
 
-        species_serializer = SpeciesSerializer(species)
-        portrait_serializer = FaunaPortraitSerializer(portrait) if is_fauna else FloraportraitSerializer(portrait)
+        species_serializer = SpeciesSerializer(species_qs)
+        portrait_serializer = FaunaPortraitSerializer(portrait_qs) if is_fauna else FloraportraitSerializer(portrait_qs)
 
         combined_data = {**species_serializer.data, **portrait_serializer.data}
 
