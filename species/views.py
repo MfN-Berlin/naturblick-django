@@ -117,9 +117,9 @@ class PortraitDetail(generics.GenericAPIView):
             Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
                      to_attr="prefetched_speciesnames"))
         if id:
-            species_qs.filter(id=id)
+            species_qs = species_qs.filter(id=id)
         elif speciesid:
-            species_qs.filter(speciesid=speciesid)
+            species_qs = species_qs.filter(speciesid=speciesid)
         species_qs = species_qs.first()
 
         if not species_qs:

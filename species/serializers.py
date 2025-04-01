@@ -87,15 +87,18 @@ class UrlField(serializers.Field):
         pif = obj.prefetched_portraits[0].descmeta.portrait_image_file
         return pif.image_small.url
 
+
 class WidthField(serializers.Field):
     def to_representation(self, obj):
         pif = obj.prefetched_portraits[0].descmeta.portrait_image_file
         return pif.image_small.width
 
+
 class HeightField(serializers.Field):
     def to_representation(self, obj):
         pif = obj.prefetched_portraits[0].descmeta.portrait_image_file
         return pif.image_small.height
+
 
 class SimilarSpeciesLocalnameField(serializers.Field):
     def to_representation(self, obj):
@@ -162,11 +165,11 @@ class PortraitSerializer(serializers.ModelSerializer):
                                                                   read_only=True)
     funfact_image_text = serializers.CharField(source="funfactmeta.text", read_only=True)
     funfact_image_small = serializers.URLField(source="funfactmeta.portrait_image_file.small.url",
-                                                   read_only=True)
+                                               read_only=True)
     funfact_image_medium = serializers.URLField(source="funfactmeta.portrait_image_file.medium.url",
-                                                    read_only=True)
+                                                read_only=True)
     funfact_image_large = serializers.URLField(source="funfactmeta.portrait_image_file.large.url",
-                                                   read_only=True)
+                                               read_only=True)
 
     inthecity_image_orientation = serializers.CharField(source="inthecitymeta.image_orientation", read_only=True)
     inthecity_image_display_ratio = serializers.CharField(source="inthecitymeta.display_ratio", read_only=True)
@@ -177,11 +180,11 @@ class PortraitSerializer(serializers.ModelSerializer):
                                                                     read_only=True)
     inthecity_image_text = serializers.CharField(source="inthecitymeta.text", read_only=True)
     inthecity_image_small = serializers.URLField(source="inthecitymeta.portrait_image_file.small.url",
-                                               read_only=True)
+                                                 read_only=True)
     inthecity_image_medium = serializers.URLField(source="inthecitymeta.portrait_image_file.medium.url",
-                                                read_only=True)
+                                                  read_only=True)
     inthecity_image_large = serializers.URLField(source="inthecitymeta.portrait_image_file.large.url",
-                                               read_only=True)
+                                                 read_only=True)
 
     class Meta:
         fields = ['short_description', 'city_habitat', 'human_interaction', 'similar_species', 'goodtoknow',
@@ -220,18 +223,23 @@ class FaunaPortraitSerializer(PortraitSerializer):
     audio_license = serializers.CharField(source="faunaportrait_audio_file.license", read_only=True)
     audio_url = serializers.CharField(source="faunaportrait_audio_file.audio_file.url", read_only=True)
     audio_specgram = serializers.CharField(source="faunaportrait_audio_file.audio_spectrogram.url", read_only=True)
+    is_floraportrait = serializers.BooleanField(default=False, read_only=True)
 
     class Meta:
         model = Faunaportrait
         fields = PortraitSerializer.Meta.fields + ['male_description', 'female_description', 'juvenile_description',
-                                                   'audio_title', 'audio_license', 'audio_url', 'audio_specgram']
+                                                   'audio_title', 'audio_license', 'audio_url', 'audio_specgram',
+                                                   'is_floraportrait']
 
 
 class FloraportraitSerializer(PortraitSerializer):
+    is_floraportrait = serializers.BooleanField(default=True, read_only=True)
+
     class Meta:
         model = Floraportrait
         fields = PortraitSerializer.Meta.fields + ['leaf_description', 'stem_axis_description', 'flower_description',
-                                                   'fruit_description']
+                                                   'fruit_description', 'is_floraportrait']
+
 
 class SpeciesImageListSerializer(serializers.ModelSerializer):
     localname = SpeciesLocalnameField(source='*')
@@ -246,4 +254,5 @@ class SpeciesImageListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Species
-        fields = ['id', 'localname', 'group', 'sciname', 'synonym', 'avatar_url', 'desc_url', 'desc_width', 'desc_height']
+        fields = ['id', 'localname', 'group', 'sciname', 'synonym', 'avatar_url', 'desc_url', 'desc_width',
+                  'desc_height']
