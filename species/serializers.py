@@ -113,11 +113,12 @@ class SimilarSpeciesLocalnameField(serializers.Field):
 class SimilarSpeciesSerilizer(serializers.ModelSerializer):
     sciname = serializers.CharField(source="species.sciname", read_only=True)
     similar_species_id = serializers.CharField(source="species.id", read_only=True)
+    avatar_url = serializers.CharField(source="species.avatar.image.url", read_only=True)
     localname = SimilarSpeciesLocalnameField(source='*')
 
     class Meta:
         model = SimilarSpecies
-        fields = ['differences', 'localname', 'sciname', 'similar_species_id']
+        fields = ['differences', 'localname', 'sciname', 'similar_species_id', 'avatar_url']
 
 
 class GoodtoknowSerilizer(serializers.ModelSerializer):
@@ -138,81 +139,68 @@ class SourceSerilizer(serializers.ModelSerializer):
         fields = ['text']
 
 
+class DescMetaSerializer(serializers.Serializer):
+    image_orientation = serializers.CharField(source="descmeta.image_orientation", read_only=True)
+    display_ratio = serializers.CharField(source="descmeta.display_ratio", read_only=True)
+    grid_ratio = serializers.CharField(source="descmeta.grid_ratio", read_only=True)
+    focus_point_vertical = serializers.FloatField(source="descmeta.focus_point_vertical", read_only=True)
+    focus_point_horizontal = serializers.FloatField(source="descmeta.focus_point_horizontal", read_only=True)
+    text = serializers.CharField(source="descmeta.text", read_only=True)
+    image_small = serializers.URLField(source="descmeta.portrait_image_file.small.url", read_only=True)
+    image_medium = serializers.URLField(source="descmeta.portrait_image_file.medium.url", read_only=True)
+    image_large = serializers.URLField(source="descmeta.portrait_image_file.large.url", read_only=True)
+    owner = serializers.CharField(source="descmeta.portrait_image_file.owner", read_only=True)
+    owner_link = serializers.CharField(source="descmeta.portrait_image_file.owner_link", read_only=True)
+    source = serializers.CharField(source="descmeta.portrait_image_file.source", read_only=True)
+    license = serializers.CharField(source="descmeta.portrait_image_file.license", read_only=True)
+
+
+class FunfactMetaSerializer(serializers.Serializer):
+    image_orientation = serializers.CharField(source="funfactmeta.image_orientation", read_only=True)
+    display_ratio = serializers.CharField(source="funfactmeta.display_ratio", read_only=True)
+    grid_ratio = serializers.CharField(source="funfactmeta.grid_ratio", read_only=True)
+    focus_point_vertical = serializers.FloatField(source="funfactmeta.focus_point_vertical", read_only=True)
+    focus_point_horizontal = serializers.FloatField(source="funfactmeta.focus_point_horizontal", read_only=True)
+    text = serializers.CharField(source="funfactmeta.text", read_only=True)
+    image_small = serializers.URLField(source="funfactmeta.portrait_image_file.small.url", read_only=True)
+    image_medium = serializers.URLField(source="funfactmeta.portrait_image_file.medium.url", read_only=True)
+    image_large = serializers.URLField(source="funfactmeta.portrait_image_file.large.url", read_only=True)
+    owner = serializers.CharField(source="funfactmeta.portrait_image_file.owner", read_only=True)
+    owner_link = serializers.CharField(source="funfactmeta.portrait_image_file.owner_link", read_only=True)
+    source = serializers.CharField(source="funfactmeta.portrait_image_file.source", read_only=True)
+    license = serializers.CharField(source="funfactmeta.portrait_image_file.license", read_only=True)
+
+
+class InthecityMetaSerializer(serializers.Serializer):
+    image_orientation = serializers.CharField(source="inthecitymeta.image_orientation", read_only=True)
+    display_ratio = serializers.CharField(source="inthecitymeta.display_ratio", read_only=True)
+    grid_ratio = serializers.CharField(source="inthecitymeta.grid_ratio", read_only=True)
+    focus_point_vertical = serializers.FloatField(source="inthecitymeta.focus_point_vertical", read_only=True)
+    focus_point_horizontal = serializers.FloatField(source="inthecitymeta.focus_point_horizontal", read_only=True)
+    text = serializers.CharField(source="inthecitymeta.text", read_only=True)
+    image_small = serializers.URLField(source="inthecitymeta.portrait_image_file.small.url", read_only=True)
+    image_medium = serializers.URLField(source="inthecitymeta.portrait_image_file.medium.url", read_only=True)
+    image_large = serializers.URLField(source="inthecitymeta.portrait_image_file.large.url", read_only=True)
+    owner = serializers.CharField(source="inthecitymeta.portrait_image_file.owner", read_only=True)
+    owner_link = serializers.CharField(source="inthecitymeta.portrait_image_file.owner_link", read_only=True)
+    source = serializers.CharField(source="inthecitymeta.portrait_image_file.source", read_only=True)
+    license = serializers.CharField(source="inthecitymeta.portrait_image_file.license", read_only=True)
+
+
 class PortraitSerializer(serializers.ModelSerializer):
     similar_species = SimilarSpeciesSerilizer(many=True, read_only=True, source='similarspecies_set')
     goodtoknow = GoodtoknowSerilizer(many=True, read_only=True, source='goodtoknow_set')
     unambigousfeature = UnambigousFeatureSerilizer(many=True, read_only=True, source='unambigousfeature_set')
     source = SourceSerilizer(many=True, read_only=True, source='source_set')
 
-    description_image_orientation = serializers.CharField(source="descmeta.image_orientation", read_only=True)
-    description_image_display_ratio = serializers.CharField(source="descmeta.display_ratio", read_only=True)
-    description_image_grid_ratio = serializers.CharField(source="descmeta.grid_ratio", read_only=True)
-    description_image_focus_point_vertical = serializers.FloatField(source="descmeta.focus_point_vertical",
-                                                                    read_only=True)
-    description_image_focus_point_horizontal = serializers.FloatField(source="descmeta.focus_point_horizontal",
-                                                                      read_only=True)
-    description_image_text = serializers.CharField(source="descmeta.text", read_only=True)
-    description_image_small = serializers.URLField(source="descmeta.portrait_image_file.small.url", read_only=True)
-    description_image_medium = serializers.URLField(source="descmeta.portrait_image_file.medium.url", read_only=True)
-    description_image_large = serializers.URLField(source="descmeta.portrait_image_file.large.url", read_only=True)
-
-    funfact_image_orientation = serializers.CharField(source="funfactmeta.image_orientation", read_only=True)
-    funfact_image_display_ratio = serializers.CharField(source="funfactmeta.display_ratio", read_only=True)
-    funfact_image_grid_ratio = serializers.CharField(source="funfactmeta.grid_ratio", read_only=True)
-    funfact_image_focus_point_vertical = serializers.FloatField(source="funfactmeta.focus_point_vertical",
-                                                                read_only=True)
-    funfact_image_focus_point_horizontal = serializers.FloatField(source="funfactmeta.focus_point_horizontal",
-                                                                  read_only=True)
-    funfact_image_text = serializers.CharField(source="funfactmeta.text", read_only=True)
-    funfact_image_small = serializers.URLField(source="funfactmeta.portrait_image_file.small.url",
-                                               read_only=True)
-    funfact_image_medium = serializers.URLField(source="funfactmeta.portrait_image_file.medium.url",
-                                                read_only=True)
-    funfact_image_large = serializers.URLField(source="funfactmeta.portrait_image_file.large.url",
-                                               read_only=True)
-
-    inthecity_image_orientation = serializers.CharField(source="inthecitymeta.image_orientation", read_only=True)
-    inthecity_image_display_ratio = serializers.CharField(source="inthecitymeta.display_ratio", read_only=True)
-    inthecity_image_grid_ratio = serializers.CharField(source="inthecitymeta.grid_ratio", read_only=True)
-    inthecity_image_focus_point_vertical = serializers.FloatField(source="inthecitymeta.focus_point_vertical",
-                                                                  read_only=True)
-    inthecity_image_focus_point_horizontal = serializers.FloatField(source="inthecitymeta.focus_point_horizontal",
-                                                                    read_only=True)
-    inthecity_image_text = serializers.CharField(source="inthecitymeta.text", read_only=True)
-    inthecity_image_small = serializers.URLField(source="inthecitymeta.portrait_image_file.small.url",
-                                                 read_only=True)
-    inthecity_image_medium = serializers.URLField(source="inthecitymeta.portrait_image_file.medium.url",
-                                                  read_only=True)
-    inthecity_image_large = serializers.URLField(source="inthecitymeta.portrait_image_file.large.url",
-                                                 read_only=True)
-
     class Meta:
-        fields = ['short_description', 'city_habitat', 'human_interaction', 'similar_species', 'goodtoknow',
-                  'unambigousfeature', 'source',
-                  'description_image_display_ratio',
-                  'description_image_grid_ratio',
-                  'description_image_focus_point_vertical',
-                  'description_image_focus_point_horizontal',
-                  'description_image_text',
-                  'description_image_small',
-                  'description_image_medium',
-                  'description_image_large',
-                  'funfact_image_display_ratio',
-                  'funfact_image_grid_ratio',
-                  'funfact_image_focus_point_vertical',
-                  'funfact_image_focus_point_horizontal',
-                  'funfact_image_text',
-                  'funfact_image_small',
-                  'funfact_image_medium',
-                  'funfact_image_large',
-                  'inthecity_image_display_ratio',
-                  'inthecity_image_grid_ratio',
-                  'inthecity_image_focus_point_vertical',
-                  'inthecity_image_focus_point_horizontal',
-                  'inthecity_image_text',
-                  'inthecity_image_small',
-                  'inthecity_image_medium',
-                  'inthecity_image_large',
+        fields = ['short_description',
+                  'city_habitat',
+                  'human_interaction',
+                  'similar_species',
+                  'goodtoknow',
+                  'unambigousfeature',
+                  'source',
                   'similar_species',
                   'goodtoknow',
                   'unambigousfeature',

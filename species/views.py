@@ -7,7 +7,8 @@ from rest_framework.response import Response
 from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait, GoodToKnow, Source, SimilarSpecies, \
     UnambigousFeature
 from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializer, \
-    FloraportraitSerializer, SpeciesImageListSerializer
+    FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
+    FunfactMetaSerializer, InthecityMetaSerializer
 from .utils import create_sqlite_file
 
 
@@ -149,9 +150,17 @@ class PortraitDetail(generics.GenericAPIView):
         species_serializer = SpeciesSerializer(species_qs)
         portrait_serializer = FaunaPortraitSerializer(portrait_qs) if is_fauna else FloraportraitSerializer(portrait_qs)
 
-        combined_data = {**species_serializer.data, **portrait_serializer.data}
+        descmeta_serializer = DescMetaSerializer(portrait_qs)
+        funfact_serializer = FunfactMetaSerializer(portrait_qs)
+        inthecity_serializer = InthecityMetaSerializer(portrait_qs)
 
-        return Response(combined_data)
+        return Response({
+            **species_serializer.data,
+            **portrait_serializer.data,
+            'desc': descmeta_serializer.data,
+            'funfact': funfact_serializer.data,
+            'inthecity': inthecity_serializer.data,
+        })
 
 
 # ordering by synonym is no more possible unless it becomes (direct) part of the query
