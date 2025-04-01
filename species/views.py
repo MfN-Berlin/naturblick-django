@@ -168,7 +168,7 @@ def order_suffix(sort, lang):
 
 def sort_species(species_qs, sort_and_order, lang):
     (sort, order) = sort_and_order.split(':')
-    order_prefix = '' if order == 'ASC' else '-'
+    order_prefix = '' if order.lower() == 'asc' else '-'
     return species_qs.order_by(f'{order_prefix}{order_suffix(sort, lang)}')
 
 

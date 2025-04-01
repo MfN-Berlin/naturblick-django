@@ -85,17 +85,17 @@ class SpeciesSerializer(serializers.ModelSerializer):
 class UrlField(serializers.Field):
     def to_representation(self, obj):
         pif = obj.prefetched_portraits[0].descmeta.portrait_image_file
-        return pif.small.url
+        return pif.image_small.url
 
 class WidthField(serializers.Field):
     def to_representation(self, obj):
         pif = obj.prefetched_portraits[0].descmeta.portrait_image_file
-        return pif.small.width
+        return pif.image_small.width
 
 class HeightField(serializers.Field):
     def to_representation(self, obj):
         pif = obj.prefetched_portraits[0].descmeta.portrait_image_file
-        return pif.small.height
+        return pif.image_small.height
 
 class SimilarSpeciesLocalnameField(serializers.Field):
     def to_representation(self, obj):
