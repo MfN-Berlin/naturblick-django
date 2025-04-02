@@ -128,7 +128,9 @@ class PortraitDetail(generics.GenericAPIView):
 
         is_fauna = species_qs.group.nature == 'fauna'
         manager = Faunaportrait.objects.select_related('faunaportrait_audio_file', 'descmeta', 'funfactmeta',
-                                                       'inthecitymeta') if is_fauna else Floraportrait.objects
+                                                       'inthecitymeta') if is_fauna else Floraportrait.objects.select_related(
+            'descmeta', 'funfactmeta', 'inthecitymeta')
+
         portrait_qs = (
             manager.prefetch_related(Prefetch('goodtoknow_set', queryset=GoodToKnow.objects.all().order_by('order')),
                                      Prefetch('unambigousfeature_set',

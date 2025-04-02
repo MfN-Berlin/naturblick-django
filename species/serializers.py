@@ -115,10 +115,12 @@ class SimilarSpeciesSerilizer(serializers.ModelSerializer):
     similar_species_id = serializers.CharField(source="species.id", read_only=True)
     avatar_url = serializers.CharField(source="species.avatar.image.url", read_only=True)
     localname = SimilarSpeciesLocalnameField(source='*')
-    
+    speciesid = serializers.CharField(source="species.speciesid", read_only=True)
+    group = serializers.CharField(source='group.name', read_only=True)
+
     class Meta:
         model = SimilarSpecies
-        fields = ['differences', 'localname', 'sciname', 'similar_species_id', 'avatar_url', 'has_portrait']
+        fields = ['differences', 'localname', 'sciname', 'similar_species_id', 'avatar_url', 'has_portrait', 'speciesid', 'group']
 
 
 class GoodtoknowSerilizer(serializers.ModelSerializer):
