@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 
+from django.core.files.storage import FileSystemStorage
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -48,11 +50,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
-
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:4200',
-]
-
 
 ROOT_URLCONF = 'naturblick.urls'
 
@@ -124,8 +121,7 @@ STATIC_ROOT =  '/static-root'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media-root')
 
-# IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = 'imagekit.cachefiles.strategies.Optimistic' # if we always pre-generate all images
-IMAGEKIT_CACHEFILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+IMAGEKIT_CACHEFILE_STORAGE = FileSystemStorage(location='/imagekit')
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
