@@ -127,23 +127,22 @@ class PortraitDetail(generics.GenericAPIView):
             return Response("no species")
 
         is_fauna = species_qs.group.nature == 'fauna'
-        manager = Faunaportrait.objects.select_related('faunaportrait_audio_file', 'descmeta', 'funfactmeta',
+        portrait_qs = Faunaportrait.objects.select_related('faunaportrait_audio_file', 'descmeta', 'funfactmeta',
                                                        'inthecitymeta') if is_fauna else Floraportrait.objects.select_related(
             'descmeta', 'funfactmeta', 'inthecitymeta')
 
+        if id:
+            portrait_qs = portrait_qs.filter(species__id=id)
+        elif speciesid:
+            portrait_qs = portrait_qs.filter(species__speciesid=speciesid)
+
         portrait_qs = (
-            manager.prefetch_related(Prefetch('goodtoknow_set', queryset=GoodToKnow.objects.all().order_by('order')),
-                                     Prefetch('unambigousfeature_set',
-                                              queryset=UnambigousFeature.objects.all().order_by('order')),
-                                     Prefetch('similarspecies_set',
-                                              queryset=SimilarSpecies.objects.all().order_by('order')),
-                                     Prefetch('source_set', queryset=Source.objects.all().order_by('order')))
+            portrait_qs.prefetch_related(Prefetch('goodtoknow_set', queryset=GoodToKnow.objects.order_by('order')),
+                                     Prefetch('unambigousfeature_set', queryset=UnambigousFeature.objects.order_by('order')),
+                                     Prefetch('similarspecies_set', queryset=SimilarSpecies.objects.order_by('order')),
+                                     Prefetch('source_set', queryset=Source.objects.order_by('order')))
             .filter(Q(language=lang) & Q(published=True)))
 
-        if id:
-            portrait_qs.filter(species__id=id)
-        elif speciesid:
-            portrait_qs.filter(species__speciesid=speciesid)
         portrait_qs = portrait_qs.first()
 
         if not portrait_qs:
