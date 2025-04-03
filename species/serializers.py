@@ -68,7 +68,7 @@ class SynonymField(serializers.Field):
 
 
 class SpeciesSerializer(serializers.ModelSerializer):
-    localname = SpeciesLocalnameField(source='*')
+    localname = SpeciesLocalnameField(source='*', read_only=True)
     group = serializers.CharField(source='group.name', read_only=True)
     synonym = SynonymField(source='*')
     avatar_url = serializers.CharField(source="avatar.image.url", read_only=True)
@@ -79,7 +79,7 @@ class SpeciesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Species
         fields = ['id', 'speciesid', 'localname', 'group', 'sciname', 'synonym', 'avatar_url', 'avatar_owner',
-                  'avatar_license', 'avatar_source']
+                  'avatar_license', 'avatar_source', 'red_list_germany']
 
 
 class UrlField(serializers.Field):
@@ -140,9 +140,12 @@ class UnambigousFeatureSerilizer(serializers.ModelSerializer):
 
 
 class SourceSerilizer(serializers.ModelSerializer):
+    source = serializers.CharField(source="text", read_only=True)
+    id = serializers.IntegerField(source="order", read_only=True)
+
     class Meta:
         model = Source
-        fields = ['text']
+        fields = ['id', 'source']
 
 
 class DescMetaSerializer(serializers.Serializer):
@@ -203,7 +206,7 @@ class PortraitSerializer(serializers.ModelSerializer):
     similar_species = SimilarSpeciesSerilizer(many=True, read_only=True, source='similarspecies_set')
     goodtoknow = GoodtoknowSerilizer(many=True, read_only=True, source='goodtoknow_set')
     unambigousfeature = UnambigousFeatureSerilizer(many=True, read_only=True, source='unambigousfeature_set')
-    source = SourceSerilizer(many=True, read_only=True, source='source_set')
+    sources = SourceSerilizer(many=True, read_only=True, source='source_set')
 
     class Meta:
         fields = ['short_description',
@@ -212,11 +215,10 @@ class PortraitSerializer(serializers.ModelSerializer):
                   'similar_species',
                   'goodtoknow',
                   'unambigousfeature',
-                  'source',
                   'similar_species',
                   'goodtoknow',
                   'unambigousfeature',
-                  'source']
+                  'sources']
 
 
 class FaunaPortraitSerializer(PortraitSerializer):

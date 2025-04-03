@@ -128,7 +128,7 @@ class PortraitDetail(generics.GenericAPIView):
 
         is_fauna = species_qs.group.nature == 'fauna'
         portrait_qs = Faunaportrait.objects.select_related('faunaportrait_audio_file', 'descmeta', 'funfactmeta',
-                                                       'inthecitymeta') if is_fauna else Floraportrait.objects.select_related(
+                                                           'inthecitymeta') if is_fauna else Floraportrait.objects.select_related(
             'descmeta', 'funfactmeta', 'inthecitymeta')
 
         if id:
@@ -138,9 +138,11 @@ class PortraitDetail(generics.GenericAPIView):
 
         portrait_qs = (
             portrait_qs.prefetch_related(Prefetch('goodtoknow_set', queryset=GoodToKnow.objects.order_by('order')),
-                                     Prefetch('unambigousfeature_set', queryset=UnambigousFeature.objects.order_by('order')),
-                                     Prefetch('similarspecies_set', queryset=SimilarSpecies.objects.order_by('order')),
-                                     Prefetch('source_set', queryset=Source.objects.order_by('order')))
+                                         Prefetch('unambigousfeature_set',
+                                                  queryset=UnambigousFeature.objects.order_by('order')),
+                                         Prefetch('similarspecies_set',
+                                                  queryset=SimilarSpecies.objects.order_by('order')),
+                                         Prefetch('source_set', queryset=Source.objects.order_by('order')))
             .filter(Q(language=lang) & Q(published=True)))
 
         portrait_qs = portrait_qs.first()
@@ -148,8 +150,9 @@ class PortraitDetail(generics.GenericAPIView):
         if not portrait_qs:
             return Response("no portrait")
 
-        species_serializer = SpeciesSerializer(species_qs)
-        portrait_serializer = FaunaPortraitSerializer(portrait_qs) if is_fauna else FloraportraitSerializer(portrait_qs)
+        species_serializer = SpeciesSerializer(species_qs, context={'request': request})
+        portrait_serializer = FaunaPortraitSerializer(portrait_qs, context={'request': request}) if is_fauna \
+            else FloraportraitSerializer(portrait_qs, context={'request': request})
 
         descmeta_serializer = DescMetaSerializer(portrait_qs)
         funfact_serializer = FunfactMetaSerializer(portrait_qs)
