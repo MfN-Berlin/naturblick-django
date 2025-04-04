@@ -36,7 +36,7 @@ docker exec strapi-db pg_dump -U strapi -t 'species*|faunaportraits*|floraportra
 2.) Prepare empty django-db and execute migrations
 
 ```
-python manage.py makemigrations && python manage.py migrate && python manage.py loaddata groups && python manage.py createsuperuser 
+python manage.py migrate && python manage.py loaddata groups 
 ```
 
 3.) Copy dumps to django-db and execute it
@@ -53,22 +53,27 @@ docker cp init.sql django-db:/ && docker exec django-db psql -U naturblick speci
 
 ## Copy media files into directories
 
-base directory is `media-root/`
+base directory is `/app/media-root/`
 
 ### avatar_images, portrait_images, audio_files, spectrogram_images, character_images
 
 Directories should already be created.
 
 ```
-docker exec django-db psql -U naturblick species -c "select 'scp worker:/data/strapi/upload/' || substr(image, 15) || ' avatar_images' from avatar;" | tail -n+3 | head -n-2 >> copy_files.sh
+UPLOAD_LOCATION=xx
+docker exec django-db psql -U naturblick species -c "select 'scp $UPLOAD_LOCATION/' || substr(image, 15) || ' avatar_images' from avatar;" | tail -n+3 | head -n-2 >> copy_files.sh
 
-docker exec django-db psql -U naturblick species -c "select 'scp worker:/data/strapi/upload/' || substr(image, 17) || ' portrait_images' from portrait_image_file;" | tail -n+3 | head -n-2 >> copy_files.sh
+docker exec django-db psql -U naturblick species -c "select 'scp $UPLOAD_LOCATION/' || substr(image, 17) || ' portrait_images' from portrait_image_file;" | tail -n+3 | head -n-2 >> copy_files.sh
 
-docker exec django-db psql -U naturblick species -c "select 'scp worker:/data/strapi/upload/' || substr(audio_file,13) || ' audio_files'  from faunaportrait_audio_file;" | tail -n+3 | head -n-2 >> copy_files.sh
+docker exec django-db psql -U naturblick species -c "select 'scp $UPLOAD_LOCATION/' || substr(audio_file,13) || ' audio_files'  from faunaportrait_audio_file;" | tail -n+3 | head -n-2 >> copy_files.sh
 
-docker exec django-db psql -U naturblick species -c "select 'scp worker:/data/strapi/upload/' || substr(audio_spectrogram,20) || ' spectrogram_images' from faunaportrait_audio_file;" | tail -n+3 | head -n-2 >> copy_files.sh
+docker exec django-db psql -U naturblick species -c "select 'scp $UPLOAD_LOCATION/' || substr(audio_spectrogram,20) || ' spectrogram_images' from faunaportrait_audio_file;" | tail -n+3 | head -n-2 >> copy_files.sh
 
-docker exec django-db psql -U naturblick species -c "select 'scp worker:/data/strapi/upload/' || substr(image,18) || ' character_images' from character_value where image is not null;" | tail -n+3 | head -n-2 >> copy_files.sh
+docker exec django-db psql -U naturblick species -c "select 'scp $UPLOAD_LOCATION/' || substr(image,18) || ' character_images' from character_value where image is not null;" | tail -n+3 | head -n-2 >> copy_files.sh
 ```
 
+**trigger management command:**
 
+```
+python manage.py generateimages
+```

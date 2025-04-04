@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.http import FileResponse
 from rest_framework import generics
 from rest_framework.response import Response
+from django.core import management
 
 from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait, GoodToKnow, Source, SimilarSpecies, \
     UnambigousFeature
@@ -14,7 +15,8 @@ from .utils import create_sqlite_file
 
 # returns sqlite database used by android/ios
 def app_content(request):
-    """Django view that generates and serves an SQLite file."""
+    # generates small, medium, large version of imagekit Spec-Fields
+    management.call_command("generateimages")
 
     sqlite_db = create_sqlite_file()
 

@@ -45,7 +45,6 @@ LOGGING = {
 
 FORCE_SCRIPT_NAME = '/django/'
 STATIC_URL = '/django/static/'
-# MEDIA_URL = '/django/media/'
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
