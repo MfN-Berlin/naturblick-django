@@ -7,6 +7,7 @@ from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
+from django.conf import settings
 
 from .choices import *
 from .validators import min_max, validate_png, validate_mp3
@@ -50,7 +51,7 @@ class Avatar(models.Model):
     cropping = ImageRatioField('image', '400x400', size_warning=True)
 
     def thumbnail(self):
-        return mark_safe('<img src="/media/%s" width="150" height="150" />' % (self.image))
+        return mark_safe(f'<img src="{settings.MEDIA_URL}%s" width="150" height="150" />' % (self.image))
 
     thumbnail.short_description = 'Thumbnail'
     thumbnail.allow_tags = True
