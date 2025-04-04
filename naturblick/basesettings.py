@@ -114,14 +114,18 @@ THUMBNAIL_ALIASES = {
 }
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static-root'),
-]
-STATIC_ROOT =  '/static-root'
+STATIC_ROOT = '/static-root'
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media-root')
 
-IMAGEKIT_CACHEFILE_STORAGE = FileSystemStorage(location='/imagekit')
+IMAGEKIT_CACHEFILE_DIR = 'auto-resized-images'
+class ImagekitOnSaveStrategy(object):
+    def on_source_saved(self, file):
+        file.generate()
+
+IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = ImagekitOnSaveStrategy
+
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
