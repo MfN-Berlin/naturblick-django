@@ -448,6 +448,10 @@ class SimilarSpecies(models.Model):
                          parent_link=False)
     order = models.IntegerField()
 
+    @property
+    def has_portrait(self):
+        return self.species.portrait_set.exists()
+
     def clean(self):
         super().clean()
         if self.species == self.portrait.species:
