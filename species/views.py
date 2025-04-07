@@ -157,15 +157,15 @@ class PortraitDetail(generics.GenericAPIView):
             else FloraportraitSerializer(portrait_qs, context={'request': request})
 
         descmeta_serializer = DescMetaSerializer(portrait_qs)
-        funfact_serializer = FunfactMetaSerializer(portrait_qs)
-        inthecity_serializer = InthecityMetaSerializer(portrait_qs)
+        funfact_data = FunfactMetaSerializer(portrait_qs).data
+        inthecity_data = InthecityMetaSerializer(portrait_qs).data
 
         return Response({
             **species_serializer.data,
             **portrait_serializer.data,
             'desc': descmeta_serializer.data,
-            'funfact': funfact_serializer.data,
-            'inthecity': inthecity_serializer.data,
+            'funfact': funfact_data if funfact_data['text'] else None,
+            'inthecity': inthecity_data if inthecity_data['text'] else None,
         })
 
 
