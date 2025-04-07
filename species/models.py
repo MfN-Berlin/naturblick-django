@@ -16,7 +16,7 @@ SMALL_WIDTH = 400
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255, unique=True, verbose_name='German name')
     english_name = models.CharField(max_length=255, unique=True)
 
     class Meta:
@@ -57,12 +57,12 @@ class Avatar(models.Model):
 
 class Species(models.Model):
     speciesid = models.CharField(max_length=255, unique=True)
-    gername = models.CharField(max_length=255, null=True, blank=True, db_index=True)
-    sciname = models.CharField(max_length=255, unique=True, db_index=True)
-    engname = models.CharField(max_length=255, null=True, blank=True, db_index=True)
+    gername = models.CharField(max_length=255, null=True, blank=True, db_index=True, verbose_name='German name')
+    sciname = models.CharField(max_length=255, unique=True, db_index=True, verbose_name='Scientific name')
+    engname = models.CharField(max_length=255, null=True, blank=True, db_index=True, verbose_name='English name')
     group = models.ForeignKey(Group, on_delete=models.PROTECT)
     nbclassid = models.CharField(max_length=255, blank=True, null=True)
-    wikipedia = models.CharField(max_length=255, blank=True, null=True)
+    wikipedia = models.URLField(max_length=255, blank=True, null=True, verbose_name='Wikipedia link')
     autoid = models.BooleanField(default=False)
     red_list_germany = models.CharField(max_length=255, blank=True, null=True, choices=REDLIST_CHOICES)
     iucncategory = models.CharField(max_length=2, blank=True, null=True, choices=IUCN_CHOICES)
@@ -75,7 +75,7 @@ class Species(models.Model):
     avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name='+', null="True", blank="True")
     female_avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name='+', null="True",
                                       blank="True")
-    gbifusagekey = models.IntegerField(blank=True, null=True)
+    gbifusagekey = models.IntegerField(blank=True, null=True, verbose_name='GBIF usagekey')
     accepted_species = models.ForeignKey("self", on_delete=models.SET_NULL, blank=True, null=True)
     created_by = CurrentUserField(related_name='species_created_by_set', null=True)
     updated_by = CurrentUserField(on_update=True, related_name='species_updated_by_set', null=True)
@@ -462,14 +462,14 @@ class SimilarSpecies(models.Model):
 
 class Character(models.Model):
     id = models.BigAutoField(primary_key=True)
-    gername = models.CharField(max_length=255)
-    engname = models.CharField(max_length=255)
+    gername = models.CharField(max_length=255, verbose_name='German name')
+    engname = models.CharField(max_length=255, verbose_name='English name')
     group = models.ForeignKey(Group, on_delete=models.PROTECT)
     display_name = models.CharField(max_length=255, null=True, blank=True)
     weight = models.IntegerField()
     single_choice = models.BooleanField(null=True, blank=True)
-    gerdescription = models.TextField(null=True, blank=True)
-    engdescription = models.TextField(null=True, blank=True)
+    gerdescription = models.TextField(null=True, blank=True, verbose_name='German description')
+    engdescription = models.TextField(null=True, blank=True, verbose_name='English description')
 
     class Meta:
         db_table = 'character'
@@ -481,8 +481,8 @@ class Character(models.Model):
 class CharacterValue(models.Model):
     id = models.BigAutoField(primary_key=True)
     character = models.ForeignKey(Character, on_delete=CASCADE)
-    gername = models.CharField(max_length=255)
-    engname = models.CharField(max_length=255)
+    gername = models.CharField(max_length=255, verbose_name='German name')
+    engname = models.CharField(max_length=255, verbose_name='English name')
     colors = models.CharField(max_length=255, null=True, blank=True)
     dots = models.CharField(max_length=255, null=True, blank=True)
     image = models.ImageField(upload_to="character_images", max_length=255, null=True)
@@ -496,9 +496,9 @@ class CharacterValue(models.Model):
 
 class SourcesImprint(models.Model):
     id = models.BigAutoField(primary_key=True)
-    name = models.CharField(max_length=32, choices=SOURCES_IMPRINT_CHOICES)
-    scie_name = models.CharField(max_length=255)
-    scie_name_eng = models.CharField(max_length=255, null=True, blank=True)
+    name = models.CharField(max_length=32, choices=SOURCES_IMPRINT_CHOICES, verbose_name='Group')
+    scie_name = models.CharField(max_length=255, verbose_name='German description')
+    scie_name_eng = models.CharField(max_length=255, null=True, blank=True, verbose_name='English description')
     image_source = models.CharField(max_length=255, null=True, blank=True)
     image_link = models.CharField(max_length=255, null=True, blank=True)
     licence = models.CharField(max_length=255, null=True, blank=True)

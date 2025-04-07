@@ -51,6 +51,8 @@ class SpeciesNameInline(admin.TabularInline):
     model = SpeciesName
     extra = 1
 
+    verbose_name_plural = "Additional names"
+
 
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
@@ -225,18 +227,19 @@ class DescMetaInline(admin.StackedInline):
     extra = 0
     model = DescMeta
     autocomplete_fields = ['portrait_image_file']
-
+    verbose_name = 'Description image'
 
 class FunFactMetaInline(admin.StackedInline):
     model = FunFactMeta
     extra = 0
     autocomplete_fields = ['portrait_image_file']
-
+    verbose_name = 'Funfact image'
 
 class InTheCityMetaInline(admin.StackedInline):
     model = InTheCityMeta
     extra = 0
     autocomplete_fields = ['portrait_image_file']
+    verbose_name = 'In the city image'
 
 
 @admin.register(Floraportrait)
