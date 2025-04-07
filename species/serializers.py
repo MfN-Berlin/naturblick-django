@@ -24,25 +24,6 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ['tag_id', 'localname']
 
 
-class AvatarSerializer(serializers.ModelSerializer):
-    avatar_url = serializers.SerializerMethodField('generate_avatar_url')
-
-    def generate_avatar_url(self, avatar):
-        return '/django' + get_backend().get_thumbnail_url(
-            avatar.image,
-            {
-                'size': (400, 400),
-                'box': avatar.cropping,
-                'crop': True,
-                'detail': True,
-            }
-        )
-
-    class Meta:
-        model = Avatar
-        fields = ['avatar_url', 'image_owner', 'image_ownerLink', 'image_source', 'image_license']
-
-
 class SpeciesNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = SpeciesName
@@ -71,7 +52,7 @@ class SpeciesSerializer(serializers.ModelSerializer):
     localname = SpeciesLocalnameField(source='*', read_only=True)
     group = serializers.CharField(source='group.name', read_only=True)
     synonym = SynonymField(source='*')
-    avatar_url = serializers.CharField(source="avatar.image.url", read_only=True)
+    avatar_url = serializers.URLField(source="avatar.image.url", read_only=True)
     avatar_owner = serializers.CharField(source="avatar.owner", read_only=True)
     avatar_license = serializers.CharField(source="avatar.license", read_only=True)
     avatar_source = serializers.CharField(source="avatar.source", read_only=True)
@@ -113,7 +94,7 @@ class SimilarSpeciesLocalnameField(serializers.Field):
 class SimilarSpeciesSerilizer(serializers.ModelSerializer):
     sciname = serializers.CharField(source="species.sciname", read_only=True)
     similar_species_id = serializers.CharField(source="species.id", read_only=True)
-    avatar_url = serializers.CharField(source="species.avatar.image.url", read_only=True)
+    avatar_url = serializers.URLField(source="species.avatar.image.url", read_only=True)
     localname = SimilarSpeciesLocalnameField(source='*')
     speciesid = serializers.CharField(source="species.speciesid", read_only=True)
     group = serializers.CharField(source='group.name', read_only=True)
@@ -248,7 +229,7 @@ class SpeciesImageListSerializer(serializers.ModelSerializer):
     group = serializers.CharField(source='group.name', read_only=True)
     synonym = SynonymField(source='*')
 
-    avatar_url = serializers.CharField(source="avatar.image.url", read_only=True)
+    avatar_url = serializers.URLField(source="avatar.image.url", read_only=True)
 
     desc_url = UrlField(source="*", required=True)
     desc_width = WidthField(source="*", required=True)
