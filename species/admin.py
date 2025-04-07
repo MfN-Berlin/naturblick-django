@@ -26,7 +26,7 @@ class AdminThumbnailSpec(ImageSpec):
     options = {'quality': 60}
 
 
-def cached_admin_thumb(instance):
+def cached_thumb(instance):
     cached = ImageCacheFile(AdminThumbnailSpec(instance.image))
     cached.generate()
     return cached
@@ -217,7 +217,7 @@ class PortraitImageFileAdmin(admin.ModelAdmin):
     list_display_links = ['id', 'admin_thumbnail']
     autocomplete_fields = ['species']
 
-    admin_thumbnail = AdminThumbnail(image_field=cached_admin_thumb)
+    admin_thumbnail = AdminThumbnail(image_field=cached_thumb)
     admin_thumbnail.short_description = 'Image'
 
 
@@ -315,11 +315,13 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Avatar)
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
-    list_display = ['id', 'thumbnail', 'image', 'owner']
-    list_display_links = ['id', 'thumbnail']
+    list_display = ['id', 'avatar_thumbnail', 'image', 'owner']
     search_fields = ['image', 'owner']
-    fields = ['thumbnail', 'image', 'owner', 'owner_link', 'source', 'license', 'cropping']
-    readonly_fields = ['thumbnail']
+    fields = ['avatar_thumbnail', 'image', 'owner', 'owner_link', 'source', 'license', 'cropping']
+    readonly_fields = ['avatar_thumbnail']
+
+    avatar_thumbnail = AdminThumbnail(image_field=cached_thumb)
+    avatar_thumbnail.short_description = 'Image'
 
 
 @admin.register(CharacterValue)
