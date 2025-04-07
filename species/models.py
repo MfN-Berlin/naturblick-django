@@ -2,7 +2,6 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import ForeignKey, URLField, CASCADE
-from django.utils.safestring import mark_safe
 from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
 from imagekit.models import ImageSpecField
@@ -48,12 +47,6 @@ class Avatar(models.Model):
     source = URLField(max_length=1024)
     license = models.CharField(max_length=64)
     cropping = ImageRatioField('image', '400x400', size_warning=True)
-
-    def thumbnail(self):
-        return mark_safe('<img src="/media/%s" width="150" height="150" />' % (self.image))
-
-    thumbnail.short_description = 'Thumbnail'
-    thumbnail.allow_tags = True
 
     def __str__(self):
         return self.image.name
