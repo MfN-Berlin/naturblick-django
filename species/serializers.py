@@ -17,6 +17,8 @@ def avatar_crop_url(avatar):
 
 class AvatarCropUrlField(serializers.Field):
     def to_representation(self, obj):
+        if not obj:
+            return None
         return avatar_crop_url(obj)
 
 class TagLocalnameField(serializers.Field):
