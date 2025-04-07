@@ -28,7 +28,7 @@ class AvatarSerializer(serializers.ModelSerializer):
     avatar_url = serializers.SerializerMethodField('generate_avatar_url')
 
     def generate_avatar_url(self, avatar):
-        return get_backend().get_thumbnail_url(
+        return '/django' + get_backend().get_thumbnail_url(
             avatar.image,
             {
                 'size': (400, 400),
