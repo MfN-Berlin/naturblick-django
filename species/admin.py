@@ -82,7 +82,8 @@ class SpeciesAdmin(admin.ModelAdmin):
               'female_avatar',
               'gbifusagekey',
               'accepted_species',
-              'tag'
+              'plantnetpowoid',
+              'tag',
               ]
 
     raw_id_fields = ['accepted_species']
