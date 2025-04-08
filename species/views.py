@@ -13,6 +13,13 @@ from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializ
 from .utils import create_sqlite_file
 
 
+def get_lang_queryparam(request):
+    lang = request.query_params.get('lang') or 'de'
+    if lang == 'dels':
+        lang = 'er'
+    return lang
+
+
 # returns sqlite database used by android/ios
 def app_content(request):
     # generates small, medium, large version of imagekit Spec-Fields
@@ -30,7 +37,7 @@ def filter_species_by_query(species_qs, query, lang):
     if not query:
         return species_qs
 
-    if lang and lang == 'de':
+    if lang and (lang == 'de' or lang == 'er'):
         return species_qs.filter(
             Q(sciname__icontains=query) | Q(gername__icontains=query) | Q(speciesname__name__icontains=query))
     elif lang and lang == 'en':
@@ -57,7 +64,7 @@ class TagsList(generics.ListAPIView):
     def get_queryset(self):
         queryset = Tag.objects.all()
         query = self.request.query_params.get('tagsearch')
-        lang = self.request.query_params.get('lang') or 'de'
+        lang = get_lang_queryparam(self.request)
         tags = self.request.query_params.getlist('tag')
 
         if query:
@@ -89,7 +96,7 @@ class SimpleTagsList(generics.ListAPIView):
     def get_queryset(self):
         queryset = Tag.objects.all()
         tags = self.request.query_params.getlist('tag')
-        lang = self.request.query_params.get('lang') or 'de'
+        lang = get_lang_queryparam(self.request)
 
         if tags:
             queryset = queryset.filter(id__in=tags)
@@ -114,7 +121,7 @@ class PortraitDetail(generics.GenericAPIView):
     def get(self, request):
         id = request.query_params.get('id')  # int-id
         speciesid = request.query_params.get('speciesid')  # old fashioned species_id
-        lang = request.query_params.get('lang') or 'de'
+        lang = get_lang_queryparam(self.request)
 
         species_qs = Species.objects.all().select_related('group', 'avatar').prefetch_related(
             Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
@@ -189,7 +196,7 @@ def sort_species(species_qs, sort_and_order, lang):
 
 class SpeciesList(generics.ListAPIView):
     def get_queryset(self):
-        lang = self.request.query_params.get('lang') or 'de'
+        lang = get_lang_queryparam(self.request)
         query = self.request.query_params.get('query')
         tags = self.request.query_params.getlist('tag')
         sort_and_order = self.request.query_params.get('sort') or 'localname:ASC'
