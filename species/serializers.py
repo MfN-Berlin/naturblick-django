@@ -67,7 +67,7 @@ class SynonymField(serializers.Field):
 class SpeciesSerializer(serializers.ModelSerializer):
     localname = SpeciesLocalnameField(source='*', read_only=True)
     group = serializers.CharField(source='group.name', read_only=True)
-    synonym = SynonymField(source='*')
+    synonyms = SynonymField(source='*')
     avatar_url = AvatarCropUrlField(source="avatar")
     avatar_owner = serializers.CharField(source="avatar.owner", read_only=True)
     avatar_license = serializers.CharField(source="avatar.license", read_only=True)
@@ -75,7 +75,7 @@ class SpeciesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Species
-        fields = ['id', 'speciesid', 'localname', 'group', 'sciname', 'synonym', 'avatar_url', 'avatar_owner',
+        fields = ['id', 'speciesid', 'localname', 'group', 'sciname', 'synonyms', 'avatar_url', 'avatar_owner',
                   'avatar_license', 'avatar_source', 'red_list_germany']
 
 
