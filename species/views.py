@@ -72,7 +72,7 @@ class TagsList(generics.ListAPIView):
             queryset = queryset.filter(Q(species__id__in=species_ids_with_tags) & ~Q(id__in=tags)).distinct()
 
         if lang == 'en':
-            queryset = queryset.order_by('engname')
+            queryset = queryset.order_by('english_name')
         else:
             queryset = queryset.order_by('name')
 
@@ -95,7 +95,7 @@ class SimpleTagsList(generics.ListAPIView):
             queryset = queryset.filter(id__in=tags)
 
         if lang == 'en':
-            queryset = queryset.order_by('engname')
+            queryset = queryset.order_by('english_name')
         else:
             queryset = queryset.order_by('name')
 
