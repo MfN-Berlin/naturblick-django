@@ -30,7 +30,7 @@ docker exec strapi-db pg_dump -U strapi -t 'species*|faunaportraits*|floraportra
 ```
 
 ```
-docker exec strapi-db pg_dump -U strapi -t 'species*|faunaportraits*|floraportrait*|components_species*|upload_file*|tags*|species__tags*|characters*|character_values*|sources_impressum*|sources_translations*' --column-inserts --data-only strapi | sed s'/public\./strapi_/g' | sed '/^SET/d' | sed '/^SELECT pg_catalog\.set/d' | sed '/^--/d' | sed '/.*OWNED.*/d' | sed '/.*OWNER.*/d' | sed '/^ALTER TABLE ONLY.*regclass);/d' | sed '/^GRANT SELECT.*/d' | awk '!/CREATE SEQUENCE/ && !p {print} /CREATE SEQUENCE/ {p=1} /;/ {p=0}' | sed 's/strapi_components_speciesportrait_species_portrait_images_components/strapi_components_speciesportrait_species_portrait_images_compo/g' | sed 's/species_pkey/strapi_species_pkey/g' | sed '/^$/d' > data.sql
+docker exec strapi-db pg_dump -U strapi -t 'species*|faunaportraits*|floraportrait*|components_species*|upload_file*|tags*|species__tags*|characters*|character_values*|sources_impressum*|sources_translations*' --column-inserts --data-only strapi | sed s'/public\./strapi_/g' | sed '/^SET/d' | sed '/^SELECT pg_catalog\.set/d' | sed '/^--/d' | sed '/.*OWNED.*/d' | sed '/.*OWNER.*/d' | sed '/^ALTER TABLE ONLY.*regclass);/d' | sed '/^GRANT SELECT.*/d' | awk '!/CREATE SEQUENCE/ && !p {print} /CREATE SEQUENCE/ {p=1} /;/ {p=0}' | sed 's/strapi_components_speciesportrait_species_portrait_images_components/strapi_components_speciesportrait_species_portrait_images_compo/g' | sed 's/species_pkey/strapi_species_pkey/g' > data.sql
 ```
 
 2.) Prepare empty django-db and execute migrations
