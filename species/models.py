@@ -75,7 +75,7 @@ class Species(models.Model):
     avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name='+', null="True", blank="True")
     female_avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name='+', null="True",
                                       blank="True")
-    gbifusagekey = models.IntegerField(blank=True, null=True, verbose_name='GBIF usagekey')
+    gbifusagekey = models.IntegerField(blank=True, null=True, verbose_name='GBIF usagekey', unique=True)
     accepted_species = models.ForeignKey("self", on_delete=models.SET_NULL, blank=True, null=True)
     created_by = CurrentUserField(related_name='species_created_by_set', null=True)
     updated_by = CurrentUserField(on_update=True, related_name='species_updated_by_set', null=True)
@@ -83,6 +83,8 @@ class Species(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     tag = models.ManyToManyField(Tag, blank=True)
+
+    plantnetpowoid = models.CharField(blank=True, null=True, max_length=255, unique=True)
 
     speciesid.short_description = "Species ID"
 
