@@ -59,7 +59,22 @@ select id, name, CASE
     WHEN language = 3 THEN 'sf'
     WHEN language = 4 THEN 'dels'
 END, species
-from strapi_speciesnames;
+from strapi_speciesnames
+on conflict do nothing;
+
+select setval('species_name_id_seq', (select max(id) from species_name));
+
+insert into species_name (name, language, species_id)
+select gernamesynonym, 'de', id
+from strapi_species
+where gernamesynonym is not null
+on conflict do nothing;
+
+insert into species_name (name, language, species_id)
+select scinamesynonym, 'sf', id
+from strapi_species
+where scinamesynonym is not null
+on conflict do nothing;
 
 insert into portrait (language, short_description, city_habitat, human_interaction, published, species_id)
 select CASE
