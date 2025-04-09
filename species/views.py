@@ -14,10 +14,7 @@ from .utils import create_sqlite_file
 
 
 def get_lang_queryparam(request):
-    lang = request.query_params.get('lang') or 'de'
-    if lang == 'dels':
-        lang = 'er'
-    return lang
+    return request.query_params.get('lang') or 'de'
 
 
 # returns sqlite database used by android/ios

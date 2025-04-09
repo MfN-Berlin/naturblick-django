@@ -47,7 +47,7 @@ NATURE_CHOICES = [
 LANGUAGE_CHOICES = [
     ('en', 'English'),
     ('de', 'German'),
-    ('er', 'Easy Read'),
+    ('dels', 'German Easy Read'),
 ]
 
 NAME_LANGUAGE_CHOICES = LANGUAGE_CHOICES + [('sf', 'Scientific')]

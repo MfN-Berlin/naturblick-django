@@ -117,7 +117,7 @@ class Species(models.Model):
 class SpeciesName(models.Model):
     species = models.ForeignKey(Species, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    language = models.CharField(max_length=2, choices=NAME_LANGUAGE_CHOICES)
+    language = models.CharField(max_length=4, choices=NAME_LANGUAGE_CHOICES)
 
     def __str__(self):
         return self.name
@@ -217,7 +217,7 @@ class Portrait(models.Model):
         Species,
         on_delete=models.PROTECT
     )
-    language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES)
+    language = models.CharField(max_length=4, choices=LANGUAGE_CHOICES)
     short_description = models.TextField()
     city_habitat = models.TextField()
     human_interaction = models.TextField(blank=True, null=True)
@@ -512,7 +512,7 @@ class SourcesImprint(models.Model):
 
 
 class SourcesTranslation(models.Model):
-    language = models.CharField(max_length=2, choices=NAME_LANGUAGE_CHOICES)
+    language = models.CharField(max_length=4, choices=NAME_LANGUAGE_CHOICES)
     key = models.CharField(max_length=255, choices=SOURCES_TRANSLATION_CHOICES)
     value = models.CharField(max_length=255)
 

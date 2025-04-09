@@ -57,7 +57,7 @@ select id, name, CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
     WHEN language = 3 THEN 'sf'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, species
 from strapi_speciesnames;
 
@@ -66,7 +66,7 @@ select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
     WHEN language = 3 THEN 'sf'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, "shortDescription", "cityHabitat", "humanInteraction", published_at is not null, species
 from strapi_floraportrait;
 
@@ -77,7 +77,7 @@ join portrait as p on p.species_id = sf.species and p.language = CASE
     WHEN sf.language = 1 THEN 'de'
     WHEN sf.language = 2 THEN 'en'
     WHEN sf.language = 3 THEN 'sf'
-    WHEN sf.language = 4 THEN 'er'
+    WHEN sf.language = 4 THEN 'dels'
 END;
 
 delete from strapi_faunaportraits where species is null;
@@ -86,7 +86,7 @@ select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
     WHEN language = 3 THEN 'sf'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, "shortDescription", "cityHabitat", "humanInteraction", published_at is not null, species
 from strapi_faunaportraits;
 
@@ -98,7 +98,7 @@ join portrait as p on p.species_id = sf.species and p.language = CASE
     WHEN sf.language = 1 THEN 'de'
     WHEN sf.language = 2 THEN 'en'
     WHEN sf.language = 3 THEN 'sf'
-    WHEN sf.language = 4 THEN 'er'
+    WHEN sf.language = 4 THEN 'dels'
 END;
 
 -- fauna good_to_know
@@ -110,7 +110,7 @@ join portrait as p on p.species_id = fp.species and p.language = CASE
     WHEN fp.language = 1 THEN 'de'
     WHEN fp.language = 2 THEN 'en'
     WHEN fp.language = 3 THEN 'sf'
-    WHEN fp.language = 4 THEN 'er'
+    WHEN fp.language = 4 THEN 'dels'
 END
 join strapi_components_speciesportrait_goodtoknows as gtk on gtk.id = fpc.component_id
 where fpc.component_type = 'components_speciesportrait_goodtoknows';
@@ -124,7 +124,7 @@ join portrait as p on p.species_id = fp.species and p.language = CASE
     WHEN fp.language = 1 THEN 'de'
     WHEN fp.language = 2 THEN 'en'
     WHEN fp.language = 3 THEN 'sf'
-    WHEN fp.language = 4 THEN 'er'
+    WHEN fp.language = 4 THEN 'dels'
 END
 join strapi_components_speciesportrait_goodtoknows as gtk on gtk.id = fpc.component_id
 where fpc.component_type = 'components_speciesportrait_goodtoknows';
@@ -139,7 +139,7 @@ join portrait as p on p.species_id = fp.species and p.language = CASE
     WHEN fp.language = 1 THEN 'de'
     WHEN fp.language = 2 THEN 'en'
     WHEN fp.language = 3 THEN 'sf'
-    WHEN fp.language = 4 THEN 'er'
+    WHEN fp.language = 4 THEN 'dels'
 END
 join strapi_components_speciesportrait_links as l on l.id = fpc.component_id
 where fpc.component_type = 'components_speciesportrait_links';
@@ -153,7 +153,7 @@ join portrait as p on p.species_id = fp.species and p.language = CASE
     WHEN fp.language = 1 THEN 'de'
     WHEN fp.language = 2 THEN 'en'
     WHEN fp.language = 3 THEN 'sf'
-    WHEN fp.language = 4 THEN 'er'
+    WHEN fp.language = 4 THEN 'dels'
 END
 join strapi_components_speciesportrait_links as l on l.id = fpc.component_id
 where fpc.component_type = 'components_speciesportrait_links';
@@ -167,7 +167,7 @@ join portrait as p on p.species_id = fp.species and p.language = CASE
     WHEN fp.language = 1 THEN 'de'
     WHEN fp.language = 2 THEN 'en'
     WHEN fp.language = 3 THEN 'sf'
-    WHEN fp.language = 4 THEN 'er'
+    WHEN fp.language = 4 THEN 'dels'
 END
 join strapi_components_speciesportrait_sources as s on s.id = fpc.component_id
 where fpc.component_type = 'components_speciesportrait_sources';
@@ -181,7 +181,7 @@ join portrait as p on p.species_id = fp.species and p.language = CASE
     WHEN fp.language = 1 THEN 'de'
     WHEN fp.language = 2 THEN 'en'
     WHEN fp.language = 3 THEN 'sf'
-    WHEN fp.language = 4 THEN 'er'
+    WHEN fp.language = 4 THEN 'dels'
 END
 join strapi_components_speciesportrait_sources as s on s.id = fpc.component_id
 where fpc.component_type = 'components_speciesportrait_sources';
@@ -198,7 +198,7 @@ join portrait as p on p.species_id = fp.species and p.language = CASE
     WHEN fp.language = 1 THEN 'de'
     WHEN fp.language = 2 THEN 'en'
     WHEN fp.language = 3 THEN 'sf'
-    WHEN fp.language = 4 THEN 'er'
+    WHEN fp.language = 4 THEN 'dels'
 END
 join strapi_components_speciesportrait_similar_species as s on s.id = fpc.component_id
 where fpc.component_type = 'components_speciesportrait_similar_species';
@@ -212,7 +212,7 @@ join portrait as p on p.species_id = fp.species and p.language = CASE
     WHEN fp.language = 1 THEN 'de'
     WHEN fp.language = 2 THEN 'en'
     WHEN fp.language = 3 THEN 'sf'
-    WHEN fp.language = 4 THEN 'er'
+    WHEN fp.language = 4 THEN 'dels'
 END
 join strapi_components_speciesportrait_similar_species as s on s.id = fpc.component_id
 where fpc.component_type = 'components_speciesportrait_similar_species';
@@ -226,7 +226,7 @@ join portrait as p on p.species_id = fp.species and p.language = CASE
     WHEN fp.language = 1 THEN 'de'
     WHEN fp.language = 2 THEN 'en'
     WHEN fp.language = 3 THEN 'sf'
-    WHEN fp.language = 4 THEN 'er'
+    WHEN fp.language = 4 THEN 'dels'
 END
 join strapi_components_speciesportrait_features as f on f.id = fpc.component_id
 where fpc.component_type = 'components_speciesportrait_features';
@@ -240,7 +240,7 @@ join portrait as p on p.species_id = fp.species and p.language = CASE
     WHEN fp.language = 1 THEN 'de'
     WHEN fp.language = 2 THEN 'en'
     WHEN fp.language = 3 THEN 'sf'
-    WHEN fp.language = 4 THEN 'er'
+    WHEN fp.language = 4 THEN 'dels'
 END
 join strapi_components_speciesportrait_features as f on f.id = fpc.component_id
 where fpc.component_type = 'components_speciesportrait_features';
@@ -272,7 +272,7 @@ join portrait as p on sil.species = p.species_id and sil.language = CASE
     WHEN p.language = 'de' THEN 1
     WHEN p.language = 'en' THEN 2
     WHEN p.language = 'sf' THEN 3
-    WHEN p.language = 'er' THEN 4
+    WHEN p.language = 'dels' THEN 4
 END
 join strapi_species_image_lists_components as silc2
     on silc2.species_image_list_id = sil.id and silc2.component_type = 'components_speciesportrait_species_portrait_images' and silc2.field = 'description'
@@ -292,7 +292,7 @@ join portrait as p on sil.species = p.species_id and sil.language = CASE
     WHEN p.language = 'de' THEN 1
     WHEN p.language = 'en' THEN 2
     WHEN p.language = 'sf' THEN 3
-    WHEN p.language = 'er' THEN 4
+    WHEN p.language = 'dels' THEN 4
 END
 join strapi_species_image_lists_components as silc2
     on silc2.species_image_list_id = sil.id and silc2.component_type = 'components_speciesportrait_species_portrait_images' and silc2.field = 'funFacts'
@@ -313,7 +313,7 @@ join portrait as p on sil.species = p.species_id and sil.language = CASE
     WHEN p.language = 'de' THEN 1
     WHEN p.language = 'en' THEN 2
     WHEN p.language = 'sf' THEN 3
-    WHEN p.language = 'er' THEN 4
+    WHEN p.language = 'dels' THEN 4
 END
 join strapi_species_image_lists_components as silc2
     on silc2.species_image_list_id = sil.id and silc2.component_type = 'components_speciesportrait_species_portrait_images' and silc2.field = 'inTheCity'
@@ -357,7 +357,7 @@ insert into sources_translation (language, key, value)
 select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, 'page', page
 from strapi_sources_translations;
 
@@ -365,7 +365,7 @@ insert into sources_translation (language, key, value)
 select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, 'wiki', wiki
 from strapi_sources_translations;
 
@@ -373,7 +373,7 @@ insert into sources_translation (language, key, value)
 select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, 'revision', revision
 from strapi_sources_translations;
 
@@ -381,7 +381,7 @@ insert into sources_translation (language, key, value)
 select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, 'accessed', accessed
 from strapi_sources_translations;
 
@@ -389,7 +389,7 @@ insert into sources_translation (language, key, value)
 select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, 'version', version
 from strapi_sources_translations;
 
@@ -397,7 +397,7 @@ insert into sources_translation (language, key, value)
 select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, 'volume', volume
 from strapi_sources_translations;
 
@@ -405,7 +405,7 @@ insert into sources_translation (language, key, value)
 select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, 'editors', editors
 from strapi_sources_translations;
 
@@ -413,7 +413,7 @@ insert into sources_translation (language, key, value)
 select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, 'nodate', nodate
 from strapi_sources_translations;
 
@@ -421,7 +421,7 @@ insert into sources_translation (language, key, value)
 select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, 'in', "in"
 from strapi_sources_translations;
 
@@ -429,7 +429,7 @@ insert into sources_translation (language, key, value)
 select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, 'published', published
 from strapi_sources_translations;
 
@@ -437,7 +437,7 @@ insert into sources_translation (language, key, value)
 select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, 'edition', edition
 from strapi_sources_translations;
 
@@ -445,7 +445,7 @@ insert into sources_translation (language, key, value)
 select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, 'part', part
 from strapi_sources_translations;
 
@@ -453,7 +453,7 @@ insert into sources_translation (language, key, value)
 select CASE
     WHEN language = 1 THEN 'de'
     WHEN language = 2 THEN 'en'
-    WHEN language = 4 THEN 'er'
+    WHEN language = 4 THEN 'dels'
 END, 'changedby', changedby
 from strapi_sources_translations;
 
