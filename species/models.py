@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import ForeignKey, URLField, CASCADE
+from django.db.models.constraints import UniqueConstraint
 from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
 from imagekit.models import ImageSpecField
@@ -126,6 +127,11 @@ class SpeciesName(models.Model):
 
     class Meta:
         db_table = 'species_name'
+        constraints = [
+            UniqueConstraint(
+                fields=("species", "name", "language"), name="unique_species_name"
+            ),
+        ]
 
 
 class PortraitImageFile(models.Model):
@@ -247,7 +253,7 @@ class Portrait(models.Model):
     class Meta:
         db_table = 'portrait'
         constraints = [
-            models.UniqueConstraint(fields=['species', 'language'], name='unique_species_language')
+            UniqueConstraint(fields=['species', 'language'], name='unique_species_language')
         ]
 
 
