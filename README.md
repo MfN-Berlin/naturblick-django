@@ -2,6 +2,21 @@
 
 This is the CMS for naturblick. We use WSGI/Gunicorn.
 
+## Creating a new django-db container (prepare for replication)
+
+WAL-Level is already set in docker-compose. Just execute 
+
+```
+\set pass `echo "$REP_USER_PASS"`
+CREATE USER repuser WITH REPLICATION PASSWORD :'pass' LOGIN;
+GRANT SELECT ON species TO repuser;
+GRANT SELECT ON "group" TO repuser;
+CREATE PUBLICATION species_publication FOR TABLE species;
+CREATE PUBLICATION group_publication FOR TABLE "group";
+```
+
+and the DB is ready for replication.
+
 ## Setup for local development
 
 * once: `sudo pip install virtualenv`
