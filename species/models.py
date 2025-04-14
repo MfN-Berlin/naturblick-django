@@ -468,40 +468,6 @@ class SimilarSpecies(models.Model):
         db_table = 'similar_species'
 
 
-class Character(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    gername = models.CharField(max_length=255, verbose_name='German name')
-    engname = models.CharField(max_length=255, verbose_name='English name')
-    group = models.ForeignKey(Group, on_delete=models.PROTECT)
-    display_name = models.CharField(max_length=255, null=True, blank=True)
-    weight = models.IntegerField()
-    single_choice = models.BooleanField(null=True, blank=True)
-    gerdescription = models.TextField(null=True, blank=True, verbose_name='German description')
-    engdescription = models.TextField(null=True, blank=True, verbose_name='English description')
-
-    class Meta:
-        db_table = 'character'
-
-    def __str__(self):
-        return self.gername
-
-
-class CharacterValue(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    character = models.ForeignKey(Character, on_delete=CASCADE)
-    gername = models.CharField(max_length=255, verbose_name='German name')
-    engname = models.CharField(max_length=255, verbose_name='English name')
-    colors = models.CharField(max_length=255, null=True, blank=True)
-    dots = models.CharField(max_length=255, null=True, blank=True)
-    image = models.ImageField(upload_to="character_images", max_length=255, null=True)
-
-    class Meta:
-        db_table = 'character_value'
-
-    def __str__(self):
-        return self.gername
-
-
 class SourcesImprint(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=32, choices=SOURCES_IMPRINT_CHOICES, verbose_name='Group')

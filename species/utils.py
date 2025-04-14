@@ -53,7 +53,7 @@ def lang_to_int(lang):
             return 1
         case 'en':
             return 2
-        case 'er':
+        case 'dels':
             return 4
         case _:
             raise Exception("unknown language during db generation")

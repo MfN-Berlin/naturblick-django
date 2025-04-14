@@ -15,7 +15,7 @@ from imagekit.processors import ResizeToFit
 
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
-    Tag, Character, CharacterValue, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile
+    Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile
 
 logger = logging.getLogger(__name__)
 
@@ -326,41 +326,6 @@ class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
 
     avatar_thumbnail = AdminThumbnail(image_field=cached_thumb)
     avatar_thumbnail.short_description = 'Image'
-
-
-@admin.register(CharacterValue)
-class CharacterValueAdmin(admin.ModelAdmin):
-    fields = ['character', 'gername', 'engname', 'colors', 'dots', 'image', 'thumbnail']
-    list_display = ['character', 'thumbnail', 'gername', 'engname']
-    list_display_links = ['character', 'thumbnail']
-    readonly_fields = ['thumbnail']
-
-    def thumbnail(self, obj):
-        if obj.image:
-            return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.image.url))
-        else:
-            return "-"
-
-    thumbnail.short_description = 'Image'
-
-
-class CharacterValueInline(admin.TabularInline):
-    model = CharacterValue
-    extra = 0
-
-
-@admin.register(Character)
-class CharacterAdmin(admin.ModelAdmin):
-    inlines = [CharacterValueInline]
-    list_display = ['gername', 'engname', 'group']
-    list_filter = ['group']
-    ordering = ['gername']
-    search_fields = ['gername']
-    fields = [('gername', 'engname'), 'group', 'display_name', 'weight', 'single_choice',
-              ('gerdescription', 'engdescription')]
-    formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 8, 'cols': 40})}
-    }
 
 
 @admin.register(SourcesImprint)

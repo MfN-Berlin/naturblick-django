@@ -1,10 +1,13 @@
 from django.urls import path
-from .views import app_content, TagsList, PortraitDetail, SimpleTagsList, SpeciesList
+
+from .views import app_content_db, TagsList, PortraitDetail, SimpleTagsList, SpeciesList, \
+    AppContentCharacterValue
 
 urlpatterns = [
     path('species/', SpeciesList.as_view()),
     path('species/portrait/', PortraitDetail.as_view()),
     path('tags/filter/', TagsList.as_view()),
-    path("app-content/", app_content, name="app-content"),
+    path("app-content/db/", app_content_db, name="app-content-db"),
+    path("app-content/character-values/", AppContentCharacterValue.as_view()),
     path("tags/", SimpleTagsList.as_view()),
 ]

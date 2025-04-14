@@ -1,8 +1,9 @@
 from image_cropping.utils import get_backend
 from rest_framework import serializers
 
-from .models import Species, SpeciesName, Avatar, Tag, SimilarSpecies, GoodToKnow, UnambigousFeature, Source, \
+from .models import Species, SpeciesName, Tag, SimilarSpecies, GoodToKnow, UnambigousFeature, Source, \
     Faunaportrait, Floraportrait
+
 
 def avatar_crop_url(avatar):
     return get_backend().get_thumbnail_url(
@@ -15,11 +16,13 @@ def avatar_crop_url(avatar):
         }
     )
 
+
 class AvatarCropUrlField(serializers.Field):
     def to_representation(self, obj):
         if not obj:
             return None
         return avatar_crop_url(obj)
+
 
 class TagLocalnameField(serializers.Field):
     def to_representation(self, obj):
@@ -110,14 +113,16 @@ class SimilarSpeciesLocalnameField(serializers.Field):
 class SimilarSpeciesSerilizer(serializers.ModelSerializer):
     sciname = serializers.CharField(source="species.sciname", read_only=True)
     similar_species_id = serializers.CharField(source="species.id", read_only=True)
-    avatar_url = AvatarCropUrlField(source='species.avatar') #  serializers.URLField(source="species.avatar.image.url", read_only=True)
+    avatar_url = AvatarCropUrlField(
+        source='species.avatar')  # serializers.URLField(source="species.avatar.image.url", read_only=True)
     localname = SimilarSpeciesLocalnameField(source='*')
     speciesid = serializers.CharField(source="species.speciesid", read_only=True)
     group = serializers.CharField(source='group.name', read_only=True)
 
     class Meta:
         model = SimilarSpecies
-        fields = ['differences', 'localname', 'sciname', 'similar_species_id', 'avatar_url', 'has_portrait', 'speciesid', 'group']
+        fields = ['differences', 'localname', 'sciname', 'similar_species_id', 'avatar_url', 'has_portrait',
+                  'speciesid', 'group']
 
 
 class GoodtoknowSerilizer(serializers.ModelSerializer):
@@ -245,7 +250,7 @@ class SpeciesImageListSerializer(serializers.ModelSerializer):
     group = serializers.CharField(source='group.name', read_only=True)
     synonym = SynonymField(source='*')
 
-    avatar_url = AvatarCropUrlField(source="avatar") # serializers.URLField(source="avatar.image.url", read_only=True)
+    avatar_url = AvatarCropUrlField(source="avatar")  # serializers.URLField(source="avatar.image.url", read_only=True)
 
     desc_url = UrlField(source="*", required=True)
     desc_width = WidthField(source="*", required=True)
