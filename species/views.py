@@ -1,9 +1,14 @@
+import json
+from pathlib import Path
+
+from django.core import management
 from django.db.models import Prefetch
 from django.db.models import Q
-from django.http import FileResponse
-from rest_framework import generics
+from django.http import FileResponse, JsonResponse
+from rest_framework import generics, status
+from rest_framework.exceptions import NotFound, server_error
 from rest_framework.response import Response
-from django.core import management
+from rest_framework.views import APIView
 
 from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait, GoodToKnow, Source, SimilarSpecies, \
     UnambigousFeature
@@ -18,7 +23,7 @@ def get_lang_queryparam(request):
 
 
 # returns sqlite database used by android/ios
-def app_content(request):
+def app_content_db(request):
     # generates small, medium, large version of imagekit Spec-Fields
     management.call_command("generateimages")
 
@@ -28,6 +33,20 @@ def app_content(request):
     response["Content-Disposition"] = f'attachment; filename="species-db.sqlite3"'
 
     return response
+
+
+class AppContentCharacterValue(APIView):
+    def get(self, request):
+        base_dir = Path(__file__).resolve().parent.parent
+        character_values_file = base_dir / 'species' / 'data' / 'character-values.json'
+
+        try:
+            with open(character_values_file, 'r') as f:
+                data = json.load(f)
+
+            return Response(data) # Response(data, status=status.HTTP_200_OK)
+        except:
+            server_error(request)
 
 
 def filter_species_by_query(species_qs, query, lang):
@@ -130,7 +149,7 @@ class PortraitDetail(generics.GenericAPIView):
         species_qs = species_qs.first()
 
         if not species_qs:
-            return Response("no species")
+            raise NotFound()
 
         is_fauna = species_qs.group.nature == 'fauna'
         portrait_qs = Faunaportrait.objects.select_related('faunaportrait_audio_file', 'descmeta', 'funfactmeta',
@@ -154,7 +173,7 @@ class PortraitDetail(generics.GenericAPIView):
         portrait_qs = portrait_qs.first()
 
         if not portrait_qs:
-            return Response("no portrait")
+            raise NotFound()
 
         species_serializer = SpeciesSerializer(species_qs, context={'request': request})
         portrait_serializer = FaunaPortraitSerializer(portrait_qs, context={'request': request}) if is_fauna \
@@ -214,6 +233,6 @@ class SpeciesList(generics.ListAPIView):
                 portrait__descmeta__portrait_image_file__isnull=False))
         species_qs = sort_species(species_qs, sort_and_order, lang)
 
-        return species_qs
+        return species_qs.distinct()
 
     serializer_class = SpeciesImageListSerializer
