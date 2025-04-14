@@ -34,7 +34,7 @@ def filter_species_by_query(species_qs, query, lang):
     if not query:
         return species_qs
 
-    if lang and (lang == 'de' or lang == 'er'):
+    if lang and (lang == 'de' or lang == 'dels'):
         return species_qs.filter(
             Q(sciname__icontains=query) | Q(gername__icontains=query) | Q(speciesname__name__icontains=query))
     elif lang and lang == 'en':
