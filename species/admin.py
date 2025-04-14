@@ -15,7 +15,7 @@ from imagekit.processors import ResizeToFit
 
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
-    Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile
+    Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping
 
 logger = logging.getLogger(__name__)
 
@@ -230,11 +230,13 @@ class DescMetaInline(admin.StackedInline):
     autocomplete_fields = ['portrait_image_file']
     verbose_name = 'Description image'
 
+
 class FunFactMetaInline(admin.StackedInline):
     model = FunFactMeta
     extra = 0
     autocomplete_fields = ['portrait_image_file']
     verbose_name = 'Funfact image'
+
 
 class InTheCityMetaInline(admin.StackedInline):
     model = InTheCityMeta
@@ -348,3 +350,15 @@ class TagAdmin(admin.ModelAdmin):
     ordering = ['name']
     search_fields = ['name', 'english_name']
     list_display = ['name', 'english_name']
+
+
+@admin.register(PlantnetPowoidMapping)
+class PlantnetPowoidMappingAdmin(admin.ModelAdmin):
+    list_display = ['plantnetpowoid', 'species']
+    autocomplete_fields = ['species_plantnetpowoid']
+
+    @admin.display(description="Species plantnetpowoid")
+    def species(self, obj):
+        link = reverse("admin:species_species_change", args=[obj.species_plantnetpowoid.id])
+        return format_html('<a href="{}">{} ({})</a>', link, obj.species_plantnetpowoid.plantnetpowoid,
+                           obj.species_plantnetpowoid)

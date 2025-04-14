@@ -495,3 +495,13 @@ class SourcesTranslation(models.Model):
 
     def __str__(self):
         return f"{self.key} - {self.value}"
+
+class PlantnetPowoidMapping(models.Model):
+    plantnetpowoid = models.CharField(blank=True, null=True, max_length=255, unique=True)
+    species_plantnetpowoid = models.ForeignKey(Species, to_field="plantnetpowoid", limit_choices_to={"plantnetpowoid__isnull": False}, on_delete=CASCADE)
+
+    class Meta:
+        db_table="plantnet_powoid_mapping"
+
+    def __str__(self):
+        return f"{self.plantnetpowoid} => {self.species_plantnetpowoid.plantnetpowoid} [{self.species_plantnetpowoid}]"
