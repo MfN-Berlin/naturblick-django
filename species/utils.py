@@ -53,6 +53,8 @@ def lang_to_int(lang):
             return 1
         case 'en':
             return 2
+        case 'sf':
+            return 3
         case 'dels':
             return 4
         case _:
