@@ -64,22 +64,28 @@ class SynonymField(serializers.Field):
         speciesnames = [sn.name for sn in obj.prefetched_speciesnames]
         if speciesnames:
             return ", ".join(speciesnames)
-        return ""
+        return None
 
+class Mp3Url(serializers.Field):
+    def to_representation(self, obj):
+        if len(obj.prefetched_audiofile) > 0 and obj.prefetched_audiofile[0]:
+            return obj.prefetched_audiofile[0].audio_file.url
+        return None
 
 class SpeciesSerializer(serializers.ModelSerializer):
     localname = SpeciesLocalnameField(source='*', read_only=True)
     group = serializers.CharField(source='group.name', read_only=True)
-    synonyms = SynonymField(source='*')
+    synonym = SynonymField(source='*')
     avatar_url = AvatarCropUrlField(source="avatar")
     avatar_owner = serializers.CharField(source="avatar.owner", read_only=True)
     avatar_license = serializers.CharField(source="avatar.license", read_only=True)
     avatar_source = serializers.CharField(source="avatar.source", read_only=True)
+    mp3_url = Mp3Url(source='*')
 
     class Meta:
         model = Species
-        fields = ['id', 'speciesid', 'localname', 'group', 'sciname', 'synonyms', 'avatar_url', 'avatar_owner',
-                  'avatar_license', 'avatar_source', 'red_list_germany']
+        fields = ['id', 'speciesid', 'localname', 'group', 'sciname', 'synonym', 'avatar_url', 'avatar_owner',
+                  'avatar_license', 'avatar_source', 'red_list_germany', 'mp3_url']
 
 
 class UrlField(serializers.Field):
