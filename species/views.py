@@ -4,14 +4,16 @@ from pathlib import Path
 from django.core import management
 from django.db.models import Prefetch
 from django.db.models import Q
-from django.http import FileResponse, JsonResponse
-from rest_framework import generics, status
-from rest_framework.exceptions import NotFound, server_error
+from django.http import FileResponse
+from rest_framework import generics
+from rest_framework.decorators import api_view
+from rest_framework.exceptions import NotFound, server_error, MethodNotAllowed
 from rest_framework.response import Response
+from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait, GoodToKnow, Source, SimilarSpecies, \
-    UnambigousFeature
+    UnambigousFeature, FaunaportraitAudioFile
 from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializer, \
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
     FunfactMetaSerializer, InthecityMetaSerializer
@@ -44,7 +46,7 @@ class AppContentCharacterValue(APIView):
             with open(character_values_file, 'r') as f:
                 data = json.load(f)
 
-            return Response(data) # Response(data, status=status.HTTP_200_OK)
+            return Response(data)
         except:
             server_error(request)
 
@@ -141,7 +143,10 @@ class PortraitDetail(generics.GenericAPIView):
 
         species_qs = Species.objects.all().select_related('group', 'avatar').prefetch_related(
             Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
-                     to_attr="prefetched_speciesnames"))
+                     to_attr="prefetched_speciesnames"),
+            Prefetch("faunaportraitaudiofile_set", queryset=FaunaportraitAudioFile.objects.all(),
+                     to_attr="prefetched_audiofile")
+        )
         if id:
             species_qs = species_qs.filter(id=id)
         elif speciesid:
@@ -208,6 +213,52 @@ def sort_species(species_qs, sort_and_order, lang):
     (sort, order) = sort_and_order.split(':')
     order_prefix = '' if order.lower() == 'asc' else '-'
     return species_qs.order_by(f'{order_prefix}{order_suffix(sort, lang)}')
+
+
+@api_view(['GET'])
+def species(request, id):
+    if request.method == 'GET':
+        if id:
+            lang = get_lang_queryparam(request)
+
+            species_qs = Species.objects.all().select_related('group', 'avatar').prefetch_related(
+                Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
+                         to_attr="prefetched_speciesnames"),
+                Prefetch("faunaportraitaudiofile_set", queryset=FaunaportraitAudioFile.objects.all(),
+                         to_attr="prefetched_audiofile")
+            )
+            species_qs = species_qs.filter(id=id)
+            species_qs = species_qs.first()
+
+            if not species_qs:
+                raise NotFound()
+            serializer = SpeciesSerializer(species_qs)
+            return Response(serializer.data)
+        return Response({"error": "Species ID is required"}, status=HTTP_400_BAD_REQUEST)
+
+    else:
+        raise MethodNotAllowed(method=request.method)
+
+# /species/?speciesid_in=bird_3896956a&speciesid_in=bird_19b17548&speciesid_in=bird_be0e137d
+@api_view(['GET'])
+def species_list(request):
+    if request.method == 'GET':
+        species_ids = request.query_params.getlist('speciesid_in')
+        lang = get_lang_queryparam(request)
+
+        species_qs = Species.objects.all().select_related('group', 'avatar').prefetch_related(
+            Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
+                     to_attr="prefetched_speciesnames"),
+            Prefetch("faunaportraitaudiofile_set", queryset=FaunaportraitAudioFile.objects.all(),
+                     to_attr="prefetched_audiofile")
+        )
+        species_qs = species_qs.filter(speciesid__in=species_ids)
+
+        if not species_qs:
+            raise NotFound()
+        serializer = SpeciesSerializer(species_qs, many=True)
+        return Response(serializer.data)
+    return Response({"error": "Species ID is required"}, status=HTTP_400_BAD_REQUEST)
 
 
 class SpeciesList(generics.ListAPIView):
