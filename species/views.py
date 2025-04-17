@@ -239,6 +239,27 @@ def species(request, id):
     else:
         raise MethodNotAllowed(method=request.method)
 
+# /species/?speciesid_in=bird_3896956a&speciesid_in=bird_19b17548&speciesid_in=bird_be0e137d
+@api_view(['GET'])
+def species_list(request):
+    if request.method == 'GET':
+        species_ids = request.query_params.getlist('speciesid_in')
+        lang = get_lang_queryparam(request)
+
+        species_qs = Species.objects.all().select_related('group', 'avatar').prefetch_related(
+            Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
+                     to_attr="prefetched_speciesnames"),
+            Prefetch("faunaportraitaudiofile_set", queryset=FaunaportraitAudioFile.objects.all(),
+                     to_attr="prefetched_audiofile")
+        )
+        species_qs = species_qs.filter(speciesid__in=species_ids)
+
+        if not species_qs:
+            raise NotFound()
+        serializer = SpeciesSerializer(species_qs, many=True)
+        return Response(serializer.data)
+    return Response({"error": "Species ID is required"}, status=HTTP_400_BAD_REQUEST)
+
 
 class SpeciesList(generics.ListAPIView):
     def get_queryset(self):
