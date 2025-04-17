@@ -322,7 +322,7 @@ class GroupAdmin(admin.ModelAdmin):
 @admin.register(Avatar)
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
     list_display = ['id', 'avatar_thumbnail', 'image', 'owner']
-    search_fields = ['image', 'owner']
+    search_fields = ['image', 'owner', 'species__sciname', 'species__gername', 'species__speciesid']
     fields = ['avatar_thumbnail', 'image', 'owner', 'owner_link', 'source', 'license', 'cropping']
     readonly_fields = ['avatar_thumbnail']
 
