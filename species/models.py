@@ -73,7 +73,7 @@ class Species(models.Model):
                                               validators=[MinValueValidator(0), MaxValueValidator(23)])
     activity_end_hour = models.IntegerField(blank=True, null=True,
                                             validators=[MinValueValidator(0), MaxValueValidator(23)])
-    avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name='+', null="True", blank="True")
+    avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, null="True", blank="True")
     female_avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name='+', null="True",
                                       blank="True")
     gbifusagekey = models.IntegerField(blank=True, null=True, verbose_name='GBIF usagekey', unique=True)
