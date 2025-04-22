@@ -61,42 +61,48 @@ class SpeciesLocalnameField(serializers.Field):
 
 class SynonymField(serializers.Field):
     def to_representation(self, obj):
-        speciesnames = [sn.name for sn in obj.prefetched_speciesnames]
+        speciesnames = [sn.name for sn in obj]
         if speciesnames:
             return ", ".join(speciesnames)
-        return ""
+        return None
 
+class Mp3Url(serializers.Field):
+    def to_representation(self, obj):
+        if len(obj) > 0 and obj[0]:
+            return obj[0].audio_file.url
+        return None
 
 class SpeciesSerializer(serializers.ModelSerializer):
     localname = SpeciesLocalnameField(source='*', read_only=True)
     group = serializers.CharField(source='group.name', read_only=True)
-    synonyms = SynonymField(source='*')
+    synonym = SynonymField(source='prefetched_speciesnames')
     avatar_url = AvatarCropUrlField(source="avatar")
     avatar_owner = serializers.CharField(source="avatar.owner", read_only=True)
     avatar_license = serializers.CharField(source="avatar.license", read_only=True)
     avatar_source = serializers.CharField(source="avatar.source", read_only=True)
+    mp3_url = Mp3Url(source='prefetched_audiofile')
 
     class Meta:
         model = Species
-        fields = ['id', 'speciesid', 'localname', 'group', 'sciname', 'synonyms', 'avatar_url', 'avatar_owner',
-                  'avatar_license', 'avatar_source', 'red_list_germany']
+        fields = ['id', 'speciesid', 'localname', 'group', 'sciname', 'synonym', 'avatar_url', 'avatar_owner',
+                  'avatar_license', 'avatar_source', 'red_list_germany', 'mp3_url']
 
 
 class UrlField(serializers.Field):
     def to_representation(self, obj):
-        pif = obj.prefetched_portraits[0].descmeta.portrait_image_file
+        pif = obj[0].descmeta.portrait_image_file
         return pif.image_small.url
 
 
 class WidthField(serializers.Field):
     def to_representation(self, obj):
-        pif = obj.prefetched_portraits[0].descmeta.portrait_image_file
+        pif = obj[0].descmeta.portrait_image_file
         return pif.image_small.width
 
 
 class HeightField(serializers.Field):
     def to_representation(self, obj):
-        pif = obj.prefetched_portraits[0].descmeta.portrait_image_file
+        pif = obj[0].descmeta.portrait_image_file
         return pif.image_small.height
 
 
@@ -248,13 +254,13 @@ class FloraportraitSerializer(PortraitSerializer):
 class SpeciesImageListSerializer(serializers.ModelSerializer):
     localname = SpeciesLocalnameField(source='*')
     group = serializers.CharField(source='group.name', read_only=True)
-    synonym = SynonymField(source='*')
+    synonym = SynonymField(source='prefetched_speciesnames')
 
-    avatar_url = AvatarCropUrlField(source="avatar")  # serializers.URLField(source="avatar.image.url", read_only=True)
+    avatar_url = AvatarCropUrlField(source="avatar")
 
-    desc_url = UrlField(source="*", required=True)
-    desc_width = WidthField(source="*", required=True)
-    desc_height = HeightField(source="*", required=True)
+    desc_url = UrlField(source="prefetched_portraits", required=True)
+    desc_width = WidthField(source="prefetched_portraits", required=True)
+    desc_height = HeightField(source="prefetched_portraits", required=True)
 
     class Meta:
         model = Species
