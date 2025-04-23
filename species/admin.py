@@ -12,6 +12,8 @@ from imagekit import ImageSpec
 from imagekit.admin import AdminThumbnail
 from imagekit.cachefiles import ImageCacheFile
 from imagekit.processors import ResizeToFit
+from django.utils.html import mark_safe
+from image_cropping.utils import get_backend
 
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
@@ -321,14 +323,23 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Avatar)
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
-    list_display = ['id', 'avatar_thumbnail', 'image', 'owner']
+    list_display = ['id', 'cropped_image', 'image', 'owner', ]
     search_fields = ['image', 'owner', 'species__sciname', 'species__gername', 'species__speciesid']
-    fields = ['avatar_thumbnail', 'image', 'owner', 'owner_link', 'source', 'license', 'cropping']
-    readonly_fields = ['avatar_thumbnail']
+    fields = ['cropping', 'image', 'owner', 'owner_link', 'source', 'license']
 
-    avatar_thumbnail = AdminThumbnail(image_field=cached_thumb)
-    avatar_thumbnail.short_description = 'Image'
+    def cropped_image(self, obj):
+        image_url = get_backend().get_thumbnail_url(
+            obj.image,
+            {
+                'size': (400, 400),
+                'box': obj.cropping,
+                'crop': True,
+                'detail': True,
+            }
+        )
+        return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
 
+    cropped_image.short_description = 'Cropped Image'
 
 @admin.register(SourcesImprint)
 class SourcesImprintAdmin(admin.ModelAdmin):
