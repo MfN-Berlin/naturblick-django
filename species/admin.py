@@ -7,13 +7,13 @@ from django.forms import Textarea
 from django.forms.models import BaseInlineFormSet
 from django.urls import reverse
 from django.utils.html import format_html
+from django.utils.html import mark_safe
 from image_cropping import ImageCroppingMixin
+from image_cropping.utils import get_backend
 from imagekit import ImageSpec
 from imagekit.admin import AdminThumbnail
 from imagekit.cachefiles import ImageCacheFile
 from imagekit.processors import ResizeToFit
-from django.utils.html import mark_safe
-from image_cropping.utils import get_backend
 
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
@@ -93,6 +93,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar', 'female_avatar']
 
+    @admin.display()
     def portrait(self, obj):
         if obj.group.nature is None:
             return "-"
@@ -327,6 +328,9 @@ class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
     search_fields = ['image', 'owner', 'species__sciname', 'species__gername', 'species__speciesid']
     fields = ['cropping', 'image', 'owner', 'owner_link', 'source', 'license']
 
+    @admin.display(
+        description="Cropped Image"
+    )
     def cropped_image(self, obj):
         image_url = get_backend().get_thumbnail_url(
             obj.image,
@@ -339,7 +343,6 @@ class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
         )
         return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
 
-    cropped_image.short_description = 'Cropped Image'
 
 @admin.register(SourcesImprint)
 class SourcesImprintAdmin(admin.ModelAdmin):
