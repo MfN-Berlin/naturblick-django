@@ -140,6 +140,20 @@ class HasAdditionalNames(YesNoFilter):
                 speciesname__isnull=True
             )
 
+class HasPlantnetPowoidFilter(YesNoFilter):
+    title = "plantnetpowoid"
+    parameter_name = "has_plantnetpowoid"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                plantnetpowoid__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                plantnetpowoid__isnull=True
+            )
+
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
     inlines = [
@@ -148,7 +162,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     readonly_fields = ['speciesid']
     list_display = ['id', 'speciesid', 'sciname', 'gername', 'portrait']
     list_display_links = ['id', 'speciesid']
-    list_filter = ['group__nature', HasGbifusagekeyFilter, IsSynonymFilter, HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, 'group']
+    list_filter = ['group__nature', HasGbifusagekeyFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername']
     fields = ['speciesid',
               'group',
