@@ -7,7 +7,9 @@ from django.forms import Textarea
 from django.forms.models import BaseInlineFormSet
 from django.urls import reverse
 from django.utils.html import format_html
+from django.utils.html import mark_safe
 from image_cropping import ImageCroppingMixin
+from image_cropping.utils import get_backend
 from imagekit import ImageSpec
 from imagekit.admin import AdminThumbnail
 from imagekit.cachefiles import ImageCacheFile
@@ -91,6 +93,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar', 'female_avatar']
 
+    @admin.display()
     def portrait(self, obj):
         if obj.group.nature is None:
             return "-"
@@ -321,13 +324,24 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Avatar)
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
-    list_display = ['id', 'avatar_thumbnail', 'image', 'owner']
+    list_display = ['id', 'cropped_image', 'image', 'owner', ]
     search_fields = ['image', 'owner', 'species__sciname', 'species__gername', 'species__speciesid']
-    fields = ['avatar_thumbnail', 'image', 'owner', 'owner_link', 'source', 'license', 'cropping']
-    readonly_fields = ['avatar_thumbnail']
+    fields = ['cropping', 'image', 'owner', 'owner_link', 'source', 'license']
 
-    avatar_thumbnail = AdminThumbnail(image_field=cached_thumb)
-    avatar_thumbnail.short_description = 'Image'
+    @admin.display(
+        description="Cropped Image"
+    )
+    def cropped_image(self, obj):
+        image_url = get_backend().get_thumbnail_url(
+            obj.image,
+            {
+                'size': (400, 400),
+                'box': obj.cropping,
+                'crop': True,
+                'detail': True,
+            }
+        )
+        return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
 
 
 @admin.register(SourcesImprint)
