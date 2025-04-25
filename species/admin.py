@@ -85,7 +85,7 @@ class HasGbifusagekeyFilter(YesNoFilter):
             )
 
 class IsSynonymFilter(YesNoFilter):
-    title = "synonym"
+    title = "is synonym"
     parameter_name = "is_synonym"
 
     def queryset(self, request, queryset):
@@ -154,6 +154,30 @@ class HasPlantnetPowoidFilter(YesNoFilter):
                 plantnetpowoid__isnull=True
             )
 
+class HasNbclassidFilter(YesNoFilter):
+    title = "nbclassid"
+    parameter_name = "has_nbclassid"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                nbclassid__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                nbclassid__isnull=True
+            )
+
+class HasPortraitFilter(YesNoFilter):
+    title = "portrait"
+    parameter_name = "has_portrait"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(portrait__isnull=False)
+        if self.value() == "n":
+            return queryset.filter(portrait__isnull=True)
+        
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
     inlines = [
@@ -162,7 +186,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     readonly_fields = ['speciesid']
     list_display = ['id', 'speciesid', 'sciname', 'gername', 'portrait']
     list_display_links = ['id', 'speciesid']
-    list_filter = ['group__nature', HasGbifusagekeyFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, 'group']
+    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasNbclassidFilter, HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername']
     fields = ['speciesid',
               'group',
