@@ -48,6 +48,13 @@ def validate_order(theforms, name):
             raise forms.ValidationError(
                 f"The order numbers of {name} must be consecutive numbers from 1 up to {len(order_numbers)} (in any order)")
 
+@admin.register(SpeciesName)
+class SpeciesNameAdmin(admin.ModelAdmin):
+    list_filter = ['language']
+    list_display = ['name', 'language', 'species']
+    list_display_links = ['name']
+    search_fields = ['name', 'species__sciname', 'species__gername', 'species__engname']
+    autocomplete_fields = ['species']
 
 class SpeciesNameInline(admin.TabularInline):
     model = SpeciesName
