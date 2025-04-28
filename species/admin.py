@@ -48,6 +48,13 @@ def validate_order(theforms, name):
             raise forms.ValidationError(
                 f"The order numbers of {name} must be consecutive numbers from 1 up to {len(order_numbers)} (in any order)")
 
+@admin.register(SpeciesName)
+class SpeciesNameAdmin(admin.ModelAdmin):
+    list_filter = ['language']
+    list_display = ['name', 'language', 'species']
+    list_display_links = ['name']
+    search_fields = ['name', 'species__sciname', 'species__gername', 'species__engname']
+    autocomplete_fields = ['species']
 
 class SpeciesNameInline(admin.TabularInline):
     model = SpeciesName
@@ -56,6 +63,121 @@ class SpeciesNameInline(admin.TabularInline):
     verbose_name_plural = "Additional names"
 
 
+class YesNoFilter(admin.SimpleListFilter):
+    def lookups(self, request, model_admin):
+        return [
+            ("y", "yes"),
+            ("n", "no"),
+        ]
+
+class HasGbifusagekeyFilter(YesNoFilter):
+    title = "gbifusagekey"
+    parameter_name = "has_gbifusagekey"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                gbifusagekey__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                gbifusagekey__isnull=True
+            )
+
+class IsSynonymFilter(YesNoFilter):
+    title = "is synonym"
+    parameter_name = "is_synonym"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                accepted_species__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                accepted_species__isnull=True
+            )
+
+class HasAvatarFilter(YesNoFilter):
+    title = "avatar"
+    parameter_name = "has_avatar"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                avatar__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                avatar__isnull=True
+            )
+
+class HasFemaleAvatarFilter(YesNoFilter):
+    title = "female avatar"
+    parameter_name = "has_female_avatar"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                female_avatar__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                female_avatar__isnull=True
+            )
+
+class HasAdditionalNames(YesNoFilter):
+    title = "additional names"
+    parameter_name = "has_additional_names"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                speciesname__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                speciesname__isnull=True
+            )
+
+class HasPlantnetPowoidFilter(YesNoFilter):
+    title = "plantnetpowoid"
+    parameter_name = "has_plantnetpowoid"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                plantnetpowoid__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                plantnetpowoid__isnull=True
+            )
+
+class HasNbclassidFilter(YesNoFilter):
+    title = "nbclassid"
+    parameter_name = "has_nbclassid"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                nbclassid__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                nbclassid__isnull=True
+            )
+
+class HasPortraitFilter(YesNoFilter):
+    title = "portrait"
+    parameter_name = "has_portrait"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(portrait__isnull=False)
+        if self.value() == "n":
+            return queryset.filter(portrait__isnull=True)
+        
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
     inlines = [
@@ -64,7 +186,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     readonly_fields = ['speciesid']
     list_display = ['id', 'speciesid', 'sciname', 'gername', 'portrait']
     list_display_links = ['id', 'speciesid']
-    list_filter = ('group__nature', 'group')
+    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasNbclassidFilter, HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername']
     fields = ['speciesid',
               'group',
