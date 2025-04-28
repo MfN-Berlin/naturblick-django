@@ -177,6 +177,20 @@ class HasPortraitFilter(YesNoFilter):
             return queryset.filter(portrait__isnull=False)
         if self.value() == "n":
             return queryset.filter(portrait__isnull=True)
+
+class HasWikipediaFilter(YesNoFilter):
+    title = "wikipedia"
+    parameter_name = "has_wikipedia"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                wikipedia__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                wikipedia__isnull=True
+            )
         
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
@@ -184,9 +198,9 @@ class SpeciesAdmin(admin.ModelAdmin):
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid']
-    list_display = ['id', 'speciesid', 'sciname', 'gername', 'gbif', 'accepted', 'portrait']
-    list_display_links = ['id', 'speciesid', 'sciname']
-    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasNbclassidFilter, 'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, 'group']
+    list_display = ['id', 'speciesid', 'scientific_name', 'gername', 'gbif', 'accepted', 'portrait']
+    list_display_links = ['id', 'speciesid']
+    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasNbclassidFilter, 'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, HasWikipediaFilter, 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
               'group',
@@ -215,21 +229,33 @@ class SpeciesAdmin(admin.ModelAdmin):
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar', 'female_avatar']
 
+    @admin.display(
+        description='Scientific name',
+        ordering='sciname'
+    )
+    def scientific_name(self, obj):
+        if obj.wikipedia is None:
+            scientific_url_name=obj.sciname.replace(' ', '_')
+            wikipedia_url = f'https://en.wikipedia.org/wiki/{scientific_url_name}'
+            return format_html(f'<a href="{{}}">{obj.sciname}</a>', wikipedia_url)
+        else:
+            return format_html(f'<a href="{{}}">{obj.sciname}</a>', obj.wikipedia)
+
     @admin.display()
     def gbif(self, obj):
         if obj.gbifusagekey is None:
-            return "-"
+            return '-'
         else:
             gbif_url = f'https://www.gbif.org/species/{obj.gbifusagekey}'
             return format_html(f'<a href="{{}}">{obj.gbifusagekey}</a>', gbif_url)
 
-    @admin.display(description="Synonym of")
+    @admin.display(description='Synonym of')
     def accepted(self, obj):
         if obj.accepted_species is None:
             return "-"
         else:
             url = reverse('admin:species_species_change', args=(obj.accepted_species.id,))
-            return format_html(f'<a href="{{}}">{obj.accepted_species}</a>', url)
+            return format_html(f'<a href="{{}}">{obj.accepted_species.sciname}</a>', url)
 
     @admin.display()
     def portrait(self, obj):
