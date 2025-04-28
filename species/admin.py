@@ -184,10 +184,10 @@ class SpeciesAdmin(admin.ModelAdmin):
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid']
-    list_display = ['id', 'speciesid', 'sciname', 'gername', 'portrait']
-    list_display_links = ['id', 'speciesid']
-    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasNbclassidFilter, HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, 'group']
-    search_fields = ['id', 'speciesid', 'sciname', 'gername']
+    list_display = ['id', 'speciesid', 'sciname', 'gername', 'gbif', 'accepted', 'portrait']
+    list_display_links = ['id', 'speciesid', 'sciname']
+    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasNbclassidFilter, 'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, 'group']
+    search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
               'group',
               'gername',
@@ -214,6 +214,22 @@ class SpeciesAdmin(admin.ModelAdmin):
     ordering = ('sciname',)
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar', 'female_avatar']
+
+    @admin.display()
+    def gbif(self, obj):
+        if obj.gbifusagekey is None:
+            return "-"
+        else:
+            gbif_url = f'https://www.gbif.org/species/{obj.gbifusagekey}'
+            return format_html(f'<a href="{{}}">{obj.gbifusagekey}</a>', gbif_url)
+
+    @admin.display(description="Synonym of")
+    def accepted(self, obj):
+        if obj.accepted_species is None:
+            return "-"
+        else:
+            url = reverse('admin:species_species_change', args=(obj.accepted_species.id,))
+            return format_html(f'<a href="{{}}">{obj.accepted_species}</a>', url)
 
     @admin.display()
     def portrait(self, obj):
