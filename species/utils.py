@@ -162,7 +162,7 @@ def insert_sources_imprint(sqlite_cursor):
 
 
 def insert_current_version(sqlite_cursor):
-    url = "https://naturblick.museumfuernaturkunde.berlin/api/speciesdbversion"
+    url = "http://playback:9000/api/speciesdbversion"
     response = requests.get(url)
     if response.status_code == 200:
         sqlite_cursor.execute("INSERT INTO species_current_version VALUES (?, ?);", (1, response.json()["version"]))
