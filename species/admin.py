@@ -226,7 +226,7 @@ class SpeciesAdmin(admin.ModelAdmin):
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid']
-    list_display = ['id', 'speciesid', 'scientific_name', 'gername', 'gbif', 'accepted', 'portrait', 'plantnet']
+    list_display = ['id', 'speciesid', 'scientific_name', 'gername', 'gbif', 'accepted', 'portrait', 'plantnet', 'search']
     list_display_links = ['id', 'speciesid']
     list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasSynonymsFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter, 'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, HasWikipediaFilter, 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
@@ -256,6 +256,14 @@ class SpeciesAdmin(admin.ModelAdmin):
     ordering = ('sciname',)
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar', 'female_avatar']
+
+    @admin.display(
+        description='Search'
+    )
+    def search(self, obj):
+        plantnet_url = f'https://identify.plantnet.org/k-world-flora/species?search={obj.sciname}'
+        gbif_url = f'https://www.gbif.org/species/search?q={obj.sciname}'
+        return format_html('<a href="{}">Pl@ntNet</a>, <a href="{}">GBIF</a>', plantnet_url, gbif_url)
 
     @admin.display(
         description='Powo ID (Plantnet)'
