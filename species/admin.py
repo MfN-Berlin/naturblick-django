@@ -98,6 +98,20 @@ class IsSynonymFilter(YesNoFilter):
                 accepted_species__isnull=True
             )
 
+class HasSynonymsFilter(YesNoFilter):
+    title = "has synonyms"
+    parameter_name = "has_synonyms"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                species__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                species__isnull=True
+            )
+
 class HasAvatarFilter(YesNoFilter):
     title = "avatar"
     parameter_name = "has_avatar"
@@ -200,7 +214,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     readonly_fields = ['speciesid']
     list_display = ['id', 'speciesid', 'scientific_name', 'gername', 'gbif', 'accepted', 'portrait']
     list_display_links = ['id', 'speciesid']
-    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasNbclassidFilter, 'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, HasWikipediaFilter, 'group']
+    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasSynonymsFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasNbclassidFilter, 'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, HasWikipediaFilter, 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
               'group',
