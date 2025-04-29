@@ -168,6 +168,20 @@ class HasPlantnetPowoidFilter(YesNoFilter):
                 plantnetpowoid__isnull=True
             )
 
+class HasPlantnetPowoidMappingFilter(YesNoFilter):
+    title = "plantnet mapping"
+    parameter_name = "has_plantnetpowoid_mapping"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                plantnetpowoidmapping__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                plantnetpowoidmapping__isnull=True
+            )
+
 class HasNbclassidFilter(YesNoFilter):
     title = "nbclassid"
     parameter_name = "has_nbclassid"
@@ -212,9 +226,9 @@ class SpeciesAdmin(admin.ModelAdmin):
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid']
-    list_display = ['id', 'speciesid', 'scientific_name', 'gername', 'gbif', 'accepted', 'portrait']
+    list_display = ['id', 'speciesid', 'scientific_name', 'gername', 'gbif', 'accepted', 'portrait', 'plantnet']
     list_display_links = ['id', 'speciesid']
-    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasSynonymsFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasNbclassidFilter, 'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, HasWikipediaFilter, 'group']
+    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasSynonymsFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter, 'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, HasWikipediaFilter, 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
               'group',
@@ -242,6 +256,16 @@ class SpeciesAdmin(admin.ModelAdmin):
     ordering = ('sciname',)
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar', 'female_avatar']
+
+    @admin.display(
+        description='Powo ID (Plantnet)'
+    )
+    def plantnet(self, obj):
+        if obj.plantnetpowoid is None:
+            return '-'
+        else:
+            plantnet_url = f'https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:{obj.plantnetpowoid}'
+            return format_html(f'<a href="{{}}">{obj.plantnetpowoid}</a>', plantnet_url)
 
     @admin.display(
         description='Scientific name',
