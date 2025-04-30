@@ -13,10 +13,10 @@ from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait, GoodToKnow, Source, SimilarSpecies, \
-    UnambigousFeature, FaunaportraitAudioFile
+    UnambigousFeature, FaunaportraitAudioFile, PlantnetPowoidMapping
 from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializer, \
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
-    FunfactMetaSerializer, InthecityMetaSerializer
+    FunfactMetaSerializer, InthecityMetaSerializer, PlantnetPowoidMappingSeralizer
 from .utils import create_sqlite_file
 
 
@@ -287,3 +287,11 @@ class SpeciesList(generics.ListAPIView):
         return species_qs.distinct()
 
     serializer_class = SpeciesImageListSerializer
+
+class PlantnetPowoidMappingList(generics.ListAPIView):
+
+    def get_queryset(self):
+        return PlantnetPowoidMapping.objects.all()
+
+    serializer_class = PlantnetPowoidMappingSeralizer
+    pagination_class = None
