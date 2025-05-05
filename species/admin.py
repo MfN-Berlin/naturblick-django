@@ -1,13 +1,14 @@
 import logging
 
 from django import forms
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.db import models
 from django.forms import Textarea
 from django.forms.models import BaseInlineFormSet
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.html import mark_safe
+from django.utils.translation import ngettext
 from image_cropping import ImageCroppingMixin
 from image_cropping.utils import get_backend
 from imagekit import ImageSpec
@@ -256,6 +257,21 @@ class SpeciesAdmin(admin.ModelAdmin):
     ordering = ('sciname',)
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar', 'female_avatar']
+    actions = ['make_autoid_enabled']
+    
+    @admin.action(description="Mark selected species as available for autoid")
+    def make_autoid_enabled(self, request, queryset):
+        updated = queryset.update(autoid=True)
+        self.message_user(
+            request,
+            ngettext(
+                "%d species was successfully marked as available for autoid.",
+                "%d species were successfully marked as available for autoid.",
+                updated,
+            )
+            % updated,
+            messages.SUCCESS,
+        )
 
     @admin.display(
         description='Search'
