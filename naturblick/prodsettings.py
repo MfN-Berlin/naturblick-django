@@ -8,7 +8,7 @@ DEBUG = False
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
-ALLOWED_HOSTS = ['staging.naturblick.museumfuernaturkunde.berlin', 'naturblick.museumfuernaturkunde.berlin']
+ALLOWED_HOSTS = ['staging.naturblick.museumfuernaturkunde.berlin', 'naturblick.museumfuernaturkunde.berlin', 'django']
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
