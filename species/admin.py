@@ -1,13 +1,14 @@
 import logging
 
 from django import forms
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.db import models
 from django.forms import Textarea
 from django.forms.models import BaseInlineFormSet
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.html import mark_safe
+from django.utils.translation import ngettext
 from image_cropping import ImageCroppingMixin
 from image_cropping.utils import get_backend
 from imagekit import ImageSpec
@@ -66,8 +67,8 @@ class SpeciesNameInline(admin.TabularInline):
 class YesNoFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         return [
-            ("y", "yes"),
-            ("n", "no"),
+            ("y", "Yes"),
+            ("n", "No"),
         ]
 
 class HasGbifusagekeyFilter(YesNoFilter):
@@ -138,6 +139,43 @@ class HasFemaleAvatarFilter(YesNoFilter):
         if self.value() == "n":
             return queryset.filter(
                 female_avatar__isnull=True
+            )
+
+class HasPrimaryName(admin.SimpleListFilter):
+    title = "primary name"
+    parameter_name = "has_primary_name"
+
+    def lookups(self, request, model_admin):
+        return [
+            ("g", "German"),
+            ("e", "English"),
+            ("b", "Both"),
+            ("i", "Either"),
+            ("n", "None")
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() == "g":
+            return queryset.filter(
+                gername__isnull=False
+            )
+        if self.value() == "e":
+            return queryset.filter(
+                engname__isnull=False
+            )
+        if self.value() == "b":
+            return queryset.filter(
+                engname__isnull=False,
+                gername__isnull=False
+            )
+        if self.value() == "i":
+            return queryset.filter(
+                models.Q(engname__isnull=False) | models.Q(gername__isnull=False)
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                engname__isnull=True,
+                gername__isnull=True
             )
 
 class HasAdditionalNames(YesNoFilter):
@@ -228,7 +266,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     readonly_fields = ['speciesid']
     list_display = ['id', 'speciesid', 'scientific_name', 'gername', 'gbif', 'accepted', 'portrait', 'plantnet', 'search']
     list_display_links = ['id', 'speciesid']
-    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasSynonymsFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter, 'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, HasWikipediaFilter, 'group']
+    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, HasSynonymsFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter, 'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, HasWikipediaFilter, 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
               'group',
@@ -256,6 +294,21 @@ class SpeciesAdmin(admin.ModelAdmin):
     ordering = ('sciname',)
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar', 'female_avatar']
+    actions = ['make_autoid_enabled']
+    
+    @admin.action(description="Mark selected species as available for autoid")
+    def make_autoid_enabled(self, request, queryset):
+        updated = queryset.update(autoid=True)
+        self.message_user(
+            request,
+            ngettext(
+                "%d species was successfully marked as available for autoid.",
+                "%d species were successfully marked as available for autoid.",
+                updated,
+            )
+            % updated,
+            messages.SUCCESS,
+        )
 
     @admin.display(
         description='Search'
