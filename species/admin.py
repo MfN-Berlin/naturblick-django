@@ -584,10 +584,25 @@ class GroupAdmin(admin.ModelAdmin):
     list_display = ['name', 'nature']
     list_filter = ['nature']
 
+class HasSpecies(YesNoFilter):
+    title = "species"
+    parameter_name = "has_species"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                species__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                species__isnull=True
+            )
+
 
 @admin.register(Avatar)
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
     list_display = ['id', 'cropped_image', 'image', 'owner', 'species_list']
+    list_filter = [HasSpecies]
     search_fields = ['image', 'owner', 'species__sciname', 'species__gername', 'species__speciesid']
     fields = ['cropping', 'image', 'owner', 'owner_link', 'source', 'license']
 
