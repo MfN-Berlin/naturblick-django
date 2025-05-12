@@ -6,7 +6,7 @@ from django.db import models
 from django.forms import Textarea
 from django.forms.models import BaseInlineFormSet
 from django.urls import reverse
-from django.utils.html import format_html
+from django.utils.html import format_html, format_html_join
 from django.utils.html import mark_safe
 from django.utils.translation import ngettext
 from image_cropping import ImageCroppingMixin
@@ -587,7 +587,7 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Avatar)
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
-    list_display = ['id', 'cropped_image', 'image', 'owner', ]
+    list_display = ['id', 'cropped_image', 'image', 'owner', 'species_list']
     search_fields = ['image', 'owner', 'species__sciname', 'species__gername', 'species__speciesid']
     fields = ['cropping', 'image', 'owner', 'owner_link', 'source', 'license']
 
@@ -606,6 +606,19 @@ class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
         )
         return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
 
+    @admin.display(
+        description="Species"
+    )
+    def species_list(self, obj):
+        return format_html_join(
+            ', ',
+            '<a href="{}">{}</a>',
+            ((reverse("admin:species_species_change", args=[species.id]), str(species))
+             for species in obj.species_set.all())
+        )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related("species_set")
 
 @admin.register(SourcesImprint)
 class SourcesImprintAdmin(admin.ModelAdmin):
