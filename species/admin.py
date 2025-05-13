@@ -3,8 +3,6 @@ import logging
 from django import forms
 from django.contrib import admin, messages
 from django.db import models, transaction
-from django.db.models import F, Q
-from django.db.transaction import atomic
 from django.forms import Textarea
 from django.forms.models import BaseInlineFormSet
 from django.urls import reverse
@@ -51,6 +49,7 @@ def validate_order(theforms, name):
             raise forms.ValidationError(
                 f"The order numbers of {name} must be consecutive numbers from 1 up to {len(order_numbers)} (in any order)")
 
+
 @admin.register(SpeciesName)
 class SpeciesNameAdmin(admin.ModelAdmin):
     list_filter = ['language']
@@ -58,6 +57,7 @@ class SpeciesNameAdmin(admin.ModelAdmin):
     list_display_links = ['name']
     search_fields = ['name', 'species__sciname', 'species__gername', 'species__engname']
     autocomplete_fields = ['species']
+
 
 class SpeciesNameInline(admin.TabularInline):
     model = SpeciesName
@@ -72,6 +72,7 @@ class YesNoFilter(admin.SimpleListFilter):
             ("y", "Yes"),
             ("n", "No"),
         ]
+
 
 class HasGbifusagekeyFilter(YesNoFilter):
     title = "gbifusagekey"
@@ -117,6 +118,7 @@ class IsSynonymFilter(YesNoFilter):
                 accepted_species__isnull=True
             )
 
+
 class HasSynonymsFilter(YesNoFilter):
     title = "has synonyms"
     parameter_name = "has_synonyms"
@@ -130,6 +132,7 @@ class HasSynonymsFilter(YesNoFilter):
             return queryset.filter(
                 species__isnull=True
             )
+
 
 class HasAvatarFilter(YesNoFilter):
     title = "avatar"
@@ -145,6 +148,7 @@ class HasAvatarFilter(YesNoFilter):
                 avatar__isnull=True
             )
 
+
 class HasFemaleAvatarFilter(YesNoFilter):
     title = "female avatar"
     parameter_name = "has_female_avatar"
@@ -158,6 +162,7 @@ class HasFemaleAvatarFilter(YesNoFilter):
             return queryset.filter(
                 female_avatar__isnull=True
             )
+
 
 class HasPrimaryName(admin.SimpleListFilter):
     title = "primary name"
@@ -196,6 +201,7 @@ class HasPrimaryName(admin.SimpleListFilter):
                 gername__isnull=True
             )
 
+
 class HasAdditionalNames(YesNoFilter):
     title = "additional names"
     parameter_name = "has_additional_names"
@@ -209,6 +215,7 @@ class HasAdditionalNames(YesNoFilter):
             return queryset.filter(
                 speciesname__isnull=True
             )
+
 
 class HasPlantnetPowoidFilter(YesNoFilter):
     title = "plantnetpowoid"
@@ -224,6 +231,7 @@ class HasPlantnetPowoidFilter(YesNoFilter):
                 plantnetpowoid__isnull=True
             )
 
+
 class HasPlantnetPowoidMappingFilter(YesNoFilter):
     title = "plantnet mapping"
     parameter_name = "has_plantnetpowoid_mapping"
@@ -237,6 +245,7 @@ class HasPlantnetPowoidMappingFilter(YesNoFilter):
             return queryset.filter(
                 plantnetpowoidmapping__isnull=True
             )
+
 
 class HasNbclassidFilter(YesNoFilter):
     title = "nbclassid"
@@ -252,6 +261,7 @@ class HasNbclassidFilter(YesNoFilter):
                 nbclassid__isnull=True
             )
 
+
 class HasPortraitFilter(YesNoFilter):
     title = "portrait"
     parameter_name = "has_portrait"
@@ -261,6 +271,7 @@ class HasPortraitFilter(YesNoFilter):
             return queryset.filter(portrait__isnull=False)
         if self.value() == "n":
             return queryset.filter(portrait__isnull=True)
+
 
 class HasWikipediaFilter(YesNoFilter):
     title = "wikipedia"
@@ -275,16 +286,20 @@ class HasWikipediaFilter(YesNoFilter):
             return queryset.filter(
                 wikipedia__isnull=True
             )
-        
+
+
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
     inlines = [
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid']
-    list_display = ['id', 'speciesid', 'scientific_name', 'gername', 'gbif', 'accepted', 'portrait', 'plantnet', 'search']
+    list_display = ['id', 'speciesid', 'scientific_name', 'gername', 'gbif', 'accepted', 'portrait', 'plantnet',
+                    'search']
     list_display_links = ['id', 'speciesid']
-    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, HasSynonymsFilter, IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter, 'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, HasWikipediaFilter, 'group']
+    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, HasSynonymsFilter,
+                   IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
+                   'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, HasWikipediaFilter, 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
               'group',
@@ -313,7 +328,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar', 'female_avatar']
     actions = ['make_autoid_enabled']
-    
+
     @admin.action(description="Mark selected species as available for autoid")
     def make_autoid_enabled(self, request, queryset):
         updated = queryset.update(autoid=True)
@@ -352,7 +367,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     )
     def scientific_name(self, obj):
         if obj.wikipedia is None:
-            scientific_url_name=obj.sciname.replace(' ', '_')
+            scientific_url_name = obj.sciname.replace(' ', '_')
             wikipedia_url = f'https://en.wikipedia.org/wiki/{scientific_url_name}'
             return format_html(f'<a href="{{}}">{obj.sciname}</a>', wikipedia_url)
         else:
@@ -528,8 +543,17 @@ class InTheCityMetaInline(admin.StackedInline):
     autocomplete_fields = ['portrait_image_file']
     verbose_name = 'In the city image'
 
+
 @admin.action(description="Move selected portrait to accepted species")
 def move_to_accepted(modeladmin, request, queryset):
+    def move_portrait_image_file(meta, accepted_species):
+        if meta:
+            portrait_image_file = meta.portrait_image_file
+            if portrait_image_file:
+                portrait_image_file.species = accepted_species
+                portrait_image_file.save()
+
+    # check correct selection
     if queryset.filter(species__accepted_species__isnull=True).exists():
         modeladmin.message_user(
             request,
@@ -538,8 +562,8 @@ def move_to_accepted(modeladmin, request, queryset):
         )
         return
 
-    for obj in queryset:
-        all_lang_portrait_ids = Portrait.objects.filter(species=obj.species).values_list('id', flat=True)
+    for portrait in queryset:
+        all_lang_portrait_ids = Portrait.objects.filter(species=portrait.species).values_list('id', flat=True)
         qs_portrait_ids = queryset.values_list('id', flat=True)
         if not all(p in qs_portrait_ids for p in all_lang_portrait_ids):
             modeladmin.message_user(
@@ -549,28 +573,28 @@ def move_to_accepted(modeladmin, request, queryset):
             )
             return
 
+    # update data
     with transaction.atomic():
-        for obj in queryset.select_related('species__accepted_species'):
-            accepted_species = obj.species.accepted_species
+        for portrait in queryset.select_related('species__accepted_species'):
+            accepted_species = portrait.species.accepted_species
             if accepted_species:
-                obj.species = accepted_species
+                # move avatars
+                synonym_species = portrait.species
+                if synonym_species.avatar and not accepted_species.avatar:
+                    accepted_species.avatar = synonym_species.avatar
+                    accepted_species.save()
+                if synonym_species.female_avatar and not accepted_species.female_avatar:
+                    accepted_species.female_avatar = synonym_species.female_avatar
+                    accepted_species.save()
 
-                description_portrait_image_file = obj.descmeta.portrait_image_file
-                if description_portrait_image_file:
-                    description_portrait_image_file.species = accepted_species
-                    description_portrait_image_file.save()
+                # move species
+                portrait.species = accepted_species
+                portrait.save()
 
-                funfact_portrait_image_file = obj.funfactmeta.portrait_image_file
-                if funfact_portrait_image_file:
-                    funfact_portrait_image_file.species = accepted_species
-                    funfact_portrait_image_file.save()
-
-                inthecity_portrait_image_file = obj.inthecitymeta.portrait_image_file
-                if inthecity_portrait_image_file:
-                    inthecity_portrait_image_file.species = accepted_species
-                    inthecity_portrait_image_file.save()
-
-                obj.save()
+                # move portrait image files
+                move_portrait_image_file(getattr(portrait, 'descmeta', None), accepted_species)
+                move_portrait_image_file(getattr(portrait, 'funfactmeta', None), accepted_species)
+                move_portrait_image_file(getattr(portrait, 'inthecitymeta', None), accepted_species)
 
 
 @admin.register(Floraportrait)
@@ -648,6 +672,7 @@ class GroupAdmin(admin.ModelAdmin):
     list_display = ['name', 'nature']
     list_filter = ['nature']
 
+
 class HasSpecies(YesNoFilter):
     title = "species"
     parameter_name = "has_species"
@@ -698,6 +723,7 @@ class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
 
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related("species_set")
+
 
 @admin.register(SourcesImprint)
 class SourcesImprintAdmin(admin.ModelAdmin):
