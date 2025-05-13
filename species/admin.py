@@ -85,6 +85,22 @@ class HasGbifusagekeyFilter(YesNoFilter):
                 gbifusagekey__isnull=True
             )
 
+
+class PortraitIsSynonymFilter(YesNoFilter):
+    title = "portrait is synonym"
+    parameter_name = "portrait_is_synonym"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                species__accepted_species__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                species__accepted_species__isnull=True
+            )
+
+
 class IsSynonymFilter(YesNoFilter):
     title = "is synonym"
     parameter_name = "is_synonym"
@@ -516,7 +532,7 @@ class FloraportraitAdmin(admin.ModelAdmin):
     list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
     search_fields = ('id', 'species__speciesid', 'species__sciname', 'species__gername')
     search_help_text = 'Sucht über alle Artnamen'
-    list_filter = ('published', 'language')
+    list_filter = ('published', 'language', PortraitIsSynonymFilter)
     inlines = [
         UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline,
         DescMetaInline, FunFactMetaInline, InTheCityMetaInline
@@ -559,7 +575,7 @@ class FaunaportraitAdmin(admin.ModelAdmin):
     list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
     search_fields = ('id', 'species__speciesid', 'species__sciname', 'species__gername')
     search_help_text = 'Sucht über alle Artnamen'
-    list_filter = ('published', 'language')
+    list_filter = ('published', 'language', PortraitIsSynonymFilter)
     inlines = [
         UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline,
         DescMetaInline, FunFactMetaInline, InTheCityMetaInline
