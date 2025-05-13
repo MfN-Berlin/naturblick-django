@@ -2,7 +2,9 @@ import logging
 
 from django import forms
 from django.contrib import admin, messages
-from django.db import models
+from django.db import models, transaction
+from django.db.models import F, Q
+from django.db.transaction import atomic
 from django.forms import Textarea
 from django.forms.models import BaseInlineFormSet
 from django.urls import reverse
@@ -18,7 +20,7 @@ from imagekit.processors import ResizeToFit
 
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
-    Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping
+    Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait
 
 logger = logging.getLogger(__name__)
 
@@ -526,6 +528,50 @@ class InTheCityMetaInline(admin.StackedInline):
     autocomplete_fields = ['portrait_image_file']
     verbose_name = 'In the city image'
 
+@admin.action(description="Move selected portrait to accepted species")
+def move_to_accepted(modeladmin, request, queryset):
+    if queryset.filter(species__accepted_species__isnull=True).exists():
+        modeladmin.message_user(
+            request,
+            "Not all selected portraits have an accepted species - use filter 'portrait is synonym species'.",
+            level=messages.WARNING
+        )
+        return
+
+    for obj in queryset:
+        all_lang_portrait_ids = Portrait.objects.filter(species=obj.species).values_list('id', flat=True)
+        qs_portrait_ids = queryset.values_list('id', flat=True)
+        if not all(p in qs_portrait_ids for p in all_lang_portrait_ids):
+            modeladmin.message_user(
+                request,
+                "You have to select all portraits of a specific species'.",
+                level=messages.WARNING
+            )
+            return
+
+    with transaction.atomic():
+        for obj in queryset.select_related('species__accepted_species'):
+            accepted_species = obj.species.accepted_species
+            if accepted_species:
+                obj.species = accepted_species
+
+                description_portrait_image_file = obj.descmeta.portrait_image_file
+                if description_portrait_image_file:
+                    description_portrait_image_file.species = accepted_species
+                    description_portrait_image_file.save()
+
+                funfact_portrait_image_file = obj.funfactmeta.portrait_image_file
+                if funfact_portrait_image_file:
+                    funfact_portrait_image_file.species = accepted_species
+                    funfact_portrait_image_file.save()
+
+                inthecity_portrait_image_file = obj.inthecitymeta.portrait_image_file
+                if inthecity_portrait_image_file:
+                    inthecity_portrait_image_file.species = accepted_species
+                    inthecity_portrait_image_file.save()
+
+                obj.save()
+
 
 @admin.register(Floraportrait)
 class FloraportraitAdmin(admin.ModelAdmin):
@@ -542,6 +588,7 @@ class FloraportraitAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 80})}
     }
+    actions = [move_to_accepted]
 
     def get_fields(self, request, obj=None, **kwargs):
         fields = super().get_fields(request, obj, **kwargs)
@@ -585,6 +632,7 @@ class FaunaportraitAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 80})}
     }
+    actions = [move_to_accepted]
 
     def get_fields(self, request, obj=None, **kwargs):
         fields = super().get_fields(request, obj, **kwargs)
