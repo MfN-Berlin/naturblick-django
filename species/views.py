@@ -5,6 +5,7 @@ from django.core import management
 from django.db.models import Prefetch
 from django.db.models import Q
 from django.http import FileResponse
+from django.db import connection
 from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import NotFound, server_error, MethodNotAllowed
@@ -130,16 +131,62 @@ class SimpleTagsList(generics.ListAPIView):
     pagination_class = None
 
 
-# 4.)      species/portrait?id=1569&lang=de (id means species_id not portrait_id)
-#       or species/portrait?speciesid=bird_0123abcd&lang=de (speciesid means old fashioned species_id)
-#
-# json: siehe https://naturblick.museumfuernaturkunde.berlin/strapi/species/portrait?id=1569&lang=de
+def get_accepted_portrait_species_id(lang, s_id=None, speciesid=None):
+    if s_id:
+        query = """
+                 SELECT 
+                COALESCE(p2.species_id, p1.species_id), 
+                CASE WHEN p2.species_id IS NOT NULL THEN s.sciname ELSE NULL END
+            FROM species AS s
+            JOIN portrait p1 ON p1.species_id = s.id AND p1.language = %s
+            LEFT JOIN portrait p2 ON p2.species_id = s.accepted_species_id AND p2.language = %s
+            WHERE s.id = %s;
+        """
+    else:
+        query = """
+            SELECT COALESCE(p2.species_id, p1.species_id), CASE WHEN p2.species_id IS NOT NULL THEN s.sciname ELSE NULL END
+            FROM species AS s
+            JOIN portrait p1 ON p1.species_id = s.id AND p1.language = %s 
+            LEFT JOIN portrait p2 ON p2.species_id = s.accepted_species_id AND p2.language = %s
+            WHERE s.speciesid = %s;
+        """
 
+    with connection.cursor() as cursor:
+        if s_id:
+            cursor.execute(query, [lang, lang, s_id])
+        else:
+            cursor.execute(query, [lang, lang, speciesid])
+        result = cursor.fetchone()
+
+    if result:
+        species_id, sciname = result
+        return species_id, sciname
+    else:
+        return None, None
+
+
+#
+# called by playback HttpService and platform
+# /species/portrait/
 class PortraitDetail(generics.GenericAPIView):
+
     def get(self, request):
         id = request.query_params.get('id')  # int-id
         speciesid = request.query_params.get('speciesid')  # old fashioned species_id
         lang = get_lang_queryparam(self.request)
+
+        if id:
+            species_id, is_redirected_from = get_accepted_portrait_species_id(s_id=id, lang=lang)
+        elif speciesid:
+            species_id, is_redirected_from = get_accepted_portrait_species_id(speciesid=speciesid, lang=lang)
+        else:
+            return Response(
+                {"detail": "Missing required parameters: species_id"},
+                status=HTTP_400_BAD_REQUEST
+            )
+
+        if not species_id:
+            raise NotFound()
 
         species_qs = Species.objects.all().select_related('group', 'avatar').prefetch_related(
             Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
@@ -147,24 +194,15 @@ class PortraitDetail(generics.GenericAPIView):
             Prefetch("faunaportraitaudiofile_set", queryset=FaunaportraitAudioFile.objects.all(),
                      to_attr="prefetched_audiofile")
         )
-        if id:
-            species_qs = species_qs.filter(id=id)
-        elif speciesid:
-            species_qs = species_qs.filter(speciesid=speciesid)
+        species_qs = species_qs.filter(id=species_id)
         species_qs = species_qs.first()
-
-        if not species_qs:
-            raise NotFound()
 
         is_fauna = species_qs.group.nature == 'fauna'
         portrait_qs = Faunaportrait.objects.select_related('faunaportrait_audio_file', 'descmeta', 'funfactmeta',
                                                            'inthecitymeta') if is_fauna else Floraportrait.objects.select_related(
             'descmeta', 'funfactmeta', 'inthecitymeta')
 
-        if id:
-            portrait_qs = portrait_qs.filter(species__id=id)
-        elif speciesid:
-            portrait_qs = portrait_qs.filter(species__speciesid=speciesid)
+        portrait_qs = portrait_qs.filter(species__id=species_id)
 
         portrait_qs = (
             portrait_qs.prefetch_related(Prefetch('goodtoknow_set', queryset=GoodToKnow.objects.order_by('order')),
@@ -194,6 +232,7 @@ class PortraitDetail(generics.GenericAPIView):
             'desc': descmeta_serializer.data,
             'funfact': funfact_data if funfact_data['text'] else None,
             'inthecity': inthecity_data if inthecity_data['text'] else None,
+            'is_redirected_from': is_redirected_from
         })
 
 
@@ -238,6 +277,7 @@ def species(request, id):
 
     else:
         raise MethodNotAllowed(method=request.method)
+
 
 # /species/?speciesid_in=bird_3896956a&speciesid_in=bird_19b17548&speciesid_in=bird_be0e137d
 @api_view(['GET'])
@@ -287,6 +327,7 @@ class SpeciesList(generics.ListAPIView):
         return species_qs.distinct()
 
     serializer_class = SpeciesImageListSerializer
+
 
 class PlantnetPowoidMappingList(generics.ListAPIView):
 
