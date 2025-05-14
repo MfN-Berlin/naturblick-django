@@ -138,7 +138,7 @@ def get_accepted_portrait_species_id(lang, s_id=None, speciesid=None):
                 COALESCE(p2.species_id, p1.species_id), 
                 CASE WHEN p2.species_id IS NOT NULL THEN s.sciname ELSE NULL END
             FROM species AS s
-            JOIN portrait p1 ON p1.species_id = s.id AND p1.language = %s
+            LEFT JOIN portrait p1 ON p1.species_id = s.id AND p1.language = %s
             LEFT JOIN portrait p2 ON p2.species_id = s.accepted_species_id AND p2.language = %s
             WHERE s.id = %s;
         """
@@ -146,7 +146,7 @@ def get_accepted_portrait_species_id(lang, s_id=None, speciesid=None):
         query = """
             SELECT COALESCE(p2.species_id, p1.species_id), CASE WHEN p2.species_id IS NOT NULL THEN s.sciname ELSE NULL END
             FROM species AS s
-            JOIN portrait p1 ON p1.species_id = s.id AND p1.language = %s 
+            LEFT JOIN portrait p1 ON p1.species_id = s.id AND p1.language = %s 
             LEFT JOIN portrait p2 ON p2.species_id = s.accepted_species_id AND p2.language = %s
             WHERE s.speciesid = %s;
         """
