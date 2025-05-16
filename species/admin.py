@@ -693,7 +693,7 @@ class HasSpecies(YesNoFilter):
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
     list_display = ['id', 'cropped_image', 'image', 'owner', 'species_list']
     list_filter = [HasSpecies]
-    search_fields = ['image', 'owner', 'species__sciname', 'species__gername', 'species__speciesid']
+    search_fields = ['image', 'owner', 'avatar_species__sciname', 'avatar_species__gername', 'avatar_species__speciesid', 'female_avatar_species__sciname', 'female_avatar_species__gername', 'female_avatar_species__speciesid']
     fields = ['cropping', 'image', 'owner', 'owner_link', 'source', 'license']
 
     @admin.display(
