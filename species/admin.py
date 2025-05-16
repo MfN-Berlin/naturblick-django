@@ -3,6 +3,7 @@ import logging
 from django import forms
 from django.contrib import admin, messages
 from django.db import models, transaction
+from django.db.models import Q
 from django.forms import Textarea
 from django.forms.models import BaseInlineFormSet
 from django.urls import reverse
@@ -680,11 +681,11 @@ class HasSpecies(YesNoFilter):
     def queryset(self, request, queryset):
         if self.value() == "y":
             return queryset.filter(
-                species__isnull=False
+                Q(avatar_species__isnull=False) | Q(female_avatar_species__isnull=False)
             )
         if self.value() == "n":
             return queryset.filter(
-                species__isnull=True
+                Q(avatar_species__isnull=True) & Q(female_avatar_species__isnull=True)
             )
 
 
@@ -718,11 +719,11 @@ class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
             ', ',
             '<a href="{}">{}</a>',
             ((reverse("admin:species_species_change", args=[species.id]), str(species))
-             for species in obj.species_set.all())
+             for species in obj.avatar_species.all())
         )
 
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related("species_set")
+        return super().get_queryset(request).prefetch_related("avatar_species")
 
 
 @admin.register(SourcesImprint)
