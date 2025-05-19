@@ -263,7 +263,6 @@ def insert_species(sqlite_cursor):
         ) AS accepting
         WHERE accepting.accepted_id = rowid;
         """)
-    sqlite_cursor.execute("ALTER TABLE species DROP COLUMN accepted;")
     sqlite_cursor.execute("ALTER TABLE species DROP COLUMN gbifusagekey;")
 
 
