@@ -588,6 +588,9 @@ def move_to_accepted(modeladmin, request, queryset):
                     accepted_species.female_avatar = synonym_species.female_avatar
                     accepted_species.save()
 
+                # remove accepted species from similar species
+                portrait.similarspecies_set.filter(species_id=accepted_species.id).delete()
+
                 # move species
                 portrait.species = accepted_species
                 portrait.save()
