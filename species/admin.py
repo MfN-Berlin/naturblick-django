@@ -54,10 +54,20 @@ def validate_order(theforms, name):
 @admin.register(SpeciesName)
 class SpeciesNameAdmin(admin.ModelAdmin):
     list_filter = ['language']
-    list_display = ['name', 'language', 'species']
+    list_display = ['name', 'language', 'species_link']
     list_display_links = ['name']
     search_fields = ['name', 'species__sciname', 'species__gername', 'species__engname']
     autocomplete_fields = ['species']
+
+    @admin.display(
+        description="Species"
+    )
+    def species_link(self, obj):
+        return format_html(
+            '<a href="{}">{}</a>',
+            reverse("admin:species_species_change", args=[obj.species.id]),
+            str(obj.species)
+        )
 
 
 class SpeciesNameInline(admin.TabularInline):
