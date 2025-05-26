@@ -60,7 +60,8 @@ class SpeciesNameAdmin(admin.ModelAdmin):
     autocomplete_fields = ['species']
 
     @admin.display(
-        description="Species"
+        description="Species",
+        ordering='species__sciname'
     )
     def species_link(self, obj):
         return format_html(
