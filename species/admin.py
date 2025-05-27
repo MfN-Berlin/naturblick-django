@@ -6,6 +6,7 @@ from django.db import models, transaction
 from django.db.models import Q
 from django.forms import Textarea
 from django.forms.models import BaseInlineFormSet
+from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.html import format_html, format_html_join
 from django.utils.html import mark_safe
@@ -302,12 +303,15 @@ class HasWikipediaFilter(YesNoFilter):
 
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
+    class Media:
+        css = {
+            "all": ["species/admin.css"],
+        }
     inlines = [
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid']
-    list_display = ['id', 'speciesid', 'scientific_name', 'gername', 'gbif', 'accepted', 'portrait', 'plantnet',
-                    'search']
+    list_display = ['id', 'speciesid', 'sciname', 'gername', 'accepted', 'portrait', 'gbif', 'plantnet', 'search']
     list_display_links = ['id', 'speciesid']
     list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, HasSynonymsFilter,
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
@@ -360,8 +364,16 @@ class SpeciesAdmin(admin.ModelAdmin):
     )
     def search(self, obj):
         plantnet_url = f'https://identify.plantnet.org/k-world-flora/species?search={obj.sciname}'
+        plantnet_img_url = static('species/plantnet_white_border_marker.png')
         gbif_url = f'https://www.gbif.org/species/search?q={obj.sciname}'
-        return format_html('<a href="{}">Pl@ntNet</a>, <a href="{}">GBIF</a>', plantnet_url, gbif_url)
+        gbif_img_url = static('species/gbif-mark-green-logo.png')
+        scientific_url_name = obj.sciname.replace(' ', '_')
+        wikipedia_url = f'https://en.wikipedia.org/wiki/{scientific_url_name}'
+        wikipedia_img_url = static('species/Wikipedia-logo-v2.svg')
+        scientific_wikimedia_url_name = obj.sciname.replace(' ', '+')
+        wikimedia_url = f'https://commons.wikimedia.org/w/index.php?search={scientific_wikimedia_url_name}&title=Special:MediaSearch&type=image'
+        wikimedia_img_url = static('species/Wikimedia Commons Logo.svg')
+        return format_html('<a title="GBIF" href="{}"><img class="image-link" src={}></a> | <a title="Wikipedia" href="{}"><img class="image-link" src={}></a> | <a href="{}"><img title="Wikimedia Image Search" class="image-link" src={}></a> | <a title="Plantnet" href="{}"><img class="image-link" src={}></a>', gbif_url, gbif_img_url, wikipedia_url, wikipedia_img_url, wikimedia_url, wikimedia_img_url, plantnet_url,plantnet_img_url)
 
     @admin.display(
         description='Powo ID (Plantnet)'
@@ -372,18 +384,6 @@ class SpeciesAdmin(admin.ModelAdmin):
         else:
             plantnet_url = f'https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:{obj.plantnetpowoid}'
             return format_html(f'<a href="{{}}">{obj.plantnetpowoid}</a>', plantnet_url)
-
-    @admin.display(
-        description='Scientific name',
-        ordering='sciname'
-    )
-    def scientific_name(self, obj):
-        if obj.wikipedia is None:
-            scientific_url_name = obj.sciname.replace(' ', '_')
-            wikipedia_url = f'https://en.wikipedia.org/wiki/{scientific_url_name}'
-            return format_html(f'<a href="{{}}">{obj.sciname}</a>', wikipedia_url)
-        else:
-            return format_html(f'<a href="{{}}">{obj.sciname}</a>', obj.wikipedia)
 
     @admin.display()
     def gbif(self, obj):
