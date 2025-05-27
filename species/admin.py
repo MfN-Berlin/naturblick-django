@@ -1,5 +1,3 @@
-import logging
-
 from django import forms
 from django.contrib import admin, messages
 from django.db import models, transaction
@@ -20,8 +18,6 @@ from imagekit.processors import ResizeToFit
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
     Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait
-
-logger = logging.getLogger(__name__)
 
 
 class AdminThumbnailSpec(ImageSpec):
@@ -409,6 +405,9 @@ class SpeciesAdmin(admin.ModelAdmin):
             links = []
             urls = []
             for lang in ['de', 'en']:
+                if obj.accepted_species:
+                    return
+
                 portrait = obj.portrait_set.filter(language=lang)
 
                 if portrait.exists():
