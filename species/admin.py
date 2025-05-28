@@ -6,6 +6,8 @@ from django.db import models, transaction
 from django.db.models import Q
 from django.forms import Textarea
 from django.forms.models import BaseInlineFormSet
+from django.http import HttpResponseRedirect
+from django.template.response import TemplateResponse
 from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.html import format_html, format_html_join
@@ -21,6 +23,8 @@ from imagekit.processors import ResizeToFit
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
     Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait
+
+from species import utils
 
 logger = logging.getLogger(__name__)
 
@@ -300,6 +304,8 @@ class HasWikipediaFilter(YesNoFilter):
                 wikipedia__isnull=True
             )
 
+class ImportAvatarFromWikimediaForm(forms.Form):
+    wikimedia_url = forms.URLField(label="Wikimedia image URL")
 
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
@@ -311,7 +317,7 @@ class SpeciesAdmin(admin.ModelAdmin):
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid']
-    list_display = ['id', 'speciesid', 'sciname', 'gername', 'accepted', 'portrait', 'gbif', 'plantnet', 'search']
+    list_display = ['id', 'speciesid', 'sciname', 'gername', 'avatar_crop', 'accepted', 'portrait', 'gbif', 'plantnet', 'search']
     list_display_links = ['id', 'speciesid']
     list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, HasSynonymsFilter,
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
@@ -343,7 +349,13 @@ class SpeciesAdmin(admin.ModelAdmin):
     ordering = ('sciname',)
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar', 'female_avatar']
-    actions = ['make_autoid_enabled']
+    actions = ['make_autoid_enabled', 'import_avatar_from_wikimedia']
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.resolver_match.view_name.endswith('changelist'):
+            return qs.select_related('avatar', 'group').prefetch_related('portrait_set')
+        return qs
 
     @admin.action(description="Mark selected species as available for autoid")
     def make_autoid_enabled(self, request, queryset):
@@ -358,6 +370,41 @@ class SpeciesAdmin(admin.ModelAdmin):
             % updated,
             messages.SUCCESS,
         )
+
+    @admin.action(description="Import avatar from Wikimedia")
+    @transaction.atomic
+    def import_avatar_from_wikimedia(self, request, queryset):
+        if request.POST.get("post"):
+            form = ImportAvatarFromWikimediaForm(request.POST)
+            if form.is_valid():
+                meta = utils.get_metadata(form.cleaned_data['wikimedia_url'])
+                avatar = Avatar.objects.create(owner=meta.author, owner_link=meta.author_url, source=meta.image_url, license=meta.license, image=meta.image)
+                queryset.update(avatar=avatar.id)
+                return HttpResponseRedirect(reverse('admin:species_avatar_change', args=(avatar.id,)))
+        else:
+            form = ImportAvatarFromWikimediaForm()
+            
+        return TemplateResponse(request,'admin/avatar_from_wikimedia.html', {"form": form, 'queryset': queryset})
+
+    @admin.display(
+        description="Avatar"
+    )
+    def avatar_crop(self, obj):
+        avatar = obj.avatar
+        if avatar:
+            image_url = get_backend().get_thumbnail_url(
+                avatar.image,
+                {
+                    'size': (400, 400),
+                    'box': avatar.cropping,
+                    'crop': True,
+                    'detail': True,
+                }
+            )
+            url = reverse('admin:species_avatar_change', args=(avatar.id,))
+            return format_html('<a href="{}"><img src="{}" class="species-avatar"/></a>', url, image_url)
+        else:
+            return "-"
 
     @admin.display(
         description='Search'
@@ -409,10 +456,9 @@ class SpeciesAdmin(admin.ModelAdmin):
             links = []
             urls = []
             for lang in ['de', 'en']:
-                portrait = obj.portrait_set.filter(language=lang)
-
-                if portrait.exists():
-                    url = reverse(f'admin:species_{obj.group.nature}portrait_change', args=(portrait.first().id,))
+                portrait = [portrait for portrait in obj.portrait_set.all() if portrait.language == lang]
+                if portrait:
+                    url = reverse(f'admin:species_{obj.group.nature}portrait_change', args=(portrait[0].id,))
                     links.append(f'<a href="{{}}" class="changelink">{lang}</a>')
                     urls.append(url)
                 else:
