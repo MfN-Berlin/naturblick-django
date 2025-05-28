@@ -5,3 +5,8 @@
 a[role=button].button {
     padding: 10px 15px;
 }
+
+img.species-avatar {
+    height: 3rem;
+    width: 3rem;
+}

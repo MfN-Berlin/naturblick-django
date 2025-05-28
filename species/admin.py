@@ -317,7 +317,7 @@ class SpeciesAdmin(admin.ModelAdmin):
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid']
-    list_display = ['id', 'speciesid', 'sciname', 'gername', 'accepted', 'portrait', 'gbif', 'plantnet', 'search']
+    list_display = ['id', 'speciesid', 'sciname', 'gername', 'avatar_crop', 'accepted', 'portrait', 'gbif', 'plantnet', 'search']
     list_display_links = ['id', 'speciesid']
     list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, HasSynonymsFilter,
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
@@ -379,7 +379,27 @@ class SpeciesAdmin(admin.ModelAdmin):
             form = ImportAvatarFromWikimediaForm()
             
         return TemplateResponse(request,'admin/avatar_from_wikimedia.html', {"form": form, 'queryset': queryset})
-        
+
+    @admin.display(
+        description="Avatar"
+    )
+    def avatar_crop(self, obj):
+        avatar = obj.avatar
+        if avatar:
+            image_url = get_backend().get_thumbnail_url(
+                avatar.image,
+                {
+                    'size': (400, 400),
+                    'box': avatar.cropping,
+                    'crop': True,
+                    'detail': True,
+                }
+            )
+            url = reverse('admin:species_avatar_change', args=(avatar.id,))
+            return format_html('<a href="{}"><img src="{}" class="species-avatar"/></a>', url, image_url)
+        else:
+            return "-"
+
     @admin.display(
         description='Search'
     )
