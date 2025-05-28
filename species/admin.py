@@ -351,6 +351,12 @@ class SpeciesAdmin(admin.ModelAdmin):
     autocomplete_fields = ['avatar', 'female_avatar']
     actions = ['make_autoid_enabled', 'import_avatar_from_wikimedia']
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.resolver_match.view_name.endswith('changelist'):
+            return qs.select_related('avatar', 'group').prefetch_related('portrait_set')
+        return qs
+
     @admin.action(description="Mark selected species as available for autoid")
     def make_autoid_enabled(self, request, queryset):
         updated = queryset.update(autoid=True)
@@ -450,10 +456,9 @@ class SpeciesAdmin(admin.ModelAdmin):
             links = []
             urls = []
             for lang in ['de', 'en']:
-                portrait = obj.portrait_set.filter(language=lang)
-
-                if portrait.exists():
-                    url = reverse(f'admin:species_{obj.group.nature}portrait_change', args=(portrait.first().id,))
+                portrait = [portrait for portrait in obj.portrait_set.all() if portrait.language == lang]
+                if portrait:
+                    url = reverse(f'admin:species_{obj.group.nature}portrait_change', args=(portrait[0].id,))
                     links.append(f'<a href="{{}}" class="changelink">{lang}</a>')
                     urls.append(url)
                 else:
