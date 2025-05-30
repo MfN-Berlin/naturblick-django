@@ -10,3 +10,9 @@ img.species-avatar {
     height: 3rem;
     width: 3rem;
 }
+
+img.naturblick-logo-link {
+    height: 0.5rem;
+    -webkit-filter: invert(1); /* safari 6.0 - 9.0 */
+          filter: invert(1);
+}
