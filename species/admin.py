@@ -466,7 +466,8 @@ class SpeciesAdmin(admin.ModelAdmin):
                     links.append(f'<a href="{{}}"  class="addlink">{lang}</a>')
                     urls.append(f'{url}?species={obj.id}&language={lang}')
 
-            return format_html(' | '.join(links), urls[0], urls[1])
+            links.append('<a href="{}"><img class="naturblick-logo-link" src="{}"/></a>')
+            return format_html(' | '.join(links), urls[0], urls[1], f'/species/portrait/{obj.id}', static('species/logo.svg'))
 
 
 #
