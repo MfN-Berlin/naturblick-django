@@ -1,4 +1,3 @@
-import logging
 import json
 from pathlib import Path
 
@@ -15,31 +14,22 @@ from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait, GoodToKnow, Source, SimilarSpecies, \
-    UnambigousFeature, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait
+    UnambigousFeature, FaunaportraitAudioFile, PlantnetPowoidMapping
 from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializer, \
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
     FunfactMetaSerializer, InthecityMetaSerializer, PlantnetPowoidMappingSeralizer
 from .utils import create_sqlite_file
-
-logger = logging.getLogger(__name__)
 
 
 def get_lang_queryparam(request):
     return request.query_params.get('lang') or 'de'
 
 
-
-def is_data_valid():
-    return not Portrait.objects.filter(species__accepted_species__isnull=False).exists()
-
 # returns sqlite database used by android/ios
 def app_content_db(request):
     # generates small, medium, large version of imagekit Spec-Fields
     management.call_command("generateimages")
 
-    if (not is_data_valid()):
-        logger.error('There are artportraits connected to a synonym')
-        return server_error(request)
     sqlite_db = create_sqlite_file()
 
     response = FileResponse(open(sqlite_db, "rb"), as_attachment=True)
@@ -59,7 +49,7 @@ class AppContentCharacterValue(APIView):
 
             return Response(data)
         except:
-            return server_error(request)
+            server_error(request)
 
 
 def filter_species_by_query(species_qs, query, lang):
