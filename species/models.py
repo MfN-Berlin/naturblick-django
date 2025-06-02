@@ -7,6 +7,7 @@ from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
+import requests
 
 from .choices import *
 from .validators import min_max, validate_png, validate_mp3
@@ -88,24 +89,51 @@ class Species(models.Model):
 
     speciesid.short_description = "Species ID"
 
+    def validate_gbif(self):
+       if self.gbifusagekey:
+            response = requests.get(f"https://api.gbif.org/v1/species/{self.gbifusagekey}")
+
+            if response.status_code != 200:
+                raise ValidationError({"gbifusagekey": f"{self.gbifusagekey} could not be validated as a valid GBIF usage key (GBIF returned {response.status_code})"})
+
+            json = response.json()
+
+            is_species = json['rank'] == "SPECIES"
+            is_accepted = not ('acceptedKey' in json)
+
+            if not is_species:
+                raise ValidationError({"gbifusagekey": "Only GBIF objects with rank SPECIES are valid"})
+            if self.accepted_species:
+                if is_accepted:
+                    raise ValidationError({"gbifusagekey": "Accepted species must NOT be set for a GBIF species that is accepted"})
+            else:
+                if not is_accepted:
+                    raise ValidationError({"gbifusagekey": "Accepted species must be set for a GBIF species that is NOT accepted"})
+       else:
+
+           if not self.id:
+               raise ValidationError({"gbifusagekey": "All new species must have gbifusagekey set"})
+           if self.accepted_species:
+               raise ValidationError({"accepted_species": "Accepted species must NOT be set for a species without gbifusagekey"})
+
+    def generate_id_for_new_species(self):
+        if not self.speciesid:
+            prefix = f'{self.group}_ffff'
+            try:
+                last_insert_id = Species.objects.filter(speciesid__startswith=prefix).order_by("-speciesid")[0].speciesid
+                next_insert_id = int(last_insert_id[len(last_insert_id) - 4: len(last_insert_id)], 16) + 1
+                self.speciesid = f'{self.group}_ffff{next_insert_id:04x}'
+            except:
+                self.speciesid = f'{self.group}_ffff0000'
+
     def clean(self):
         super().clean()
         if self.accepted_species and self.accepted_species == self:
             raise ValidationError('Accepted species must not be self')
         if self.accepted_species and self.accepted_species.group != self.group:
             raise ValidationError('Accepted species must be in the same group')
-
-    def save(self, *args, **kwargs):
-        if not self.speciesid:
-            prefix = f'{self.group}_ffff'
-            try:
-                last_insert_id = Species.objects.filter(speciesid__startswith=prefix).order_by("-speciesid")[
-                    0].speciesid
-                next_insert_id = int(last_insert_id[len(last_insert_id) - 4: len(last_insert_id)], 16) + 1
-                self.speciesid = f'{self.group}_ffff{next_insert_id:04x}'
-            except:
-                self.speciesid = f'{self.group}_ffff0000'
-        super().save(*args, **kwargs)
+        self.validate_gbif()
+        self.generate_id_for_new_species()
 
     def __str__(self):
         name_list = [item for item in [self.gername, self.sciname, self.speciesid] if item is not None]
