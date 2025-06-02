@@ -28,15 +28,20 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
-        "file": {
+        "info_file": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
             "filename": "/logs/info.log",
         },
+        "error_file": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            "filename": "/logs/error.log",
+        },
     },
     "loggers": {
         "django": {
-            "handlers": ["file"],
+            "handlers": ["info_file", "error_file"],
             "level": "INFO",
             "propagate": True,
         },
@@ -49,4 +54,3 @@ STATIC_URL = '/django/static/'
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = ['https://staging.naturblick.museumfuernaturkunde.berlin', 'https://naturblick.museumfuernaturkunde.berlin']
-
