@@ -7,6 +7,7 @@ from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
+import requests
 
 from .choices import *
 from .validators import min_max, validate_png, validate_mp3
@@ -88,12 +89,37 @@ class Species(models.Model):
 
     speciesid.short_description = "Species ID"
 
+    def validate_gbif(self):
+       if self.gbifusagekey:
+            response = requests.get(f"https://api.gbif.org/v1/species/{self.gbifusagekey}")
+
+            if response.status_code != 200:
+                raise ValidationError({"gbifusagekey": f"{self.gbifusagekey} could not be validated as a valid GBIF usage key (GBIF returned {response.status_code})"})
+
+            json = response.json()
+
+            is_species = json['rank'] == "SPECIES"
+            is_accepted = not ('acceptedKey' in json)
+
+            if not is_species:
+                raise ValidationError({"gbifusagekey": "Only GBIF objects with rank SPECIES are valid"})
+            if self.accepted_species:
+                if is_accepted:
+                    raise ValidationError({"gbifusagekey": "Accepted species must NOT be set for a GBIF species that is accepted"})
+            else:
+                if not is_accepted:
+                    raise ValidationError({"gbifusagekey": "Accepted species must be set for a GBIF species that is NOT accepted"})
+       else:
+           if self.accepted_species:
+               raise ValidationError({"accepted_species": "Accepted species must NOT be set for a species without gbifusagekey"})
+
     def clean(self):
         super().clean()
         if self.accepted_species and self.accepted_species == self:
             raise ValidationError('Accepted species must not be self')
         if self.accepted_species and self.accepted_species.group != self.group:
             raise ValidationError('Accepted species must be in the same group')
+        self.validate_gbif()
 
     def save(self, *args, **kwargs):
         if not self.speciesid:
