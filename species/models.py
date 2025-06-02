@@ -110,8 +110,21 @@ class Species(models.Model):
                 if not is_accepted:
                     raise ValidationError({"gbifusagekey": "Accepted species must be set for a GBIF species that is NOT accepted"})
        else:
+
+           if not self.id:
+               raise ValidationError({"gbifusagekey": "All new species must have gbifusagekey set"})
            if self.accepted_species:
                raise ValidationError({"accepted_species": "Accepted species must NOT be set for a species without gbifusagekey"})
+
+    def generate_id_for_new_species(self):
+        if not self.speciesid:
+            prefix = f'{self.group}_ffff'
+            try:
+                last_insert_id = Species.objects.filter(speciesid__startswith=prefix).order_by("-speciesid")[0].speciesid
+                next_insert_id = int(last_insert_id[len(last_insert_id) - 4: len(last_insert_id)], 16) + 1
+                self.speciesid = f'{self.group}_ffff{next_insert_id:04x}'
+            except:
+                self.speciesid = f'{self.group}_ffff0000'
 
     def clean(self):
         super().clean()
@@ -120,18 +133,7 @@ class Species(models.Model):
         if self.accepted_species and self.accepted_species.group != self.group:
             raise ValidationError('Accepted species must be in the same group')
         self.validate_gbif()
-
-    def save(self, *args, **kwargs):
-        if not self.speciesid:
-            prefix = f'{self.group}_ffff'
-            try:
-                last_insert_id = Species.objects.filter(speciesid__startswith=prefix).order_by("-speciesid")[
-                    0].speciesid
-                next_insert_id = int(last_insert_id[len(last_insert_id) - 4: len(last_insert_id)], 16) + 1
-                self.speciesid = f'{self.group}_ffff{next_insert_id:04x}'
-            except:
-                self.speciesid = f'{self.group}_ffff0000'
-        super().save(*args, **kwargs)
+        self.generate_id_for_new_species()
 
     def __str__(self):
         name_list = [item for item in [self.gername, self.sciname, self.speciesid] if item is not None]
