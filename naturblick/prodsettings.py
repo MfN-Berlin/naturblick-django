@@ -27,16 +27,24 @@ DATABASES = {
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    'formatters': {
+        'naturblick': {
+            'format': '%(asctime)s - %(levelname)s - %(name)s - %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S,%f',
+        },
+    },
     "handlers": {
         "info_file": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
             "filename": "/logs/info.log",
+            "formatter": "naturblick"
         },
         "error_file": {
             "level": "ERROR",
             "class": "logging.FileHandler",
             "filename": "/logs/error.log",
+            "formatter": "naturblick"
         },
     },
     "loggers": {
