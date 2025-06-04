@@ -1,4 +1,4 @@
-import os
+    import os
 
 from .basesettings import *
 
@@ -29,8 +29,8 @@ LOGGING = {
     "disable_existing_loggers": False,
     'formatters': {
         'naturblick': {
-            'format': '%(asctime)s - %(levelname)s - %(name)s - %(message)s',
-            'datefmt': '%Y-%m-%d %H:%M:%S,%f',
+            'format': '{asctime} - {levelname} - {module} - {message}',
+            'style': '{'
         },
     },
     "handlers": {
