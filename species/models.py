@@ -1,4 +1,11 @@
+import logging
+import os
+import subprocess
+import uuid
+
+import requests
 from django.core.exceptions import ValidationError
+from django.core.files.storage import default_storage
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import ForeignKey, URLField, CASCADE
@@ -7,14 +14,16 @@ from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
-import requests
 
+from naturblick import settings
 from .choices import *
 from .validators import min_max, validate_png, validate_mp3
 
 LARGE_WIDTH = 1200
 MEDIUM_WIDTH = 800
 SMALL_WIDTH = 400
+
+logger = logging.getLogger(__name__)
 
 
 class Tag(models.Model):
@@ -74,8 +83,10 @@ class Species(models.Model):
                                               validators=[MinValueValidator(0), MaxValueValidator(23)])
     activity_end_hour = models.IntegerField(blank=True, null=True,
                                             validators=[MinValueValidator(0), MaxValueValidator(23)])
-    avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name="avatar_species", null="True", blank="True")
-    female_avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name="female_avatar_species", null="True", blank="True")
+    avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name="avatar_species", null="True",
+                               blank="True")
+    female_avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name="female_avatar_species",
+                                      null="True", blank="True")
     gbifusagekey = models.IntegerField(blank=True, null=True, verbose_name='GBIF usagekey', unique=True)
     accepted_species = models.ForeignKey("self", on_delete=models.SET_NULL, blank=True, null=True)
     created_by = CurrentUserField(related_name='species_created_by_set', null=True)
@@ -90,11 +101,12 @@ class Species(models.Model):
     speciesid.short_description = "Species ID"
 
     def validate_gbif(self):
-       if self.gbifusagekey:
+        if self.gbifusagekey:
             response = requests.get(f"https://api.gbif.org/v1/species/{self.gbifusagekey}")
 
             if response.status_code != 200:
-                raise ValidationError({"gbifusagekey": f"{self.gbifusagekey} could not be validated as a valid GBIF usage key (GBIF returned {response.status_code})"})
+                raise ValidationError({
+                    "gbifusagekey": f"{self.gbifusagekey} could not be validated as a valid GBIF usage key (GBIF returned {response.status_code})"})
 
             json = response.json()
 
@@ -105,22 +117,26 @@ class Species(models.Model):
                 raise ValidationError({"gbifusagekey": "Only GBIF objects with rank SPECIES are valid"})
             if self.accepted_species:
                 if is_accepted:
-                    raise ValidationError({"gbifusagekey": "Accepted species must NOT be set for a GBIF species that is accepted"})
+                    raise ValidationError(
+                        {"gbifusagekey": "Accepted species must NOT be set for a GBIF species that is accepted"})
             else:
                 if not is_accepted:
-                    raise ValidationError({"gbifusagekey": "Accepted species must be set for a GBIF species that is NOT accepted"})
-       else:
+                    raise ValidationError(
+                        {"gbifusagekey": "Accepted species must be set for a GBIF species that is NOT accepted"})
+        else:
 
-           if not self.id:
-               raise ValidationError({"gbifusagekey": "All new species must have gbifusagekey set"})
-           if self.accepted_species:
-               raise ValidationError({"accepted_species": "Accepted species must NOT be set for a species without gbifusagekey"})
+            if not self.id:
+                raise ValidationError({"gbifusagekey": "All new species must have gbifusagekey set"})
+            if self.accepted_species:
+                raise ValidationError(
+                    {"accepted_species": "Accepted species must NOT be set for a species without gbifusagekey"})
 
     def generate_id_for_new_species(self):
         if not self.speciesid:
             prefix = f'{self.group}_ffff'
             try:
-                last_insert_id = Species.objects.filter(speciesid__startswith=prefix).order_by("-speciesid")[0].speciesid
+                last_insert_id = Species.objects.filter(speciesid__startswith=prefix).order_by("-speciesid")[
+                    0].speciesid
                 next_insert_id = int(last_insert_id[len(last_insert_id) - 4: len(last_insert_id)], 16) + 1
                 self.speciesid = f'{self.group}_ffff{next_insert_id:04x}'
             except:
@@ -358,13 +374,39 @@ class FaunaportraitAudioFile(models.Model):
     owner_link = URLField(blank=True, null=True, max_length=255)
     source = URLField(max_length=1024)
     license = models.CharField(max_length=64)
-    audio_file = models.FileField(upload_to="audio_files", null=True, blank=True, validators=[validate_mp3])
-    audio_spectrogram = models.ImageField(upload_to="spectrogram_images", null=True, blank=True,
-                                          validators=[validate_png])
+    audio_file = models.FileField(upload_to="audio_files", validators=[validate_mp3])
+    audio_spectrogram = models.ImageField(upload_to="spectrogram_images", validators=[validate_png],
+                                          help_text='Automatically generated')
+
+    def create_specgram(self):
+        specgram_file = os.path.basename(self.audio_file.path) + '.png'
+        specgram_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'spectrogram_images'), specgram_file)
+        self.audio_spectrogram = os.path.join('spectrogram_images', specgram_file)
+
+        # the file and it's corresponding spectrogram already exist
+        if default_storage.exists(self.audio_file.path) and default_storage.exists(specgram_path):
+            return
+
+        wav_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'tmp_wav'), f"{uuid.uuid4()}.wav")
+
+        try:
+            script_path = os.path.join(settings.BASE_DIR, 'scripts', 'spec.sh')
+            subprocess.run([script_path, self.audio_file.path, wav_path, specgram_path], check=True)
+
+            super().save(update_fields=['audio_spectrogram'])
+
+        except Exception as e:
+            logger.error(f"Failed create_specgram: {e}")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.audio_file:
+            self.create_specgram()
 
     def clean(self):
         super().clean()
-        if self.species.group.nature != 'Fauna':
+
+        if self.species.group.nature != 'fauna':
             raise ValidationError('FaunaPortraitAudioFiles only for fauna')
         if self.id is not None:
             faunaportrait = Faunaportrait.objects.filter(faunaportrait_audio_file=self.id).first()
@@ -523,12 +565,14 @@ class SourcesTranslation(models.Model):
     def __str__(self):
         return f"{self.key} - {self.value}"
 
+
 class PlantnetPowoidMapping(models.Model):
     plantnetpowoid = models.CharField(blank=True, null=True, max_length=255, unique=True)
-    species_plantnetpowoid = models.ForeignKey(Species, to_field="plantnetpowoid", limit_choices_to={"plantnetpowoid__isnull": False}, on_delete=CASCADE)
+    species_plantnetpowoid = models.ForeignKey(Species, to_field="plantnetpowoid",
+                                               limit_choices_to={"plantnetpowoid__isnull": False}, on_delete=CASCADE)
 
     class Meta:
-        db_table="plantnet_powoid_mapping"
+        db_table = "plantnet_powoid_mapping"
 
     def __str__(self):
         return f"{self.plantnetpowoid} => {self.species_plantnetpowoid.plantnetpowoid} [{self.species_plantnetpowoid}]"
