@@ -1,3 +1,5 @@
+import os
+
 from image_cropping.utils import get_backend
 from rest_framework import serializers
 
@@ -66,11 +68,13 @@ class SynonymField(serializers.Field):
             return ", ".join(speciesnames)
         return None
 
+
 class Mp3Url(serializers.Field):
     def to_representation(self, obj):
         if len(obj) > 0 and obj[0]:
             return obj[0].audio_file.url
         return None
+
 
 class SpeciesSerializer(serializers.ModelSerializer):
     localname = SpeciesLocalnameField(source='*', read_only=True)
@@ -80,13 +84,18 @@ class SpeciesSerializer(serializers.ModelSerializer):
     avatar_owner = serializers.CharField(source="avatar.owner", read_only=True)
     avatar_license = serializers.CharField(source="avatar.license", read_only=True)
     avatar_source = serializers.CharField(source="avatar.source", read_only=True)
-    mp3_url = Mp3Url(source='prefetched_audiofile')
+    audio_filename = serializers.SerializerMethodField(method_name="create_audio_filename")
 
     class Meta:
         model = Species
         fields = ['id', 'speciesid', 'localname', 'group', 'sciname', 'synonym', 'avatar_url', 'avatar_owner',
-                  'avatar_license', 'avatar_source', 'red_list_germany', 'mp3_url']
+                  'avatar_license', 'avatar_source', 'red_list_germany', 'audio_filename']
 
+    def create_audio_filename(self, obj):
+        if obj.prefetched_audiofile:
+            return os.path.basename(obj.prefetched_audiofile[0].audio_file.name)
+        else:
+            return None
 
 class UrlField(serializers.Field):
     def to_representation(self, obj):
@@ -169,8 +178,10 @@ class DescMetaSerializer(serializers.Serializer):
     image_small = serializers.URLField(source="descmeta.portrait_image_file.image_small.url", read_only=True)
     image_medium = serializers.URLField(source="descmeta.portrait_image_file.image_medium.url", read_only=True)
     image_large = serializers.URLField(source="descmeta.portrait_image_file.image_large.url", read_only=True)
-    image_large_width = serializers.IntegerField(source="descmeta.portrait_image_file.image_large.width", read_only=True)
-    image_large_height = serializers.IntegerField(source="descmeta.portrait_image_file.image_large.height", read_only=True)
+    image_large_width = serializers.IntegerField(source="descmeta.portrait_image_file.image_large.width",
+                                                 read_only=True)
+    image_large_height = serializers.IntegerField(source="descmeta.portrait_image_file.image_large.height",
+                                                  read_only=True)
     owner = serializers.CharField(source="descmeta.portrait_image_file.owner", read_only=True)
     owner_link = serializers.CharField(source="descmeta.portrait_image_file.owner_link", read_only=True)
     source = serializers.CharField(source="descmeta.portrait_image_file.source", read_only=True)
@@ -234,16 +245,18 @@ class PortraitSerializer(serializers.ModelSerializer):
 
 class FaunaPortraitSerializer(PortraitSerializer):
     audio_license = serializers.CharField(source="faunaportrait_audio_file.license", read_only=True)
-    audio_url = serializers.CharField(source="faunaportrait_audio_file.audio_file.url", read_only=True)
-    audio_specgram = serializers.CharField(source="faunaportrait_audio_file.audio_spectrogram.url", read_only=True)
+    audio_filename = serializers.SerializerMethodField(method_name="create_audio_filename")
     is_floraportrait = serializers.BooleanField(default=False, read_only=True)
 
     class Meta:
         model = Faunaportrait
         fields = PortraitSerializer.Meta.fields + ['male_description', 'female_description', 'juvenile_description',
-                                                   'audio_title', 'audio_license', 'audio_url', 'audio_specgram',
-                                                   'is_floraportrait']
-
+                                                   'audio_title', 'audio_license', 'audio_filename', 'is_floraportrait']
+    def create_audio_filename(self, obj):
+        try:
+            return os.path.basename(obj.faunaportrait_audio_file.audio_file.name)
+        except AttributeError:
+            return None
 
 class FloraportraitSerializer(PortraitSerializer):
     is_floraportrait = serializers.BooleanField(default=True, read_only=True)
@@ -270,8 +283,8 @@ class SpeciesImageListSerializer(serializers.ModelSerializer):
         fields = ['id', 'localname', 'group', 'sciname', 'synonym', 'avatar_url', 'desc_url', 'desc_width',
                   'desc_height']
 
+
 class PlantnetPowoidMappingSeralizer(serializers.ModelSerializer):
     class Meta:
         model = PlantnetPowoidMapping
         fields = ['plantnetpowoid', 'species_plantnetpowoid']
-
