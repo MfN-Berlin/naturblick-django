@@ -12,6 +12,6 @@ else
 	wav=$2
 	spec=$3
 
-	ffmpeg -y -i $mp3 $wav && sox $wav -n remix 1 rate 22.05k spectrogram -m -r -x 700 -y 129 -o - | convert - -alpha copy -fx '#fff' -gravity north -chop x10 - $spec 
+	ffmpeg -y -i $mp3 $wav && sox $wav -n remix 1 rate 22.05k spectrogram -m -r -x 700 -y 129 -o - | convert - -alpha copy -fill white -colorize 100% -gravity north -chop x10 - $spec
 	rm -f $wav
 fi
