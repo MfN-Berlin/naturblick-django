@@ -66,11 +66,13 @@ class SynonymField(serializers.Field):
             return ", ".join(speciesnames)
         return None
 
+
 class Mp3Url(serializers.Field):
     def to_representation(self, obj):
         if len(obj) > 0 and obj[0]:
             return obj[0].audio_file.url
         return None
+
 
 class SpeciesSerializer(serializers.ModelSerializer):
     localname = SpeciesLocalnameField(source='*', read_only=True)
@@ -168,8 +170,10 @@ class DescMetaSerializer(serializers.Serializer):
     image_small = serializers.URLField(source="descmeta.portrait_image_file.image_small.url", read_only=True)
     image_medium = serializers.URLField(source="descmeta.portrait_image_file.image_medium.url", read_only=True)
     image_large = serializers.URLField(source="descmeta.portrait_image_file.image_large.url", read_only=True)
-    image_large_width = serializers.IntegerField(source="descmeta.portrait_image_file.image_large.width", read_only=True)
-    image_large_height = serializers.IntegerField(source="descmeta.portrait_image_file.image_large.height", read_only=True)
+    image_large_width = serializers.IntegerField(source="descmeta.portrait_image_file.image_large.width",
+                                                 read_only=True)
+    image_large_height = serializers.IntegerField(source="descmeta.portrait_image_file.image_large.height",
+                                                  read_only=True)
     owner = serializers.CharField(source="descmeta.portrait_image_file.owner", read_only=True)
     owner_link = serializers.CharField(source="descmeta.portrait_image_file.owner_link", read_only=True)
     source = serializers.CharField(source="descmeta.portrait_image_file.source", read_only=True)
@@ -234,14 +238,12 @@ class PortraitSerializer(serializers.ModelSerializer):
 class FaunaPortraitSerializer(PortraitSerializer):
     audio_license = serializers.CharField(source="faunaportrait_audio_file.license", read_only=True)
     audio_url = serializers.CharField(source="faunaportrait_audio_file.audio_file.url", read_only=True)
-    audio_specgram = serializers.CharField(source="faunaportrait_audio_file.audio_spectrogram.url", read_only=True)
     is_floraportrait = serializers.BooleanField(default=False, read_only=True)
 
     class Meta:
         model = Faunaportrait
         fields = PortraitSerializer.Meta.fields + ['male_description', 'female_description', 'juvenile_description',
-                                                   'audio_title', 'audio_license', 'audio_url', 'audio_specgram',
-                                                   'is_floraportrait']
+                                                   'audio_title', 'audio_license', 'audio_url', 'is_floraportrait']
 
 
 class FloraportraitSerializer(PortraitSerializer):
@@ -269,8 +271,8 @@ class SpeciesImageListSerializer(serializers.ModelSerializer):
         fields = ['id', 'localname', 'group', 'sciname', 'synonym', 'avatar_url', 'desc_url', 'desc_width',
                   'desc_height']
 
+
 class PlantnetPowoidMappingSeralizer(serializers.ModelSerializer):
     class Meta:
         model = PlantnetPowoidMapping
         fields = ['plantnetpowoid', 'species_plantnetpowoid']
-

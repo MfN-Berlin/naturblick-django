@@ -1,11 +1,8 @@
 import logging
 import os
-import subprocess
-import uuid
 
 import requests
 from django.core.exceptions import ValidationError
-from django.core.files.storage import default_storage
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import ForeignKey, URLField, CASCADE
@@ -15,9 +12,8 @@ from image_cropping import ImageRatioField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
 
-from naturblick import settings
 from .choices import *
-from .validators import min_max, validate_png, validate_mp3
+from .validators import min_max, validate_mp3
 
 LARGE_WIDTH = 1200
 MEDIUM_WIDTH = 800
@@ -375,33 +371,9 @@ class FaunaportraitAudioFile(models.Model):
     source = URLField(max_length=1024)
     license = models.CharField(max_length=64)
     audio_file = models.FileField(upload_to="audio_files", validators=[validate_mp3])
-    audio_spectrogram = models.ImageField(upload_to="spectrogram_images", validators=[validate_png],
-                                          help_text='Automatically generated')
-
-    def create_specgram(self):
-        specgram_file = os.path.basename(self.audio_file.path) + '.png'
-        specgram_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'spectrogram_images'), specgram_file)
-        self.audio_spectrogram = os.path.join('spectrogram_images', specgram_file)
-
-        # the file and it's corresponding spectrogram already exist
-        if default_storage.exists(self.audio_file.path) and default_storage.exists(specgram_path):
-            return
-
-        wav_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'tmp_wav'), f"{uuid.uuid4()}.wav")
-
-        try:
-            script_path = os.path.join(settings.BASE_DIR, 'scripts', 'spec.sh')
-            subprocess.run([script_path, self.audio_file.path, wav_path, specgram_path], check=True)
-
-            super().save(update_fields=['audio_spectrogram'])
-
-        except Exception as e:
-            logger.error(f"Failed create_specgram: {e}")
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if self.audio_file:
-            self.create_specgram()
 
     def clean(self):
         super().clean()

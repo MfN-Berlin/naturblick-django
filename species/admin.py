@@ -687,9 +687,8 @@ class FloraportraitAdmin(admin.ModelAdmin):
 @admin.register(FaunaportraitAudioFile)
 class FaunaportraitAudioFileAdmin(admin.ModelAdmin):
     list_display = ['id', 'audio_file', 'species__gername', 'species__sciname']
-    search_fields = ['owner', 'audio_file', 'audio_spectrogram']
+    search_fields = ['owner', 'audio_file']
     fields = ['audio_file',
-              'audio_spectrogram',
               'species',
               'owner',
               'owner_link',
