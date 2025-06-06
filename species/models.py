@@ -415,7 +415,7 @@ class FaunaportraitAudioFile(models.Model):
                     f"This Audiofile is already set as an 'audiofile' in the portrait of {faunaportrait}. The species can not be changed until it's unset")
 
     def __str__(self):
-        return f"{self.owner} {self.audio_file.name[self.audio_file.name.index('/') + 1:]}"
+        return f"{self.owner} {os.path.basename(self.audio_file.path)}"
 
     class Meta:
         db_table = 'faunaportrait_audio_file'
