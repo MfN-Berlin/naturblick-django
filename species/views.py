@@ -1,4 +1,7 @@
 import json
+import os
+import subprocess
+import tempfile
 from pathlib import Path
 
 from django.core import management
@@ -13,6 +16,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
+from naturblick import settings
 from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait, GoodToKnow, Source, SimilarSpecies, \
     UnambigousFeature, FaunaportraitAudioFile, PlantnetPowoidMapping
 from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializer, \
@@ -253,6 +257,18 @@ def sort_species(species_qs, sort_and_order, lang):
     order_prefix = '' if order.lower() == 'asc' else '-'
     return species_qs.order_by(f'{order_prefix}{order_suffix(sort, lang)}')
 
+@api_view(['GET'])
+def specgram(request):
+    mp3 = request.query_params.get('mp3')
+
+    specgram_file = f"{mp3}.png"
+    specgram_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'spectrogram_images'), specgram_file)
+    mp3_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'audio_files'), mp3)
+
+    with tempfile.NamedTemporaryFile(suffix=".wav") as wav:
+        subprocess.run(f"""ffmpeg -y -i {mp3_path} {wav.name} && sox {wav.name} -n remix 1 rate 22.05k spectrogram -m -r -x 700 -y 129 | magick - -alpha copy -fill white -colorize 100% -gravity north -chop x10 - {specgram_path}""", check=True, shell=True)
+
+    return FileResponse(open(specgram_path, "rb"), filename=specgram_file)
 
 @api_view(['GET'])
 def species(request, id):

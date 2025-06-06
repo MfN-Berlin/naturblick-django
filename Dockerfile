@@ -9,7 +9,8 @@ RUN mkdir /logs
 COPY requirements.txt /app/
 
 RUN pip install --no-cache-dir -r requirements.txt
-
+RUN apk update && apk add --no-cache sox imagemagick ffmpeg
+                                         
 COPY . /app/
 
 ENV DJANGO_ENV=production
