@@ -302,9 +302,6 @@ def specgram(request):
         ]
         subprocess.run(magick_cmd, check=True)
 
-        if not os.path.exists(specgram_path):
-            raise NotFound()
-
         return specgram_response(specgram_file)
 
 
