@@ -1,3 +1,5 @@
+import os
+
 from image_cropping.utils import get_backend
 from rest_framework import serializers
 
@@ -237,14 +239,18 @@ class PortraitSerializer(serializers.ModelSerializer):
 
 class FaunaPortraitSerializer(PortraitSerializer):
     audio_license = serializers.CharField(source="faunaportrait_audio_file.license", read_only=True)
-    audio_url = serializers.CharField(source="faunaportrait_audio_file.audio_file.url", read_only=True)
+    audio_filename = serializers.SerializerMethodField(method_name="create_audio_filename")
     is_floraportrait = serializers.BooleanField(default=False, read_only=True)
 
     class Meta:
         model = Faunaportrait
         fields = PortraitSerializer.Meta.fields + ['male_description', 'female_description', 'juvenile_description',
-                                                   'audio_title', 'audio_license', 'audio_url', 'is_floraportrait']
-
+                                                   'audio_title', 'audio_license', 'audio_filename', 'is_floraportrait']
+    def create_audio_filename(self, obj):
+        try:
+            return os.path.basename(obj.faunaportrait_audio_file.audio_file.name)
+        except AttributeError:
+            return None
 
 class FloraportraitSerializer(PortraitSerializer):
     is_floraportrait = serializers.BooleanField(default=True, read_only=True)
