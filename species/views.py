@@ -1,14 +1,15 @@
 import json
+import json
 import os
 import subprocess
 import tempfile
 from pathlib import Path
 
 from django.core import management
+from django.db import connection
 from django.db.models import Prefetch
 from django.db.models import Q
 from django.http import FileResponse
-from django.db import connection
 from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import NotFound, server_error, MethodNotAllowed
@@ -257,18 +258,53 @@ def sort_species(species_qs, sort_and_order, lang):
     order_prefix = '' if order.lower() == 'asc' else '-'
     return species_qs.order_by(f'{order_prefix}{order_suffix(sort, lang)}')
 
+
 @api_view(['GET'])
 def specgram(request):
     mp3 = request.query_params.get('mp3')
+    if not mp3:
+        return Response({"error": "mp3 is required"}, status=HTTP_400_BAD_REQUEST)
 
     specgram_file = f"{mp3}.png"
     specgram_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'spectrogram_images'), specgram_file)
     mp3_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'audio_files'), mp3)
 
-    with tempfile.NamedTemporaryFile(suffix=".wav") as wav:
-        subprocess.run(f"""ffmpeg -y -i {mp3_path} {wav.name} && sox {wav.name} -n remix 1 rate 22.05k spectrogram -m -r -x 700 -y 129 | magick - -alpha copy -fill white -colorize 100% -gravity north -chop x10 - {specgram_path}""", check=True, shell=True)
+    with tempfile.NamedTemporaryFile(suffix=".wav") as wav, tempfile.NamedTemporaryFile(suffix=".png") as sox_png:
+        subprocess.run(["ffmpeg", "-y", "-i", mp3_path, wav.name], check=True)
 
-    return FileResponse(open(specgram_path, "rb"), filename=specgram_file)
+        sox_cmd = [
+            "sox", wav.name, "-n",
+            "remix", "1",
+            "rate", "22.05k",
+            "spectrogram",
+            "-m", "-r",
+            "-x", "700",
+            "-y", "129",
+            sox_png.name
+        ]
+
+        subprocess.run(sox_cmd, check=True)
+
+        magick_cmd = [
+            "convert", "-",
+            "-alpha", "copy",
+            "-fill", "white",
+            "-colorize", "100%",
+            "-gravity", "north",
+            "-chop", "x10",
+            specgram_path,
+        ]
+
+        with subprocess.Popen(sox_cmd, stdout=subprocess.PIPE) as sox_proc, subprocess.Popen(magick_cmd,
+                                                                                             stdin=sox_proc.stdout) as magick_proc:
+            sox_proc.stdout.close()
+            magick_proc.communicate()
+            sox_proc.wait()
+
+
+            with open(specgram_path, "rb") as f:
+                return FileResponse(f, filename=specgram_file)
+
 
 @api_view(['GET'])
 def species(request, id):
