@@ -84,12 +84,18 @@ class SpeciesSerializer(serializers.ModelSerializer):
     avatar_owner = serializers.CharField(source="avatar.owner", read_only=True)
     avatar_license = serializers.CharField(source="avatar.license", read_only=True)
     avatar_source = serializers.CharField(source="avatar.source", read_only=True)
+    audio_filename = serializers.SerializerMethodField(method_name="create_audio_filename")
 
     class Meta:
         model = Species
         fields = ['id', 'speciesid', 'localname', 'group', 'sciname', 'synonym', 'avatar_url', 'avatar_owner',
-                  'avatar_license', 'avatar_source', 'red_list_germany']
+                  'avatar_license', 'avatar_source', 'red_list_germany', 'audio_filename']
 
+    def create_audio_filename(self, obj):
+        if obj.prefetched_audiofile:
+            return os.path.basename(obj.prefetched_audiofile[0].audio_file.name)
+        else:
+            return None
 
 class UrlField(serializers.Field):
     def to_representation(self, obj):
