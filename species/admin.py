@@ -26,7 +26,7 @@ from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, Ad
 
 from species import utils
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("django")
 
 
 class AdminThumbnailSpec(ImageSpec):

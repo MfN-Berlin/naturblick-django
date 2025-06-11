@@ -19,7 +19,7 @@ LARGE_WIDTH = 1200
 MEDIUM_WIDTH = 800
 SMALL_WIDTH = 400
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("django")
 
 
 class Tag(models.Model):

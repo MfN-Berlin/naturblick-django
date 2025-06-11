@@ -1,11 +1,12 @@
 import json
-import json
+import logging
 import os
 import subprocess
 import tempfile
 from pathlib import Path
 
 from django.core import management
+from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import connection
 from django.db.models import Prefetch
 from django.db.models import Q
@@ -24,6 +25,8 @@ from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializ
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
     FunfactMetaSerializer, InthecityMetaSerializer, PlantnetPowoidMappingSeralizer
 from .utils import create_sqlite_file
+
+logger = logging.getLogger('django')
 
 
 def get_lang_queryparam(request):
@@ -261,16 +264,23 @@ def sort_species(species_qs, sort_and_order, lang):
 
 @api_view(['GET'])
 def specgram(request):
+    logger.info(f"specgram {request}")
     mp3 = request.query_params.get('mp3')
     if not mp3:
         return Response({"error": "mp3 is required"}, status=HTTP_400_BAD_REQUEST)
+
+    logger.info("building pathes")
 
     specgram_file = f"{mp3}.png"
     specgram_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'spectrogram_images'), specgram_file)
     mp3_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'audio_files'), mp3)
 
+    logger.info(f"mp3_path: {mp3_path}")
+
     with tempfile.NamedTemporaryFile(suffix=".wav") as wav, tempfile.NamedTemporaryFile(suffix=".png") as sox_png:
         subprocess.run(["ffmpeg", "-y", "-i", mp3_path, wav.name], check=True)
+
+        logger.info(f"wav: {wav.name} sox: {sox_png.name} specgram: {specgram_path}")
 
         sox_cmd = [
             "sox", wav.name, "-n",
@@ -280,13 +290,15 @@ def specgram(request):
             "-m", "-r",
             "-x", "700",
             "-y", "129",
-            sox_png.name
+            "-o", sox_png.name
         ]
+
+        logger.info(f"execute sox {sox_cmd}")
 
         subprocess.run(sox_cmd, check=True)
 
         magick_cmd = [
-            "convert", "-",
+            "magick", sox_png.name,
             "-alpha", "copy",
             "-fill", "white",
             "-colorize", "100%",
@@ -295,15 +307,20 @@ def specgram(request):
             specgram_path,
         ]
 
-        with subprocess.Popen(sox_cmd, stdout=subprocess.PIPE) as sox_proc, subprocess.Popen(magick_cmd,
-                                                                                             stdin=sox_proc.stdout) as magick_proc:
-            sox_proc.stdout.close()
-            magick_proc.communicate()
-            sox_proc.wait()
 
+        logger.info(f"execute magick_cmd {magick_cmd}")
+        subprocess.run(magick_cmd, check=True)
 
-            with open(specgram_path, "rb") as f:
-                return FileResponse(f, filename=specgram_file)
+        #with subprocess.Popen(sox_cmd, stdout=subprocess.PIPE) as sox_proc, subprocess.Popen(magick_cmd,
+        #                                                                                     stdin=sox_proc.stdout) as magick_proc:
+        #    sox_proc.stdout.close()
+        #    magick_proc.communicate()
+        #    sox_proc.wait()
+#
+        if not os.path.exists(specgram_path):
+            raise NotFound()
+
+        return FileResponse(specgram_path, filename=specgram_file)
 
 
 @api_view(['GET'])
