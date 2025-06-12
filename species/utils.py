@@ -14,7 +14,7 @@ import requests
 from species.models import Species, SpeciesName, SourcesTranslation, SourcesImprint, Faunaportrait, Floraportrait
 from .utils_characters import insert_characters
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("django")
 
 
 @dataclass
