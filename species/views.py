@@ -264,17 +264,10 @@ def sort_species(species_qs, sort_and_order, lang):
 
 
 @api_view(['GET'])
-def specgram(request):
-    mp3 = request.query_params.get('mp3')
-    if not mp3:
-        return Response({"error": "mp3 is required"}, status=HTTP_400_BAD_REQUEST)
-
-    specgram_file = f"{mp3}.png"
-    specgram_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'spectrogram_images'), specgram_file)
+def specgram(request, filename):
+    specgram_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'spectrogram_images'), filename)
+    mp3 = filename.rsplit('.', 1)[0]
     mp3_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'audio_files'), mp3)
-
-    if os.path.exists(specgram_path):
-        return specgram_response(specgram_file)
 
     with tempfile.NamedTemporaryFile(suffix=".wav") as wav, tempfile.NamedTemporaryFile(suffix=".png") as sox_png:
         subprocess.run(["ffmpeg", "-y", "-i", mp3_path, wav.name], check=True)
@@ -301,14 +294,7 @@ def specgram(request):
             specgram_path,
         ]
         subprocess.run(magick_cmd, check=True)
-
-        return specgram_response(specgram_file)
-
-
-def specgram_response(specgram_file):
-    response = Response(status=HTTP_204_NO_CONTENT)
-    response["X-Accel-Redirect"] = f"/django/spectrogram_images/{specgram_file}"
-    return response
+        return FileResponse(open(specgram_path, "rb"))
 
 
 @api_view(['GET'])
