@@ -1,5 +1,3 @@
-import os
-
 from .basesettings import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -27,16 +25,24 @@ DATABASES = {
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    'formatters': {
+        'naturblick': {
+            'format': '{asctime} - {levelname} - {module} - {message}',
+            'style': '{'
+        },
+    },
     "handlers": {
         "info_file": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
             "filename": "/logs/info.log",
+            "formatter": "naturblick"
         },
         "error_file": {
             "level": "ERROR",
             "class": "logging.FileHandler",
             "filename": "/logs/error.log",
+            "formatter": "naturblick"
         },
     },
     "loggers": {
@@ -53,4 +59,5 @@ STATIC_URL = '/django/static/'
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = ['https://staging.naturblick.museumfuernaturkunde.berlin', 'https://naturblick.museumfuernaturkunde.berlin']
+CSRF_TRUSTED_ORIGINS = ['https://staging.naturblick.museumfuernaturkunde.berlin',
+                        'https://naturblick.museumfuernaturkunde.berlin']
