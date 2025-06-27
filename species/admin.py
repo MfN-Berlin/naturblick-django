@@ -1,5 +1,3 @@
-import logging
-
 from django import forms
 from django.contrib import admin, messages
 from django.db import models, transaction
@@ -24,8 +22,6 @@ from species import utils
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
     Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait
-
-logger = logging.getLogger("django")
 
 class AdminThumbnailSpec(ImageSpec):
     processors = [ResizeToFit(150, None)]

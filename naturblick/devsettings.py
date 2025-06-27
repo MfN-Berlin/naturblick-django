@@ -29,21 +29,22 @@ DATABASES = {
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    'formatters': {
+        'naturblick': {
+            'format': '{asctime} - {levelname} - {name} - {message}',
+            'style': '{'
+        },
+    },
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
+            "level": "INFO",
+            "formatter": "naturblick"
         },
     },
     "root": {
         "handlers": ["console"],
         "level": "INFO",
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["console"],
-            "level": "INFO",
-            "propagate": False,
-        },
     },
 }
 
