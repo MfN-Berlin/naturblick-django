@@ -1,6 +1,4 @@
-import logging
 import json
-import logging
 import os
 import subprocess
 import tempfile
@@ -27,8 +25,6 @@ from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializ
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
     FunfactMetaSerializer, InthecityMetaSerializer, PlantnetPowoidMappingSeralizer
 from .utils import create_sqlite_file
-
-logger = logging.getLogger('django')
 
 def get_lang_queryparam(request):
     return request.query_params.get('lang') or 'de'

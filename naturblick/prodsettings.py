@@ -33,7 +33,7 @@ LOGGING = {
     },
     "handlers": {
         "info_file": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.FileHandler",
             "filename": "/logs/info.log",
             "formatter": "naturblick"
@@ -45,12 +45,9 @@ LOGGING = {
             "formatter": "naturblick"
         },
     },
-    "loggers": {
-        "django": {
-            "handlers": ["info_file", "error_file"],
-            "level": "INFO",
-            "propagate": True,
-        },
+    "root": {
+        "handlers": ["info_file", "error_file"],
+        "level": "INFO",
     },
 }
 
