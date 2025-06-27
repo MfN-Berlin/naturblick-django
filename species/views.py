@@ -15,7 +15,7 @@ from django.db.models import Q
 from django.http import FileResponse
 from rest_framework import generics
 from rest_framework.decorators import api_view
-from rest_framework.exceptions import NotFound, server_error, MethodNotAllowed
+from rest_framework.exceptions import NotFound, MethodNotAllowed
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
@@ -44,8 +44,8 @@ def app_content_db(request):
     management.call_command("generateimages")
 
     if (not is_data_valid()):
-        logger.error('There are artportraits connected to a synonym')
-        return server_error(request)
+        raise RuntimeError('There are artportraits connected to a synonym')
+
     sqlite_db = create_sqlite_file()
 
     response = FileResponse(open(sqlite_db, "rb"), as_attachment=True)
@@ -59,14 +59,9 @@ class AppContentCharacterValue(APIView):
         base_dir = Path(__file__).resolve().parent.parent
         character_values_file = base_dir / 'species' / 'data' / 'character-values.json'
 
-        try:
-            with open(character_values_file, 'r') as f:
-                data = json.load(f)
-
-            return Response(data)
-        except:
-            return server_error(request)
-
+        with open(character_values_file, 'r') as f:
+            data = json.load(f)
+        return Response(data)
 
 def filter_species_by_query(species_qs, query, lang):
     if not query:
