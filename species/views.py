@@ -1,3 +1,4 @@
+import logging
 import json
 import logging
 import os
@@ -14,14 +15,14 @@ from django.db.models import Q
 from django.http import FileResponse
 from rest_framework import generics
 from rest_framework.decorators import api_view
-from rest_framework.exceptions import NotFound, server_error, MethodNotAllowed
+from rest_framework.exceptions import NotFound, MethodNotAllowed
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
 from naturblick import settings
 from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait, GoodToKnow, Source, SimilarSpecies, \
-    UnambigousFeature, FaunaportraitAudioFile, PlantnetPowoidMapping
+    UnambigousFeature, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait
 from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializer, \
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
     FunfactMetaSerializer, InthecityMetaSerializer, PlantnetPowoidMappingSeralizer
@@ -29,15 +30,21 @@ from .utils import create_sqlite_file
 
 logger = logging.getLogger('django')
 
-
 def get_lang_queryparam(request):
     return request.query_params.get('lang') or 'de'
 
+
+
+def is_data_valid():
+    return not Portrait.objects.filter(species__accepted_species__isnull=False).exists()
 
 # returns sqlite database used by android/ios
 def app_content_db(request):
     # generates small, medium, large version of imagekit Spec-Fields
     management.call_command("generateimages")
+
+    if (not is_data_valid()):
+        raise RuntimeError('There are artportraits connected to a synonym')
 
     sqlite_db = create_sqlite_file()
 
@@ -52,14 +59,9 @@ class AppContentCharacterValue(APIView):
         base_dir = Path(__file__).resolve().parent.parent
         character_values_file = base_dir / 'species' / 'data' / 'character-values.json'
 
-        try:
-            with open(character_values_file, 'r') as f:
-                data = json.load(f)
-
-            return Response(data)
-        except:
-            server_error(request)
-
+        with open(character_values_file, 'r') as f:
+            data = json.load(f)
+        return Response(data)
 
 def filter_species_by_query(species_qs, query, lang):
     if not query:
@@ -143,8 +145,8 @@ class SimpleTagsList(generics.ListAPIView):
 def get_accepted_portrait_species_id(lang, s_id=None, speciesid=None):
     if s_id:
         query = """
-                 SELECT 
-                COALESCE(p2.species_id, p1.species_id), 
+                 SELECT
+                COALESCE(p2.species_id, p1.species_id),
                 CASE WHEN p2.species_id IS NOT NULL THEN s.sciname ELSE NULL END
             FROM species AS s
             LEFT JOIN portrait p1 ON p1.species_id = s.id AND p1.language = %s
@@ -155,7 +157,7 @@ def get_accepted_portrait_species_id(lang, s_id=None, speciesid=None):
         query = """
             SELECT COALESCE(p2.species_id, p1.species_id), CASE WHEN p2.species_id IS NOT NULL THEN s.sciname ELSE NULL END
             FROM species AS s
-            LEFT JOIN portrait p1 ON p1.species_id = s.id AND p1.language = %s 
+            LEFT JOIN portrait p1 ON p1.species_id = s.id AND p1.language = %s
             LEFT JOIN portrait p2 ON p2.species_id = s.accepted_species_id AND p2.language = %s
             WHERE s.speciesid = %s;
         """
