@@ -20,6 +20,7 @@ from imagekit.admin import AdminThumbnail
 from imagekit.cachefiles import ImageCacheFile
 from imagekit.processors import ResizeToFit
 
+from species import utils
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
     Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait
@@ -27,7 +28,6 @@ from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, Ad
 from species import utils
 
 logger = logging.getLogger("django")
-
 
 class AdminThumbnailSpec(ImageSpec):
     processors = [ResizeToFit(150, None)]
@@ -304,8 +304,10 @@ class HasWikipediaFilter(YesNoFilter):
                 wikipedia__isnull=True
             )
 
+
 class ImportAvatarFromWikimediaForm(forms.Form):
     wikimedia_url = forms.URLField(label="Wikimedia image URL")
+
 
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
@@ -313,11 +315,13 @@ class SpeciesAdmin(admin.ModelAdmin):
         css = {
             "all": ["species/admin.css"],
         }
+
     inlines = [
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid']
-    list_display = ['id', 'speciesid', 'sciname', 'gername', 'avatar_crop', 'accepted', 'portrait', 'gbif', 'plantnet', 'search']
+    list_display = ['id', 'speciesid', 'sciname', 'gername', 'avatar_crop', 'accepted', 'portrait', 'gbif', 'plantnet',
+                    'search']
     list_display_links = ['id', 'speciesid']
     list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, HasSynonymsFilter,
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
@@ -378,13 +382,14 @@ class SpeciesAdmin(admin.ModelAdmin):
             form = ImportAvatarFromWikimediaForm(request.POST)
             if form.is_valid():
                 meta = utils.get_metadata(form.cleaned_data['wikimedia_url'])
-                avatar = Avatar.objects.create(owner=meta.author, owner_link=meta.author_url, source=meta.image_url, license=meta.license, image=meta.image)
+                avatar = Avatar.objects.create(owner=meta.author, owner_link=meta.author_url, source=meta.image_url,
+                                               license=meta.license, image=meta.image)
                 queryset.update(avatar=avatar.id)
                 return HttpResponseRedirect(reverse('admin:species_avatar_change', args=(avatar.id,)))
         else:
             form = ImportAvatarFromWikimediaForm()
-            
-        return TemplateResponse(request,'admin/avatar_from_wikimedia.html', {"form": form, 'queryset': queryset})
+
+        return TemplateResponse(request, 'admin/avatar_from_wikimedia.html', {"form": form, 'queryset': queryset})
 
     @admin.display(
         description="Avatar"
@@ -420,7 +425,10 @@ class SpeciesAdmin(admin.ModelAdmin):
         scientific_wikimedia_url_name = obj.sciname.replace(' ', '+')
         wikimedia_url = f'https://commons.wikimedia.org/w/index.php?search={scientific_wikimedia_url_name}&title=Special:MediaSearch&type=image'
         wikimedia_img_url = static('species/Wikimedia Commons Logo.svg')
-        return format_html('<a title="GBIF" href="{}"><img class="image-link" src={}></a> | <a title="Wikipedia" href="{}"><img class="image-link" src={}></a> | <a href="{}"><img title="Wikimedia Image Search" class="image-link" src={}></a> | <a title="Plantnet" href="{}"><img class="image-link" src={}></a>', gbif_url, gbif_img_url, wikipedia_url, wikipedia_img_url, wikimedia_url, wikimedia_img_url, plantnet_url,plantnet_img_url)
+        return format_html(
+            '<a title="GBIF" href="{}"><img class="image-link" src={}></a> | <a title="Wikipedia" href="{}"><img class="image-link" src={}></a> | <a href="{}"><img title="Wikimedia Image Search" class="image-link" src={}></a> | <a title="Plantnet" href="{}"><img class="image-link" src={}></a>',
+            gbif_url, gbif_img_url, wikipedia_url, wikipedia_img_url, wikimedia_url, wikimedia_img_url, plantnet_url,
+            plantnet_img_url)
 
     @admin.display(
         description='Powo ID (Plantnet)'
@@ -450,11 +458,12 @@ class SpeciesAdmin(admin.ModelAdmin):
 
     @admin.display()
     def portrait(self, obj):
-        if obj.group.nature is None:
+        if obj.group.nature is None or obj.accepted_species:
             return "-"
         else:
             links = []
             urls = []
+
             for lang in ['de', 'en']:
                 portrait = [portrait for portrait in obj.portrait_set.all() if portrait.language == lang]
                 if portrait:
@@ -467,7 +476,8 @@ class SpeciesAdmin(admin.ModelAdmin):
                     urls.append(f'{url}?species={obj.id}&language={lang}')
 
             links.append('<a href="{}"><img class="naturblick-logo-link" src="{}"/></a>')
-            return format_html(' | '.join(links), urls[0], urls[1], f'/species/portrait/{obj.id}', static('species/logo.svg'))
+            return format_html(' | '.join(links), urls[0], urls[1], f'/species/portrait/{obj.id}',
+                               static('species/logo.svg'))
 
 
 #
@@ -753,7 +763,9 @@ class HasSpecies(YesNoFilter):
 class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
     list_display = ['id', 'cropped_image', 'image', 'owner', 'species_list']
     list_filter = [HasSpecies]
-    search_fields = ['image', 'owner', 'avatar_species__sciname', 'avatar_species__gername', 'avatar_species__speciesid', 'female_avatar_species__sciname', 'female_avatar_species__gername', 'female_avatar_species__speciesid']
+    search_fields = ['image', 'owner', 'avatar_species__sciname', 'avatar_species__gername',
+                     'avatar_species__speciesid', 'female_avatar_species__sciname', 'female_avatar_species__gername',
+                     'female_avatar_species__speciesid']
     fields = ['cropping', 'image', 'owner', 'owner_link', 'source', 'license']
 
     @admin.display(

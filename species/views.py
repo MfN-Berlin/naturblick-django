@@ -1,3 +1,4 @@
+import logging
 import json
 import logging
 import os
@@ -21,7 +22,7 @@ from rest_framework.views import APIView
 
 from naturblick import settings
 from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait, GoodToKnow, Source, SimilarSpecies, \
-    UnambigousFeature, FaunaportraitAudioFile, PlantnetPowoidMapping
+    UnambigousFeature, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait
 from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializer, \
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
     FunfactMetaSerializer, InthecityMetaSerializer, PlantnetPowoidMappingSeralizer
@@ -29,16 +30,22 @@ from .utils import create_sqlite_file
 
 logger = logging.getLogger('django')
 
-
 def get_lang_queryparam(request):
     return request.query_params.get('lang') or 'de'
 
+
+
+def is_data_valid():
+    return not Portrait.objects.filter(species__accepted_species__isnull=False).exists()
 
 # returns sqlite database used by android/ios
 def app_content_db(request):
     # generates small, medium, large version of imagekit Spec-Fields
     management.call_command("generateimages")
 
+    if (not is_data_valid()):
+        logger.error('There are artportraits connected to a synonym')
+        return server_error(request)
     sqlite_db = create_sqlite_file()
 
     response = FileResponse(open(sqlite_db, "rb"), as_attachment=True)
@@ -58,7 +65,7 @@ class AppContentCharacterValue(APIView):
 
             return Response(data)
         except:
-            server_error(request)
+            return server_error(request)
 
 
 def filter_species_by_query(species_qs, query, lang):
@@ -143,8 +150,8 @@ class SimpleTagsList(generics.ListAPIView):
 def get_accepted_portrait_species_id(lang, s_id=None, speciesid=None):
     if s_id:
         query = """
-                 SELECT 
-                COALESCE(p2.species_id, p1.species_id), 
+                 SELECT
+                COALESCE(p2.species_id, p1.species_id),
                 CASE WHEN p2.species_id IS NOT NULL THEN s.sciname ELSE NULL END
             FROM species AS s
             LEFT JOIN portrait p1 ON p1.species_id = s.id AND p1.language = %s
@@ -155,7 +162,7 @@ def get_accepted_portrait_species_id(lang, s_id=None, speciesid=None):
         query = """
             SELECT COALESCE(p2.species_id, p1.species_id), CASE WHEN p2.species_id IS NOT NULL THEN s.sciname ELSE NULL END
             FROM species AS s
-            LEFT JOIN portrait p1 ON p1.species_id = s.id AND p1.language = %s 
+            LEFT JOIN portrait p1 ON p1.species_id = s.id AND p1.language = %s
             LEFT JOIN portrait p2 ON p2.species_id = s.accepted_species_id AND p2.language = %s
             WHERE s.speciesid = %s;
         """
