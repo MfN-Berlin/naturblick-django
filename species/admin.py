@@ -25,8 +25,6 @@ from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, Ad
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
     Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait
 
-from species import utils
-
 logger = logging.getLogger("django")
 
 class AdminThumbnailSpec(ImageSpec):
