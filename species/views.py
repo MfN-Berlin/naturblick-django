@@ -218,7 +218,7 @@ class PortraitDetail(generics.GenericAPIView):
                                          Prefetch('similarspecies_set',
                                                   queryset=SimilarSpecies.objects.order_by('order')),
                                          Prefetch('source_set', queryset=Source.objects.order_by('order')))
-            .filter(Q(language=lang) & Q(published=True)))
+            .filter(language=lang))
 
         portrait_qs = portrait_qs.first()
 
