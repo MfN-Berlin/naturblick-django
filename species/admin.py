@@ -23,6 +23,7 @@ from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, Ad
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
     Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait
 
+
 class AdminThumbnailSpec(ImageSpec):
     processors = [ResizeToFit(150, None)]
     format = 'JPEG'
@@ -607,6 +608,76 @@ class InTheCityMetaInline(admin.StackedInline):
     verbose_name = 'In the city image'
 
 
+@admin.action(description="Copy selected portrait to english")
+def copy_to_eng(modeladmin, request, queryset):
+    is_fauna_portrait = isinstance(modeladmin, FaunaportraitAdmin)
+    if is_fauna_portrait:
+        model = Faunaportrait
+    else:
+        model = Floraportrait
+
+    if queryset.filter(~Q(language='de')).exists():
+        messages.error(request, "Please select only german portraits.")
+        return
+    if model.objects.filter(
+            Q(species_id__in=queryset.values_list('species__id', flat=True)) & Q(language='en')).exists():
+        messages.error(request, "At least one english portrait for the selected species already exists.")
+        return
+
+    for p in queryset:
+        if is_fauna_portrait:
+            new_portrait = Faunaportrait(
+                species=p.species,
+                language='en',
+                short_description=p.short_description,
+                city_habitat=p.city_habitat,
+                human_interaction=p.human_interaction,
+                published=p.published,
+                male_description=p.male_description,
+                female_description=p.female_description,
+                juvenile_description=p.juvenile_description,
+                tracks=p.tracks,
+                audio_title=p.audio_title,
+                faunaportrait_audio_file=p.faunaportrait_audio_file)
+        else:
+            new_portrait = Floraportrait(species=p.species,
+                                language='en',
+                                short_description=p.short_description,
+                                city_habitat=p.city_habitat,
+                                human_interaction=p.human_interaction,
+                                published=p.published,
+                                leaf_description=p.leaf_description,
+                                stem_axis_description=p.stem_axis_description,
+                                flower_description=p.flower_description,
+                                fruit_description=p.fruit_description)
+        new_portrait.save()
+
+        if hasattr(p, 'descmeta'):
+            descmeta = p.descmeta
+            descmeta.id = None
+            descmeta._state.adding = True
+            descmeta.portrait = new_portrait
+            descmeta.save()
+
+        if hasattr(p, 'inthecitymeta'):
+            inthecitymeta = p.inthecitymeta
+            inthecitymeta.id = None
+            inthecitymeta._state.adding = True
+            inthecitymeta.portrait = new_portrait
+            inthecitymeta.save()
+
+        if hasattr(p, 'funfactmeta'):
+            funfactmeta = p.funfactmeta
+            funfactmeta.id = None
+            funfactmeta._state.adding = True
+            funfactmeta.portrait = new_portrait
+            funfactmeta.save()
+
+
+
+        # goodtoknow_set, source_set, similarspecies_set, unambigousfeature_set, additionallink_set
+
+
 @admin.action(description="Move selected portrait to accepted species")
 def move_to_accepted(modeladmin, request, queryset):
     def move_portrait_image_file(meta, accepted_species):
@@ -678,7 +749,7 @@ class FloraportraitAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 80})}
     }
-    actions = [move_to_accepted]
+    actions = [move_to_accepted, copy_to_eng]
 
     def get_fields(self, request, obj=None, **kwargs):
         fields = super().get_fields(request, obj, **kwargs)
@@ -721,7 +792,7 @@ class FaunaportraitAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 80})}
     }
-    actions = [move_to_accepted]
+    actions = [move_to_accepted, copy_to_eng]
 
     def get_fields(self, request, obj=None, **kwargs):
         fields = super().get_fields(request, obj, **kwargs)
