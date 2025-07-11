@@ -34,13 +34,13 @@ LOGGING = {
     "handlers": {
         "info_file": {
             "level": "INFO",
-            "class": "logging.FileHandler",
+            "class": "logging.handlers.WatchedFileHandler",
             "filename": "/logs/info.log",
             "formatter": "naturblick"
         },
         "error_file": {
             "level": "ERROR",
-            "class": "logging.FileHandler",
+            "class": "logging.handlers.WatchedFileHandler",
             "filename": "/logs/error.log",
             "formatter": "naturblick"
         },
