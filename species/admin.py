@@ -23,6 +23,7 @@ from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, Ad
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
     Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait
 
+
 class AdminThumbnailSpec(ImageSpec):
     processors = [ResizeToFit(150, None)]
     format = 'JPEG'
@@ -607,8 +608,89 @@ class InTheCityMetaInline(admin.StackedInline):
     verbose_name = 'In the city image'
 
 
+@admin.action(description="Copy selected portrait to english")
+@transaction.atomic
+def copy_portrait_to_eng(modeladmin, request, queryset):
+    def copy_ref(ref, new_portrait):
+        ref.id = None
+        ref._state.adding = True
+        ref.portrait = new_portrait
+        ref.save()
+
+    is_fauna_portrait = isinstance(modeladmin, FaunaportraitAdmin)
+    if is_fauna_portrait:
+        model = Faunaportrait
+    else:
+        model = Floraportrait
+
+    if queryset.filter(~Q(language='de')).exists():
+        messages.error(request, "Please select only german portraits.")
+        return
+    if model.objects.filter(
+            Q(species_id__in=queryset.values_list('species__id', flat=True)) & Q(language='en')).exists():
+        messages.error(request, "At least one english portrait for the selected species already exists.")
+        return
+
+    for p in queryset:
+        if is_fauna_portrait:
+            new_portrait = Faunaportrait(
+                species=p.species,
+                language='en',
+                short_description=p.short_description,
+                city_habitat=p.city_habitat,
+                human_interaction=p.human_interaction,
+                published=False,
+                male_description=p.male_description,
+                female_description=p.female_description,
+                juvenile_description=p.juvenile_description,
+                tracks=p.tracks,
+                audio_title=p.audio_title,
+                faunaportrait_audio_file=p.faunaportrait_audio_file)
+        else:
+            new_portrait = Floraportrait(species=p.species,
+                                         language='en',
+                                         short_description=p.short_description,
+                                         city_habitat=p.city_habitat,
+                                         human_interaction=p.human_interaction,
+                                         published=False,
+                                         leaf_description=p.leaf_description,
+                                         stem_axis_description=p.stem_axis_description,
+                                         flower_description=p.flower_description,
+                                         fruit_description=p.fruit_description)
+        new_portrait.save()
+
+        if hasattr(p, 'descmeta'):
+            copy_ref(p.descmeta, new_portrait)
+
+        if hasattr(p, 'inthecitymeta'):
+            copy_ref(p.inthecitymeta, new_portrait)
+
+        if hasattr(p, 'funfactmeta'):
+            copy_ref(p.funfactmeta, new_portrait)
+
+        if hasattr(p, 'goodtoknow_set'):
+            for goodtoknow in p.goodtoknow_set.all():
+                copy_ref(goodtoknow, new_portrait)
+
+        if hasattr(p, 'source_set'):
+            for source in p.source_set.all():
+                copy_ref(source, new_portrait)
+
+        if hasattr(p, 'similarspecies_set'):
+            for similarspecies in p.similarspecies_set.all():
+                copy_ref(similarspecies, new_portrait)
+
+        if hasattr(p, 'unambigousfeature_set'):
+            for unambigousfeature in p.unambigousfeature_set.all():
+                copy_ref(unambigousfeature, new_portrait)
+
+        if hasattr(p, 'additionallink_set'):
+            for additionallink in p.additionallink_set.all():
+                copy_ref(additionallink, new_portrait)
+
+
 @admin.action(description="Move selected portrait to accepted species")
-def move_to_accepted(modeladmin, request, queryset):
+def move_portrait_to_accepted(modeladmin, request, queryset):
     def move_portrait_image_file(meta, accepted_species):
         if meta:
             portrait_image_file = meta.portrait_image_file
@@ -678,7 +760,7 @@ class FloraportraitAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 80})}
     }
-    actions = [move_to_accepted]
+    actions = [move_portrait_to_accepted, copy_portrait_to_eng]
 
     def get_fields(self, request, obj=None, **kwargs):
         fields = super().get_fields(request, obj, **kwargs)
@@ -721,7 +803,7 @@ class FaunaportraitAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 80})}
     }
-    actions = [move_to_accepted]
+    actions = [move_portrait_to_accepted, copy_portrait_to_eng]
 
     def get_fields(self, request, obj=None, **kwargs):
         fields = super().get_fields(request, obj, **kwargs)
