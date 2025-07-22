@@ -750,7 +750,7 @@ class FloraportraitAdmin(admin.ModelAdmin):
     list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
     search_fields = ('id', 'species__speciesid', 'species__sciname', 'species__gername')
     search_help_text = 'Sucht über alle Artnamen'
-    list_filter = ('published', 'language', PortraitIsSynonymFilter)
+    list_filter = ('published', 'language', PortraitIsSynonymFilter, 'species__group')
     inlines = [
         UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline,
         DescMetaInline, FunFactMetaInline, InTheCityMetaInline
@@ -793,7 +793,7 @@ class FaunaportraitAdmin(admin.ModelAdmin):
     list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
     search_fields = ('id', 'species__speciesid', 'species__sciname', 'species__gername')
     search_help_text = 'Sucht über alle Artnamen'
-    list_filter = ('published', 'language', PortraitIsSynonymFilter)
+    list_filter = ('published', 'language', PortraitIsSynonymFilter, 'species__group')
     inlines = [
         UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline,
         DescMetaInline, FunFactMetaInline, InTheCityMetaInline
