@@ -745,6 +745,19 @@ def move_portrait_to_accepted(modeladmin, request, queryset):
                 move_portrait_image_file(getattr(portrait, 'inthecitymeta', None), accepted_species)
 
 
+def portrait_fieldorder(fields):
+    fields.remove('published')
+    fields.remove('species')
+    fields.insert(0, ('species', 'published'))
+    fields.remove('city_habitat')
+    fields.remove('human_interaction')
+    fields.remove('ecosystem_role')
+    fields.append('city_habitat')
+    fields.append('human_interaction')
+    fields.append('ecosystem_role')
+    return fields
+
+
 @admin.register(Floraportrait)
 class FloraportraitAdmin(admin.ModelAdmin):
     list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
@@ -753,7 +766,7 @@ class FloraportraitAdmin(admin.ModelAdmin):
     list_filter = ('published', 'language', PortraitIsSynonymFilter)
     inlines = [
         UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline,
-        DescMetaInline, FunFactMetaInline, InTheCityMetaInline
+        DescMetaInline, InTheCityMetaInline, FunFactMetaInline
     ]
     ordering = ('species__sciname',)
     autocomplete_fields = ['species']
@@ -763,11 +776,7 @@ class FloraportraitAdmin(admin.ModelAdmin):
     actions = [move_portrait_to_accepted, copy_portrait_to_eng]
 
     def get_fields(self, request, obj=None, **kwargs):
-        fields = super().get_fields(request, obj, **kwargs)
-        fields.remove('published')
-        fields.remove('species')
-        fields.insert(0, ('species', 'published'))
-        return fields
+        return portrait_fieldorder(super().get_fields(request, obj, **kwargs))
 
 
 @admin.register(FaunaportraitAudioFile)
@@ -796,7 +805,7 @@ class FaunaportraitAdmin(admin.ModelAdmin):
     list_filter = ('published', 'language', PortraitIsSynonymFilter)
     inlines = [
         UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline,
-        DescMetaInline, FunFactMetaInline, InTheCityMetaInline
+        DescMetaInline, InTheCityMetaInline, FunFactMetaInline
     ]
     ordering = ["species__sciname"]
     autocomplete_fields = ['species', 'faunaportrait_audio_file']
@@ -806,11 +815,7 @@ class FaunaportraitAdmin(admin.ModelAdmin):
     actions = [move_portrait_to_accepted, copy_portrait_to_eng]
 
     def get_fields(self, request, obj=None, **kwargs):
-        fields = super().get_fields(request, obj, **kwargs)
-        fields.remove('published')
-        fields.remove('species')
-        fields.insert(0, ('species', 'published'))
-        return fields
+        return portrait_fieldorder(super().get_fields(request, obj, **kwargs))
 
 
 @admin.register(Group)

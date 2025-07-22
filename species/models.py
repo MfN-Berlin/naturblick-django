@@ -269,6 +269,7 @@ class Portrait(models.Model):
     city_habitat = models.TextField()
     human_interaction = models.TextField(blank=True, null=True)
     published = models.BooleanField(default=False)
+    ecosystem_role = models.TextField(blank=True, null=True)
 
     short_description.help_text = "Kurze Beschreibung für den schnellen Überblick draußen."
     city_habitat.help_text = "Beschreibung Lebensraum in der Stadt, besondere Anpassungen an die Stadt."
