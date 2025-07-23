@@ -821,8 +821,20 @@ class FaunaportraitAdmin(admin.ModelAdmin):
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     radio_fields = {"nature": admin.VERTICAL}
-    list_display = ['name', 'nature']
+    list_display = ['name', 'nature', 'admin_thumbnail', 'svg_preview']
     list_filter = ['nature']
+    fields = ['name', 'nature', 'image', 'admin_thumbnail', 'svg', 'svg_preview']
+    readonly_fields = ['admin_thumbnail', 'svg_preview']
+
+    admin_thumbnail = AdminThumbnail(image_field=cached_thumb)
+    admin_thumbnail.short_description = 'Image'
+
+    def svg_preview(self, obj):
+        if obj.svg and obj.svg.name.endswith('.svg'):
+            return format_html('<img src="{}" alt="icon" height="50" width="50" />', obj.svg.url)
+        return "N/A"
+
+    svg_preview.short_description = "SVG"
 
 
 class HasSpecies(YesNoFilter):

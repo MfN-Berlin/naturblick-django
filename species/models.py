@@ -36,6 +36,8 @@ class Tag(models.Model):
 class Group(models.Model):
     name = models.CharField(max_length=255, unique=True)
     nature = models.CharField(max_length=5, choices=NATURE_CHOICES, null=True)
+    image = models.ImageField(upload_to="group_images", max_length=255, null=True, blank=True)
+    svg = models.FileField(upload_to="group_svg", max_length=255, null=True, blank=True)
 
     nature.short_description = "Nature"
 
