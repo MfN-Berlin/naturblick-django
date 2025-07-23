@@ -62,6 +62,9 @@ GOOD_TO_KNOW_CHOICES = [
     ('originofname', 'Origin of name'),
     ('origin', 'Origin'),
     ('toxicityorusage', 'Toxicity or usage'),
+    ('blossom','Blossom'),
+    ('lifeform','Lifeform'),
+    ('distribution','Distribution'),
     ('other', 'Other'),
 ]
 
