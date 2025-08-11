@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('species', '0006_portrait_ecosystem_role'),
+        ('species', '0007_alter_goodtoknow_type'),
     ]
 
     operations = [
