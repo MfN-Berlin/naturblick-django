@@ -31,6 +31,8 @@ class AdminThumbnailSpec(ImageSpec):
 
 
 def cached_thumb(instance):
+    if not instance.image:
+        return
     cached = ImageCacheFile(AdminThumbnailSpec(instance.image))
     cached.generate()
     return cached
