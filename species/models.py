@@ -1,9 +1,6 @@
 import logging
-import os
 
 import requests
-from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import ForeignKey, URLField, CASCADE
 from django.db.models.constraints import UniqueConstraint
@@ -13,7 +10,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
 
 from .choices import *
-from .validators import min_max, validate_mp3
+from .validators import *
 
 LARGE_WIDTH = 1200
 MEDIUM_WIDTH = 800
@@ -35,9 +32,10 @@ class Tag(models.Model):
 
 class Group(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    nature = models.CharField(max_length=5, choices=NATURE_CHOICES, null=True)
-    image = models.ImageField(upload_to="group_images", max_length=255, null=True, blank=True)
-    svg = models.FileField(upload_to="group_svg", max_length=255, null=True, blank=True)
+    nature = models.CharField(max_length=5, choices=NATURE_CHOICES, null=True, blank=True)
+    image = models.ImageField(upload_to="group_images", max_length=255, null=True, blank=True,
+                              validators=[validate_group_image, validate_png])
+    svg = models.FileField(upload_to="group_svg", max_length=255, null=True, blank=True, validators=[validate_svg])
 
     nature.short_description = "Nature"
 
