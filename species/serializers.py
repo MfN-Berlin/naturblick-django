@@ -142,10 +142,11 @@ class SimilarSpeciesSerilizer(serializers.ModelSerializer):
 
 class GoodtoknowSerilizer(serializers.ModelSerializer):
     text = serializers.CharField(source="fact")
+    type = serializers.CharField()
 
     class Meta:
         model = GoodToKnow
-        fields = ['text']
+        fields = ['text', 'type']
 
 
 class UnambigousFeatureSerilizer(serializers.ModelSerializer):
