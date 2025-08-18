@@ -1,15 +1,16 @@
-from django.core.files.base import ContentFile
-from html.parser import HTMLParser
 import json
 import logging
 import re
 import sqlite3
 import tempfile
+import uuid
 from dataclasses import dataclass, field
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
-import uuid
+
 import requests
+from django.core.files.base import ContentFile
 
 from species.models import Species, SpeciesName, SourcesTranslation, SourcesImprint, Faunaportrait, Floraportrait
 from .utils_characters import insert_characters
@@ -147,7 +148,16 @@ def insert_unambiguous_feature(sqlite_cursor, portrait_id, portrait):
 
 def insert_good_to_know(sqlite_cursor, portrait_id, portrait):
     if hasattr(portrait, 'goodtoknow_set'):
-        data = list(map(lambda gtk: (portrait_id, gtk.fact),
+        is_de = portrait.language == lang_to_int('de')
+
+        labels = {
+            "blossom": "Blüte: " if is_de else "Blossom: ",
+            "usage": "Nutzung: " if is_de else "Usage: ",
+            "distribution": "Verbreitung: " if is_de else "Distribution: ",
+            "lifeform": "Lebensform: " if is_de else "Lifeform: "
+        }
+
+        data = list(map(lambda gtk: (portrait_id, labels.get(gtk.type, "") + gtk.fact),
                         portrait.goodtoknow_set.all()))
         sqlite_cursor.executemany("INSERT INTO good_to_know VALUES (?, ?);", data)
 
@@ -214,8 +224,8 @@ def create_sqlite_file():
 
     create_tables(sqlite_cursor)
 
-    portraits = (list(Faunaportrait.objects.filter(published=True, language__in=['de','en']))
-                 + list(Floraportrait.objects.filter(published=True, language__in=['de','en'])))
+    portraits = (list(Faunaportrait.objects.filter(published=True, language__in=['de', 'en']))
+                 + list(Floraportrait.objects.filter(published=True, language__in=['de', 'en'])))
 
     insert_species(sqlite_cursor)
     insert_portrait_image_and_sizes(sqlite_cursor, portraits)
@@ -233,7 +243,8 @@ def create_sqlite_file():
 
 def get_synonnyms(language, species_id):
     synonyms = ", ".join(
-        SpeciesName.objects.filter(species=species_id, language=language).order_by('name').values_list("name", flat=True))
+        SpeciesName.objects.filter(species=species_id, language=language).order_by('name').values_list("name",
+                                                                                                       flat=True))
     return allow_break_on_hyphen(synonyms) or None
 
 
@@ -337,6 +348,7 @@ def create_tables(sqlite_cursor):
         "`version` INTEGER NOT NULL, PRIMARY KEY(`rowid`));"
     )
 
+
 class ArtistLinkParser(HTMLParser):
     def __init__(self):
         super().__init__()
@@ -372,6 +384,7 @@ class ArtistLinkParser(HTMLParser):
         else:
             return self.last_data
 
+
 @dataclass
 class ImageMetadata:
     license: str
@@ -380,28 +393,35 @@ class ImageMetadata:
     image_url: str
     image: ContentFile
 
+
 def get_metadata(url):
     path = urlparse(url).path
     wiki_file = path[path.index("File"):]
     image_filename = str(uuid.uuid4()) + wiki_file[wiki_file.index("."):].lower()
-    response = requests.get(f"https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&format=json&iiprop=extmetadata&iilimit=1&titles={wiki_file}")
+    response = requests.get(
+        f"https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&format=json&iiprop=extmetadata&iilimit=1&titles={wiki_file}")
     response.raise_for_status()
     metadata = list(response.json()['query']['pages'].values())[0]['imageinfo'][0]['extmetadata']
     raw_license = metadata['License']['value']
     license_version = re.search(r"\d.\d", metadata['License']['value'])
     if raw_license.startswith("cc") and license_version:
-        license = (raw_license[:license_version.start() - 1].replace("-", " ", 1) + raw_license[license_version.start() - 1:].replace("-", " ")).upper()
+        license = (raw_license[:license_version.start() - 1].replace("-", " ", 1) + raw_license[
+                                                                                    license_version.start() - 1:].replace(
+            "-", " ")).upper()
     else:
         license = raw_license.replace("-", " ", 1).upper()
     parser = ArtistLinkParser()
     parser.feed(metadata['Artist']['value'])
 
-    file_meta_response = requests.get(f"https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&format=json&iiprop=url&iilimit=1&titles={wiki_file}")
+    file_meta_response = requests.get(
+        f"https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&format=json&iiprop=url&iilimit=1&titles={wiki_file}")
     file_meta_response.raise_for_status()
 
     file_url = list(file_meta_response.json()['query']['pages'].values())[0]['imageinfo'][0]['url']
-    
-    file_response = requests.get(file_url, headers={'User-Agent': 'Naturblick-Django (https://naturblick.museumfuernaturkunde.berlin/; naturblick@mfn.berlin)'})
+
+    file_response = requests.get(file_url, headers={
+        'User-Agent': 'Naturblick-Django (https://naturblick.museumfuernaturkunde.berlin/; naturblick@mfn.berlin)'})
     file_response.raise_for_status()
 
-    return ImageMetadata(license, parser.author, parser.href, url, ContentFile(file_response.content, name = image_filename))
+    return ImageMetadata(license, parser.author, parser.href, url,
+                         ContentFile(file_response.content, name=image_filename))
