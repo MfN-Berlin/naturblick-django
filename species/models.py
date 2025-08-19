@@ -8,6 +8,7 @@ from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
+from django.db.models import Q
 
 from .choices import *
 from .validators import *
@@ -33,11 +34,47 @@ class Tag(models.Model):
 class Group(models.Model):
     name = models.CharField(max_length=255, unique=True)
     nature = models.CharField(max_length=5, choices=NATURE_CHOICES, null=True, blank=True)
+    gername = models.CharField(max_length=255, unique=True, null=True, blank=True)
+    engname = models.CharField(max_length=255, unique=True, null=True, blank=True)
+    has_portraits = models.BooleanField(default=False)
+    is_fieldbookfilter = models.BooleanField(default=False)
+    has_characters = models.BooleanField(default=False)
     image = models.ImageField(upload_to="group_images", max_length=255, null=True, blank=True,
                               validators=[validate_group_image, validate_png])
     svg = models.FileField(upload_to="group_svg", max_length=255, null=True, blank=True, validators=[validate_svg])
 
     nature.short_description = "Nature"
+
+    def clean(self):
+        if self.has_portraits:
+            if not self.gername:
+                raise ValidationError({"gername": "Must set gername if has_portrait."})
+            if not self.engname:
+                raise ValidationError({"engname": "Must set engname if has_portrait."})
+            if not self.image:
+                raise ValidationError({"image": "Must have image if has_portrait."})
+            if not self.nature:
+                raise ValidationError({"nature": "Must have nature if has_portrait."})
+            elif not Portrait.objects.filter(Q(published=True) & Q(species__group__name=self.name)).exists():
+                raise ValidationError({"has_portraits": "must have published portraits"})
+
+        if self.has_characters:
+            if not self.gername:
+                raise ValidationError({"gername": "Must set gername if has_characters."})
+            if not self.engname:
+                raise ValidationError({"engname": "Must set engname if has_characters."})
+            if not self.image:
+                raise ValidationError({"image": "Must have image if has_characters."})
+
+        if self.is_fieldbookfilter:
+            if not self.gername:
+                raise ValidationError({"gername": "Must set gername if is_fieldbookfilter."})
+            if not self.engname:
+                raise ValidationError({"engname": "Must set engname if is_fieldbookfilter."})
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

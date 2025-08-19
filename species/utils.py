@@ -216,9 +216,10 @@ def insert_timezone_polygon(sqlite_cursor):
 
 
 def insert_groups(sqlite_cursor):
-    data = list(map(lambda g: (g.name, g.nature, g.image.url if g.image else None, g.svg.url if g.svg else None),
-                    Group.objects.all()))
-    sqlite_cursor.executemany("INSERT INTO groups VALUES (?, ?, ?, ?);", data)
+    data = list(
+        map(lambda g: (g.name, g.nature, g.gername, g.engname, g.has_portraits, g.is_fieldbookfilter, g.has_characters),
+            Group.objects.all()))
+    sqlite_cursor.executemany("INSERT INTO groups VALUES (?, ?, ?, ?, ?, ?, ?);", data)
 
 
 def create_sqlite_file():
@@ -304,7 +305,7 @@ def map_species():
 
 def create_tables(sqlite_cursor):
     sqlite_cursor.execute(
-        "CREATE TABLE `groups` (`name` TEXT NOT NULL, `nature` TEXT, `image` TEXT, `svg` TEXT, PRIMARY KEY(`name`));"
+        "CREATE TABLE `groups` (`name` TEXT NOT NULL, `nature` TEXT, `gername` TEXT, `engname` TEXT, `has_portraits` INTEGER NOT NULL, `is_fieldbookfilter` INTEGER NOT NULL, `has_characters` INTEGER NOT NULL, PRIMARY KEY(`name`));"
     )
     sqlite_cursor.execute(
         "CREATE TABLE `species` (`rowid` INTEGER NOT NULL, `group_id` TEXT NOT NULL, `sciname` TEXT NOT NULL, `gername` TEXT, `engname` TEXT, `wikipedia` TEXT, `image_url` TEXT, `female_image_url` TEXT, `gersynonym` TEXT, `engsynonym` TEXT, `red_list_germany` TEXT, `iucn_category` TEXT, `old_species_id` TEXT NOT NULL, `gbifusagekey` INTEGER, `accepted` INTEGER, `gersearchfield` TEXT, `engsearchfield` TEXT, PRIMARY KEY(`rowid`), FOREIGN KEY(`group_id`) REFERENCES `groups`(`name`));"

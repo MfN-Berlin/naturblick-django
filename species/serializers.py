@@ -4,7 +4,7 @@ from image_cropping.utils import get_backend
 from rest_framework import serializers
 
 from .models import Species, SpeciesName, Tag, SimilarSpecies, GoodToKnow, UnambigousFeature, Source, \
-    Faunaportrait, Floraportrait, PlantnetPowoidMapping
+    Faunaportrait, Floraportrait, PlantnetPowoidMapping, Group
 
 
 def avatar_crop_url(avatar):
@@ -96,6 +96,7 @@ class SpeciesSerializer(serializers.ModelSerializer):
             return os.path.basename(obj.prefetched_audiofile[0].audio_file.name)
         else:
             return None
+
 
 class UrlField(serializers.Field):
     def to_representation(self, obj):
@@ -253,11 +254,13 @@ class FaunaPortraitSerializer(PortraitSerializer):
         model = Faunaportrait
         fields = PortraitSerializer.Meta.fields + ['male_description', 'female_description', 'juvenile_description',
                                                    'audio_title', 'audio_license', 'audio_filename', 'is_floraportrait']
+
     def create_audio_filename(self, obj):
         try:
             return os.path.basename(obj.faunaportrait_audio_file.audio_file.name)
         except AttributeError:
             return None
+
 
 class FloraportraitSerializer(PortraitSerializer):
     is_floraportrait = serializers.BooleanField(default=True, read_only=True)
@@ -289,3 +292,9 @@ class PlantnetPowoidMappingSeralizer(serializers.ModelSerializer):
     class Meta:
         model = PlantnetPowoidMapping
         fields = ['plantnetpowoid', 'species_plantnetpowoid']
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ["id", "name", "nature", "image", "svg"]
