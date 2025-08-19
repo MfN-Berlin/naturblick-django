@@ -216,8 +216,10 @@ def insert_timezone_polygon(sqlite_cursor):
 
 
 def insert_groups(sqlite_cursor):
-    data = list(map(lambda g: (g.name, g.nature, g.image.url if g.image else None, g.svg.url if g.svg else None), Group.objects.all()))
+    data = list(map(lambda g: (g.name, g.nature, g.image.url if g.image else None, g.svg.url if g.svg else None),
+                    Group.objects.all()))
     sqlite_cursor.executemany("INSERT INTO groups VALUES (?, ?, ?, ?);", data)
+
 
 def create_sqlite_file():
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".sqlite3")
@@ -228,17 +230,17 @@ def create_sqlite_file():
 
     create_tables(sqlite_cursor)
 
-    #portraits = (list(Faunaportrait.objects.filter(published=True, language__in=['de', 'en']))
-    #             + list(Floraportrait.objects.filter(published=True, language__in=['de', 'en'])))
+    portraits = (list(Faunaportrait.objects.filter(published=True, language__in=['de', 'en']))
+                 + list(Floraportrait.objects.filter(published=True, language__in=['de', 'en'])))
 
     insert_groups(sqlite_cursor)
     insert_species(sqlite_cursor)
-    # insert_portrait_image_and_sizes(sqlite_cursor, portraits)
-    # insert_sources_translations(sqlite_cursor)
-    # insert_sources_imprint(sqlite_cursor)
-    # insert_current_version(sqlite_cursor)
-    # insert_timezone_polygon(sqlite_cursor)
-    # insert_characters(sqlite_cursor)
+    insert_portrait_image_and_sizes(sqlite_cursor, portraits)
+    insert_sources_translations(sqlite_cursor)
+    insert_sources_imprint(sqlite_cursor)
+    insert_current_version(sqlite_cursor)
+    insert_timezone_polygon(sqlite_cursor)
+    insert_characters(sqlite_cursor)
 
     sqlite_conn.commit()
     sqlite_conn.close()
