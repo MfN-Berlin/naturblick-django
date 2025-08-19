@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 import requests
 from django.core.files.base import ContentFile
 
-from species.models import Species, SpeciesName, SourcesTranslation, SourcesImprint, Faunaportrait, Floraportrait
+from species.models import Species, SpeciesName, SourcesTranslation, SourcesImprint, Faunaportrait, Floraportrait, Group
 from .utils_characters import insert_characters
 
 logger = logging.getLogger("django")
@@ -215,6 +215,10 @@ def insert_timezone_polygon(sqlite_cursor):
                     polygon_id += 1
 
 
+def insert_groups(sqlite_cursor):
+    data = list(map(lambda g: (g.name, g.nature, g.image.url if g.image else None, g.svg.url if g.svg else None), Group.objects.all()))
+    sqlite_cursor.executemany("INSERT INTO groups VALUES (?, ?, ?, ?);", data)
+
 def create_sqlite_file():
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".sqlite3")
     temp_file.close()
@@ -224,16 +228,17 @@ def create_sqlite_file():
 
     create_tables(sqlite_cursor)
 
-    portraits = (list(Faunaportrait.objects.filter(published=True, language__in=['de', 'en']))
-                 + list(Floraportrait.objects.filter(published=True, language__in=['de', 'en'])))
+    #portraits = (list(Faunaportrait.objects.filter(published=True, language__in=['de', 'en']))
+    #             + list(Floraportrait.objects.filter(published=True, language__in=['de', 'en'])))
 
+    insert_groups(sqlite_cursor)
     insert_species(sqlite_cursor)
-    insert_portrait_image_and_sizes(sqlite_cursor, portraits)
-    insert_sources_translations(sqlite_cursor)
-    insert_sources_imprint(sqlite_cursor)
-    insert_current_version(sqlite_cursor)
-    insert_timezone_polygon(sqlite_cursor)
-    insert_characters(sqlite_cursor)
+    # insert_portrait_image_and_sizes(sqlite_cursor, portraits)
+    # insert_sources_translations(sqlite_cursor)
+    # insert_sources_imprint(sqlite_cursor)
+    # insert_current_version(sqlite_cursor)
+    # insert_timezone_polygon(sqlite_cursor)
+    # insert_characters(sqlite_cursor)
 
     sqlite_conn.commit()
     sqlite_conn.close()
@@ -297,7 +302,10 @@ def map_species():
 
 def create_tables(sqlite_cursor):
     sqlite_cursor.execute(
-        "CREATE TABLE `species` (`rowid` INTEGER NOT NULL, `group_id` TEXT NOT NULL, `sciname` TEXT NOT NULL, `gername` TEXT, `engname` TEXT, `wikipedia` TEXT, `image_url` TEXT, `female_image_url` TEXT, `gersynonym` TEXT, `engsynonym` TEXT, `red_list_germany` TEXT, `iucn_category` TEXT, `old_species_id` TEXT NOT NULL, `gbifusagekey` INTEGER, `accepted` INTEGER, `gersearchfield` TEXT, `engsearchfield` TEXT, PRIMARY KEY(`rowid`));"
+        "CREATE TABLE `groups` (`name` TEXT NOT NULL, `nature` TEXT, `image` TEXT, `svg` TEXT, PRIMARY KEY(`name`));"
+    )
+    sqlite_cursor.execute(
+        "CREATE TABLE `species` (`rowid` INTEGER NOT NULL, `group_id` TEXT NOT NULL, `sciname` TEXT NOT NULL, `gername` TEXT, `engname` TEXT, `wikipedia` TEXT, `image_url` TEXT, `female_image_url` TEXT, `gersynonym` TEXT, `engsynonym` TEXT, `red_list_germany` TEXT, `iucn_category` TEXT, `old_species_id` TEXT NOT NULL, `gbifusagekey` INTEGER, `accepted` INTEGER, `gersearchfield` TEXT, `engsearchfield` TEXT, PRIMARY KEY(`rowid`), FOREIGN KEY(`group_id`) REFERENCES `groups`(`name`));"
     )
     sqlite_cursor.execute("CREATE INDEX idx_species_gername ON species(gername);")
     sqlite_cursor.execute("CREATE INDEX idx_species_engname ON species(engname);")
