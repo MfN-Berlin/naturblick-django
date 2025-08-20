@@ -36,3 +36,4 @@ def validate_group_image(image):
     height = image.height
     if width != 170 or height != 170:
         raise ValidationError('Group images must be 170x170')
+    

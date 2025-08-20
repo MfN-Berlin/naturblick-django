@@ -825,7 +825,7 @@ class GroupAdmin(admin.ModelAdmin):
     radio_fields = {"nature": admin.VERTICAL}
     list_display = ['name', 'nature', 'admin_thumbnail', 'svg_preview']
     list_filter = ['nature']
-    fields = ['name', 'nature', 'image', 'admin_thumbnail', 'svg', 'svg_preview']
+    fields = ['name', 'nature', 'image', 'admin_thumbnail', 'svg', 'svg_preview', 'gername', 'engname', 'has_portraits', 'is_fieldbookfilter', 'has_characters']
     readonly_fields = ['admin_thumbnail', 'svg_preview']
 
     admin_thumbnail = AdminThumbnail(image_field=cached_thumb)

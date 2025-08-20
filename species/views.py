@@ -2,11 +2,9 @@ import json
 import os
 import subprocess
 import tempfile
-from http.client import NotConnected
 from pathlib import Path
 
 from django.core import management
-from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import connection
 from django.db.models import Prefetch
 from django.db.models import Q
@@ -15,24 +13,25 @@ from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import NotFound, MethodNotAllowed
 from rest_framework.response import Response
-from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
+from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from naturblick import settings
 from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait, GoodToKnow, Source, SimilarSpecies, \
-    UnambigousFeature, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait
+    UnambigousFeature, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, Group
 from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializer, \
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
-    FunfactMetaSerializer, InthecityMetaSerializer, PlantnetPowoidMappingSeralizer
+    FunfactMetaSerializer, InthecityMetaSerializer, PlantnetPowoidMappingSeralizer, GroupSerializer
 from .utils import create_sqlite_file
+
 
 def get_lang_queryparam(request):
     return request.query_params.get('lang') or 'de'
 
 
-
 def is_data_valid():
     return not Portrait.objects.filter(species__accepted_species__isnull=False).exists()
+
 
 # returns sqlite database used by android/ios
 def app_content_db(request):
@@ -58,6 +57,7 @@ class AppContentCharacterValue(APIView):
         with open(character_values_file, 'r') as f:
             data = json.load(f)
         return Response(data)
+
 
 def filter_species_by_query(species_qs, query, lang):
     if not query:
@@ -340,6 +340,11 @@ def species_list(request):
         serializer = SpeciesSerializer(species_qs, many=True)
         return Response(serializer.data)
     return Response({"error": "Species ID is required"}, status=HTTP_400_BAD_REQUEST)
+
+
+class GroupsList(generics.ListAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
 
 
 class SpeciesList(generics.ListAPIView):
