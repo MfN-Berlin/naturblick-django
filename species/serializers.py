@@ -297,4 +297,4 @@ class PlantnetPowoidMappingSeralizer(serializers.ModelSerializer):
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ["id", "name", "nature", "image", "svg"]
+        fields = ["name", "image", "svg"]
