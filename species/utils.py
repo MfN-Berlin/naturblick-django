@@ -406,12 +406,13 @@ class ImageMetadata:
 
 
 def get_metadata(url):
+    user_agent = 'Naturblick-Django (https://naturblick.museumfuernaturkunde.berlin/; naturblick@mfn.berlin)'
     path = urlparse(url).path
     wiki_file = path[path.index("File"):]
     image_filename = str(uuid.uuid4()) + wiki_file[wiki_file.index("."):].lower()
     response = requests.get(
         f"https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&format=json&iiprop=extmetadata&iilimit=1&titles={wiki_file}",
-        headers={'User-Agent': 'Naturblick-Django (https://naturblick.museumfuernaturkunde.berlin/; naturblick@mfn.berlin)'})
+        headers={'User-Agent': user_agent})
     response.raise_for_status()
     metadata = list(response.json()['query']['pages'].values())[0]['imageinfo'][0]['extmetadata']
     raw_license = metadata['License']['value']
@@ -427,13 +428,13 @@ def get_metadata(url):
 
     file_meta_response = requests.get(
         f"https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&format=json&iiprop=url&iilimit=1&titles={wiki_file}",
-        headers={'User-Agent': 'Naturblick-Django (https://naturblick.museumfuernaturkunde.berlin/; naturblick@mfn.berlin)'})
+        headers={'User-Agent': user_agent})
     file_meta_response.raise_for_status()
 
     file_url = list(file_meta_response.json()['query']['pages'].values())[0]['imageinfo'][0]['url']
 
     file_response = requests.get(file_url, headers={
-        'User-Agent': 'Naturblick-Django (https://naturblick.museumfuernaturkunde.berlin/; naturblick@mfn.berlin)'})
+        'User-Agent': user_agent})
     file_response.raise_for_status()
 
     return ImageMetadata(license, parser.author, parser.href, url,
