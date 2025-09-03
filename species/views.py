@@ -23,6 +23,7 @@ from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializ
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
     FunfactMetaSerializer, InthecityMetaSerializer, PlantnetPowoidMappingSeralizer, GroupSerializer
 from .utils import create_sqlite_file
+from .leicht_db import create_leicht_db
 
 
 def get_lang_queryparam(request):
@@ -48,6 +49,17 @@ def app_content_db(request):
 
     return response
 
+# returns sqlite database used by naturblick leicht android/ios
+def app_content_leicht_db(request):
+    # generates small, medium, large version of imagekit Spec-Fields
+    management.call_command("generateimages")
+
+    if (not is_data_valid()):
+        raise RuntimeError('There are artportraits connected to a synonym')
+
+    sqlite_db = create_leicht_db()
+
+    return FileResponse(open(sqlite_db, "rb"), as_attachment=True, filename='species-db.sqlite3')
 
 class AppContentCharacterValue(APIView):
     def get(self, request):
