@@ -11,15 +11,18 @@ def insert_current_version(sqlite_cursor):
     else:
         logger.error(f"Playback not available: response [ {response.text} ]")
 
+def leicht_species():
+    return Species.objects.filter(
+        portrait__language__exact='dels',
+        avatar__isnull=False,
+        gername__isnull=False
+    )
+
 def insert_species(sqlite_cursor):
         sqlite_cursor.executemany(
             "INSERT INTO species VALUES (?, ?, ?);",
             ((species.id, species.gername, species.avatar.image.url)
-             for species in Species.objects.filter(
-                     portrait__language__exact='dels',
-                     avatar__isnull=False,
-                     gername__isnull=False
-             ))
+             for species in leicht_species())
         )
 
 def create_tables(sqlite_cursor):
@@ -46,5 +49,4 @@ def create_leicht_db():
     sqlite_conn.close()
 
     return temp_file.name
-
 

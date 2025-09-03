@@ -1,9 +1,9 @@
 from django.urls import path
 from django.urls import re_path
 
-from .views import app_content_db, app_content_leicht_db, TagsList, PortraitDetail, \
-    SimpleTagsList, SpeciesList, AppContentCharacterValue, species, specgram, \
-    species_list, PlantnetPowoidMappingList, GroupsList
+from .views import app_content_db, app_content_leicht_db, app_content_leicht_image_list, \
+    TagsList, PortraitDetail, SimpleTagsList, SpeciesList, AppContentCharacterValue, \
+    species, specgram, species_list, PlantnetPowoidMappingList, GroupsList
 
 urlpatterns = [
     path('species/filter/', SpeciesList.as_view()),
@@ -14,6 +14,7 @@ urlpatterns = [
     path('tags/filter/', TagsList.as_view()),
     path("app-content/db/", app_content_db, name="app-content-db"),
     path("app-content/leicht-db/", app_content_leicht_db, name="app-content-leicht-db"),
+    path("app-content/leicht-image-list/", app_content_leicht_image_list, name="app-content-leicht-image-list"),
     path("app-content/character-values/", AppContentCharacterValue.as_view()),
     path("tags/", SimpleTagsList.as_view()),
     path("plantnet-species-mappings/", PlantnetPowoidMappingList.as_view()),
