@@ -1,6 +1,7 @@
 import sqlite3
 import tempfile
 import requests
+from species.models import Species
 
 def insert_current_version(sqlite_cursor):
     url = "http://playback:9000/speciesdbversion"
@@ -10,10 +11,24 @@ def insert_current_version(sqlite_cursor):
     else:
         logger.error(f"Playback not available: response [ {response.text} ]")
 
+def insert_species(sqlite_cursor):
+        sqlite_cursor.executemany(
+            "INSERT INTO species VALUES (?, ?, ?);",
+            ((species.id, species.gername, species.avatar.image.url)
+             for species in Species.objects.filter(
+                     portrait__language__exact='dels',
+                     avatar__isnull=False,
+                     gername__isnull=False
+             ))
+        )
+
 def create_tables(sqlite_cursor):
     sqlite_cursor.execute(
         "CREATE TABLE IF NOT EXISTS `species_current_version` (`rowid` INTEGER NOT NULL," +
         "`version` INTEGER NOT NULL, PRIMARY KEY(`rowid`));"
+    )
+    sqlite_cursor.execute(
+        """CREATE TABLE IF NOT EXISTS `species` (`rowid` INTEGER NOT NULL, `name` TEXT NOT NULL, `image_url` TEXT NOT NULL, PRIMARY KEY(`rowid`));"""
     )
 
 def create_leicht_db():
@@ -26,7 +41,7 @@ def create_leicht_db():
     create_tables(sqlite_cursor)
 
     insert_current_version(sqlite_cursor)
-
+    insert_species(sqlite_cursor)
     sqlite_conn.commit()
     sqlite_conn.close()
 
