@@ -181,7 +181,7 @@ def insert_current_version(sqlite_cursor):
     if response.status_code == 200:
         sqlite_cursor.execute("INSERT INTO species_current_version VALUES (?, ?);", (1, response.json()["version"]))
     else:
-        logger.error(f"Playback not available: response [ {response.text} ]")
+        raise Exception(f"Playback not available: response [ {response.text} ]")
 
 
 def insert_timezone_polygon(sqlite_cursor):
