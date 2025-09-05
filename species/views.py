@@ -1,3 +1,4 @@
+import csv
 import json
 import os
 import subprocess
@@ -8,7 +9,7 @@ from django.core import management
 from django.db import connection
 from django.db.models import Prefetch
 from django.db.models import Q
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import NotFound, MethodNotAllowed
@@ -23,6 +24,7 @@ from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializ
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
     FunfactMetaSerializer, InthecityMetaSerializer, PlantnetPowoidMappingSeralizer, GroupSerializer
 from .utils import create_sqlite_file
+from .leicht_db import create_leicht_db, leicht_species
 
 
 def get_lang_queryparam(request):
@@ -46,6 +48,30 @@ def app_content_db(request):
     response = FileResponse(open(sqlite_db, "rb"), as_attachment=True)
     response["Content-Disposition"] = f'attachment; filename="species-db.sqlite3"'
 
+    return response
+
+# returns sqlite database used by naturblick leicht android/ios
+def app_content_leicht_db(request):
+    # generates small, medium, large version of imagekit Spec-Fields
+    management.call_command("generateimages")
+
+    if (not is_data_valid()):
+        raise RuntimeError('There are artportraits connected to a synonym')
+
+    sqlite_db = create_leicht_db()
+
+    return FileResponse(open(sqlite_db, "rb"), as_attachment=True, filename='species-db.sqlite3')
+
+# return CSV image list for naturblick leicht
+def app_content_leicht_image_list(request):
+    response = HttpResponse(
+        content_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="leicht-mage-list.csv"'},
+    )
+
+    writer = csv.writer(response)
+    for species in leicht_species():
+        writer.writerow((species.avatar.image.url, ))
     return response
 
 
