@@ -148,7 +148,7 @@ def insert_unambiguous_feature(sqlite_cursor, portrait_id, portrait):
 
 def insert_good_to_know(sqlite_cursor, portrait_id, portrait):
     if hasattr(portrait, 'goodtoknow_set'):
-        is_de = portrait.language == lang_to_int('de')
+        is_de = portrait.language == 'de'
 
         labels = {
             "blossom": "Blüte: " if is_de else "Blossom: ",
