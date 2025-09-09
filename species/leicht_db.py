@@ -1,5 +1,7 @@
 import sqlite3
 import tempfile
+from pathlib import Path
+
 import requests
 from species.models import Species
 
@@ -21,7 +23,7 @@ def leicht_species():
 def insert_species(sqlite_cursor):
         sqlite_cursor.executemany(
             "INSERT INTO species VALUES (?, ?, ?);",
-            ((species.id, species.gername, species.avatar.image.url)
+            ((species.id, species.gername, Path(species.avatar.image.url).name)
              for species in leicht_species())
         )
 
