@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
+from image_cropping.utils import get_backend
 
 import requests
 from django.core.files.base import ContentFile
@@ -289,13 +290,24 @@ def insert_species(sqlite_cursor):
     sqlite_cursor.execute("ALTER TABLE species DROP COLUMN gbifusagekey;")
 
 
+def avatar_crop(avatar):
+    get_backend().get_thumbnail_url(
+        avatar.image,
+        {
+            'size': (400, 400),
+            'box': avatar.cropping,
+            'crop': True,
+            'detail': True,
+        }
+    )
+
 def map_species():
     return lambda s: (
         s.id, s.group.name, allow_break_on_hyphen(s.sciname), allow_break_on_hyphen(s.gername),
         allow_break_on_hyphen(s.engname),
         s.wikipedia,
-        s.avatar.image.url if s.avatar else None,
-        s.female_avatar.image.url if s.female_avatar else None,
+        avatar_crop(s.avatar) if s.avatar else None,
+        avatar_crop(s.female_avatar) if s.female_avatar else None,
         get_synonnyms('de', s.id),
         get_synonnyms('en', s.id), s.red_list_germany, s.iucncategory, s.speciesid, s.gbifusagekey,
         s.accepted_species.id if s.accepted_species else None,
