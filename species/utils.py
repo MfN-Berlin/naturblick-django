@@ -291,7 +291,7 @@ def insert_species(sqlite_cursor):
 
 
 def avatar_crop(avatar):
-    get_backend().get_thumbnail_url(
+    return get_backend().get_thumbnail_url(
         avatar.image,
         {
             'size': (400, 400),
