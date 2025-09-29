@@ -71,7 +71,7 @@ def app_content_leicht_image_list(request):
 
     writer = csv.writer(response)
     for species in leicht_species():
-        writer.writerow((species.avatar.image.url, ))
+        writer.writerow((species.avatar.image.url, species.id))
     return response
 
 
