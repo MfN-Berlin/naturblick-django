@@ -263,7 +263,7 @@ def allow_break_on_hyphen(s):
 
 def insert_species(sqlite_cursor):
     data = list(map(map_species(), Species.objects.all()))
-    sqlite_cursor.executemany("INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
+    sqlite_cursor.executemany("INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
 
     # could be done on insert level
     sqlite_cursor.execute("""
@@ -307,6 +307,7 @@ def map_species():
         allow_break_on_hyphen(s.engname),
         s.wikipedia,
         avatar_crop(s.avatar) if s.avatar else None,
+        s.avatar.image.url if s.avatar else None,
         avatar_crop(s.female_avatar) if s.female_avatar else None,
         get_synonnyms('de', s.id),
         get_synonnyms('en', s.id), s.red_list_germany, s.iucncategory, s.speciesid, s.gbifusagekey,
@@ -320,7 +321,7 @@ def create_tables(sqlite_cursor):
         "CREATE TABLE `groups` (`name` TEXT NOT NULL, `nature` TEXT, `gername` TEXT, `engname` TEXT, `has_portraits` INTEGER NOT NULL, `is_fieldbookfilter` INTEGER NOT NULL, `has_characters` INTEGER NOT NULL, PRIMARY KEY(`name`));"
     )
     sqlite_cursor.execute(
-        "CREATE TABLE `species` (`rowid` INTEGER NOT NULL, `group_id` TEXT NOT NULL, `sciname` TEXT NOT NULL, `gername` TEXT, `engname` TEXT, `wikipedia` TEXT, `image_url` TEXT, `female_image_url` TEXT, `gersynonym` TEXT, `engsynonym` TEXT, `red_list_germany` TEXT, `iucn_category` TEXT, `old_species_id` TEXT NOT NULL, `gbifusagekey` INTEGER, `accepted` INTEGER, `gersearchfield` TEXT, `engsearchfield` TEXT, PRIMARY KEY(`rowid`), FOREIGN KEY(`group_id`) REFERENCES `groups`(`name`));"
+        "CREATE TABLE `species` (`rowid` INTEGER NOT NULL, `group_id` TEXT NOT NULL, `sciname` TEXT NOT NULL, `gername` TEXT, `engname` TEXT, `wikipedia` TEXT, `image_url` TEXT, `image_url_orig` TEXT, `female_image_url` TEXT, `gersynonym` TEXT, `engsynonym` TEXT, `red_list_germany` TEXT, `iucn_category` TEXT, `old_species_id` TEXT NOT NULL, `gbifusagekey` INTEGER, `accepted` INTEGER, `gersearchfield` TEXT, `engsearchfield` TEXT, PRIMARY KEY(`rowid`), FOREIGN KEY(`group_id`) REFERENCES `groups`(`name`));"
     )
     sqlite_cursor.execute("CREATE INDEX idx_species_gername ON species(gername);")
     sqlite_cursor.execute("CREATE INDEX idx_species_engname ON species(engname);")
