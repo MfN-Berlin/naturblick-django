@@ -875,17 +875,18 @@ class LeichtRecognizeInline(OrderableAdmin, admin.TabularInline):
     model = LeichtRecognize
     verbose_name = 'Leicht recognize text'
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 2, 'cols': 60})}
+        models.TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 60})}
     }
-
+    ordering_field_hide_input = True
 
 class LeichtGoodtoknowInline(OrderableAdmin, admin.TabularInline):
     extra = 0
     model = LeichtGoodToKnow
     verbose_name = 'Leicht goodtoknow text'
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 2, 'cols': 60})}
+        models.TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 60})}
     }
+    ordering_field_hide_input = True
 
 class LeichtPortraitAdminForm(forms.ModelForm):
     class Meta:
