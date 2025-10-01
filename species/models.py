@@ -2,13 +2,14 @@ import logging
 
 import requests
 from django.db import models
-from django.db.models import ForeignKey, URLField, CASCADE
+from django.db.models import ForeignKey, URLField, CASCADE, RESTRICT
+from django.db.models import Q
 from django.db.models.constraints import UniqueConstraint
 from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
-from django.db.models import Q
+from admin_ordering.models import OrderableModel
 
 from .choices import *
 from .validators import *
@@ -469,64 +470,64 @@ class Faunaportrait(Portrait):
         db_table = 'faunaportrait'
 
 
-class Source(models.Model):
+class Source(OrderableModel):
     text = models.TextField()
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
-    order = models.IntegerField()
+    ordering = models.IntegerField()
 
     def __str__(self):
         return f"Source {self.text}"
 
-    class Meta:
+    class Meta(OrderableModel.Meta):
         db_table = 'source'
 
 
-class GoodToKnow(models.Model):
+class GoodToKnow(OrderableModel):
     fact = models.TextField()
     type = models.CharField(max_length=15, choices=GOOD_TO_KNOW_CHOICES)
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
-    order = models.IntegerField()
+    ordering = models.IntegerField()
 
     def __str__(self):
         return f"GoodToKnow {self.fact}"
 
-    class Meta:
+    class Meta(OrderableModel.Meta):
         db_table = 'good_to_know'
 
 
-class UnambigousFeature(models.Model):
+class UnambigousFeature(OrderableModel):
     description = models.TextField()
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
-    order = models.IntegerField()
+    ordering = models.IntegerField()
 
     def __str__(self):
         return f"UnambigousFeature {self.description}"
 
-    class Meta:
+    class Meta(OrderableModel.Meta):
         db_table = 'unambigous_feature'
 
 
-class AdditionalLink(models.Model):
+class AdditionalLink(OrderableModel):
     title = models.CharField(max_length=255)
     description = models.TextField()
     url = models.URLField(max_length=255)
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
-    order = models.IntegerField()
+    ordering = models.IntegerField()
 
     def __str__(self):
         return f"AdditionalLink {self.title}"
 
-    class Meta:
+    class Meta(OrderableModel.Meta):
         db_table = 'additional_link'
 
 
-class SimilarSpecies(models.Model):
+class SimilarSpecies(OrderableModel):
     differences = models.TextField()
     portrait = ForeignKey(Portrait, on_delete=models.CASCADE)
     species = ForeignKey(Species,
                          on_delete=models.CASCADE,
                          parent_link=False)
-    order = models.IntegerField()
+    ordering = models.IntegerField()
 
     @property
     def has_portrait(self):
@@ -543,7 +544,7 @@ class SimilarSpecies(models.Model):
     def __str__(self):
         return f"SimilarSpecies {self.species.speciesid}"
 
-    class Meta:
+    class Meta(OrderableModel.Meta):
         db_table = 'similar_species'
 
 
@@ -586,3 +587,40 @@ class PlantnetPowoidMapping(models.Model):
 
     def __str__(self):
         return f"{self.plantnetpowoid} => {self.species_plantnetpowoid.plantnetpowoid} [{self.species_plantnetpowoid}]"
+
+
+class LeichtPortrait(models.Model):
+    species = models.ForeignKey(
+        Species,
+        on_delete=models.PROTECT
+    )
+    recognize_image = models.OneToOneField(PortraitImageFile, on_delete=RESTRICT, related_name="recognize_image")
+    goodtoknow_image = models.OneToOneField(PortraitImageFile, on_delete=RESTRICT, related_name="goodtoknow_image")
+
+    def __str__(self):
+        return f"{self.species.gername}"
+
+    def clean(self):
+        super().clean()
+        if self.species.speciesid != self.recognize_image.species.speciesid:
+            raise ValidationError("recognize_image and portrait must have same speciesid")
+        if self.species.speciesid != self.goodtoknow_image.species.speciesid:
+            raise ValidationError("goodtoknow_image and portrait must have same speciesid")
+
+
+class LeichtRecognize(OrderableModel):
+    text = models.TextField()
+    portrait = ForeignKey(LeichtPortrait, on_delete=models.CASCADE)
+    ordering = models.IntegerField()
+
+    def __str__(self):
+        return f"LeichtRecognize {self.text}"
+
+
+class LeichtGoodToKnow(OrderableModel):
+    text = models.TextField()
+    portrait = ForeignKey(LeichtPortrait, on_delete=models.CASCADE)
+    ordering = models.IntegerField()
+
+    def __str__(self):
+        return f"LeichtGoodToKnow {self.text}"

@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'image_cropping',
     'imagekit',
     'corsheaders',
+    'admin_ordering',
 ]
 
 MIDDLEWARE = [

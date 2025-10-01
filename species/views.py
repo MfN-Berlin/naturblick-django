@@ -24,7 +24,7 @@ from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializ
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
     FunfactMetaSerializer, InthecityMetaSerializer, PlantnetPowoidMappingSeralizer, GroupSerializer
 from .utils import create_sqlite_file
-from .leicht_db import create_leicht_db, leicht_species
+from .leicht_db import create_leicht_db, leicht_species, leicht_portrait
 
 
 def get_lang_queryparam(request):
@@ -66,12 +66,19 @@ def app_content_leicht_db(request):
 def app_content_leicht_image_list(request):
     response = HttpResponse(
         content_type="text/csv",
-        headers={"Content-Disposition": 'attachment; filename="leicht-mage-list.csv"'},
+        headers={"Content-Disposition": 'attachment; filename="leicht-image-list.csv"'},
     )
 
     writer = csv.writer(response)
-    for species in leicht_species():
-        writer.writerow((species.avatar.image.url, species.id))
+    for portrait in leicht_portrait():
+        writer.writerow(('avatar', portrait.species.avatar.image.url, portrait.species.id))
+        writer.writerow(('recognize', portrait.recognize_image.image.url, portrait.species.id))
+        writer.writerow(('goodtoknow', portrait.goodtoknow_image.image.url, portrait.species.id))
+
+        for fp in Faunaportrait.objects.filter(Q(species_id=portrait.species.id) & Q(language='de')):
+            if hasattr(fp, 'faunaportrait_audio_file') and fp.faunaportrait_audio_file:
+                writer.writerow(('audio', fp.faunaportrait_audio_file.audio_file.url, portrait.species.id))
+
     return response
 
 
@@ -238,12 +245,12 @@ class PortraitDetail(generics.GenericAPIView):
         portrait_qs = portrait_qs.filter(species__id=species_id)
 
         portrait_qs = (
-            portrait_qs.prefetch_related(Prefetch('goodtoknow_set', queryset=GoodToKnow.objects.order_by('order')),
+            portrait_qs.prefetch_related(Prefetch('goodtoknow_set', queryset=GoodToKnow.objects.order_by('ordering')),
                                          Prefetch('unambigousfeature_set',
-                                                  queryset=UnambigousFeature.objects.order_by('order')),
+                                                  queryset=UnambigousFeature.objects.order_by('ordering')),
                                          Prefetch('similarspecies_set',
-                                                  queryset=SimilarSpecies.objects.order_by('order')),
-                                         Prefetch('source_set', queryset=Source.objects.order_by('order')))
+                                                  queryset=SimilarSpecies.objects.order_by('ordering')),
+                                         Prefetch('source_set', queryset=Source.objects.order_by('ordering')))
             .filter(language=lang))
 
         portrait_qs = portrait_qs.first()
