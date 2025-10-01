@@ -482,6 +482,7 @@ class SourceInline(OrderableAdmin, admin.TabularInline):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
+    ordering_field_hide_input = True
 
 
 class GoodToKnowInline(OrderableAdmin, admin.TabularInline):
@@ -490,6 +491,8 @@ class GoodToKnowInline(OrderableAdmin, admin.TabularInline):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
+    ordering_field_hide_input = True
+
 
 
 class SimilarSpeciesInline(OrderableAdmin, admin.TabularInline):
@@ -499,6 +502,7 @@ class SimilarSpeciesInline(OrderableAdmin, admin.TabularInline):
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
     autocomplete_fields = ['species']
+    ordering_field_hide_input = True
 
 
 class AdditionalLinkInline(OrderableAdmin, admin.TabularInline):
@@ -507,6 +511,7 @@ class AdditionalLinkInline(OrderableAdmin, admin.TabularInline):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
+    ordering_field_hide_input = True
 
 
 class UnambigousFeatureInline(OrderableAdmin, admin.TabularInline):
@@ -515,6 +520,7 @@ class UnambigousFeatureInline(OrderableAdmin, admin.TabularInline):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
+    ordering_field_hide_input = True
 
 
 @admin.register(PortraitImageFile)
