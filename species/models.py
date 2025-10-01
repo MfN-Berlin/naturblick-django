@@ -594,8 +594,8 @@ class LeichtPortrait(models.Model):
         Species,
         on_delete=models.PROTECT
     )
-    recognize_image = models.OneToOneField(PortraitImageFile, on_delete=RESTRICT, related_name="recognize_image")
-    goodtoknow_image = models.OneToOneField(PortraitImageFile, on_delete=RESTRICT, related_name="goodtoknow_image")
+    recognize_image = models.ForeignKey(PortraitImageFile, on_delete=RESTRICT, related_name="recognize_image")
+    goodtoknow_image = models.ForeignKey(PortraitImageFile, on_delete=RESTRICT, related_name="goodtoknow_image")
 
     def __str__(self):
         return f"{self.species.gername}"
