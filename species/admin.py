@@ -18,6 +18,8 @@ from imagekit import ImageSpec
 from imagekit.admin import AdminThumbnail
 from imagekit.cachefiles import ImageCacheFile
 from imagekit.processors import ResizeToFit
+from django.core.exceptions import ValidationError
+
 
 from species import utils
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
@@ -885,9 +887,33 @@ class LeichtGoodtoknowInline(OrderableAdmin, admin.TabularInline):
         models.TextField: {'widget': Textarea(attrs={'rows': 2, 'cols': 60})}
     }
 
+class LeichtPortraitAdminForm(forms.ModelForm):
+    class Meta:
+        model = LeichtPortrait
+        fields = "__all__"
+
+    def clean(self):
+        cleaned_data = super().clean()
+        species = cleaned_data.get("species")
+        recognize_image = cleaned_data.get("recognize_image")
+        goodtoknow_image = cleaned_data.get("goodtoknow_image")
+
+        if recognize_image and recognize_image.species != species:
+            raise ValidationError({
+                "recognize_image": "Recognize image must have the same species as the portrait."
+            })
+
+        if goodtoknow_image and goodtoknow_image.species != species:
+            raise ValidationError({
+                "goodtoknow_image": "Good-to-know image must have the same species as the portrait."
+            })
+
+        return cleaned_data
+
 
 @admin.register(LeichtPortrait)
-class LeichtPortrait(admin.ModelAdmin):
+class LeichtPortraitAdmin(admin.ModelAdmin):
+    form = LeichtPortraitAdminForm
     list_display = ['species__speciesid', 'species__sciname', 'species__gername']
     search_fields = ['species__speciesid', 'species__sciname', 'species__gername']
     search_help_text = 'Sucht über alle Artnamen'

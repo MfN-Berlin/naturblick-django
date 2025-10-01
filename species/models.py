@@ -600,12 +600,6 @@ class LeichtPortrait(models.Model):
     def __str__(self):
         return f"{self.species.gername}"
 
-    def clean(self):
-        super().clean()
-        if self.species.speciesid != self.recognize_image.species.speciesid:
-            raise ValidationError("recognize_image and portrait must have same speciesid")
-        if self.species.speciesid != self.goodtoknow_image.species.speciesid:
-            raise ValidationError("goodtoknow_image and portrait must have same speciesid")
 
 
 class LeichtRecognize(OrderableModel):
