@@ -1,3 +1,4 @@
+from admin_ordering.admin import OrderableAdmin
 from django import forms
 from django.contrib import admin, messages
 from django.db import models, transaction
@@ -17,11 +18,14 @@ from imagekit import ImageSpec
 from imagekit.admin import AdminThumbnail
 from imagekit.cachefiles import ImageCacheFile
 from imagekit.processors import ResizeToFit
+from django.core.exceptions import ValidationError
+
 
 from species import utils
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
-    Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait
+    Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, LeichtPortrait, \
+    LeichtRecognize, LeichtGoodToKnow
 
 
 class AdminThumbnailSpec(ImageSpec):
@@ -36,21 +40,6 @@ def cached_thumb(instance):
     cached = ImageCacheFile(AdminThumbnailSpec(instance.image))
     cached.generate()
     return cached
-
-
-def validate_order(theforms, name):
-    order_numbers = set()
-    for form in theforms:
-        if form.cleaned_data and not form.cleaned_data.get('DELETE', False):
-            order_number = form.cleaned_data.get('order')
-            if order_number in order_numbers:
-                raise forms.ValidationError(f"Two {name} could not have same order.")
-            order_numbers.add(order_number)
-
-    for i, _ in enumerate(order_numbers):
-        if i + 1 not in order_numbers:
-            raise forms.ValidationError(
-                f"The order numbers of {name} must be consecutive numbers from 1 up to {len(order_numbers)} (in any order)")
 
 
 @admin.register(SpeciesName)
@@ -485,12 +474,8 @@ class SourceInlineFormSet(BaseInlineFormSet):
         model = Source
         fields = '__all__'
 
-    def clean(self):
-        super().clean()
-        validate_order(self.forms, "Source")
 
-
-class SourceInline(admin.TabularInline):
+class SourceInline(OrderableAdmin, admin.TabularInline):
     model = Source
     formset = SourceInlineFormSet
     extra = 0
@@ -499,38 +484,16 @@ class SourceInline(admin.TabularInline):
     }
 
 
-class GoodToKnowInlineFormSet(BaseInlineFormSet):
-    class Meta:
-        model = GoodToKnow
-        fields = '__all__'
-
-    def clean(self):
-        super().clean()
-        validate_order(self.forms, "GoodToKnow")
-
-
-class GoodToKnowInline(admin.TabularInline):
+class GoodToKnowInline(OrderableAdmin, admin.TabularInline):
     model = GoodToKnow
-    formset = GoodToKnowInlineFormSet
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
 
 
-class SimilarSpeciesFormSet(BaseInlineFormSet):
-    class Meta:
-        model = SimilarSpecies
-        fields = '__all__'
-
-    def clean(self):
-        super().clean()
-        validate_order(self.forms, "SimilarSpecies")
-
-
-class SimilarSpeciesInline(admin.TabularInline):
+class SimilarSpeciesInline(OrderableAdmin, admin.TabularInline):
     model = SimilarSpecies
-    formset = SimilarSpeciesFormSet
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
@@ -538,38 +501,16 @@ class SimilarSpeciesInline(admin.TabularInline):
     autocomplete_fields = ['species']
 
 
-class AdditionalLinkFormSet(BaseInlineFormSet):
-    class Meta:
-        model = AdditionalLink
-        fields = '__all__'
-
-    def clean(self):
-        super().clean()
-        validate_order(self.forms, "AdditionalLink")
-
-
-class AdditionalLinkInline(admin.TabularInline):
+class AdditionalLinkInline(OrderableAdmin, admin.TabularInline):
     model = AdditionalLink
-    formset = AdditionalLinkFormSet
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
 
 
-class UnambigousFeatureFormSet(BaseInlineFormSet):
-    class Meta:
-        model = UnambigousFeature
-        fields = '__all__'
-
-    def clean(self):
-        super().clean()
-        validate_order(self.forms, "AdditionalLink")
-
-
-class UnambigousFeatureInline(admin.TabularInline):
+class UnambigousFeatureInline(OrderableAdmin, admin.TabularInline):
     model = UnambigousFeature
-    formset = UnambigousFeatureFormSet
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
@@ -823,9 +764,11 @@ class FaunaportraitAdmin(admin.ModelAdmin):
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     radio_fields = {"nature": admin.VERTICAL}
-    list_display = ['name', 'nature', 'admin_thumbnail', 'svg_preview', 'has_portraits', 'is_fieldbookfilter', 'has_characters']
+    list_display = ['name', 'nature', 'admin_thumbnail', 'svg_preview', 'has_portraits', 'is_fieldbookfilter',
+                    'has_characters']
     list_filter = ['nature']
-    fields = ['name', 'nature', 'image', 'admin_thumbnail', 'svg', 'svg_preview', 'gername', 'engname', 'has_portraits', 'is_fieldbookfilter', 'has_characters']
+    fields = ['name', 'nature', 'image', 'admin_thumbnail', 'svg', 'svg_preview', 'gername', 'engname', 'has_portraits',
+              'is_fieldbookfilter', 'has_characters']
     readonly_fields = ['admin_thumbnail', 'svg_preview']
 
     admin_thumbnail = AdminThumbnail(image_field=cached_thumb)
@@ -925,3 +868,55 @@ class PlantnetPowoidMappingAdmin(admin.ModelAdmin):
         link = reverse("admin:species_species_change", args=[obj.species_plantnetpowoid.id])
         return format_html('<a href="{}">{} ({})</a>', link, obj.species_plantnetpowoid.plantnetpowoid,
                            obj.species_plantnetpowoid)
+
+
+class LeichtRecognizeInline(OrderableAdmin, admin.TabularInline):
+    extra = 0
+    model = LeichtRecognize
+    verbose_name = 'Leicht recognize text'
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 2, 'cols': 60})}
+    }
+
+
+class LeichtGoodtoknowInline(OrderableAdmin, admin.TabularInline):
+    extra = 0
+    model = LeichtGoodToKnow
+    verbose_name = 'Leicht goodtoknow text'
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 2, 'cols': 60})}
+    }
+
+class LeichtPortraitAdminForm(forms.ModelForm):
+    class Meta:
+        model = LeichtPortrait
+        fields = "__all__"
+
+    def clean(self):
+        cleaned_data = super().clean()
+        species = cleaned_data.get("species")
+        recognize_image = cleaned_data.get("recognize_image")
+        goodtoknow_image = cleaned_data.get("goodtoknow_image")
+
+        if recognize_image and recognize_image.species != species:
+            raise ValidationError({
+                "recognize_image": "Recognize image must have the same species as the portrait."
+            })
+
+        if goodtoknow_image and goodtoknow_image.species != species:
+            raise ValidationError({
+                "goodtoknow_image": "Good-to-know image must have the same species as the portrait."
+            })
+
+        return cleaned_data
+
+
+@admin.register(LeichtPortrait)
+class LeichtPortraitAdmin(admin.ModelAdmin):
+    form = LeichtPortraitAdminForm
+    list_display = ['species__speciesid', 'species__sciname', 'species__gername']
+    search_fields = ['species__speciesid', 'species__sciname', 'species__gername']
+    search_help_text = 'Sucht über alle Artnamen'
+    ordering = ["species__sciname"]
+    autocomplete_fields = ['species', 'recognize_image', 'goodtoknow_image']
+    inlines = [LeichtRecognizeInline, LeichtGoodtoknowInline]
