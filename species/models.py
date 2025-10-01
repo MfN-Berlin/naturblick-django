@@ -598,7 +598,7 @@ class LeichtPortrait(models.Model):
     goodtoknow_image = models.ForeignKey(PortraitImageFile, on_delete=RESTRICT, related_name="goodtoknow_image")
 
     def __str__(self):
-        return f"{self.species.gername}"
+        return str(self.species)
 
 
 
