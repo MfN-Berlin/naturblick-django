@@ -905,6 +905,11 @@ class LeichtPortraitAdminForm(forms.ModelForm):
         recognize_image = cleaned_data.get("recognize_image")
         goodtoknow_image = cleaned_data.get("goodtoknow_image")
 
+        if not species.avatar:
+            raise ValidationError({
+                "species": "Leichtportrait species need an avatar"
+            })
+
         if recognize_image and recognize_image.species != species:
             raise ValidationError({
                 "recognize_image": "Recognize image must have the same species as the portrait."
