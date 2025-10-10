@@ -926,7 +926,7 @@ class LeichtPortraitAdminForm(forms.ModelForm):
 @admin.register(LeichtPortrait)
 class LeichtPortraitAdmin(admin.ModelAdmin):
     form = LeichtPortraitAdminForm
-    list_display = ['species__speciesid', 'species__sciname', 'species__gername']
+    list_display = ['species__speciesid', 'species__sciname', 'species__gername', 'level']
     search_fields = ['species__speciesid', 'species__sciname', 'species__gername']
     search_help_text = 'Sucht über alle Artnamen'
     ordering = ["species__sciname"]

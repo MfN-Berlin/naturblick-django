@@ -8,12 +8,13 @@ from species.models import LeichtPortrait
 
 
 def insert_current_version(sqlite_cursor):
-    url = "http://playback:9000/speciesdbversion"
-    response = requests.get(url)
-    if response.status_code == 200:
-        sqlite_cursor.execute("INSERT INTO species_current_version VALUES (?, ?);", (1, response.json()["version"]))
-    else:
-        logger.error(f"Playback not available: response [ {response.text} ]")
+    "1"
+    # url = "http://playback:9000/speciesdbversion"
+    # response = requests.get(url)
+    # if response.status_code == 200:
+    #     sqlite_cursor.execute("INSERT INTO species_current_version VALUES (?, ?);", (1, response.json()["version"]))
+    # else:
+    #     logger.error(f"Playback not available: response [ {response.text} ]")
 
 
 def leicht_portrait():
@@ -26,7 +27,7 @@ def leicht_species():
 
 def insert_species(sqlite_cursor):
     sqlite_cursor.executemany(
-        "INSERT INTO species VALUES (?, ?, ?, ?, ?);",
+        "INSERT INTO species VALUES (?, ?, ?, ?, ?, ?);",
         ((portrait.species.id,
           portrait.species.gername,
           Path(portrait.species.avatar.image.url).name,
@@ -39,7 +40,8 @@ def insert_species(sqlite_cursor):
               portrait.leichtgoodtoknow_set.all()
               .order_by("ordering")
               .values_list("text", flat=True)
-          ))
+          ),
+          portrait.level)
          for portrait in leicht_portrait())
     )
 
@@ -50,7 +52,7 @@ def create_tables(sqlite_cursor):
         "`version` INTEGER NOT NULL, PRIMARY KEY(`rowid`));"
     )
     sqlite_cursor.execute(
-        """CREATE TABLE IF NOT EXISTS `species` (`rowid` INTEGER NOT NULL, `name` TEXT NOT NULL, `image_url` TEXT NOT NULL, `recognize` TEXT NOT NULL, `good_to_know` TEXT NOT NULL, PRIMARY KEY(`rowid`));"""
+        """CREATE TABLE IF NOT EXISTS `species` (`rowid` INTEGER NOT NULL, `name` TEXT NOT NULL, `image_url` TEXT NOT NULL, `recognize` TEXT NOT NULL, `good_to_know` TEXT NOT NULL, `level` INTEGER NOT NULL, PRIMARY KEY(`rowid`));"""
     )
 
 

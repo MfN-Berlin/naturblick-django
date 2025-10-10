@@ -596,6 +596,7 @@ class LeichtPortrait(models.Model):
     )
     recognize_image = models.ForeignKey(PortraitImageFile, on_delete=RESTRICT, related_name="recognize_image")
     goodtoknow_image = models.ForeignKey(PortraitImageFile, on_delete=RESTRICT, related_name="goodtoknow_image")
+    level = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return str(self.species)
