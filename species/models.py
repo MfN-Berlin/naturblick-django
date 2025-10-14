@@ -18,8 +18,6 @@ LARGE_WIDTH = 1200
 MEDIUM_WIDTH = 800
 SMALL_WIDTH = 400
 
-logger = logging.getLogger("django")
-
 
 class Tag(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name='German name')
