@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import re
 import sqlite3
 import tempfile
@@ -8,16 +9,13 @@ from dataclasses import dataclass, field
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
-from image_cropping.utils import get_backend
 
 import requests
 from django.core.files.base import ContentFile
+from image_cropping.utils import get_backend
 
 from species.models import Species, SpeciesName, SourcesTranslation, SourcesImprint, Faunaportrait, Floraportrait, Group
 from .utils_characters import insert_characters
-
-logger = logging.getLogger("django")
-
 
 @dataclass
 class DbPortrait:
@@ -171,12 +169,15 @@ def insert_sources_translations(sqlite_cursor):
 
 def insert_sources_imprint(sqlite_cursor):
     data = list(map(lambda si: (
-        si.id, si.name, si.scie_name, si.scie_name_eng if si.scie_name_eng else '', si.image_source, si.licence, si.author),
+        si.id, si.name, si.scie_name, si.scie_name_eng if si.scie_name_eng else '', si.image_source, si.licence,
+        si.author),
                     SourcesImprint.objects.all()))
     sqlite_cursor.executemany("INSERT INTO sources_imprint VALUES (?, ?, ?, ?, ?, ?, ?);", data)
 
 
 def insert_current_version(sqlite_cursor):
+    if os.environ.get('DJANGO_ENV') == 'development':
+        return "1"
     url = "http://playback:9000/speciesdbversion"
     response = requests.get(url)
     if response.status_code == 200:
@@ -263,7 +264,8 @@ def allow_break_on_hyphen(s):
 
 def insert_species(sqlite_cursor):
     data = list(map(map_species(), Species.objects.all()))
-    sqlite_cursor.executemany("INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
+    sqlite_cursor.executemany(
+        "INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
 
     # could be done on insert level
     sqlite_cursor.execute("""
@@ -290,16 +292,17 @@ def insert_species(sqlite_cursor):
     sqlite_cursor.execute("ALTER TABLE species DROP COLUMN gbifusagekey;")
 
 
-def avatar_crop(avatar):
+def avatar_crop(image_with_cropping):
     return get_backend().get_thumbnail_url(
-        avatar.image,
+        image_with_cropping.image,
         {
             'size': (400, 400),
-            'box': avatar.cropping,
+            'box': image_with_cropping.cropping,
             'crop': True,
             'detail': True,
         }
     )
+
 
 def map_species():
     return lambda s: (

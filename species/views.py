@@ -16,6 +16,7 @@ from rest_framework.exceptions import NotFound, MethodNotAllowed
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
+from .utils import avatar_crop
 
 from naturblick import settings
 from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait, GoodToKnow, Source, SimilarSpecies, \
@@ -24,7 +25,7 @@ from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializ
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
     FunfactMetaSerializer, InthecityMetaSerializer, PlantnetPowoidMappingSeralizer, GroupSerializer
 from .utils import create_sqlite_file
-from .leicht_db import create_leicht_db, leicht_species, leicht_portrait
+from .leicht_db import create_leicht_db, leicht_portrait
 
 
 def get_lang_queryparam(request):
@@ -71,13 +72,12 @@ def app_content_leicht_image_list(request):
 
     writer = csv.writer(response)
     for portrait in leicht_portrait():
-        writer.writerow(('avatar', portrait.species.avatar.image.url, portrait.species.id))
-        writer.writerow(('recognize', portrait.recognize_image.image.url, portrait.species.id))
-        writer.writerow(('goodtoknow', portrait.goodtoknow_image.image.url, portrait.species.id))
+        writer.writerow(('avatar', avatar_crop(portrait.avatar.image), portrait.id))
+        writer.writerow(('recognize', portrait.avatar.image.url, portrait.id))
+        writer.writerow(('goodtoknow', portrait.goodtoknow_image.image.url, portrait.id))
 
-        for fp in Faunaportrait.objects.filter(Q(species_id=portrait.species.id) & Q(language='de')):
-            if hasattr(fp, 'faunaportrait_audio_file') and fp.faunaportrait_audio_file:
-                writer.writerow(('audio', fp.faunaportrait_audio_file.audio_file.url, portrait.species.id))
+        if hasattr(portrait, 'audio') and portrait.audio:
+            writer.writerow(('audio', portrait.audio.audio_file.url, portrait.id))
 
     return response
 

@@ -586,19 +586,86 @@ class PlantnetPowoidMapping(models.Model):
     def __str__(self):
         return f"{self.plantnetpowoid} => {self.species_plantnetpowoid.plantnetpowoid} [{self.species_plantnetpowoid}]"
 
+class ImageFile(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    species = models.ForeignKey(Species, null=True, blank=True, on_delete=CASCADE)
+    owner = models.CharField(max_length=255)
+    owner_link = URLField(blank=True, null=True, max_length=255)
+    source = URLField(max_length=1024)
+    license = models.CharField(max_length=64)
+    image = models.ImageField(upload_to="images", max_length=255, width_field='width', height_field='height')
+    width = models.IntegerField(default=0)
+    height = models.IntegerField(default=0)
 
-class LeichtPortrait(models.Model):
-    species = models.ForeignKey(
-        Species,
-        on_delete=models.PROTECT
+    @property
+    def large(self):
+        if self.width > LARGE_WIDTH:
+            return self.image_large
+        return None
+
+    @property
+    def medium(self):
+        if self.width > MEDIUM_WIDTH:
+            return self.image_medium
+        return None
+
+    @property
+    def small(self):
+        if self.width > SMALL_WIDTH:
+            return self.image_small
+        return None
+
+    image_large = ImageSpecField(
+        source='image',
+        processors=[ResizeToFit(LARGE_WIDTH, None)],
+        options={'quality': 90}
     )
-    recognize_image = models.ForeignKey(PortraitImageFile, on_delete=RESTRICT, related_name="recognize_image")
-    goodtoknow_image = models.ForeignKey(PortraitImageFile, on_delete=RESTRICT, related_name="goodtoknow_image")
-    level = models.PositiveIntegerField(default=1)
+    image_medium = ImageSpecField(
+        source='image',
+        processors=[ResizeToFit(MEDIUM_WIDTH, None)],
+        options={'quality': 90}
+    )
+    image_small = ImageSpecField(
+        source='image',
+        processors=[ResizeToFit(SMALL_WIDTH, None)],
+        options={'quality': 90}
+    )
 
     def __str__(self):
-        return str(self.species)
+        return f"{self.owner} {self.image.name[self.image.name.index('/') + 1:]}"
 
+
+class ImageCrop(ImageFile):
+    cropping = ImageRatioField('image', '400x400', size_warning=True)
+
+
+class AudioFile(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    species = models.ForeignKey(Species, null=True, blank=True, on_delete=CASCADE)
+    owner = models.CharField(max_length=255)
+    owner_link = URLField(blank=True, null=True, max_length=255)
+    source = URLField(max_length=1024)
+    license = models.CharField(max_length=64)
+    audio_file = models.FileField(upload_to="leicht_audio_files", validators=[validate_mp3])
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.owner} {os.path.basename(self.audio_file.path)}"
+
+    class Meta:
+        db_table = 'audio_file'
+
+class LeichtPortrait(models.Model):
+    name = models.TextField()
+    avatar = models.ForeignKey(ImageCrop, on_delete=RESTRICT)
+    goodtoknow_image = models.ForeignKey(ImageFile, on_delete=RESTRICT, related_name="goodtoknow_image")
+    level = models.PositiveIntegerField(default=1)
+    audio = models.ForeignKey(AudioFile, on_delete=models.SET_NULL, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.name)
 
 
 class LeichtRecognize(OrderableModel):
