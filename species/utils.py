@@ -171,9 +171,9 @@ def insert_sources_translations(sqlite_cursor):
 
 def insert_sources_imprint(sqlite_cursor):
     data = list(map(lambda si: (
-        si.id, si.name, si.scie_name, si.scie_name_eng if si.scie_name_eng else '', si.image_source, si.licence, si.author),
+        si.id, si.scie_name, si.scie_name_eng if si.scie_name_eng else '', si.image_source, si.licence, si.author),
                     SourcesImprint.objects.all()))
-    sqlite_cursor.executemany("INSERT INTO sources_imprint VALUES (?, ?, ?, ?, ?, ?, ?);", data)
+    sqlite_cursor.executemany("INSERT INTO sources_imprint VALUES (?, ?, ?, ?, ?, ?);", data)
 
 
 def insert_current_version(sqlite_cursor):
@@ -357,7 +357,7 @@ def create_tables(sqlite_cursor):
         "CREATE TABLE `good_to_know` (`portrait_id` INTEGER NOT NULL, `fact` TEXT NOT NULL, PRIMARY KEY(`portrait_id`, `fact`), FOREIGN KEY(`portrait_id`) REFERENCES `portrait`(`rowid`) ON UPDATE NO ACTION ON DELETE CASCADE );"
     )
     sqlite_cursor.execute(
-        "CREATE TABLE `sources_imprint` (`id` INTEGER NOT NULL, `section` TEXT NOT NULL, `scie_name` TEXT NOT NULL, `scie_name_eng` TEXT NOT NULL, `image_source` TEXT, `licence` TEXT, `author` TEXT, PRIMARY KEY(`id`));"
+        "CREATE TABLE `sources_imprint` (`id` INTEGER NOT NULL, `scie_name` TEXT NOT NULL, `scie_name_eng` TEXT NOT NULL, `image_source` TEXT, `licence` TEXT, `author` TEXT, PRIMARY KEY(`id`));"
     )
     sqlite_cursor.execute(
         "CREATE TABLE `sources_translations` (`language` INTEGER NOT NULL, `key` TEXT NOT NULL, `value` TEXT NOT NULL, PRIMARY KEY(`language`, `key`));"
