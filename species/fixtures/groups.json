@@ -287,14 +287,6 @@
   },
   {
     "model": "species.group",
-    "pk": 41,
-    "fields": {
-      "name": "dragonfly",
-      "nature": "fauna"
-    }
-  },
-  {
-    "model": "species.group",
     "pk": 42,
     "fields": {
       "name": "echinoidea"

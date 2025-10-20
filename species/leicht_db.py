@@ -6,14 +6,13 @@ import requests
 
 from species.models import LeichtPortrait
 
-
 def insert_current_version(sqlite_cursor):
     url = "http://playback:9000/speciesdbversion"
     response = requests.get(url)
     if response.status_code == 200:
         sqlite_cursor.execute("INSERT INTO species_current_version VALUES (?, ?);", (1, response.json()["version"]))
     else:
-        logger.error(f"Playback not available: response [ {response.text} ]")
+        raise Exception(f"Playback not available: response [ {response.text} ]")
 
 
 def leicht_portrait():
