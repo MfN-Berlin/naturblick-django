@@ -1,29 +1,17 @@
 import os
 
-from image_cropping.utils import get_backend
 from rest_framework import serializers
 
 from .models import Species, SpeciesName, Tag, SimilarSpecies, GoodToKnow, UnambigousFeature, Source, \
     Faunaportrait, Floraportrait, PlantnetPowoidMapping, Group
-
-
-def avatar_crop_url(avatar):
-    return get_backend().get_thumbnail_url(
-        avatar.image,
-        {
-            'size': (400, 400),
-            'box': avatar.cropping,
-            'crop': True,
-            'detail': True,
-        }
-    )
+from .utils import cropped_image
 
 
 class AvatarCropUrlField(serializers.Field):
     def to_representation(self, obj):
         if not obj:
             return None
-        return avatar_crop_url(obj)
+        return cropped_image(obj.image, obj.cropping)
 
 
 class TagLocalnameField(serializers.Field):

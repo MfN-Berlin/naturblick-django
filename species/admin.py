@@ -13,7 +13,6 @@ from django.utils.html import format_html, format_html_join
 from django.utils.html import mark_safe
 from django.utils.translation import ngettext
 from image_cropping import ImageCroppingMixin
-from image_cropping.utils import get_backend
 from imagekit import ImageSpec
 from imagekit.admin import AdminThumbnail
 from imagekit.cachefiles import ImageCacheFile
@@ -24,6 +23,7 @@ from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, Ad
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
     Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, LeichtPortrait, \
     LeichtRecognize, LeichtGoodToKnow, AudioFile, ImageCrop, ImageFile
+from .utils import cropped_image
 
 
 class AdminThumbnailSpec(ImageSpec):
@@ -381,16 +381,8 @@ class SpeciesAdmin(admin.ModelAdmin):
     def avatar_crop(self, obj):
         avatar = obj.avatar
         if avatar:
-            image_url = get_backend().get_thumbnail_url(
-                avatar.image,
-                {
-                    'size': (400, 400),
-                    'box': avatar.cropping,
-                    'crop': True,
-                    'detail': True,
-                }
-            )
-            url = reverse('admin:species_avatar_change', args=(avatar.id,))
+            image_url = cropped_image(avatar.image, avatar.cropping)
+            url = reverse('admin:species_avatar_change', args=([avatar.id]))
             return format_html('<a href="{}"><img src="{}" class="species-avatar"/></a>', url, image_url)
         else:
             return "-"
@@ -451,7 +443,7 @@ class SpeciesAdmin(admin.ModelAdmin):
             for lang in ['de', 'en']:
                 portrait = [portrait for portrait in obj.portrait_set.all() if portrait.language == lang]
                 if portrait:
-                    url = reverse(f'admin:species_{obj.group.nature}portrait_change', args=(portrait[0].id,))
+                    url = reverse(f'admin:species_{obj.group.nature}portrait_change', args=([portrait[0].id]))
                     links.append(f'<a href="{{}}" class="changelink">{lang}</a>')
                     urls.append(url)
                 else:
@@ -813,15 +805,7 @@ class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
         description="Cropped Image"
     )
     def cropped_image(self, obj):
-        image_url = get_backend().get_thumbnail_url(
-            obj.image,
-            {
-                'size': (400, 400),
-                'box': obj.cropping,
-                'crop': True,
-                'detail': True,
-            }
-        )
+        image_url = cropped_image(obj.image, obj.cropping)
         return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
 
     @admin.display(
@@ -893,77 +877,60 @@ class LeichtGoodtoknowInline(OrderableAdmin, admin.TabularInline):
     ordering_field_hide_input = True
 
 
-class HasCrop(YesNoFilter):
-    title = "crop"
+class HasCropFilter(YesNoFilter):
+    title = "Crop"
     parameter_name = "has_crop"
 
     def queryset(self, request, queryset):
+        crop_ids = ImageCrop.objects.values('imagefile_id')
         if self.value() == "y":
-            return queryset.exclude(cropping='0,0,0,0')
-        elif self.value() == "n":
-            return queryset.filter(cropping='0,0,0,0')
-
-
-@admin.action(description="Created crop for selected images")
-def create_crop(self, request, queryset):
-    [ImageCrop(
-        imagefile_ptr_id=image.id,
-        species=image.species,
-        owner=image.owner,
-        owner_link=image.owner_link,
-        source=image.source,
-        license=image.license,
-        image=image.image,
-        width=image.width,
-        height=image.height,
-        cropping='0,0,0,0').save() for image in queryset]
+            return queryset.filter(id__in=crop_ids)
+        if self.value() == "n":
+            return queryset.exclude(id__in=crop_ids)
 
 
 @admin.register(ImageFile)
 class ImageFileAdmin(admin.ModelAdmin):
-    list_display = ['id', 'admin_thumbnail', 'owner', 'species__gername']
+    list_display = ['id', 'admin_thumbnail', 'owner', 'species__gername', 'add_crop_link']
     search_fields = ['image', 'owner', 'species__sciname', 'species__gername', 'species__speciesid']
     fields = ['image', 'species', 'owner', 'owner_link', 'source', 'license', 'width', 'height']
     readonly_fields = ['admin_thumbnail', 'width', 'height']
     list_display_links = ['id', 'admin_thumbnail']
     autocomplete_fields = ['species']
-    actions = [create_crop]
+    list_filter = [HasCropFilter]
 
     admin_thumbnail = AdminThumbnail(image_field=cached_thumb)
     admin_thumbnail.short_description = 'Image'
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        # do not show crops
-        return qs.exclude(id__in=ImageCrop.objects.values('id'))
+    @admin.display()
+    def add_crop_link(self, obj):
+        maybe_imagecrop = ImageCrop.objects.filter(imagefile_id=obj.id)
+        if maybe_imagecrop:
+            # for now only 1 imagecrop per imagefile and therefore [0] ok
+            url = reverse('admin:species_imagecrop_change', args=([maybe_imagecrop[0].id]))
+            return format_html('<a href="{}" class="changelink"></a>', url)
+        else:
+            url = (
+                    reverse('admin:species_imagecrop_add')
+                    + f'?imagefile={obj.id}'
+            )
+            return format_html('<a href="{}" class="addlink"></a>', url)
+
+    add_crop_link.short_description = 'Crop'
 
 
 @admin.register(ImageCrop)
 class ImageCropAdmin(ImageCroppingMixin, admin.ModelAdmin):
-    list_display = ['id', 'cropped_image', 'admin_thumbnail', 'owner', 'species__gername']
-    search_fields = ['image', 'owner', 'species__sciname', 'species__gername', 'species__speciesid']
-    fields = ['cropping', 'image', 'species', 'owner', 'owner_link', 'source', 'license', 'width', 'height']
-    readonly_fields = ['admin_thumbnail', 'width', 'height']
-    list_display_links = ['id', 'admin_thumbnail']
-    autocomplete_fields = ['species']
-    list_filter = [HasCrop]
-
-    admin_thumbnail = AdminThumbnail(image_field=cached_thumb)
-    admin_thumbnail.short_description = 'Image'
+    list_display = ['cropped_image']
+    search_fields = ['imagefile__owner', 'imagefile__species__sciname', 'imagefile__species__gername',
+                     'imagefile__species__speciesid']
+    autocomplete_fields = ['imagefile']
 
     @admin.display(
         description="Cropped Image"
     )
     def cropped_image(self, obj):
-        image_url = get_backend().get_thumbnail_url(
-            obj.image,
-            {
-                'size': (400, 400),
-                'box': obj.cropping,
-                'crop': True,
-                'detail': True,
-            }
-        )
+        image_url = cropped_image(obj.imagefile.image, obj.cropping, (100, 100))
         return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
 
 
@@ -983,7 +950,7 @@ class AudioFileAdmin(admin.ModelAdmin):
 
 @admin.register(LeichtPortrait)
 class LeichtPortraitAdmin(admin.ModelAdmin):
-    list_display = ['name', 'level', 'avatar_thumb']
+    list_display = ['name', 'level', 'avatar_thumb', 'goodtoknow_thumb']
     search_fields = ['name']
     search_help_text = 'Sucht über alle Namen'
     ordering = ["name"]
@@ -993,28 +960,17 @@ class LeichtPortraitAdmin(admin.ModelAdmin):
         models.TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 60})}
     }
     readonly_fields = ['avatar_thumb', 'goodtoknow_thumb']
-    fields = ['name', 'level']
 
     @admin.display(
         description="Avatar"
     )
     def avatar_thumb(self, obj):
-        image_url = get_backend().get_thumbnail_url(
-            obj.avatar.image,
-            {
-                'size': (100, 100)
-            }
-        )
+        image_url = cropped_image(obj.avatar.imagefile.image, cropping=obj.avatar.cropping, size=(100, 100))
         return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
 
     @admin.display(
         description="Goodtoknow Image"
     )
     def goodtoknow_thumb(self, obj):
-        image_url = get_backend().get_thumbnail_url(
-            obj.goodtoknow_image.image,
-            {
-                'size': (100, 100)
-            }
-        )
+        image_url = cropped_image(obj.goodtoknow_image.image, cropping=None, size=(100, 100))
         return mark_safe(f'<img src="{image_url}" width="100" height="100" />')

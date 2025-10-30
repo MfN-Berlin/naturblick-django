@@ -16,16 +16,16 @@ from rest_framework.exceptions import NotFound, MethodNotAllowed
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
-from .utils import avatar_crop
 
 from naturblick import settings
+from .leicht_db import create_leicht_db, leicht_portrait
 from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait, GoodToKnow, Source, SimilarSpecies, \
     UnambigousFeature, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, Group
 from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializer, \
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
     FunfactMetaSerializer, InthecityMetaSerializer, PlantnetPowoidMappingSeralizer, GroupSerializer
+from .utils import cropped_image
 from .utils import create_sqlite_file
-from .leicht_db import create_leicht_db, leicht_portrait
 
 
 def get_lang_queryparam(request):
@@ -51,6 +51,7 @@ def app_content_db(request):
 
     return response
 
+
 # returns sqlite database used by naturblick leicht android/ios
 def app_content_leicht_db(request):
     # generates small, medium, large version of imagekit Spec-Fields
@@ -63,7 +64,12 @@ def app_content_leicht_db(request):
 
     return FileResponse(open(sqlite_db, "rb"), as_attachment=True, filename='species-db.sqlite3')
 
+
 # return CSV image list for naturblick leicht
+def get_backend():
+    pass
+
+
 def app_content_leicht_image_list(request):
     response = HttpResponse(
         content_type="text/csv",
@@ -72,8 +78,9 @@ def app_content_leicht_image_list(request):
 
     writer = csv.writer(response)
     for portrait in leicht_portrait():
-        writer.writerow(('avatar', avatar_crop(portrait.avatar.image), portrait.id))
-        writer.writerow(('recognize', portrait.avatar.image.url, portrait.id))
+        writer.writerow(
+            ('avatar', cropped_image(portrait.avatar.imagefile.image, portrait.avatar.cropping), portrait.id))
+        writer.writerow(('recognize', portrait.avatar.imagefile.image.url, portrait.id))
         writer.writerow(('goodtoknow', portrait.goodtoknow_image.image.url, portrait.id))
 
         if hasattr(portrait, 'audio') and portrait.audio:

@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 import re
 import sqlite3
@@ -16,6 +15,7 @@ from image_cropping.utils import get_backend
 
 from species.models import Species, SpeciesName, SourcesTranslation, SourcesImprint, Faunaportrait, Floraportrait, Group
 from .utils_characters import insert_characters
+
 
 @dataclass
 class DbPortrait:
@@ -292,12 +292,12 @@ def insert_species(sqlite_cursor):
     sqlite_cursor.execute("ALTER TABLE species DROP COLUMN gbifusagekey;")
 
 
-def avatar_crop(image_with_cropping):
+def cropped_image(image, cropping, size = (400,400)):
     return get_backend().get_thumbnail_url(
-        image_with_cropping.image,
+        image,
         {
-            'size': (400, 400),
-            'box': image_with_cropping.cropping,
+            'size': size,
+            'box': cropping,
             'crop': True,
             'detail': True,
         }
@@ -309,13 +309,13 @@ def map_species():
         s.id, s.group.name, allow_break_on_hyphen(s.sciname), allow_break_on_hyphen(s.gername),
         allow_break_on_hyphen(s.engname),
         s.wikipedia,
-        avatar_crop(s.avatar) if s.avatar else None,
+        cropped_image(s.avatar.image, s.avatar.cropping) if s.avatar else None,
         s.avatar.image.url if s.avatar else None,
         s.avatar.owner if s.avatar else None,
         s.avatar.owner_link if s.avatar else None,
         s.avatar.source if s.avatar else None,
         s.avatar.license if s.avatar else None,
-        avatar_crop(s.female_avatar) if s.female_avatar else None,
+        cropped_image(s.female_avatar.image, s.female_avatar.cropping) if s.female_avatar else None,
         get_synonnyms('de', s.id),
         get_synonnyms('en', s.id), s.red_list_germany, s.iucncategory, s.speciesid, s.gbifusagekey,
         s.accepted_species.id if s.accepted_species else None,
