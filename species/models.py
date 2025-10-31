@@ -16,6 +16,68 @@ LARGE_WIDTH = 1200
 MEDIUM_WIDTH = 800
 SMALL_WIDTH = 400
 
+class ImageFile(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    species = models.ForeignKey("Species", null=True, blank=True, on_delete=CASCADE)
+    owner = models.CharField(max_length=255)
+    owner_link = URLField(blank=True, null=True, max_length=255)
+    source = URLField(max_length=1024)
+    license = models.CharField(max_length=64)
+    image = models.ImageField(upload_to="images", max_length=255, width_field='width', height_field='height')
+    width = models.IntegerField(default=0)
+    height = models.IntegerField(default=0)
+
+    @property
+    def large(self):
+        if self.width > LARGE_WIDTH:
+            return self.image_large
+        return None
+
+    @property
+    def medium(self):
+        if self.width > MEDIUM_WIDTH:
+            return self.image_medium
+        return None
+
+    @property
+    def small(self):
+        if self.width > SMALL_WIDTH:
+            return self.image_small
+        return None
+
+    image_large = ImageSpecField(
+        source='image',
+        processors=[ResizeToFit(LARGE_WIDTH, None)],
+        options={'quality': 90}
+    )
+    image_medium = ImageSpecField(
+        source='image',
+        processors=[ResizeToFit(MEDIUM_WIDTH, None)],
+        options={'quality': 90}
+    )
+    image_small = ImageSpecField(
+        source='image',
+        processors=[ResizeToFit(SMALL_WIDTH, None)],
+        options={'quality': 90}
+    )
+
+    def __str__(self):
+        return f"{self.owner} {self.image.name[self.image.name.index('/') + 1:]}"
+
+    class Meta:
+        db_table = "imagefile"
+
+class ImageCrop(models.Model):
+    imagefile = models.OneToOneField(ImageFile, on_delete=CASCADE)
+    cropping = ImageRatioField('imagefile__image', '400x400', size_warning=True)
+
+    def save(self, *args, **kwargs):
+
+        super().save(*args, **kwargs)
+
+
+    class Meta:
+        db_table = "imagecrop"
 
 class Tag(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name='German name')
@@ -116,6 +178,10 @@ class Species(models.Model):
     avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name="avatar_species", null="True",
                                blank="True")
     female_avatar = models.ForeignKey(Avatar, on_delete=models.SET_NULL, related_name="female_avatar_species",
+                                      null="True", blank="True")
+    avatar_new = models.ForeignKey(ImageCrop, on_delete=models.SET_NULL, related_name="avatar_species_new", null="True",
+                               blank="True")
+    female_avatar_new = models.ForeignKey(ImageCrop, on_delete=models.SET_NULL, related_name="female_avatar_species_new",
                                       null="True", blank="True")
     gbifusagekey = models.IntegerField(blank=True, null=True, verbose_name='GBIF usagekey', unique=True)
     accepted_species = models.ForeignKey("self", on_delete=models.SET_NULL, blank=True, null=True)
@@ -583,70 +649,6 @@ class PlantnetPowoidMapping(models.Model):
 
     def __str__(self):
         return f"{self.plantnetpowoid} => {self.species_plantnetpowoid.plantnetpowoid} [{self.species_plantnetpowoid}]"
-
-
-class ImageFile(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    species = models.ForeignKey(Species, null=True, blank=True, on_delete=CASCADE)
-    owner = models.CharField(max_length=255)
-    owner_link = URLField(blank=True, null=True, max_length=255)
-    source = URLField(max_length=1024)
-    license = models.CharField(max_length=64)
-    image = models.ImageField(upload_to="images", max_length=255, width_field='width', height_field='height')
-    width = models.IntegerField(default=0)
-    height = models.IntegerField(default=0)
-
-    @property
-    def large(self):
-        if self.width > LARGE_WIDTH:
-            return self.image_large
-        return None
-
-    @property
-    def medium(self):
-        if self.width > MEDIUM_WIDTH:
-            return self.image_medium
-        return None
-
-    @property
-    def small(self):
-        if self.width > SMALL_WIDTH:
-            return self.image_small
-        return None
-
-    image_large = ImageSpecField(
-        source='image',
-        processors=[ResizeToFit(LARGE_WIDTH, None)],
-        options={'quality': 90}
-    )
-    image_medium = ImageSpecField(
-        source='image',
-        processors=[ResizeToFit(MEDIUM_WIDTH, None)],
-        options={'quality': 90}
-    )
-    image_small = ImageSpecField(
-        source='image',
-        processors=[ResizeToFit(SMALL_WIDTH, None)],
-        options={'quality': 90}
-    )
-
-    def __str__(self):
-        return f"{self.owner} {self.image.name[self.image.name.index('/') + 1:]}"
-
-    class Meta:
-        db_table = "imagefile"
-
-class ImageCrop(models.Model):
-    imagefile = models.OneToOneField(ImageFile, on_delete=CASCADE)
-    cropping = ImageRatioField('imagefile__image', '400x400', size_warning=True)
-
-    def save(self, *args, **kwargs):
-
-        super().save(*args, **kwargs)
-
-
-    class Meta:
-        db_table = "imagecrop"
 
 
 class AudioFile(models.Model):
