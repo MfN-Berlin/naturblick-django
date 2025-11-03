@@ -13,19 +13,17 @@ from django.utils.html import format_html, format_html_join
 from django.utils.html import mark_safe
 from django.utils.translation import ngettext
 from image_cropping import ImageCroppingMixin
-from image_cropping.utils import get_backend
 from imagekit import ImageSpec
 from imagekit.admin import AdminThumbnail
 from imagekit.cachefiles import ImageCacheFile
 from imagekit.processors import ResizeToFit
-from django.core.exceptions import ValidationError
-
 
 from species import utils
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
     Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, LeichtPortrait, \
-    LeichtRecognize, LeichtGoodToKnow
+    LeichtRecognize, LeichtGoodToKnow, AudioFile, ImageCrop, ImageFile
+from .utils import cropped_image
 
 
 class AdminThumbnailSpec(ImageSpec):
@@ -383,16 +381,8 @@ class SpeciesAdmin(admin.ModelAdmin):
     def avatar_crop(self, obj):
         avatar = obj.avatar
         if avatar:
-            image_url = get_backend().get_thumbnail_url(
-                avatar.image,
-                {
-                    'size': (400, 400),
-                    'box': avatar.cropping,
-                    'crop': True,
-                    'detail': True,
-                }
-            )
-            url = reverse('admin:species_avatar_change', args=(avatar.id,))
+            image_url = cropped_image(avatar.image, avatar.cropping)
+            url = reverse('admin:species_avatar_change', args=([avatar.id]))
             return format_html('<a href="{}"><img src="{}" class="species-avatar"/></a>', url, image_url)
         else:
             return "-"
@@ -453,7 +443,7 @@ class SpeciesAdmin(admin.ModelAdmin):
             for lang in ['de', 'en']:
                 portrait = [portrait for portrait in obj.portrait_set.all() if portrait.language == lang]
                 if portrait:
-                    url = reverse(f'admin:species_{obj.group.nature}portrait_change', args=(portrait[0].id,))
+                    url = reverse(f'admin:species_{obj.group.nature}portrait_change', args=([portrait[0].id]))
                     links.append(f'<a href="{{}}" class="changelink">{lang}</a>')
                     urls.append(url)
                 else:
@@ -492,7 +482,6 @@ class GoodToKnowInline(OrderableAdmin, admin.TabularInline):
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 60})}
     }
     ordering_field_hide_input = True
-
 
 
 class SimilarSpeciesInline(OrderableAdmin, admin.TabularInline):
@@ -816,15 +805,7 @@ class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
         description="Cropped Image"
     )
     def cropped_image(self, obj):
-        image_url = get_backend().get_thumbnail_url(
-            obj.image,
-            {
-                'size': (400, 400),
-                'box': obj.cropping,
-                'crop': True,
-                'detail': True,
-            }
-        )
+        image_url = cropped_image(obj.image, obj.cropping)
         return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
 
     @admin.display(
@@ -885,6 +866,7 @@ class LeichtRecognizeInline(OrderableAdmin, admin.TabularInline):
     }
     ordering_field_hide_input = True
 
+
 class LeichtGoodtoknowInline(OrderableAdmin, admin.TabularInline):
     extra = 0
     model = LeichtGoodToKnow
@@ -894,41 +876,101 @@ class LeichtGoodtoknowInline(OrderableAdmin, admin.TabularInline):
     }
     ordering_field_hide_input = True
 
-class LeichtPortraitAdminForm(forms.ModelForm):
-    class Meta:
-        model = LeichtPortrait
-        fields = "__all__"
 
-    def clean(self):
-        cleaned_data = super().clean()
-        species = cleaned_data.get("species")
-        recognize_image = cleaned_data.get("recognize_image")
-        goodtoknow_image = cleaned_data.get("goodtoknow_image")
+class HasCropFilter(YesNoFilter):
+    title = "Crop"
+    parameter_name = "has_crop"
 
-        if not species.avatar:
-            raise ValidationError({
-                "species": "Leichtportrait species need an avatar"
-            })
+    def queryset(self, request, queryset):
+        crop_ids = ImageCrop.objects.values('imagefile_id')
+        if self.value() == "y":
+            return queryset.filter(id__in=crop_ids)
+        if self.value() == "n":
+            return queryset.exclude(id__in=crop_ids)
 
-        if recognize_image and recognize_image.species != species:
-            raise ValidationError({
-                "recognize_image": "Recognize image must have the same species as the portrait."
-            })
 
-        if goodtoknow_image and goodtoknow_image.species != species:
-            raise ValidationError({
-                "goodtoknow_image": "Good-to-know image must have the same species as the portrait."
-            })
+@admin.register(ImageFile)
+class ImageFileAdmin(admin.ModelAdmin):
+    list_display = ['id', 'admin_thumbnail', 'owner', 'species__gername', 'add_crop_link']
+    search_fields = ['image', 'owner', 'species__sciname', 'species__gername', 'species__speciesid']
+    fields = ['image', 'species', 'owner', 'owner_link', 'source', 'license', 'width', 'height']
+    readonly_fields = ['admin_thumbnail', 'width', 'height']
+    list_display_links = ['id', 'admin_thumbnail']
+    autocomplete_fields = ['species']
+    list_filter = [HasCropFilter]
 
-        return cleaned_data
+    admin_thumbnail = AdminThumbnail(image_field=cached_thumb)
+    admin_thumbnail.short_description = 'Image'
+
+    @admin.display()
+    def add_crop_link(self, obj):
+        maybe_imagecrop = ImageCrop.objects.filter(imagefile_id=obj.id)
+        if maybe_imagecrop:
+            # for now only 1 imagecrop per imagefile and therefore [0] ok
+            url = reverse('admin:species_imagecrop_change', args=([maybe_imagecrop[0].id]))
+            return format_html('<a href="{}" class="changelink"></a>', url)
+        else:
+            url = (
+                    reverse('admin:species_imagecrop_add')
+                    + f'?imagefile={obj.id}'
+            )
+            return format_html('<a href="{}" class="addlink"></a>', url)
+
+    add_crop_link.short_description = 'Crop'
+
+
+@admin.register(ImageCrop)
+class ImageCropAdmin(ImageCroppingMixin, admin.ModelAdmin):
+    list_display = ['cropped_image']
+    search_fields = ['imagefile__owner', 'imagefile__species__sciname', 'imagefile__species__gername',
+                     'imagefile__species__speciesid']
+    autocomplete_fields = ['imagefile']
+
+    @admin.display(
+        description="Cropped Image"
+    )
+    def cropped_image(self, obj):
+        image_url = cropped_image(obj.imagefile.image, obj.cropping, (100, 100))
+        return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
+
+
+@admin.register(AudioFile)
+class AudioFileAdmin(admin.ModelAdmin):
+    list_display = ['id', 'audio_file', 'owner', 'species__gername']
+    search_fields = ['owner', 'audio_file', 'species__sciname', 'species__gername', 'species__speciesid']
+    fields = ['audio_file',
+              'species',
+              'owner',
+              'owner_link',
+              'source',
+              'license'
+              ]
+    autocomplete_fields = ['species']
 
 
 @admin.register(LeichtPortrait)
 class LeichtPortraitAdmin(admin.ModelAdmin):
-    form = LeichtPortraitAdminForm
-    list_display = ['species__speciesid', 'species__sciname', 'species__gername', 'level']
-    search_fields = ['species__speciesid', 'species__sciname', 'species__gername']
-    search_help_text = 'Sucht über alle Artnamen'
-    ordering = ["species__sciname"]
-    autocomplete_fields = ['species', 'recognize_image', 'goodtoknow_image']
+    list_display = ['name', 'level', 'avatar_thumb', 'goodtoknow_thumb']
+    search_fields = ['name']
+    search_help_text = 'Sucht über alle Namen'
+    ordering = ["name"]
+    autocomplete_fields = ['avatar', 'audio', 'goodtoknow_image']
     inlines = [LeichtRecognizeInline, LeichtGoodtoknowInline]
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 60})}
+    }
+    readonly_fields = ['avatar_thumb', 'goodtoknow_thumb']
+
+    @admin.display(
+        description="Avatar"
+    )
+    def avatar_thumb(self, obj):
+        image_url = cropped_image(obj.avatar.imagefile.image, cropping=obj.avatar.cropping, size=(100, 100))
+        return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
+
+    @admin.display(
+        description="Goodtoknow Image"
+    )
+    def goodtoknow_thumb(self, obj):
+        image_url = cropped_image(obj.goodtoknow_image.image, cropping=None, size=(100, 100))
+        return mark_safe(f'<img src="{image_url}" width="100" height="100" />')

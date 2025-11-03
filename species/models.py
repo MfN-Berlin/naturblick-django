@@ -1,6 +1,5 @@
-import logging
-
 import requests
+from admin_ordering.models import OrderableModel
 from django.db import models
 from django.db.models import ForeignKey, URLField, CASCADE, RESTRICT
 from django.db.models import Q
@@ -9,7 +8,6 @@ from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
-from admin_ordering.models import OrderableModel
 
 from .choices import *
 from .validators import *
@@ -587,18 +585,101 @@ class PlantnetPowoidMapping(models.Model):
         return f"{self.plantnetpowoid} => {self.species_plantnetpowoid.plantnetpowoid} [{self.species_plantnetpowoid}]"
 
 
-class LeichtPortrait(models.Model):
-    species = models.ForeignKey(
-        Species,
-        on_delete=models.PROTECT
+class ImageFile(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    species = models.ForeignKey(Species, null=True, blank=True, on_delete=CASCADE)
+    owner = models.CharField(max_length=255)
+    owner_link = URLField(blank=True, null=True, max_length=255)
+    source = URLField(max_length=1024)
+    license = models.CharField(max_length=64)
+    image = models.ImageField(upload_to="images", max_length=255, width_field='width', height_field='height')
+    width = models.IntegerField(default=0)
+    height = models.IntegerField(default=0)
+
+    @property
+    def large(self):
+        if self.width > LARGE_WIDTH:
+            return self.image_large
+        return None
+
+    @property
+    def medium(self):
+        if self.width > MEDIUM_WIDTH:
+            return self.image_medium
+        return None
+
+    @property
+    def small(self):
+        if self.width > SMALL_WIDTH:
+            return self.image_small
+        return None
+
+    image_large = ImageSpecField(
+        source='image',
+        processors=[ResizeToFit(LARGE_WIDTH, None)],
+        options={'quality': 90}
     )
-    recognize_image = models.ForeignKey(PortraitImageFile, on_delete=RESTRICT, related_name="recognize_image")
-    goodtoknow_image = models.ForeignKey(PortraitImageFile, on_delete=RESTRICT, related_name="goodtoknow_image")
-    level = models.PositiveIntegerField(default=1)
+    image_medium = ImageSpecField(
+        source='image',
+        processors=[ResizeToFit(MEDIUM_WIDTH, None)],
+        options={'quality': 90}
+    )
+    image_small = ImageSpecField(
+        source='image',
+        processors=[ResizeToFit(SMALL_WIDTH, None)],
+        options={'quality': 90}
+    )
 
     def __str__(self):
-        return str(self.species)
+        return f"{self.owner} {self.image.name[self.image.name.index('/') + 1:]}"
 
+    class Meta:
+        db_table = "imagefile"
+
+class ImageCrop(models.Model):
+    imagefile = models.OneToOneField(ImageFile, on_delete=CASCADE)
+    cropping = ImageRatioField('imagefile__image', '400x400', size_warning=True)
+
+    def save(self, *args, **kwargs):
+
+        super().save(*args, **kwargs)
+
+
+    class Meta:
+        db_table = "imagecrop"
+
+
+class AudioFile(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    species = models.ForeignKey(Species, null=True, blank=True, on_delete=CASCADE)
+    owner = models.CharField(max_length=255)
+    owner_link = URLField(blank=True, null=True, max_length=255)
+    source = URLField(max_length=1024)
+    license = models.CharField(max_length=64)
+    audio_file = models.FileField(upload_to="leicht_audio_files", validators=[validate_mp3])
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.owner} {os.path.basename(self.audio_file.path)}"
+
+    class Meta:
+        db_table = 'audiofile'
+
+
+class LeichtPortrait(models.Model):
+    name = models.TextField(default='unknown')
+    avatar = models.ForeignKey(ImageCrop, on_delete=RESTRICT, default=1)
+    goodtoknow_image = models.ForeignKey(ImageFile, on_delete=RESTRICT, related_name="goodtoknow_image", default=1)
+    level = models.PositiveIntegerField(default=1)
+    audio = models.ForeignKey(AudioFile, on_delete=models.SET_NULL, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.name)
+
+    class Meta:
+        db_table = 'leichtportrait'
 
 
 class LeichtRecognize(OrderableModel):
@@ -609,6 +690,9 @@ class LeichtRecognize(OrderableModel):
     def __str__(self):
         return f"LeichtRecognize {self.text}"
 
+    class Meta(OrderableModel.Meta):
+        db_table = 'leichtrecognize'
+
 
 class LeichtGoodToKnow(OrderableModel):
     text = models.TextField()
@@ -617,3 +701,6 @@ class LeichtGoodToKnow(OrderableModel):
 
     def __str__(self):
         return f"LeichtGoodToKnow {self.text}"
+
+    class Meta(OrderableModel.Meta):
+        db_table = 'leichtgtk'

@@ -132,4 +132,5 @@ docker-compose.yml
 
 refresh.sh
 media-root/
-
+static-root/
+pg_dump.sql

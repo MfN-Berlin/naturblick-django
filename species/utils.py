@@ -1,5 +1,5 @@
 import json
-import logging
+import os
 import re
 import sqlite3
 import tempfile
@@ -8,15 +8,13 @@ from dataclasses import dataclass, field
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
-from image_cropping.utils import get_backend
 
 import requests
 from django.core.files.base import ContentFile
+from image_cropping.utils import get_backend
 
 from species.models import Species, SpeciesName, SourcesTranslation, SourcesImprint, Faunaportrait, Floraportrait, Group
 from .utils_characters import insert_characters
-
-logger = logging.getLogger("django")
 
 
 @dataclass
@@ -171,12 +169,15 @@ def insert_sources_translations(sqlite_cursor):
 
 def insert_sources_imprint(sqlite_cursor):
     data = list(map(lambda si: (
-        si.id, si.name, si.scie_name, si.scie_name_eng if si.scie_name_eng else '', si.image_source, si.licence, si.author),
+        si.id, si.name, si.scie_name, si.scie_name_eng if si.scie_name_eng else '', si.image_source, si.licence,
+        si.author),
                     SourcesImprint.objects.all()))
     sqlite_cursor.executemany("INSERT INTO sources_imprint VALUES (?, ?, ?, ?, ?, ?, ?);", data)
 
 
 def insert_current_version(sqlite_cursor):
+    if os.environ.get('DJANGO_ENV') == 'development':
+        return "1"
     url = "http://playback:9000/speciesdbversion"
     response = requests.get(url)
     if response.status_code == 200:
@@ -263,7 +264,8 @@ def allow_break_on_hyphen(s):
 
 def insert_species(sqlite_cursor):
     data = list(map(map_species(), Species.objects.all()))
-    sqlite_cursor.executemany("INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
+    sqlite_cursor.executemany(
+        "INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
 
     # could be done on insert level
     sqlite_cursor.execute("""
@@ -290,29 +292,30 @@ def insert_species(sqlite_cursor):
     sqlite_cursor.execute("ALTER TABLE species DROP COLUMN gbifusagekey;")
 
 
-def avatar_crop(avatar):
+def cropped_image(image, cropping, size = (400,400)):
     return get_backend().get_thumbnail_url(
-        avatar.image,
+        image,
         {
-            'size': (400, 400),
-            'box': avatar.cropping,
+            'size': size,
+            'box': cropping,
             'crop': True,
             'detail': True,
         }
     )
+
 
 def map_species():
     return lambda s: (
         s.id, s.group.name, allow_break_on_hyphen(s.sciname), allow_break_on_hyphen(s.gername),
         allow_break_on_hyphen(s.engname),
         s.wikipedia,
-        avatar_crop(s.avatar) if s.avatar else None,
+        cropped_image(s.avatar.image, s.avatar.cropping) if s.avatar else None,
         s.avatar.image.url if s.avatar else None,
         s.avatar.owner if s.avatar else None,
         s.avatar.owner_link if s.avatar else None,
         s.avatar.source if s.avatar else None,
         s.avatar.license if s.avatar else None,
-        avatar_crop(s.female_avatar) if s.female_avatar else None,
+        cropped_image(s.female_avatar.image, s.female_avatar.cropping) if s.female_avatar else None,
         get_synonnyms('de', s.id),
         get_synonnyms('en', s.id), s.red_list_germany, s.iucncategory, s.speciesid, s.gbifusagekey,
         s.accepted_species.id if s.accepted_species else None,

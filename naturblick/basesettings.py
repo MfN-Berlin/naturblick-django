@@ -12,11 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 
-from django.core.files.storage import FileSystemStorage
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -90,7 +87,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -104,9 +100,10 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 from easy_thumbnails.conf import Settings as thumbnail_settings
+
 THUMBNAIL_PROCESSORS = (
-    'image_cropping.thumbnail_processors.crop_corners',
-) + thumbnail_settings.THUMBNAIL_PROCESSORS
+                           'image_cropping.thumbnail_processors.crop_corners',
+                       ) + thumbnail_settings.THUMBNAIL_PROCESSORS
 
 THUMBNAIL_ALIASES = {
     '': {
@@ -115,12 +112,15 @@ THUMBNAIL_ALIASES = {
 }
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/static-root'
+STATIC_ROOT = BASE_DIR / "static-root"
+
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media-root')
+MEDIA_ROOT = BASE_DIR / "media-root"
 
 IMAGEKIT_CACHEFILE_DIR = 'auto-resized-images'
+
+
 class ImagekitOnSaveStrategy(object):
     def on_source_saved(self, file):
         file.generate()
@@ -131,8 +131,8 @@ class ImagekitOnSaveStrategy(object):
     def on_existence_required(self, file):
         file.generate()
 
-IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = ImagekitOnSaveStrategy
 
+IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = ImagekitOnSaveStrategy
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
