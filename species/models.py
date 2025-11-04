@@ -71,10 +71,8 @@ class ImageCrop(models.Model):
     imagefile = models.OneToOneField(ImageFile, on_delete=CASCADE)
     cropping = ImageRatioField('imagefile__image', '400x400', size_warning=True)
 
-    def save(self, *args, **kwargs):
-
-        super().save(*args, **kwargs)
-
+    def __str__(self):
+        return self.imagefile.__str__()
 
     class Meta:
         db_table = "imagecrop"
