@@ -20,7 +20,7 @@ from imagekit.processors import ResizeToFit
 
 from species import utils
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
-    PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Avatar, Group, Floraportrait, \
+    PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Group, Floraportrait, \
     Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, LeichtPortrait, \
     LeichtRecognize, LeichtGoodToKnow, AudioFile, ImageCrop, ImageFile
 from .utils import cropped_image
@@ -142,11 +142,11 @@ class HasAvatarFilter(YesNoFilter):
     def queryset(self, request, queryset):
         if self.value() == "y":
             return queryset.filter(
-                avatar__isnull=False
+                avatar_new__isnull=False
             )
         if self.value() == "n":
             return queryset.filter(
-                avatar__isnull=True
+                avatar_new__isnull=True
             )
 
 
@@ -157,11 +157,11 @@ class HasFemaleAvatarFilter(YesNoFilter):
     def queryset(self, request, queryset):
         if self.value() == "y":
             return queryset.filter(
-                female_avatar__isnull=False
+                female_avatar_new__isnull=False
             )
         if self.value() == "n":
             return queryset.filter(
-                female_avatar__isnull=True
+                female_avatar_new__isnull=True
             )
 
 
@@ -325,8 +325,8 @@ class SpeciesAdmin(admin.ModelAdmin):
                'activity_end_month'),
               ('activity_start_hour',
                'activity_end_hour'),
-              'avatar',
-              'female_avatar',
+              'avatar_new',
+              'female_avatar_new',
               'gbifusagekey',
               'accepted_species',
               'plantnetpowoid',
@@ -336,13 +336,13 @@ class SpeciesAdmin(admin.ModelAdmin):
     raw_id_fields = ['accepted_species']
     ordering = ('sciname',)
     filter_horizontal = ['tag']
-    autocomplete_fields = ['avatar', 'female_avatar']
+    autocomplete_fields = ['avatar_new', 'female_avatar_new']
     actions = ['make_autoid_enabled', 'import_avatar_from_wikimedia']
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.resolver_match.view_name.endswith('changelist'):
-            return qs.select_related('avatar', 'group').prefetch_related('portrait_set')
+            return qs.select_related('avatar_new', 'group').prefetch_related('portrait_set')
         return qs
 
     @admin.action(description="Mark selected species as available for autoid")
@@ -366,9 +366,9 @@ class SpeciesAdmin(admin.ModelAdmin):
             form = ImportAvatarFromWikimediaForm(request.POST)
             if form.is_valid():
                 meta = utils.get_metadata(form.cleaned_data['wikimedia_url'])
-                avatar = Avatar.objects.create(owner=meta.author, owner_link=meta.author_url, source=meta.image_url,
+                avatar = ImageFile.objects.create(owner=meta.author, owner_link=meta.author_url, source=meta.image_url,
                                                license=meta.license, image=meta.image)
-                queryset.update(avatar=avatar.id)
+                queryset.update(avatar_new=avatar.id)
                 return HttpResponseRedirect(reverse('admin:species_avatar_change', args=(avatar.id,)))
         else:
             form = ImportAvatarFromWikimediaForm()
@@ -379,10 +379,10 @@ class SpeciesAdmin(admin.ModelAdmin):
         description="Avatar"
     )
     def avatar_crop(self, obj):
-        avatar = obj.avatar
+        avatar = obj.avatar_new
         if avatar:
-            image_url = cropped_image(avatar.image, avatar.cropping)
-            url = reverse('admin:species_avatar_change', args=([avatar.id]))
+            image_url = cropped_image(avatar.imagefile.image, avatar.cropping)
+            url = reverse('admin:species_imagecrop_change', args=([avatar.id]))
             return format_html('<a href="{}"><img src="{}" class="species-avatar"/></a>', url, image_url)
         else:
             return "-"
@@ -663,11 +663,11 @@ def move_portrait_to_accepted(modeladmin, request, queryset):
             if accepted_species:
                 # move avatars
                 synonym_species = portrait.species
-                if synonym_species.avatar and not accepted_species.avatar:
-                    accepted_species.avatar = synonym_species.avatar
+                if synonym_species.avatar_new and not accepted_species.avatar_new:
+                    accepted_species.avatar_new = synonym_species.avatar_new
                     accepted_species.save()
-                if synonym_species.female_avatar and not accepted_species.female_avatar:
-                    accepted_species.female_avatar = synonym_species.female_avatar
+                if synonym_species.female_avatar_new and not accepted_species.female_avatar_new:
+                    accepted_species.female_avatar_new = synonym_species.female_avatar_new
                     accepted_species.save()
 
                 # remove accepted species from similar species
@@ -784,43 +784,12 @@ class HasSpecies(YesNoFilter):
     def queryset(self, request, queryset):
         if self.value() == "y":
             return queryset.filter(
-                Q(avatar_species__isnull=False) | Q(female_avatar_species__isnull=False)
+                Q(avatar_new_species__isnull=False) | Q(female_avatar_new_species__isnull=False)
             )
         if self.value() == "n":
             return queryset.filter(
-                Q(avatar_species__isnull=True) & Q(female_avatar_species__isnull=True)
+                Q(avatar_new_species__isnull=True) & Q(female_avatar_new_species__isnull=True)
             )
-
-
-@admin.register(Avatar)
-class AvatarAdmin(ImageCroppingMixin, admin.ModelAdmin):
-    list_display = ['id', 'cropped_image', 'image', 'owner', 'species_list']
-    list_filter = [HasSpecies]
-    search_fields = ['image', 'owner', 'avatar_species__sciname', 'avatar_species__gername',
-                     'avatar_species__speciesid', 'female_avatar_species__sciname', 'female_avatar_species__gername',
-                     'female_avatar_species__speciesid']
-    fields = ['cropping', 'image', 'owner', 'owner_link', 'source', 'license']
-
-    @admin.display(
-        description="Cropped Image"
-    )
-    def cropped_image(self, obj):
-        image_url = cropped_image(obj.image, obj.cropping)
-        return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
-
-    @admin.display(
-        description="Species"
-    )
-    def species_list(self, obj):
-        return format_html_join(
-            ', ',
-            '<a href="{}">{}</a>',
-            ((reverse("admin:species_species_change", args=[species.id]), str(species))
-             for species in obj.avatar_species.all())
-        )
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related("avatar_species")
 
 
 @admin.register(SourcesImprint)
