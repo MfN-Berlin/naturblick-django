@@ -13,39 +13,33 @@ def copy_avatar_data(apps, schema_editor):
     for species in Species.objects.all():
         avatar = species.avatar
         if avatar:
-            try:
-                old_path = f"{media_root}/{avatar.image.name}"
-                image_file = ImageFile(species=species, owner=avatar.owner, owner_link=avatar.owner_link,
-                                       source=avatar.source,
-                                       license=avatar.license, image=avatar.image )
-                image_file.image.name = f"images/{avatar.image.name.split('/')[-1]}"
-                image_file.save()
+            old_path = f"{media_root}/{avatar.image.name}"
+            image_file = ImageFile(species=species, owner=avatar.owner, owner_link=avatar.owner_link,
+                                   source=avatar.source,
+                                   license=avatar.license, image=avatar.image )
+            image_file.image.name = f"images/{avatar.image.name.split('/')[-1]}"
+            image_file.save()
 
-                image_crop = ImageCrop(imagefile=image_file, cropping=avatar.cropping)
-                image_crop.save()
-                species.avatar_new = image_crop
-                species.save(update_fields=['avatar_new'])
+            image_crop = ImageCrop(imagefile=image_file, cropping=avatar.cropping)
+            image_crop.save()
+            species.avatar_new = image_crop
+            species.save(update_fields=['avatar_new'])
 
-                shutil.copyfile(old_path, f"{media_root}/{image_file.image.name}")
-            except FileNotFoundError:
-                print(f"File avatar '{old_path}' NOT FOUND")
+            shutil.copyfile(old_path, f"{media_root}/{image_file.image.name}")
 
         female_avatar = species.female_avatar
         if female_avatar:
-            try:
-                female_old_path = f"{media_root}/{female_avatar.image.name}"
-                female_image_file = ImageFile(species=species, owner=female_avatar.owner, owner_link=female_avatar.owner_link,
-                                       source=female_avatar.source,
-                                       license=female_avatar.license, image=female_avatar.image)
-                female_image_file.image.name = f"images/{female_avatar.image.name.split('/')[-1]}"
-                female_image_file.save()
-                female_image_crop = ImageCrop(imagefile=female_image_file, cropping=female_avatar.cropping)
-                female_image_crop.save()
-                species.female_avatar_new = female_image_crop
-                species.save(update_fields=['female_avatar_new'])
-                shutil.copyfile(female_old_path, f"{media_root}/{female_image_file.image.name}")
-            except FileNotFoundError:
-                print(f"File female avatar '{old_path}' NOT FOUND")
+            female_old_path = f"{media_root}/{female_avatar.image.name}"
+            female_image_file = ImageFile(species=species, owner=female_avatar.owner, owner_link=female_avatar.owner_link,
+                                   source=female_avatar.source,
+                                   license=female_avatar.license, image=female_avatar.image)
+            female_image_file.image.name = f"images/{female_avatar.image.name.split('/')[-1]}"
+            female_image_file.save()
+            female_image_crop = ImageCrop(imagefile=female_image_file, cropping=female_avatar.cropping)
+            female_image_crop.save()
+            species.female_avatar_new = female_image_crop
+            species.save(update_fields=['female_avatar_new'])
+            shutil.copyfile(female_old_path, f"{media_root}/{female_image_file.image.name}")
 
 
 class Migration(migrations.Migration):
