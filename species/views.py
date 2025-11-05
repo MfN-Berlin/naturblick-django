@@ -38,9 +38,6 @@ def is_data_valid():
 
 # returns sqlite database used by android/ios
 def app_content_db(request):
-    # generates small, medium, large version of imagekit Spec-Fields
-    management.call_command("generateimages")
-
     if (not is_data_valid()):
         raise RuntimeError('There are artportraits connected to a synonym')
 
