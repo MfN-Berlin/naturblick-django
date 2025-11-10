@@ -263,7 +263,7 @@ def allow_break_on_hyphen(s):
 
 
 def insert_species(sqlite_cursor):
-    data = list(map(map_species(), Species.objects.all()))
+    data = list(map(map_species(), Species.objects.select_related("group", "avatar_new", "female_avatar_new").all()))
     sqlite_cursor.executemany(
         "INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
 
