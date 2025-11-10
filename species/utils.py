@@ -251,10 +251,9 @@ def create_sqlite_file():
     return temp_file.name
 
 
-def get_synonnyms(language, species_id):
+def get_synonyms(all_synonyms, language, species_id):
     synonyms = ", ".join(
-        SpeciesName.objects.filter(species=species_id, language=language).order_by('name').values_list("name",
-                                                                                                       flat=True))
+        (s.name for s in all_synonyms if s.species_id == species_id and s.language == language))
     return allow_break_on_hyphen(synonyms) or None
 
 
@@ -263,7 +262,8 @@ def allow_break_on_hyphen(s):
 
 
 def insert_species(sqlite_cursor):
-    data = list(map(map_species(), Species.objects.select_related("group", "avatar_new", "female_avatar_new").all()))
+    all_synonyms = list(SpeciesName.objects.order_by('name').all())
+    data = list(map(map_species(all_synonyms), Species.objects.select_related("group", "avatar_new", "female_avatar_new").all()))
     sqlite_cursor.executemany(
         "INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
 
@@ -304,7 +304,7 @@ def cropped_image(image, cropping, size = (400,400)):
     )
 
 
-def map_species():
+def map_species(all_synonyms):
     return lambda s: (
         s.id, s.group.name, allow_break_on_hyphen(s.sciname), allow_break_on_hyphen(s.gername),
         allow_break_on_hyphen(s.engname),
@@ -316,9 +316,9 @@ def map_species():
         s.avatar_new.imagefile.source if s.avatar_new else None,
         s.avatar_new.imagefile.license if s.avatar_new else None,
         cropped_image(s.female_avatar_new.imagefile.image, s.female_avatar_new.cropping) if s.female_avatar_new else None,
-        get_synonnyms('de', s.id),
-        get_synonnyms('en', s.id), s.red_list_germany, s.iucncategory, s.speciesid, s.gbifusagekey,
-        s.accepted_species.id if s.accepted_species else None,
+        get_synonyms(all_synonyms, 'de', s.id),
+        get_synonyms(all_synonyms, 'en', s.id), s.red_list_germany, s.iucncategory, s.speciesid, s.gbifusagekey,
+        s.accepted_species_id,
         None,  # gersearchfield - per update later
         None)  # engsearchfield - per update later
 
