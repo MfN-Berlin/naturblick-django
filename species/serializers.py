@@ -11,7 +11,7 @@ class AvatarCropUrlField(serializers.Field):
     def to_representation(self, obj):
         if not obj:
             return None
-        return cropped_image(obj.image, obj.cropping)
+        return cropped_image(obj.imagefile.image, obj.cropping)
 
 
 class TagLocalnameField(serializers.Field):
