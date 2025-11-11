@@ -232,7 +232,7 @@ class PortraitDetail(generics.GenericAPIView):
         if not species_id:
             raise NotFound()
 
-        species_qs = Species.objects.all().select_related('group', 'avatar').prefetch_related(
+        species_qs = Species.objects.all().select_related('group', 'avatar_new').prefetch_related(
             Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
                      to_attr="prefetched_speciesnames"),
             Prefetch("faunaportraitaudiofile_set", queryset=FaunaportraitAudioFile.objects.all(),
@@ -338,7 +338,7 @@ def species(request, id):
         if id:
             lang = get_lang_queryparam(request)
 
-            species_qs = Species.objects.all().select_related('group', 'avatar').prefetch_related(
+            species_qs = Species.objects.all().select_related('group', 'avatar_new').prefetch_related(
                 Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
                          to_attr="prefetched_speciesnames"),
                 Prefetch("faunaportraitaudiofile_set", queryset=FaunaportraitAudioFile.objects.all(),
@@ -364,7 +364,7 @@ def species_list(request):
         species_ids = request.query_params.getlist('speciesid_in')
         lang = get_lang_queryparam(request)
 
-        species_qs = Species.objects.all().select_related('group', 'avatar').prefetch_related(
+        species_qs = Species.objects.all().select_related('group', 'avatar_new').prefetch_related(
             Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
                      to_attr="prefetched_speciesnames"),
             Prefetch("faunaportraitaudiofile_set", queryset=FaunaportraitAudioFile.objects.all(),
@@ -391,7 +391,7 @@ class SpeciesList(generics.ListAPIView):
         tags = self.request.query_params.getlist('tag')
         sort_and_order = self.request.query_params.get('sort') or 'localname:ASC'
 
-        species_qs = (Species.objects.select_related('avatar', 'group')
+        species_qs = (Species.objects.select_related('avatar_new', 'group')
         .prefetch_related(
             Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang).order_by('name'),
                      to_attr="prefetched_speciesnames"),
@@ -403,7 +403,7 @@ class SpeciesList(generics.ListAPIView):
         species_qs = filter_species_by_query(species_qs, query, lang)
         species_qs = filter_species_tags(species_qs, tags)
         species_qs = species_qs.filter(
-            Q(avatar__isnull=False) & Q(portrait__language=lang) & Q(portrait__published=True) & Q(
+            Q(avatar_new__isnull=False) & Q(portrait__language=lang) & Q(portrait__published=True) & Q(
                 portrait__descmeta__portrait_image_file__isnull=False))
         species_qs = sort_species(species_qs, sort_and_order, lang)
 
