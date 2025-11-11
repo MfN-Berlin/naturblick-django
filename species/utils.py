@@ -265,7 +265,7 @@ def insert_species(sqlite_cursor):
     all_synonyms = list(SpeciesName.objects.order_by('name').all())
     all_synonyms_dict = {}
     for synonym in all_synonyms:
-        all_synonyms_dict.setdefault(synonym.id, []).append(synonym)
+        all_synonyms_dict.setdefault(synonym.species_id, []).append(synonym)
 
     data = list(map(map_species(all_synonyms_dict), Species.objects.select_related("group", "avatar_new", "female_avatar_new").all()))
     sqlite_cursor.executemany(
