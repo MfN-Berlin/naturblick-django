@@ -228,7 +228,7 @@ def create_sqlite_file():
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".sqlite3")
     temp_file.close()
 
-    sqlite_conn = sqlite3.connect(temp_file.name, autocommit=False)
+    sqlite_conn = sqlite3.connect(temp_file.name)
     sqlite_cursor = sqlite_conn.cursor()
 
     create_tables(sqlite_cursor)
