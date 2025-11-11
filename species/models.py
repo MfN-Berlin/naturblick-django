@@ -188,6 +188,8 @@ class Species(models.Model):
 
     plantnetpowoid = models.CharField(blank=True, null=True, max_length=255, unique=True)
 
+    birdnetid = models.PositiveIntegerField(blank=True, null=True)
+    
     speciesid.short_description = "Species ID"
 
     def validate_gbif(self):

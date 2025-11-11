@@ -288,6 +288,20 @@ class HasWikipediaFilter(YesNoFilter):
                 wikipedia__isnull=True
             )
 
+class HasBirdnetIdFilter(YesNoFilter):
+    title = "birdnetid"
+    parameter_name = "has_birdnetid"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                birdnetid__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                birdnetid__isnull=True
+            )
+        
 
 class ImportAvatarFromWikimediaForm(forms.Form):
     wikimedia_url = forms.URLField(label="Wikimedia image URL")
@@ -308,7 +322,7 @@ class SpeciesAdmin(admin.ModelAdmin):
                     'search']
     list_display_links = ['id', 'speciesid']
     list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, HasSynonymsFilter,
-                   IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
+                   IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter, HasBirdnetIdFilter,
                    'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, HasWikipediaFilter, 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
@@ -330,6 +344,7 @@ class SpeciesAdmin(admin.ModelAdmin):
               'gbifusagekey',
               'accepted_species',
               'plantnetpowoid',
+              'birdnetid',
               'tag',
               ]
 
