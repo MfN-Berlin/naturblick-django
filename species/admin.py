@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.templatetags.static import static
 from django.urls import reverse
-from django.utils.html import format_html, format_html_join
+from django.utils.html import format_html
 from django.utils.html import mark_safe
 from django.utils.translation import ngettext
 from image_cropping import ImageCroppingMixin
@@ -20,9 +20,9 @@ from imagekit.processors import ResizeToFit
 
 from species import utils
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
-    PortraitImageFile, DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Group, Floraportrait, \
-    Tag, SourcesImprint, SourcesTranslation, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, LeichtPortrait, \
-    LeichtRecognize, LeichtGoodToKnow, AudioFile, ImageCrop, ImageFile
+    DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Group, Floraportrait, Tag, SourcesImprint, SourcesTranslation, \
+    FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, LeichtPortrait, LeichtRecognize, LeichtGoodToKnow, \
+    AudioFile, ImageCrop, ImageFile
 from .utils import cropped_image
 
 
@@ -528,37 +528,30 @@ class UnambigousFeatureInline(OrderableAdmin, admin.TabularInline):
     ordering_field_hide_input = True
 
 
-@admin.register(PortraitImageFile)
-class PortraitImageFileAdmin(admin.ModelAdmin):
-    search_fields = ['owner', 'image', 'species__sciname', 'species__gername', 'species__speciesid']
-    fields = ['image', 'admin_thumbnail', 'species', 'owner', 'owner_link', 'source', 'license', 'width', 'height']
-    readonly_fields = ['admin_thumbnail', 'width', 'height']
-    list_display = ['id', 'admin_thumbnail', 'image']
-    list_display_links = ['id', 'admin_thumbnail']
-    autocomplete_fields = ['species']
-
-    admin_thumbnail = AdminThumbnail(image_field=cached_thumb)
-    admin_thumbnail.short_description = 'Image'
-
-
 class DescMetaInline(admin.StackedInline):
     extra = 0
     model = DescMeta
-    autocomplete_fields = ['portrait_image_file']
+    fields = ['image_orientation', 'display_ratio', 'grid_ratio', 'focus_point_vertical', 'focus_point_horizontal',
+              'text', 'image_file']
+    autocomplete_fields = ['image_file']
     verbose_name = 'Description image'
 
 
 class FunFactMetaInline(admin.StackedInline):
     model = FunFactMeta
     extra = 0
-    autocomplete_fields = ['portrait_image_file']
+    fields = ['image_orientation', 'display_ratio', 'grid_ratio', 'focus_point_vertical', 'focus_point_horizontal',
+              'text', 'image_file']
+    autocomplete_fields = ['image_file']
     verbose_name = 'Funfact image'
 
 
 class InTheCityMetaInline(admin.StackedInline):
     model = InTheCityMeta
     extra = 0
-    autocomplete_fields = ['portrait_image_file']
+    fields = ['image_orientation', 'display_ratio', 'grid_ratio', 'focus_point_vertical', 'focus_point_horizontal',
+              'text', 'image_file']
+    autocomplete_fields = ['image_file']
     verbose_name = 'In the city image'
 
 
@@ -647,10 +640,10 @@ def copy_portrait_to_eng(modeladmin, request, queryset):
 def move_portrait_to_accepted(modeladmin, request, queryset):
     def move_portrait_image_file(meta, accepted_species):
         if meta:
-            portrait_image_file = meta.portrait_image_file
-            if portrait_image_file:
-                portrait_image_file.species = accepted_species
-                portrait_image_file.save()
+            image_file = meta.image_file
+            if image_file:
+                image_file.species = accepted_species
+                image_file.save()
 
     # check correct selection
     if queryset.filter(species__accepted_species__isnull=True).exists():

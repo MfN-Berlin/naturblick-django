@@ -41,14 +41,14 @@ def insert_image_size(sqlite_cursor, img, portrait_image_id):
 
 def insert_image(sqlite_cursor, meta, portrait_image_id):
     text = meta.text
-    pif = meta.portrait_image_file
+    image_file = meta.image_file
     sqlite_cursor.execute("INSERT INTO portrait_image VALUES (?, ?, ?, ?, ?, ?)",
-                          (portrait_image_id, pif.owner, pif.owner_link, pif.source, text, pif.license))
+                          (portrait_image_id, image_file.owner, image_file.owner_link, image_file.source, text, image_file.license))
 
-    insert_image_size(sqlite_cursor, pif.image, portrait_image_id)
-    insert_image_size(sqlite_cursor, pif.small, portrait_image_id)
-    insert_image_size(sqlite_cursor, pif.medium, portrait_image_id)
-    insert_image_size(sqlite_cursor, pif.large, portrait_image_id)
+    insert_image_size(sqlite_cursor, image_file.image, portrait_image_id)
+    insert_image_size(sqlite_cursor, image_file.small, portrait_image_id)
+    insert_image_size(sqlite_cursor, image_file.medium, portrait_image_id)
+    insert_image_size(sqlite_cursor, image_file.large, portrait_image_id)
 
 
 def lang_to_int(lang):
@@ -66,7 +66,7 @@ def lang_to_int(lang):
 
 
 def get_focus(descmeta, ratio):
-    if float(descmeta.portrait_image_file.width) / float(descmeta.portrait_image_file.height) > ratio:
+    if float(descmeta.image_file.width) / float(descmeta.image_file.height) > ratio:
         return descmeta.focus_point_horizontal if descmeta.focus_point_horizontal else 50.0
     else:
         return descmeta.focus_point_vertical if descmeta.focus_point_vertical else 50.0

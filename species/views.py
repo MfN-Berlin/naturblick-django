@@ -404,7 +404,7 @@ class SpeciesList(generics.ListAPIView):
         species_qs = filter_species_tags(species_qs, tags)
         species_qs = species_qs.filter(
             Q(avatar_new__isnull=False) & Q(portrait__language=lang) & Q(portrait__published=True) & Q(
-                portrait__descmeta__portrait_image_file__isnull=False))
+                portrait__descmeta__image_file__isnull=False))
         species_qs = sort_species(species_qs, sort_and_order, lang)
 
         return species_qs.distinct()
