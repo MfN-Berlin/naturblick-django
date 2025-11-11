@@ -68,10 +68,10 @@ class SpeciesSerializer(serializers.ModelSerializer):
     localname = SpeciesLocalnameField(source='*', read_only=True)
     group = serializers.CharField(source='group.name', read_only=True)
     synonym = SynonymField(source='prefetched_speciesnames')
-    avatar_url = AvatarCropUrlField(source="avatar")
-    avatar_owner = serializers.CharField(source="avatar.owner", read_only=True)
-    avatar_license = serializers.CharField(source="avatar.license", read_only=True)
-    avatar_source = serializers.CharField(source="avatar.source", read_only=True)
+    avatar_url = AvatarCropUrlField(source="avatar_new")
+    avatar_owner = serializers.CharField(source="avatar_new.owner", read_only=True)
+    avatar_license = serializers.CharField(source="avatar_new.license", read_only=True)
+    avatar_source = serializers.CharField(source="avatar_new.source", read_only=True)
     audio_filename = serializers.SerializerMethodField(method_name="create_audio_filename")
 
     class Meta:
@@ -118,7 +118,7 @@ class SimilarSpeciesSerilizer(serializers.ModelSerializer):
     sciname = serializers.CharField(source="species.sciname", read_only=True)
     similar_species_id = serializers.CharField(source="species.id", read_only=True)
     avatar_url = AvatarCropUrlField(
-        source='species.avatar')  # serializers.URLField(source="species.avatar.image.url", read_only=True)
+        source='species.avatar_new')
     localname = SimilarSpeciesLocalnameField(source='*')
     speciesid = serializers.CharField(source="species.speciesid", read_only=True)
     group = serializers.CharField(source='group.name', read_only=True)
@@ -264,7 +264,7 @@ class SpeciesImageListSerializer(serializers.ModelSerializer):
     group = serializers.CharField(source='group.name', read_only=True)
     synonym = SynonymField(source='prefetched_speciesnames')
 
-    avatar_url = AvatarCropUrlField(source="avatar")
+    avatar_url = AvatarCropUrlField(source="avatar_new")
 
     desc_url = UrlField(source="prefetched_portraits", required=True)
     desc_width = WidthField(source="prefetched_portraits", required=True)
