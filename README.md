@@ -21,8 +21,19 @@ and the DB is ready for replication.
 
 ## Setup for local development
 
-* once: `sudo pip install virtualenv`
+### postgres database
+
 * `export DJANGO_ENV="development"`
+* `export DJANGO_POSTGRES_PASSWORD="..."`
+* `export DJANGO_POSTGRES_USER="..."`
+* `export DJANGO_POSTGRES="..."`
+* copy `pg_dump.sql` into `/resources` folder
+* copy all media to local system: `rsync -a worker:/local/naturblick/django/media/* media-root/`
+* start or restart fresh: `docker compose down && docker compose up -d`
+
+### Django 
+
+* once: `sudo pip install virtualenv`
 * `cd naturblick-django`
 * `virtualenv env`
 * `source env/bin/activate` 
