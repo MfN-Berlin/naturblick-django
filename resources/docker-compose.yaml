@@ -1,7 +1,7 @@
 services:
   django-db:
     ports: 
-      - 5558:5432
+      - 127.0.0.1:5558:5432
     image: postgres:17.2
     restart: unless-stopped
     container_name: django-db
