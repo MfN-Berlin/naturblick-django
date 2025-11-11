@@ -251,9 +251,9 @@ def create_sqlite_file():
     return temp_file.name
 
 
-def get_synonyms(all_synonyms, language, species_id):
+def get_synonyms(all_synonyms_dict, language, species_id):
     synonyms = ", ".join(
-        (s.name for s in all_synonyms if s.species_id == species_id and s.language == language))
+        (s.name for s in all_synonyms_dict.get(species_id, []) if s.language == language))
     return allow_break_on_hyphen(synonyms) or None
 
 
@@ -263,7 +263,11 @@ def allow_break_on_hyphen(s):
 
 def insert_species(sqlite_cursor):
     all_synonyms = list(SpeciesName.objects.order_by('name').all())
-    data = list(map(map_species(all_synonyms), Species.objects.select_related("group", "avatar_new", "female_avatar_new").all()))
+    all_synonyms_dict = {}
+    for synonym in all_synonyms:
+        all_synonyms_dict.setdefault(synonym.id, []).append(synonym)
+
+    data = list(map(map_species(all_synonyms_dict), Species.objects.select_related("group", "avatar_new", "female_avatar_new").all()))
     sqlite_cursor.executemany(
         "INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
 
