@@ -188,7 +188,7 @@ class Species(models.Model):
 
     plantnetpowoid = models.CharField(blank=True, null=True, max_length=255, unique=True)
 
-    birdnetid = models.PositiveIntegerField(blank=True, null=True)
+    birdnetid = models.PositiveIntegerField(blank=True, null=True, unique=True)
     
     speciesid.short_description = "Species ID"
 
@@ -648,6 +648,17 @@ class PlantnetPowoidMapping(models.Model):
 
     class Meta:
         db_table = "plantnet_powoid_mapping"
+
+    def __str__(self):
+        return f"{self.plantnetpowoid} => {self.species_plantnetpowoid.plantnetpowoid} [{self.species_plantnetpowoid}]"
+
+class BirdnetIdMapping(models.Model):
+    birdnetid = models.PositiveIntegerField(null=False, blank=False, unique=True)
+    species_birdnetid = models.ForeignKey(Species, to_field="birdnetid",
+                                               limit_choices_to={"birdnetid__isnull": False}, on_delete=CASCADE)
+
+    class Meta:
+        db_table = "birdnet_id_mapping"
 
     def __str__(self):
         return f"{self.plantnetpowoid} => {self.species_plantnetpowoid.plantnetpowoid} [{self.species_plantnetpowoid}]"
