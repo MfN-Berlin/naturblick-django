@@ -381,10 +381,11 @@ class SpeciesAdmin(admin.ModelAdmin):
             form = ImportAvatarFromWikimediaForm(request.POST)
             if form.is_valid():
                 meta = utils.get_metadata(form.cleaned_data['wikimedia_url'])
-                avatar = ImageFile.objects.create(owner=meta.author, owner_link=meta.author_url, source=meta.image_url,
+                avater_image_file = ImageFile.objects.create(owner=meta.author, owner_link=meta.author_url, source=meta.image_url,
                                                license=meta.license, image=meta.image)
-                queryset.update(avatar_new=avatar.id)
-                return HttpResponseRedirect(reverse('admin:species_avatar_change', args=(avatar.id,)))
+                avatar_crop = ImageCrop.objects.create(imagefile=avater_image_file, cropping=None)
+                queryset.update(avatar_new=avatar_crop.id)
+                return HttpResponseRedirect(reverse('admin:species_imagecrop_change', args=(avatar_crop.id,)))
         else:
             form = ImportAvatarFromWikimediaForm()
 
