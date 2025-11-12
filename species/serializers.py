@@ -88,19 +88,19 @@ class SpeciesSerializer(serializers.ModelSerializer):
 
 class UrlField(serializers.Field):
     def to_representation(self, obj):
-        pif = obj[0].descmeta.portrait_image_file
+        pif = obj[0].descmeta.image_file
         return pif.image_small.url
 
 
 class WidthField(serializers.Field):
     def to_representation(self, obj):
-        pif = obj[0].descmeta.portrait_image_file
+        pif = obj[0].descmeta.image_file
         return pif.image_small.width
 
 
 class HeightField(serializers.Field):
     def to_representation(self, obj):
-        pif = obj[0].descmeta.portrait_image_file
+        pif = obj[0].descmeta.image_file
         return pif.image_small.height
 
 
@@ -162,20 +162,20 @@ class DescMetaSerializer(serializers.Serializer):
     focus_point_vertical = serializers.FloatField(source="descmeta.focus_point_vertical", read_only=True)
     focus_point_horizontal = serializers.FloatField(source="descmeta.focus_point_horizontal", read_only=True)
     text = serializers.CharField(source="descmeta.text", read_only=True)
-    image_orig = serializers.URLField(source="descmeta.portrait_image_file.image.url", read_only=True)
-    image_orig_width = serializers.IntegerField(source="descmeta.portrait_image_file.width", read_only=True)
-    image_orig_height = serializers.IntegerField(source="descmeta.portrait_image_file.height", read_only=True)
-    image_small = serializers.URLField(source="descmeta.portrait_image_file.image_small.url", read_only=True)
-    image_medium = serializers.URLField(source="descmeta.portrait_image_file.image_medium.url", read_only=True)
-    image_large = serializers.URLField(source="descmeta.portrait_image_file.image_large.url", read_only=True)
-    image_large_width = serializers.IntegerField(source="descmeta.portrait_image_file.image_large.width",
+    image_orig = serializers.URLField(source="descmeta.image_file.image.url", read_only=True)
+    image_orig_width = serializers.IntegerField(source="descmeta.image_file.width", read_only=True)
+    image_orig_height = serializers.IntegerField(source="descmeta.image_file.height", read_only=True)
+    image_small = serializers.URLField(source="descmeta.image_file.image_small.url", read_only=True)
+    image_medium = serializers.URLField(source="descmeta.image_file.image_medium.url", read_only=True)
+    image_large = serializers.URLField(source="descmeta.image_file.image_large.url", read_only=True)
+    image_large_width = serializers.IntegerField(source="descmeta.image_file.image_large.width",
                                                  read_only=True)
-    image_large_height = serializers.IntegerField(source="descmeta.portrait_image_file.image_large.height",
+    image_large_height = serializers.IntegerField(source="descmeta.image_file.image_large.height",
                                                   read_only=True)
-    owner = serializers.CharField(source="descmeta.portrait_image_file.owner", read_only=True)
-    owner_link = serializers.CharField(source="descmeta.portrait_image_file.owner_link", read_only=True)
-    source = serializers.CharField(source="descmeta.portrait_image_file.source", read_only=True)
-    license = serializers.CharField(source="descmeta.portrait_image_file.license", read_only=True)
+    owner = serializers.CharField(source="descmeta.image_file.owner", read_only=True)
+    owner_link = serializers.CharField(source="descmeta.image_file.owner_link", read_only=True)
+    source = serializers.CharField(source="descmeta.image_file.source", read_only=True)
+    license = serializers.CharField(source="descmeta.image_file.license", read_only=True)
 
 
 class FunfactMetaSerializer(serializers.Serializer):
@@ -185,15 +185,15 @@ class FunfactMetaSerializer(serializers.Serializer):
     focus_point_vertical = serializers.FloatField(source="funfactmeta.focus_point_vertical", read_only=True)
     focus_point_horizontal = serializers.FloatField(source="funfactmeta.focus_point_horizontal", read_only=True)
     text = serializers.CharField(source="funfactmeta.text", read_only=True)
-    image_orig = serializers.URLField(source="funfactmeta.portrait_image_file.image.url", read_only=True)
-    image_orig_width = serializers.IntegerField(source="funfactmeta.portrait_image_file.width", read_only=True)
-    image_small = serializers.URLField(source="funfactmeta.portrait_image_file.image_small.url", read_only=True)
-    image_medium = serializers.URLField(source="funfactmeta.portrait_image_file.image_medium.url", read_only=True)
-    image_large = serializers.URLField(source="funfactmeta.portrait_image_file.image_large.url", read_only=True)
-    owner = serializers.CharField(source="funfactmeta.portrait_image_file.owner", read_only=True)
-    owner_link = serializers.CharField(source="funfactmeta.portrait_image_file.owner_link", read_only=True)
-    source = serializers.CharField(source="funfactmeta.portrait_image_file.source", read_only=True)
-    license = serializers.CharField(source="funfactmeta.portrait_image_file.license", read_only=True)
+    image_orig = serializers.URLField(source="funfactmeta.image_file.image.url", read_only=True)
+    image_orig_width = serializers.IntegerField(source="funfactmeta.image_file.width", read_only=True)
+    image_small = serializers.URLField(source="funfactmeta.image_file.image_small.url", read_only=True)
+    image_medium = serializers.URLField(source="funfactmeta.image_file.image_medium.url", read_only=True)
+    image_large = serializers.URLField(source="funfactmeta.image_file.image_large.url", read_only=True)
+    owner = serializers.CharField(source="funfactmeta.image_file.owner", read_only=True)
+    owner_link = serializers.CharField(source="funfactmeta.image_file.owner_link", read_only=True)
+    source = serializers.CharField(source="funfactmeta.image_file.source", read_only=True)
+    license = serializers.CharField(source="funfactmeta.image_file.license", read_only=True)
 
 
 class InthecityMetaSerializer(serializers.Serializer):
@@ -203,15 +203,15 @@ class InthecityMetaSerializer(serializers.Serializer):
     focus_point_vertical = serializers.FloatField(source="inthecitymeta.focus_point_vertical", read_only=True)
     focus_point_horizontal = serializers.FloatField(source="inthecitymeta.focus_point_horizontal", read_only=True)
     text = serializers.CharField(source="inthecitymeta.text", read_only=True)
-    image_orig = serializers.URLField(source="inthecitymeta.portrait_image_file.image.url", read_only=True)
-    image_orig_width = serializers.IntegerField(source="inthecitymeta.portrait_image_file.width", read_only=True)
-    image_small = serializers.URLField(source="inthecitymeta.portrait_image_file.image_small.url", read_only=True)
-    image_medium = serializers.URLField(source="inthecitymeta.portrait_image_file.image_medium.url", read_only=True)
-    image_large = serializers.URLField(source="inthecitymeta.portrait_image_file.image_large.url", read_only=True)
-    owner = serializers.CharField(source="inthecitymeta.portrait_image_file.owner", read_only=True)
-    owner_link = serializers.CharField(source="inthecitymeta.portrait_image_file.owner_link", read_only=True)
-    source = serializers.CharField(source="inthecitymeta.portrait_image_file.source", read_only=True)
-    license = serializers.CharField(source="inthecitymeta.portrait_image_file.license", read_only=True)
+    image_orig = serializers.URLField(source="inthecitymeta.image_file.image.url", read_only=True)
+    image_orig_width = serializers.IntegerField(source="inthecitymeta.image_file.width", read_only=True)
+    image_small = serializers.URLField(source="inthecitymeta.image_file.image_small.url", read_only=True)
+    image_medium = serializers.URLField(source="inthecitymeta.image_file.image_medium.url", read_only=True)
+    image_large = serializers.URLField(source="inthecitymeta.image_file.image_large.url", read_only=True)
+    owner = serializers.CharField(source="inthecitymeta.image_file.owner", read_only=True)
+    owner_link = serializers.CharField(source="inthecitymeta.image_file.owner_link", read_only=True)
+    source = serializers.CharField(source="inthecitymeta.image_file.source", read_only=True)
+    license = serializers.CharField(source="inthecitymeta.image_file.license", read_only=True)
 
 
 class PortraitSerializer(serializers.ModelSerializer):

@@ -314,9 +314,6 @@ class PortraitImageFile(models.Model):
         options={'quality': 90}
     )
 
-    def __str__(self):
-        return f"{self.owner} {self.image.name[self.image.name.index('/') + 1:]}"
-
     def clean(self):
         super().clean()
         desc = DescMeta.objects.filter(portrait_image_file=self.id).first()
@@ -396,10 +393,13 @@ class Portrait(models.Model):
 class DescMeta(PortraitImageMeta):
     portrait = models.OneToOneField(Portrait, on_delete=CASCADE)
     portrait_image_file = models.ForeignKey(PortraitImageFile, on_delete=CASCADE)
+    image_file = models.ForeignKey(ImageFile, on_delete=CASCADE, db_default=1)
 
     def clean(self):
         super().clean()
-        if self.portrait and self.portrait_image_file and self.portrait.species.speciesid != self.portrait_image_file.species.speciesid:
+        if not self.image_file.species:
+            raise ValidationError("ImageFile must have set species")
+        if self.portrait and self.image_file and self.portrait.species.speciesid != self.image_file.species.speciesid:
             raise ValidationError("DescriptionImage species must be same as portrait species")
 
     def __str__(self):
@@ -412,10 +412,13 @@ class DescMeta(PortraitImageMeta):
 class FunFactMeta(PortraitImageMeta):
     portrait = models.OneToOneField(Portrait, on_delete=CASCADE)
     portrait_image_file = models.ForeignKey(PortraitImageFile, on_delete=CASCADE)
+    image_file = models.ForeignKey(ImageFile, on_delete=CASCADE, db_default=1)
 
     def clean(self):
         super().clean()
-        if self.portrait and self.portrait_image_file and self.portrait.species.speciesid != self.portrait_image_file.species.speciesid:
+        if not self.image_file.species:
+            raise ValidationError("ImageFile must have set species")
+        if self.portrait and self.image_file and self.portrait.species.speciesid != self.image_file.species.speciesid:
             raise ValidationError("FunFactImage species must be same as portrait species")
 
     def __str__(self):
@@ -428,10 +431,13 @@ class FunFactMeta(PortraitImageMeta):
 class InTheCityMeta(PortraitImageMeta):
     portrait = models.OneToOneField(Portrait, on_delete=CASCADE)
     portrait_image_file = models.ForeignKey(PortraitImageFile, on_delete=CASCADE)
+    image_file = models.ForeignKey(ImageFile, on_delete=CASCADE, db_default=1)
 
     def clean(self):
         super().clean()
-        if self.portrait and self.portrait_image_file and self.portrait.species.speciesid != self.portrait_image_file.species.speciesid:
+        if not self.image_file.species:
+            raise ValidationError("ImageFile must have set species")
+        if self.portrait and self.image_file and self.portrait.species.speciesid != self.image_file.species.speciesid:
             raise ValidationError("InTheCityImage species must be same as portrait species")
 
     def __str__(self):
