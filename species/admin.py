@@ -383,7 +383,7 @@ class SpeciesAdmin(admin.ModelAdmin):
                 meta = utils.get_metadata(form.cleaned_data['wikimedia_url'])
                 avater_image_file = ImageFile.objects.create(owner=meta.author, owner_link=meta.author_url, source=meta.image_url,
                                                license=meta.license, image=meta.image)
-                avatar_crop = ImageCrop.objects.create(imagefile=avater_image_file, cropping='0,0,400,400')
+                avatar_crop = ImageCrop.objects.create(imagefile=avater_image_file, cropping=None)
                 queryset.update(avatar_new=avatar_crop.id)
                 return HttpResponseRedirect(reverse('admin:species_imagecrop_change', args=(avatar_crop.id,)))
         else:
