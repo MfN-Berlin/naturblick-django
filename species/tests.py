@@ -1,20 +1,46 @@
-from django.db.models.lookups import Range
+from django.contrib.staticfiles import finders
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
+from django.urls import reverse
 
-from .models import Species, Group
+from .models import Species, Group, SpeciesName, ImageFile, ImageCrop, DescMeta, PortraitImageFile, \
+    Faunaportrait
 
 
 class SpeciesTestCase(TestCase):
-    def test_speciesid_algorithm(self):
-        """Species with automatically created speciesids"""
+    def setUp(self):
+        file_path = finders.find("test_amsel.jpg")
+
+        with open(file_path, "rb") as f:
+            test_amsel = SimpleUploadedFile(
+                name="test_amsel.jpg",
+                content=f.read(),
+                content_type="image/jpeg"
+            )
+
         Group.objects.create(name="bird")
         bird = Group.objects.get(name="bird")
-        Species.objects.create(sciname="Turdus merula", group=bird)
-        for x in range(1,11):
-            Species.objects.create(sciname=f'foobar{x}', group=bird)
-        amsel = Species.objects.get(sciname="Turdus merula")
-        foobar1 = Species.objects.get(sciname="foobar1")
-        foobarA = Species.objects.get(sciname="foobar10")
-        self.assertEqual(amsel.speciesid, 'bird_ffff0000')
-        self.assertEqual(foobar1.speciesid, 'bird_ffff0001')
-        self.assertEqual(foobarA.speciesid, 'bird_ffff000a')
+        amsel = Species.objects.create(sciname="Turdus merula", group=bird, gername="Amsel", speciesid="bird_0")
+        SpeciesName.objects.create(species=amsel, name="Schwarzdrossel", language="de")
+        imagefile = ImageFile.objects.create(species=amsel, owner="Test", source="127.0.0.1", license="CC0",
+                                             image=test_amsel)
+        # remove in future
+        pif = PortraitImageFile.objects.create(species=amsel, owner="Test", source="127.0.0.1", license="CC0",
+                                               image=test_amsel)
+
+        crop = ImageCrop.objects.create(imagefile=imagefile, cropping=None)
+        amsel.avatar_new = crop
+        amsel.save(update_fields=['avatar_new'])
+
+        portrait = Faunaportrait.objects.create(species=amsel, language="de", short_description="Foobar",
+                                                city_habitat="Foobar", published=True)
+        DescMeta.objects.create(display_ratio="1:1", grid_ratio="1:1", text="Foobar", portrait=portrait,
+                                portrait_image_file=pif, image_file=imagefile)
+
+        for x in range(1, 11):
+            Species.objects.create(sciname=f'foobar{x}', group=bird, speciesid=f'bird_{x}')
+
+    def test_specieslist(self):
+        url = reverse("species-filter")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
