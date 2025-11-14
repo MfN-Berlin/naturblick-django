@@ -6,10 +6,16 @@
     {{ block.super }}
     <link rel="stylesheet" href="{% static 'species/admin.css' %}"></link>
     <script src="{% static 'admin/js/cancel.js' %}" async></script>
-    
+
 {% endblock %}
 
 {% block content %}
+
+{% if owner_link %}
+<p>
+  <a href="{{ owner_link }}">Please click here to visit the author webpage to validate it</a>
+</p>
+{% endif %}
 <form method="post">{% csrf_token %}
   {{ form }}
   <div>
@@ -17,9 +23,10 @@
   <input type="hidden" name="_selected_action" value="{{ obj.pk }}" />
   {% endfor %}
   <input type="hidden" name="action" value="import_avatar_from_wikimedia" />
-  <input type="hidden" name="validate" value="yes">
-  <input type="submit" value="Validate avatar data" />
-  <a role="button" href="#" class="button cancel-link">{% translate "No, take me back" %}</a>
+  <input type="hidden" name="post" value="yes">
+  <input type="hidden" name="image_url" value="{{ image_url }}">
+  <input type="submit" value="Import avatar" />
+  <a role="button" href="{% url 'admin:species_species_changelist' %}" class="button">{% translate "No, take me back" %}</a>
   </div>
 </form>
 {% endblock %}

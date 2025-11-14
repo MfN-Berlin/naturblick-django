@@ -425,15 +425,13 @@ class ImageMetadata:
     license: str
     author: str
     author_url: str
-    image_url: str
-    image: ContentFile
 
+user_agent = 'Naturblick-Django (https://naturblick.museumfuernaturkunde.berlin/; naturblick@mfn.berlin)'
 
 def get_metadata(url):
-    user_agent = 'Naturblick-Django (https://naturblick.museumfuernaturkunde.berlin/; naturblick@mfn.berlin)'
     path = urlparse(url).path
     wiki_file = path[path.index("File"):]
-    image_filename = str(uuid.uuid4()) + wiki_file[wiki_file.index("."):].lower()
+
     response = requests.get(
         f"https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&format=json&iiprop=extmetadata&iilimit=1&titles={wiki_file}",
         headers={'User-Agent': user_agent})
@@ -450,6 +448,13 @@ def get_metadata(url):
     parser = ArtistLinkParser()
     parser.feed(metadata['Artist']['value'])
 
+    return ImageMetadata(license, parser.author, parser.href)
+
+def get_wikimedia_image(url):
+    path = urlparse(url).path
+    wiki_file = path[path.index("File"):]
+    image_filename = str(uuid.uuid4()) + wiki_file[wiki_file.index("."):].lower()
+
     file_meta_response = requests.get(
         f"https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&format=json&iiprop=url&iilimit=1&titles={wiki_file}",
         headers={'User-Agent': user_agent})
@@ -461,5 +466,4 @@ def get_metadata(url):
         'User-Agent': user_agent})
     file_response.raise_for_status()
 
-    return ImageMetadata(license, parser.author, parser.href, url,
-                         ContentFile(file_response.content, name=image_filename))
+    return ContentFile(file_response.content, name=image_filename)
