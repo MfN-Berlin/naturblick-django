@@ -18,7 +18,7 @@ SMALL_WIDTH = 400
 
 class ImageFile(models.Model):
     id = models.BigAutoField(primary_key=True)
-    species = models.ForeignKey("Species", null=True, blank=True, on_delete=CASCADE)
+    species = models.ForeignKey("Species", on_delete=CASCADE)
     owner = models.CharField(max_length=255)
     owner_link = URLField(blank=True, null=True, max_length=255)
     source = URLField(max_length=1024)
