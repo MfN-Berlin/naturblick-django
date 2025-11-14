@@ -17,4 +17,4 @@ jobs:
       - name: Build Docker image
         run: docker build -t ghcr.io/mfn-berlin/naturblick/django:pullrequest_${{ github.run_id }} .
       - name: Run Django tests
-        run: docker run -e DJANGO_ENV=development --rm ghcr.io/mfn-berlin/naturblick/django:pullrequest_${{ github.run_id }} python manage.py test
+        run: docker run -e DJANGO_ENV=development --rm ghcr.io/mfn-berlin/naturblick/django:pullrequest_${{ github.run_id }} sh -c "python manage.py test"
