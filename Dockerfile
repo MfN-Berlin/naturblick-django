@@ -13,6 +13,4 @@ RUN apk update && apk add --no-cache sox imagemagick ffmpeg
                                          
 COPY . /app/
 
-ENV DJANGO_ENV=production
 EXPOSE 8000
-ENTRYPOINT ["sh", "./scripts/run.sh"]
