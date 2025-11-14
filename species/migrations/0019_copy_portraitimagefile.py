@@ -5,19 +5,21 @@ import shutil
 from django.conf import settings
 from django.db import migrations
 
-from species.models import ImageFile, DescMeta, FunFactMeta, InTheCityMeta
-
-
 def copy_portrait_imagefiles(apps, schema_editor):
+    DescMeta = apps.get_model("species", "DescMeta")
+    FunFactMeta = apps.get_model("species", "FunFactMeta")
+    InTheCityMeta = apps.get_model("species", "InTheCityMeta")
+    ImageFile = apps.get_model("species", "ImageFile")
+
     for m in DescMeta.objects.all():
-        copy_meta(m)
+        copy_meta(m, ImageFile)
     for m in FunFactMeta.objects.all():
-        copy_meta(m)
+        copy_meta(m, ImageFile)
     for m in InTheCityMeta.objects.all():
-        copy_meta(m)
+        copy_meta(m, ImageFile)
 
 
-def copy_meta(m):
+def copy_meta(m, ImageFile):
     media_root = os.path.abspath(settings.MEDIA_ROOT)
     pif = m.portrait_image_file
     old_path = f"{media_root}/{pif.image.name}"
