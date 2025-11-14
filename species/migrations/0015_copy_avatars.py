@@ -2,13 +2,16 @@
 import os
 import shutil
 
-from django.db import migrations
 from django.conf import settings
-
-from species.models import ImageCrop, ImageFile, Species
+from django.db import migrations
 
 def copy_avatar_data(apps, schema_editor):
     media_root = os.path.abspath(settings.MEDIA_ROOT)
+
+    # retrieve historical model
+    Species = apps.get_model("species", "Species")
+    ImageFile = apps.get_model("species", "ImageFile")
+    ImageCrop = apps.get_model("species", "ImageCrop")
 
     for species in Species.objects.all():
         avatar = species.avatar
