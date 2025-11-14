@@ -378,6 +378,31 @@ class SpeciesAdmin(admin.ModelAdmin):
             messages.SUCCESS,
         )
 
+    def import_avatar_from_wikimedia_validate(self, request, queryset):
+        form = ImportAvatarFromWikimediaForm(request.POST)
+        if form.is_valid():
+            meta = utils.get_metadata(form.cleaned_data['wikimedia_url'])
+            data = {
+                "owner": meta.author,
+                "owner_link": meta.author_url,
+                "license": meta.license
+            }
+            return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html', {"form": ValidateAvtarForm(initial=data), 'queryset': queryset, "image_url": form.cleaned_data['wikimedia_url'], "owner_link": meta.author_url})
+        else:
+            return TemplateResponse(request, 'admin/avatar_from_wikimedia.html', {"form": form, 'queryset': queryset})
+
+    def import_avatar_from_wikimedia_execute(self, request, queryset):
+        form = ValidateAvtarForm(request.POST)
+        image_url = request.POST["image_url"]
+        if form.is_valid():
+            image = utils.get_wikimedia_image(image_url)
+            avatar_image_file = ImageFile.objects.create(owner=form.cleaned_data["owner"], owner_link=form.cleaned_data["owner_link"], source=image_url, license=form.cleaned_data["license"], image=image, species=queryset.first())
+            avatar_crop = ImageCrop.objects.create(imagefile=avatar_image_file, cropping=None)
+            queryset.update(avatar_new=avatar_crop.id)
+            return HttpResponseRedirect(reverse('admin:species_imagecrop_change', args=(avatar_crop.id,)))
+        else:
+            return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html', {"form": form, 'queryset': queryset, "image_url": image_url, "owner_link": form.data["owner_link"]})
+
     @admin.action(description="Import avatar from Wikimedia")
     @transaction.atomic
     def import_avatar_from_wikimedia(self, request, queryset):
@@ -389,28 +414,9 @@ class SpeciesAdmin(admin.ModelAdmin):
             )
             return
         if request.POST.get("validate"):
-            form = ImportAvatarFromWikimediaForm(request.POST)
-            if form.is_valid():
-                meta = utils.get_metadata(form.cleaned_data['wikimedia_url'])
-                data = {
-                    "owner": meta.author,
-                    "owner_link": meta.author_url,
-                    "license": meta.license
-                }
-                return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html', {"form": ValidateAvtarForm(initial=data), 'queryset': queryset, "image_url": form.cleaned_data['wikimedia_url'], "owner_link": meta.author_url})
-            else:
-                return TemplateResponse(request, 'admin/avatar_from_wikimedia.html', {"form": form, 'queryset': queryset})
+            return self.import_avatar_from_wikimedia_validate(request, queryset)
         elif request.POST.get("post"):
-            form = ValidateAvtarForm(request.POST)
-            image_url = request.POST["image_url"]
-            if form.is_valid():
-                image = utils.get_wikimedia_image(image_url)
-                avatar_image_file = ImageFile.objects.create(owner=form.cleaned_data["owner"], owner_link=form.cleaned_data["owner_link"], source=image_url, license=form.cleaned_data["license"], image=image, species=queryset.first())
-                avatar_crop = ImageCrop.objects.create(imagefile=avatar_image_file, cropping=None)
-                queryset.update(avatar_new=avatar_crop.id)
-                return HttpResponseRedirect(reverse('admin:species_imagecrop_change', args=(avatar_crop.id,)))
-            else:
-                return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html', {"form": form, 'queryset': queryset, "image_url": image_url, "owner_link": form.data["owner_link"]})
+            return self.import_avatar_from_wikimedia_execute(request, queryset)
         else:
             return TemplateResponse(request, 'admin/avatar_from_wikimedia.html', {"form": ImportAvatarFromWikimediaForm(), 'queryset': queryset})
 
