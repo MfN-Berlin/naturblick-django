@@ -19,7 +19,7 @@ def copy_avatar_data(apps, schema_editor):
             old_path = f"{media_root}/{avatar.image.name}"
             image_file = ImageFile(species=species, owner=avatar.owner, owner_link=avatar.owner_link,
                                    source=avatar.source,
-                                   license=avatar.license, image=avatar.image )
+                                   license=avatar.license, image=avatar.image)
             image_file.image.name = f"images/{avatar.image.name.split('/')[-1]}"
             image_file.save()
 
@@ -33,9 +33,10 @@ def copy_avatar_data(apps, schema_editor):
         female_avatar = species.female_avatar
         if female_avatar:
             female_old_path = f"{media_root}/{female_avatar.image.name}"
-            female_image_file = ImageFile(species=species, owner=female_avatar.owner, owner_link=female_avatar.owner_link,
-                                   source=female_avatar.source,
-                                   license=female_avatar.license, image=female_avatar.image)
+            female_image_file = ImageFile(species=species, owner=female_avatar.owner,
+                                          owner_link=female_avatar.owner_link,
+                                          source=female_avatar.source,
+                                          license=female_avatar.license, image=female_avatar.image)
             female_image_file.image.name = f"images/{female_avatar.image.name.split('/')[-1]}"
             female_image_file.save()
             female_image_crop = ImageCrop(imagefile=female_image_file, cropping=female_avatar.cropping)

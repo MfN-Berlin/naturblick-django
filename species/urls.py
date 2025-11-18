@@ -6,7 +6,7 @@ from .views import app_content_db, app_content_leicht_db, app_content_leicht_ima
     species, specgram, species_list, PlantnetPowoidMappingList, GroupsList
 
 urlpatterns = [
-    path('species/filter/', SpeciesList.as_view()),
+    path('species/filter/', SpeciesList.as_view(), name="species-filter"),
     path('species/', species_list),
     path('species/<int:id>/', species),
     path('species/portrait/', PortraitDetail.as_view()),
