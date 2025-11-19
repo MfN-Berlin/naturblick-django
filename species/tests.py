@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from .models import Species, Group, SpeciesName, ImageFile, ImageCrop, DescMeta, PortraitImageFile, \
-    Faunaportrait, Tag, PlantnetPowoidMapping
+    Faunaportrait, Tag, PlantnetPowoidMapping, LeichtPortrait, LeichtRecognize, LeichtGoodToKnow
 
 
 def load_static_image(content_type="image/jpeg", file_name="test_amsel.jpg"):
@@ -50,6 +50,11 @@ class SpeciesTestCase(TestCase):
 
         PlantnetPowoidMapping.objects.create(plantnetpowoid="1234-1", species_plantnetpowoid=amsel)
 
+        # Leicht
+        leicht_portrait = LeichtPortrait.objects.create(name="Vogel", avatar=crop, goodtoknow_image=imagefile)
+        LeichtRecognize(text="foo", portrait=leicht_portrait, ordering=1)
+        LeichtGoodToKnow(text="foo", portrait=leicht_portrait, ordering=1)
+        
     def test_speciesfilter_ok(self):
         url = reverse("species-filter")
         response = self.client.get(url)
@@ -96,6 +101,16 @@ class SpeciesTestCase(TestCase):
         content = json.loads(response.content)
         self.assertEqual(len(content), 1)
         self.assertEqual(content[0].get("localname"), "Vogel")
+
+    def test_app_content_db(self):
+        url = reverse("app-content-db")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_app_content_leicht_db(self):
+        url = reverse("app-content-leicht-db")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
 
     def test_tags(self):
         url = reverse("tags")
