@@ -11,9 +11,11 @@ from urllib.parse import urlparse
 
 import requests
 from django.core.files.base import ContentFile
+from django.db.models import Q
 from image_cropping.utils import get_backend
 
-from species.models import Species, SpeciesName, SourcesTranslation, SourcesImprint, Faunaportrait, Floraportrait, Group
+from species.models import Species, SpeciesName, SourcesTranslation, SourcesImprint, Faunaportrait, Floraportrait, \
+    Group, ImageFile
 from .utils_characters import insert_characters
 
 
@@ -43,7 +45,8 @@ def insert_image(sqlite_cursor, meta, portrait_image_id):
     text = meta.text
     image_file = meta.image_file
     sqlite_cursor.execute("INSERT INTO portrait_image VALUES (?, ?, ?, ?, ?, ?)",
-                          (portrait_image_id, image_file.owner, image_file.owner_link, image_file.source, text, image_file.license))
+                          (portrait_image_id, image_file.owner, image_file.owner_link, image_file.source, text,
+                           image_file.license))
 
     insert_image_size(sqlite_cursor, image_file.image, portrait_image_id)
     insert_image_size(sqlite_cursor, image_file.small, portrait_image_id)
@@ -70,6 +73,17 @@ def get_focus(descmeta, ratio):
         return descmeta.focus_point_horizontal if descmeta.focus_point_horizontal else 50.0
     else:
         return descmeta.focus_point_vertical if descmeta.focus_point_vertical else 50.0
+
+
+def find_similar_imagefile(image_name, source):
+    qs = ImageFile.objects.all()
+    upload_to = ImageFile._meta.get_field("image").upload_to
+
+    matches = qs.filter(
+        Q(image=f"{upload_to}/{image_name}") |
+        Q(source=source)
+    )
+    return matches
 
 
 def insert_portrait_image_and_sizes(sqlite_cursor, portraits):
@@ -267,7 +281,8 @@ def insert_species(sqlite_cursor):
     for synonym in all_synonyms:
         all_synonyms_dict.setdefault(synonym.species_id, []).append(synonym)
 
-    data = list(map(map_species(all_synonyms_dict), Species.objects.select_related("group", "avatar_new", "female_avatar_new").all()))
+    data = list(map(map_species(all_synonyms_dict),
+                    Species.objects.select_related("group", "avatar_new", "female_avatar_new").all()))
     sqlite_cursor.executemany(
         "INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
 
@@ -296,7 +311,7 @@ def insert_species(sqlite_cursor):
     sqlite_cursor.execute("ALTER TABLE species DROP COLUMN gbifusagekey;")
 
 
-def cropped_image(image, cropping, size = (400,400)):
+def cropped_image(image, cropping, size=(400, 400)):
     return get_backend().get_thumbnail_url(
         image,
         {
@@ -319,7 +334,8 @@ def map_species(all_synonyms):
         s.avatar_new.imagefile.owner_link if s.avatar_new else None,
         s.avatar_new.imagefile.source if s.avatar_new else None,
         s.avatar_new.imagefile.license if s.avatar_new else None,
-        cropped_image(s.female_avatar_new.imagefile.image, s.female_avatar_new.cropping) if s.female_avatar_new else None,
+        cropped_image(s.female_avatar_new.imagefile.image,
+                      s.female_avatar_new.cropping) if s.female_avatar_new else None,
         get_synonyms(all_synonyms, 'de', s.id),
         get_synonyms(all_synonyms, 'en', s.id), s.red_list_germany, s.iucncategory, s.speciesid, s.gbifusagekey,
         s.accepted_species_id,
@@ -426,7 +442,9 @@ class ImageMetadata:
     author: str
     author_url: str
 
+
 user_agent = 'Naturblick-Django (https://naturblick.museumfuernaturkunde.berlin/; naturblick@mfn.berlin)'
+
 
 def get_metadata(url):
     path = urlparse(url).path
@@ -449,6 +467,7 @@ def get_metadata(url):
     parser.feed(metadata['Artist']['value'])
 
     return ImageMetadata(license, parser.author, parser.href)
+
 
 def get_wikimedia_image(url):
     path = urlparse(url).path
