@@ -1,6 +1,11 @@
+import os
+
 from admin_ordering.admin import OrderableAdmin
 from django import forms
 from django.contrib import admin, messages
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models, transaction
 from django.db.models import Q
 from django.forms import Textarea
@@ -23,7 +28,7 @@ from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, Ad
     DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Group, Floraportrait, Tag, SourcesImprint, SourcesTranslation, \
     FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, LeichtPortrait, LeichtRecognize, LeichtGoodToKnow, \
     AudioFile, ImageCrop, ImageFile, BirdnetIdMapping
-from .utils import cropped_image
+from .utils import cropped_image, find_similar_imagefile
 
 
 class AdminThumbnailSpec(ImageSpec):
@@ -288,6 +293,7 @@ class HasWikipediaFilter(YesNoFilter):
                 wikipedia__isnull=True
             )
 
+
 class HasBirdnetIdFilter(YesNoFilter):
     title = "birdnetid"
     parameter_name = "has_birdnetid"
@@ -301,15 +307,17 @@ class HasBirdnetIdFilter(YesNoFilter):
             return queryset.filter(
                 birdnetid__isnull=True
             )
-        
+
 
 class ImportAvatarFromWikimediaForm(forms.Form):
     wikimedia_url = forms.URLField(label="Wikimedia image URL")
+
 
 class ValidateAvtarForm(forms.Form):
     owner = forms.CharField(label="Owner name", max_length=255)
     owner_link = forms.URLField(label="Owner homepage URL", required=False, max_length=255)
     license = forms.CharField(label="License", max_length=64)
+
 
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
@@ -326,7 +334,8 @@ class SpeciesAdmin(admin.ModelAdmin):
                     'search']
     list_display_links = ['id', 'speciesid']
     list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, HasSynonymsFilter,
-                   IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter, HasBirdnetIdFilter,
+                   IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
+                   HasBirdnetIdFilter,
                    'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, HasWikipediaFilter, 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
@@ -388,7 +397,9 @@ class SpeciesAdmin(admin.ModelAdmin):
                 "owner_link": meta.author_url,
                 "license": meta.license
             }
-            return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html', {"form": ValidateAvtarForm(initial=data), 'queryset': queryset, "image_url": form.cleaned_data['wikimedia_url'], "owner_link": meta.author_url})
+            return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html',
+                                    {"form": ValidateAvtarForm(initial=data), 'queryset': queryset,
+                                     "image_url": form.cleaned_data['wikimedia_url'], "owner_link": meta.author_url})
         else:
             return TemplateResponse(request, 'admin/avatar_from_wikimedia.html', {"form": form, 'queryset': queryset})
 
@@ -397,12 +408,17 @@ class SpeciesAdmin(admin.ModelAdmin):
         image_url = request.POST["image_url"]
         if form.is_valid():
             image = utils.get_wikimedia_image(image_url)
-            avatar_image_file = ImageFile.objects.create(owner=form.cleaned_data["owner"], owner_link=form.cleaned_data["owner_link"], source=image_url, license=form.cleaned_data["license"], image=image, species=queryset.first())
+            avatar_image_file = ImageFile.objects.create(owner=form.cleaned_data["owner"],
+                                                         owner_link=form.cleaned_data["owner_link"], source=image_url,
+                                                         license=form.cleaned_data["license"], image=image,
+                                                         species=queryset.first())
             avatar_crop = ImageCrop.objects.create(imagefile=avatar_image_file, cropping=None)
             queryset.update(avatar_new=avatar_crop.id)
             return HttpResponseRedirect(reverse('admin:species_imagecrop_change', args=(avatar_crop.id,)))
         else:
-            return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html', {"form": form, 'queryset': queryset, "image_url": image_url, "owner_link": form.data["owner_link"]})
+            return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html',
+                                    {"form": form, 'queryset': queryset, "image_url": image_url,
+                                     "owner_link": form.data["owner_link"]})
 
     @admin.action(description="Import avatar from Wikimedia")
     @transaction.atomic
@@ -419,7 +435,8 @@ class SpeciesAdmin(admin.ModelAdmin):
         elif request.POST.get("post"):
             return self.import_avatar_from_wikimedia_execute(request, queryset)
         else:
-            return TemplateResponse(request, 'admin/avatar_from_wikimedia.html', {"form": ImportAvatarFromWikimediaForm(), 'queryset': queryset})
+            return TemplateResponse(request, 'admin/avatar_from_wikimedia.html',
+                                    {"form": ImportAvatarFromWikimediaForm(), 'queryset': queryset})
 
     @admin.display(
         description="Avatar"
@@ -864,6 +881,7 @@ class PlantnetPowoidMappingAdmin(admin.ModelAdmin):
         return format_html('<a href="{}">{} ({})</a>', link, obj.species_plantnetpowoid.plantnetpowoid,
                            obj.species_plantnetpowoid)
 
+
 @admin.register(BirdnetIdMapping)
 class BirdnetIdMappingAdmin(admin.ModelAdmin):
     list_display = ['birdnetid', 'species']
@@ -936,6 +954,70 @@ class ImageFileAdmin(admin.ModelAdmin):
             return format_html('<a href="{}" class="addlink"></a>', url)
 
     add_crop_link.short_description = 'Crop'
+
+    def handle_similar_confirmed(self, request):
+        temp_path = request.session.get('tmp_image_path')
+        if temp_path:
+            f = default_storage.open(temp_path, 'rb')
+            request.FILES['image'] = SimpleUploadedFile(
+                name=os.path.basename(temp_path),
+                content=f.read()
+            )
+            f.close()
+        default_storage.delete(temp_path)
+        del request.session['tmp_image_path']
+
+    def change_view(self, request, object_id, form_url="", extra_context=None):
+        if request.method == 'POST' and 'confirmed' not in request.POST:
+            form = self.get_form(request)(request.POST, request.FILES)
+            if form.is_valid():
+                image = form.cleaned_data.get('image')
+                source = form.cleaned_data.get('source')
+                similar = find_similar_imagefile(image_name=image.name, source=source)
+                if similar.exists():
+                    image_file = request.FILES['image']
+                    temp_path = default_storage.save(
+                        f"tmp/{image_file.name}",
+                        ContentFile(image_file.read())
+                    )
+
+                    request.session['tmp_image_path'] = temp_path
+
+                    context = dict(
+                        self.admin_site.each_context(request),
+                        form=form,
+                        similar=similar,
+                    )
+                    return TemplateResponse(request, "admin/confirm_save.html", context)
+        elif request.method == 'POST' and 'confirmed' in request.POST:
+            self.handle_similar_confirmed(request)
+        return super().change_view(request, object_id, form_url, extra_context)
+
+    def add_view(self, request, form_url="", extra_context=None):
+        if request.method == 'POST' and 'confirmed' not in request.POST:
+            form = self.get_form(request)(request.POST, request.FILES)
+            if form.is_valid():
+                image = form.cleaned_data.get('image')
+                source = form.cleaned_data.get('source')
+                similar = find_similar_imagefile(image_name=image.name, source=source)
+                if similar.exists():
+                    image_file = request.FILES['image']
+                    temp_path = default_storage.save(
+                        f"tmp/{image_file.name}",
+                        ContentFile(image_file.read())
+                    )
+
+                    request.session['tmp_image_path'] = temp_path
+
+                    context = dict(
+                        self.admin_site.each_context(request),
+                        form=form,
+                        similar=similar,
+                    )
+                    return TemplateResponse(request, "admin/confirm_save.html", context)
+        elif request.method == 'POST' and 'confirmed' in request.POST:
+            self.handle_similar_confirmed(request)
+        return super().add_view(request, form_url, extra_context)
 
 
 @admin.register(ImageCrop)

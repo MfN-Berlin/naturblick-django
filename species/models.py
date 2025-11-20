@@ -112,8 +112,6 @@ class Group(models.Model):
                 raise ValidationError({"image": "Must have image if has_portrait."})
             if not self.nature:
                 raise ValidationError({"nature": "Must have nature if has_portrait."})
-            elif not Portrait.objects.filter(Q(published=True) & Q(species__group__name=self.name)).exists():
-                raise ValidationError({"has_portraits": "must have published portraits"})
 
         if self.has_characters:
             if not self.gername:
