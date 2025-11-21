@@ -21,8 +21,6 @@ jobs:
       - name: Run Django tests
         env:
           DJANGO_ENV: development
-        run: docker run --rm \
-              ghcr.io/mfn-berlin/naturblick/django:$GITHUB_REF_NAME \
-              python manage.py test
+        run: docker run -e DJANGO_ENV=development --rm ghcr.io/mfn-berlin/naturblick/django:test_$GITHUB_REF_NAME sh -c "python manage.py test"
       - name: Push Docker image
         run: docker push ghcr.io/mfn-berlin/naturblick/django:$GITHUB_REF_NAME
