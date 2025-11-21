@@ -189,6 +189,8 @@ class Species(models.Model):
     plantnetpowoid = models.CharField(blank=True, null=True, max_length=255, unique=True)
 
     birdnetid = models.PositiveIntegerField(blank=True, null=True, unique=True)
+
+    is_hidden = models.BooleanField(null=False, default=False)
     
     speciesid.short_description = "Species ID"
 

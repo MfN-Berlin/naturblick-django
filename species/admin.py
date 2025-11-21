@@ -349,6 +349,7 @@ class SpeciesAdmin(admin.ModelAdmin):
               'accepted_species',
               'plantnetpowoid',
               'birdnetid',
+              'is_hidden',
               'tag',
               ]
 
