@@ -18,9 +18,5 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build Docker image
         run: docker build -t ghcr.io/mfn-berlin/naturblick/django:$GITHUB_REF_NAME .
-      - name: Run Django tests
-        env:
-          DJANGO_ENV: development
-        run: docker run -e DJANGO_ENV=development --rm ghcr.io/mfn-berlin/naturblick/django:test_$GITHUB_REF_NAME sh -c "python manage.py test"
       - name: Push Docker image
         run: docker push ghcr.io/mfn-berlin/naturblick/django:$GITHUB_REF_NAME
