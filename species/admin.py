@@ -958,8 +958,8 @@ class ImageFileAdmin(admin.ModelAdmin):
         if request.method == 'POST' and 'confirmed' not in request.POST:
             form = self.get_form(request)(request.POST, request.FILES)
             if form.is_valid():
-                image = form.cleaned_data.get('image', '')
-                source = form.cleaned_data.get('source', '')
+                image = form.cleaned_data.get('image')
+                source = form.cleaned_data.get('source')
                 similar = find_similar_imagefile(image_name=image.name, source=source)
                 if similar.exists():
                     image_file = request.FILES['image']
@@ -984,8 +984,8 @@ class ImageFileAdmin(admin.ModelAdmin):
         if request.method == 'POST' and 'confirmed' not in request.POST:
             form = self.get_form(request)(request.POST, request.FILES)
             if form.is_valid():
-                image = form.cleaned_data.get('image', '')
-                source = form.cleaned_data.get('source', '')
+                image = form.cleaned_data.get('image')
+                source = form.cleaned_data.get('source')
                 similar = find_similar_imagefile(image_name=image.name, source=source)
                 if similar.exists():
                     image_file = request.FILES['image']
