@@ -57,7 +57,16 @@ CREATE USER repuser WITH REPLICATION PASSWORD :'pass' LOGIN;
 ```
 GRANT SELECT ON species TO repuser;
 GRANT SELECT ON "group" TO repuser;
-CREATE PUBLICATION species_publication FOR TABLE species, "group";
+CREATE PUBLICATION species_publication FOR TABLE species(id, speciesid, gername, sciname, engname, nbclassid, wikipedia, autoid, activity_start_month, activity_end_month, activity_start_hour, activity_end_hour, plantnetpowoid, accepted_species_id, group_id, birdnetid), "group" (id, name, nature);
 ```
 
 and the DB is ready for replication.
+
+## Resync species and groups
+
+```
+DROP PUBLICATION species_publication;
+CREATE PUBLICATION species_publication FOR TABLE species(id, speciesid, gername, sciname, engname, nbclassid, wikipedia, autoid, activity_start_month, activity_end_month, activity_start_hour, activity_end_hour, plantnetpowoid, accepted_species_id, group_id, birdnetid), "group" (id, name, nature);
+```
+
+And then clear data and restart any subscribers.
