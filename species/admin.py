@@ -22,7 +22,7 @@ from species import utils
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Group, Floraportrait, Tag, SourcesImprint, SourcesTranslation, \
     FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, LeichtPortrait, LeichtRecognize, LeichtGoodToKnow, \
-    AudioFile, ImageCrop, ImageFile
+    AudioFile, ImageCrop, ImageFile, BirdnetIdMapping
 from .utils import cropped_image
 
 
@@ -863,6 +863,17 @@ class PlantnetPowoidMappingAdmin(admin.ModelAdmin):
         link = reverse("admin:species_species_change", args=[obj.species_plantnetpowoid.id])
         return format_html('<a href="{}">{} ({})</a>', link, obj.species_plantnetpowoid.plantnetpowoid,
                            obj.species_plantnetpowoid)
+
+@admin.register(BirdnetIdMapping)
+class BirdnetIdMappingAdmin(admin.ModelAdmin):
+    list_display = ['birdnetid', 'species']
+    autocomplete_fields = ['species_birdnetid']
+
+    @admin.display(description="Species birdnetid")
+    def species(self, obj):
+        link = reverse("admin:species_species_change", args=[obj.species_birdnetid.id])
+        return format_html('<a href="{}">{} ({})</a>', link, obj.species_birdnetid.birdnetid,
+                           obj.species_birdnetid)
 
 
 class LeichtRecognizeInline(OrderableAdmin, admin.TabularInline):

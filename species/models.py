@@ -644,7 +644,7 @@ class SourcesTranslation(models.Model):
 
 
 class PlantnetPowoidMapping(models.Model):
-    plantnetpowoid = models.CharField(blank=True, null=True, max_length=255, unique=True)
+    plantnetpowoid = models.CharField(blank=False, null=False, max_length=255, unique=True)
     species_plantnetpowoid = models.ForeignKey(Species, to_field="plantnetpowoid",
                                                limit_choices_to={"plantnetpowoid__isnull": False}, on_delete=CASCADE)
 
@@ -663,7 +663,7 @@ class BirdnetIdMapping(models.Model):
         db_table = "birdnet_id_mapping"
 
     def __str__(self):
-        return f"{self.plantnetpowoid} => {self.species_plantnetpowoid.plantnetpowoid} [{self.species_plantnetpowoid}]"
+        return f"{self.birdnetid} => {self.species_birdnetid.birdnetid} [{self.species_birdnetid}]"
 
 
 class AudioFile(models.Model):
