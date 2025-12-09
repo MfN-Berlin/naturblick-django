@@ -57,7 +57,9 @@ CREATE USER repuser WITH REPLICATION PASSWORD :'pass' LOGIN;
 ```
 GRANT SELECT ON species TO repuser;
 GRANT SELECT ON "group" TO repuser;
-CREATE PUBLICATION species_publication FOR TABLE species(id, speciesid, gername, sciname, engname, nbclassid, wikipedia, autoid, activity_start_month, activity_end_month, activity_start_hour, activity_end_hour, plantnetpowoid, accepted_species_id, group_id, birdnetid), "group" (id, name, nature);
+GRANT SELECT ON plantnet_powoid_mapping TO repuser;
+GRANT SELECT ON birdnet_id_mapping TO repuser;
+CREATE PUBLICATION species_publication FOR TABLE species(id, speciesid, gername, sciname, engname, nbclassid, wikipedia, autoid, activity_start_month, activity_end_month, activity_start_hour, activity_end_hour, plantnetpowoid, accepted_species_id, group_id, birdnetid), "group" (id, name, nature), plantnet_powoid_mapping (id, plantnetpowoid, species_plantnetpowoid_id), birdnet_id_mapping (id, birdnetid, species_birdnetid_id);
 ```
 
 and the DB is ready for replication.
@@ -66,7 +68,7 @@ and the DB is ready for replication.
 
 ```
 DROP PUBLICATION species_publication;
-CREATE PUBLICATION species_publication FOR TABLE species(id, speciesid, gername, sciname, engname, nbclassid, wikipedia, autoid, activity_start_month, activity_end_month, activity_start_hour, activity_end_hour, plantnetpowoid, accepted_species_id, group_id, birdnetid), "group" (id, name, nature);
+CREATE PUBLICATION species_publication FOR TABLE species(id, speciesid, gername, sciname, engname, nbclassid, wikipedia, autoid, activity_start_month, activity_end_month, activity_start_hour, activity_end_hour, plantnetpowoid, accepted_species_id, group_id, birdnetid), "group" (id, name, nature), plantnet_powoid_mapping (id, plantnetpowoid, species_plantnetpowoid_id), birdnet_id_mapping (id, birdnetid, species_birdnetid_id);
 ```
 
 And then clear data and restart any subscribers.
