@@ -206,6 +206,7 @@ class Species(models.Model):
 
             is_species = json['rank'] == "SPECIES"
             is_accepted = not ('acceptedKey' in json)
+            scientific_name = json['canonicalName']
 
             if not is_species:
                 raise ValidationError({"gbifusagekey": "Only GBIF objects with rank SPECIES are valid"})
@@ -213,10 +214,20 @@ class Species(models.Model):
                 if is_accepted:
                     raise ValidationError(
                         {"gbifusagekey": "Accepted species must NOT be set for a GBIF species that is accepted"})
+                if self.birdnetid:
+                    raise ValidationError(
+                        {"birdnetid": "Birdnetid can only be set for accepted_species"})
+
+                if self.plantnetpowoid:
+                    raise ValidationError(
+                        {"plantnetpowoid": "Plantnetpowoid  can only be set for accepted_species"})
             else:
                 if not is_accepted:
                     raise ValidationError(
                         {"gbifusagekey": "Accepted species must be set for a GBIF species that is NOT accepted"})
+            if scientific_name != self.sciname:
+                raise ValidationError(
+                    {"sciname": "The scientific name does not match the canonical name of the provided gbifusagekey"})
         else:
 
             if not self.id:
@@ -224,6 +235,14 @@ class Species(models.Model):
             if self.accepted_species:
                 raise ValidationError(
                     {"accepted_species": "Accepted species must NOT be set for a species without gbifusagekey"})
+
+            if self.birdnetid:
+                raise ValidationError(
+                    {"birdnetid": "Birdnetid must NOT be set for a species without gbifusagekey"})
+
+            if self.plantnetpowoid:
+                raise ValidationError(
+                    {"plantnetpowoid": "Plantnetpowoid must NOT be set for a species without gbifusagekey"})
 
     def generate_id_for_new_species(self):
         if not self.speciesid:
