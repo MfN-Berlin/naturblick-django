@@ -3,7 +3,7 @@ from django.urls import re_path
 
 from .views import app_content_db, app_content_leicht_db, app_content_leicht_image_list, \
     TagsList, PortraitDetail, SimpleTagsList, SpeciesList, AppContentCharacterValue, \
-    species, specgram, species_list, PlantnetPowoidMappingList, GroupsList
+    species, specgram, species_list, GroupsList
 
 urlpatterns = [
     path('species/filter/', SpeciesList.as_view(), name="species-filter"),
@@ -17,6 +17,5 @@ urlpatterns = [
     path("app-content/leicht-image-list/", app_content_leicht_image_list, name="app-content-leicht-image-list"),
     path("app-content/character-values/", AppContentCharacterValue.as_view()),
     path("tags/", SimpleTagsList.as_view(), name="tags"),
-    path("plantnet-species-mappings/", PlantnetPowoidMappingList.as_view(), name="plantnet-species-mappings"),
     path("groups/", GroupsList.as_view(), name="groups")
 ]

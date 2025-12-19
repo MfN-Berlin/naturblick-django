@@ -3,7 +3,7 @@ import os
 from rest_framework import serializers
 
 from .models import Species, SpeciesName, Tag, SimilarSpecies, GoodToKnow, UnambigousFeature, Source, \
-    Faunaportrait, Floraportrait, PlantnetPowoidMapping, Group
+    Faunaportrait, Floraportrait, Group
 from .utils import cropped_image
 
 
@@ -274,12 +274,6 @@ class SpeciesImageListSerializer(serializers.ModelSerializer):
         model = Species
         fields = ['id', 'localname', 'group', 'sciname', 'synonym', 'avatar_url', 'desc_url', 'desc_width',
                   'desc_height']
-
-
-class PlantnetPowoidMappingSeralizer(serializers.ModelSerializer):
-    class Meta:
-        model = PlantnetPowoidMapping
-        fields = ['plantnetpowoid', 'species_plantnetpowoid']
 
 
 class GroupSerializer(serializers.ModelSerializer):

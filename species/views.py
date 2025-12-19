@@ -23,7 +23,7 @@ from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait, Goo
     UnambigousFeature, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, Group
 from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializer, \
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
-    FunfactMetaSerializer, InthecityMetaSerializer, PlantnetPowoidMappingSeralizer, GroupSerializer
+    FunfactMetaSerializer, InthecityMetaSerializer, GroupSerializer
 from .utils import cropped_image
 from .utils import create_sqlite_file
 
@@ -410,12 +410,3 @@ class SpeciesList(generics.ListAPIView):
         return species_qs.distinct()
 
     serializer_class = SpeciesImageListSerializer
-
-
-class PlantnetPowoidMappingList(generics.ListAPIView):
-
-    def get_queryset(self):
-        return PlantnetPowoidMapping.objects.all()
-
-    serializer_class = PlantnetPowoidMappingSeralizer
-    pagination_class = None
