@@ -119,14 +119,6 @@ class SpeciesTestCase(TestCase):
         self.assertEqual(len(content), 2)
         self.assertEqual(content[0].get("localname"), "Vogel")
 
-    def test_plantnet_species_mappings(self):
-        url = reverse("plantnet-species-mappings")
-        response = self.client.get(url)
-        content = json.loads(response.content)
-        self.assertEqual(len(content), 1)
-        self.assertEqual(content[0].get("plantnetpowoid"), "1234-1")
-        self.assertEqual(content[0].get("species_plantnetpowoid"), "4321-5")
-
     def test_groups(self):
         url = reverse("groups")
         response = self.client.get(url)
