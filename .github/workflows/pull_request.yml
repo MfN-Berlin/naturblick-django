@@ -9,6 +9,14 @@ jobs:
     runs-on: ubuntu-latest  # Use GitHub-hosted runner
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          cache: 'pip' # caching pip dependencies
+      - name: Install pycodestyle
+        run: pip install pycodestyle
+      - Validate PEP8
+        run: pycodestyle -qq species/ naturblick/
       - name: Build Docker image
         run: docker build .
       - name: Run Django tests
