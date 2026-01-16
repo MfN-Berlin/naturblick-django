@@ -16,7 +16,7 @@ jobs:
       - name: Install pycodestyle
         run: pip install pycodestyle
       - name: Validate PEP8
-        run: pycodestyle species/ naturblick/
+        run: pycodestyle --exclude="*/migrations/*" species/ naturblick/
       - name: Build Docker image
         run: docker build .
       - name: Run Django tests
