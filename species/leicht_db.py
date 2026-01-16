@@ -11,20 +11,24 @@ def leicht_portrait():
 def insert_portrait(sqlite_cursor):
     sqlite_cursor.executemany(
         "INSERT INTO portrait VALUES (?, ?, ?, ?, ?);",
-        ((portrait.id,
-          portrait.name,
-          "#".join(
-              portrait.leichtrecognize_set.all()
-              .order_by("ordering")
-              .values_list("text", flat=True)
-          ),
-          "#".join(
-              portrait.leichtgoodtoknow_set.all()
-              .order_by("ordering")
-              .values_list("text", flat=True)
-          ),
-          portrait.level)
-         for portrait in leicht_portrait())
+        (
+            (
+                portrait.id,
+                portrait.name,
+                "#".join(
+                    portrait.leichtrecognize_set.all()
+                    .order_by("ordering")
+                    .values_list("text", flat=True)
+                ),
+                "#".join(
+                    portrait.leichtgoodtoknow_set.all()
+                    .order_by("ordering")
+                    .values_list("text", flat=True)
+                ),
+                portrait.level,
+            )
+            for portrait in leicht_portrait()
+        ),
     )
 
 
