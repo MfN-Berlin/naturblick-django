@@ -26,24 +26,45 @@ class SpeciesTestCase(TestCase):
 
         Group.objects.create(name="bird", nature="fauna")
         bird = Group.objects.get(name="bird")
-        amsel = Species.objects.create(sciname="Turdus merula", group=bird, gername="Amsel", speciesid="bird_0",
-                                       plantnetpowoid="4321-5")
+        amsel = Species.objects.create(
+            sciname="Turdus merula",
+            group=bird,
+            gername="Amsel",
+            speciesid="bird_0",
+            plantnetpowoid="4321-5")
         SpeciesName.objects.create(
             species=amsel, name="Schwarzdrossel", language="de")
-        imagefile = ImageFile.objects.create(species=amsel, owner="Test", source="127.0.0.1", license="CC0",
-                                             image=test_amsel)
+        imagefile = ImageFile.objects.create(
+            species=amsel,
+            owner="Test",
+            source="127.0.0.1",
+            license="CC0",
+            image=test_amsel)
         # remove in future
-        pif = PortraitImageFile.objects.create(species=amsel, owner="Test", source="127.0.0.1", license="CC0",
-                                               image=test_amsel)
+        pif = PortraitImageFile.objects.create(
+            species=amsel,
+            owner="Test",
+            source="127.0.0.1",
+            license="CC0",
+            image=test_amsel)
 
         crop = ImageCrop.objects.create(imagefile=imagefile, cropping=None)
         amsel.avatar_new = crop
         amsel.save(update_fields=['avatar_new'])
 
-        portrait = Faunaportrait.objects.create(species=amsel, language="de", short_description="Foobar",
-                                                city_habitat="Foobar", published=True)
-        DescMeta.objects.create(display_ratio="1:1", grid_ratio="1:1", text="Foobar", portrait=portrait,
-                                portrait_image_file=pif, image_file=imagefile)
+        portrait = Faunaportrait.objects.create(
+            species=amsel,
+            language="de",
+            short_description="Foobar",
+            city_habitat="Foobar",
+            published=True)
+        DescMeta.objects.create(
+            display_ratio="1:1",
+            grid_ratio="1:1",
+            text="Foobar",
+            portrait=portrait,
+            portrait_image_file=pif,
+            image_file=imagefile)
 
         amsel_tag = Tag.objects.create(name="Vogel", english_name="Bird")
         Tag.objects.create(name="nachtaktiv", english_name="nocturnal")

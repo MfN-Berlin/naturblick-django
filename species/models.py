@@ -25,7 +25,10 @@ class ImageFile(models.Model):
     source = URLField(max_length=1024)
     license = models.CharField(max_length=64)
     image = models.ImageField(
-        upload_to="images", max_length=255, width_field='width', height_field='height')
+        upload_to="images",
+        max_length=255,
+        width_field='width',
+        height_field='height')
     width = models.IntegerField(default=0)
     height = models.IntegerField(default=0)
 
@@ -105,8 +108,14 @@ class Group(models.Model):
     has_portraits = models.BooleanField(default=False)
     is_fieldbookfilter = models.BooleanField(default=False)
     has_characters = models.BooleanField(default=False)
-    image = models.ImageField(upload_to="group_images", max_length=255, null=True, blank=True,
-                              validators=[validate_group_image, validate_png])
+    image = models.ImageField(
+        upload_to="group_images",
+        max_length=255,
+        null=True,
+        blank=True,
+        validators=[
+            validate_group_image,
+            validate_png])
     svg = models.FileField(upload_to="group_svg", max_length=255,
                            null=True, blank=True, validators=[validate_svg])
 
@@ -179,11 +188,22 @@ class Avatar(models.Model):
 class Species(models.Model):
     speciesid = models.CharField(max_length=255, unique=True)
     gername = models.CharField(
-        max_length=255, null=True, blank=True, db_index=True, verbose_name='German name')
+        max_length=255,
+        null=True,
+        blank=True,
+        db_index=True,
+        verbose_name='German name')
     sciname = models.CharField(
-        max_length=255, unique=True, db_index=True, verbose_name='Scientific name')
+        max_length=255,
+        unique=True,
+        db_index=True,
+        verbose_name='Scientific name')
     engname = models.CharField(
-        max_length=255, null=True, blank=True, db_index=True, verbose_name='English name')
+        max_length=255,
+        null=True,
+        blank=True,
+        db_index=True,
+        verbose_name='English name')
     group = models.ForeignKey(Group, on_delete=models.PROTECT)
     nbclassid = models.CharField(max_length=255, blank=True, null=True)
     wikipedia = models.URLField(
@@ -197,14 +217,24 @@ class Species(models.Model):
         blank=True, null=True, max_length=9, choices=MONTH_CHOICES)
     activity_end_month = models.CharField(
         blank=True, null=True, max_length=9, choices=MONTH_CHOICES)
-    activity_start_hour = models.IntegerField(blank=True, null=True,
-                                              validators=[MinValueValidator(0), MaxValueValidator(23)])
-    activity_end_hour = models.IntegerField(blank=True, null=True,
-                                            validators=[MinValueValidator(0), MaxValueValidator(23)])
-    avatar_new = models.ForeignKey(ImageCrop, on_delete=models.SET_NULL, related_name="avatar_species_new", null="True",
-                                   blank="True")
-    female_avatar_new = models.ForeignKey(ImageCrop, on_delete=models.SET_NULL, related_name="female_avatar_species_new",
-                                          null="True", blank="True")
+    activity_start_hour = models.IntegerField(
+        blank=True, null=True, validators=[
+            MinValueValidator(0), MaxValueValidator(23)])
+    activity_end_hour = models.IntegerField(
+        blank=True, null=True, validators=[
+            MinValueValidator(0), MaxValueValidator(23)])
+    avatar_new = models.ForeignKey(
+        ImageCrop,
+        on_delete=models.SET_NULL,
+        related_name="avatar_species_new",
+        null="True",
+        blank="True")
+    female_avatar_new = models.ForeignKey(
+        ImageCrop,
+        on_delete=models.SET_NULL,
+        related_name="female_avatar_species_new",
+        null="True",
+        blank="True")
     gbifusagekey = models.IntegerField(
         blank=True, null=True, verbose_name='GBIF usagekey', unique=True)
     accepted_species = models.ForeignKey(
@@ -265,8 +295,8 @@ class Species(models.Model):
         if not self.speciesid:
             prefix = f'{self.group}_ffff'
             try:
-                last_insert_id = Species.objects.filter(speciesid__startswith=prefix).order_by("-speciesid")[
-                    0].speciesid
+                last_insert_id = Species.objects.filter(
+                    speciesid__startswith=prefix).order_by("-speciesid")[0].speciesid
                 next_insert_id = int(
                     last_insert_id[len(last_insert_id) - 4: len(last_insert_id)], 16) + 1
                 self.speciesid = f'{self.group}_ffff{next_insert_id:04x}'
@@ -283,8 +313,11 @@ class Species(models.Model):
         self.generate_id_for_new_species()
 
     def __str__(self):
-        name_list = [item for item in [self.gername,
-                                       self.sciname, self.speciesid] if item is not None]
+        name_list = [
+            item for item in [
+                self.gername,
+                self.sciname,
+                self.speciesid] if item is not None]
         return ' - '.join(name_list)
 
     class Meta:
@@ -304,8 +337,11 @@ class SpeciesName(models.Model):
         db_table = 'species_name'
         constraints = [
             UniqueConstraint(
-                fields=("species", "name", "language"), name="unique_species_name"
-            ),
+                fields=(
+                    "species",
+                    "name",
+                    "language"),
+                name="unique_species_name"),
         ]
 
 
@@ -316,8 +352,11 @@ class PortraitImageFile(models.Model):
     owner_link = URLField(blank=True, null=True, max_length=255)
     source = URLField(max_length=1024)
     license = models.CharField(max_length=64)
-    image = models.ImageField(upload_to="portrait_images",
-                              max_length=255, width_field='width', height_field='height')
+    image = models.ImageField(
+        upload_to="portrait_images",
+        max_length=255,
+        width_field='width',
+        height_field='height')
     width = models.IntegerField(default=0)
     height = models.IntegerField(default=0)
 
@@ -379,13 +418,17 @@ class PortraitImageFile(models.Model):
 
 
 class PortraitImageMeta(models.Model):
-    image_orientation = models.CharField(max_length=10, choices=IMAGE_ORIENTATION_CHOICES,
-                                         null=True)  # this should be not null
+    image_orientation = models.CharField(
+        max_length=10,
+        choices=IMAGE_ORIENTATION_CHOICES,
+        null=True)  # this should be not null
     display_ratio = models.CharField(
         max_length=3, choices=DISPLAY_RATIO_CHOICES)
     grid_ratio = models.CharField(max_length=3, choices=GRID_RATIO_CHOICES)
-    focus_point_vertical = models.FloatField(validators=min_max(0.0, 100.0),
-                                             null=True)  # one of the focus_point shouldn't be null -> better only one field non nullable
+    # one of the focus_point shouldn't be null -> better only one field non
+    # nullable
+    focus_point_vertical = models.FloatField(
+        validators=min_max(0.0, 100.0), null=True)
     focus_point_horizontal = models.FloatField(
         validators=min_max(0.0, 100.0), null=True)
     text = models.CharField(max_length=255)
@@ -422,8 +465,9 @@ class Portrait(models.Model):
 
     @property
     def db_sources(self):
-        source_texts = [s.strip()
-                        for s in self.source_set.all().values_list('text', flat=True)]
+        source_texts = [
+            s.strip() for s in self.source_set.all().values_list(
+                'text', flat=True)]
         return '\n\n'.join(source_texts) if source_texts else None
 
     def __str__(self):
@@ -557,8 +601,11 @@ class Faunaportrait(Portrait):
     juvenile_description = models.TextField(blank=True, null=True)
     tracks = models.TextField(blank=True, null=True)  # seems unused
     audio_title = models.CharField(max_length=255, blank=True, null=True)
-    faunaportrait_audio_file = models.ForeignKey(FaunaportraitAudioFile, on_delete=models.SET_NULL, null=True,
-                                                 blank=True)
+    faunaportrait_audio_file = models.ForeignKey(
+        FaunaportraitAudioFile,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True)
 
     male_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Männchen."
     female_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Weibchen."
@@ -678,7 +725,10 @@ class SourcesImprint(models.Model):
     scie_name = models.CharField(
         max_length=255, verbose_name='German description')
     scie_name_eng = models.CharField(
-        max_length=255, null=True, blank=True, verbose_name='English description')
+        max_length=255,
+        null=True,
+        blank=True,
+        verbose_name='English description')
     image_source = models.CharField(max_length=255, null=True, blank=True)
     image_link = models.CharField(max_length=255, null=True, blank=True)
     licence = models.CharField(max_length=255, null=True, blank=True)
@@ -706,8 +756,9 @@ class SourcesTranslation(models.Model):
 class PlantnetPowoidMapping(models.Model):
     plantnetpowoid = models.CharField(
         blank=False, null=False, max_length=255, unique=True)
-    species_plantnetpowoid = models.ForeignKey(Species, to_field="plantnetpowoid",
-                                               limit_choices_to={"plantnetpowoid__isnull": False}, on_delete=CASCADE)
+    species_plantnetpowoid = models.ForeignKey(
+        Species, to_field="plantnetpowoid", limit_choices_to={
+            "plantnetpowoid__isnull": False}, on_delete=CASCADE)
 
     class Meta:
         db_table = "plantnet_powoid_mapping"
@@ -719,8 +770,9 @@ class PlantnetPowoidMapping(models.Model):
 class BirdnetIdMapping(models.Model):
     birdnetid = models.PositiveIntegerField(
         null=False, blank=False, unique=True)
-    species_birdnetid = models.ForeignKey(Species, to_field="birdnetid",
-                                          limit_choices_to={"birdnetid__isnull": False}, on_delete=CASCADE)
+    species_birdnetid = models.ForeignKey(
+        Species, to_field="birdnetid", limit_choices_to={
+            "birdnetid__isnull": False}, on_delete=CASCADE)
 
     class Meta:
         db_table = "birdnet_id_mapping"
@@ -754,7 +806,10 @@ class LeichtPortrait(models.Model):
     name = models.TextField(default='unknown')
     avatar = models.ForeignKey(ImageCrop, on_delete=RESTRICT, default=1)
     goodtoknow_image = models.ForeignKey(
-        ImageFile, on_delete=RESTRICT, related_name="goodtoknow_image", default=1)
+        ImageFile,
+        on_delete=RESTRICT,
+        related_name="goodtoknow_image",
+        default=1)
     level = models.PositiveIntegerField(default=1)
     audio = models.ForeignKey(
         AudioFile, on_delete=models.SET_NULL, blank=True, null=True)

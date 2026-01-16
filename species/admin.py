@@ -328,12 +328,35 @@ class SpeciesAdmin(admin.ModelAdmin):
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid']
-    list_display = ['id', 'speciesid', 'sciname', 'gername', 'avatar_crop', 'accepted', 'portrait', 'gbif', 'plantnet',
-                    'search']
+    list_display = [
+        'id',
+        'speciesid',
+        'sciname',
+        'gername',
+        'avatar_crop',
+        'accepted',
+        'portrait',
+        'gbif',
+        'plantnet',
+        'search']
     list_display_links = ['id', 'speciesid']
-    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, HasSynonymsFilter,
-                   IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter, HasBirdnetIdFilter,
-                   'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, HasWikipediaFilter, 'group']
+    list_filter = [
+        'group__nature',
+        HasPortraitFilter,
+        HasGbifusagekeyFilter,
+        HasPrimaryName,
+        HasSynonymsFilter,
+        IsSynonymFilter,
+        HasPlantnetPowoidFilter,
+        HasPlantnetPowoidMappingFilter,
+        HasNbclassidFilter,
+        HasBirdnetIdFilter,
+        'autoid',
+        HasAvatarFilter,
+        HasFemaleAvatarFilter,
+        HasAdditionalNames,
+        HasWikipediaFilter,
+        'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
               'group',
@@ -395,27 +418,46 @@ class SpeciesAdmin(admin.ModelAdmin):
                 "owner_link": meta.author_url,
                 "license": meta.license
             }
-            return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html', {"form": ValidateAvtarForm(
-                initial=data), 'queryset': queryset, "image_url": form.cleaned_data['wikimedia_url'], "owner_link": meta.author_url})
+            return TemplateResponse(request,
+                                    'admin/avatar_from_wikimedia_validate.html',
+                                    {"form": ValidateAvtarForm(initial=data),
+                                     'queryset': queryset,
+                                     "image_url": form.cleaned_data['wikimedia_url'],
+                                        "owner_link": meta.author_url})
         else:
-            return TemplateResponse(
-                request, 'admin/avatar_from_wikimedia.html', {"form": form, 'queryset': queryset})
+            return TemplateResponse(request,
+                                    'admin/avatar_from_wikimedia.html',
+                                    {"form": form,
+                                     'queryset': queryset})
 
     def import_avatar_from_wikimedia_execute(self, request, queryset):
         form = ValidateAvtarForm(request.POST)
         image_url = request.POST["image_url"]
         if form.is_valid():
             image = utils.get_wikimedia_image(image_url)
-            avatar_image_file = ImageFile.objects.create(owner=form.cleaned_data["owner"], owner_link=form.cleaned_data[
-                                                         "owner_link"], source=image_url, license=form.cleaned_data["license"], image=image, species=queryset.first())
+            avatar_image_file = ImageFile.objects.create(
+                owner=form.cleaned_data["owner"],
+                owner_link=form.cleaned_data["owner_link"],
+                source=image_url,
+                license=form.cleaned_data["license"],
+                image=image,
+                species=queryset.first())
             avatar_crop = ImageCrop.objects.create(
                 imagefile=avatar_image_file, cropping=None)
             queryset.update(avatar_new=avatar_crop.id)
             return HttpResponseRedirect(
-                reverse('admin:species_imagecrop_change', args=(avatar_crop.id,)))
+                reverse(
+                    'admin:species_imagecrop_change',
+                    args=(
+                        avatar_crop.id,
+                    )))
         else:
-            return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html', {
-                                    "form": form, 'queryset': queryset, "image_url": image_url, "owner_link": form.data["owner_link"]})
+            return TemplateResponse(request,
+                                    'admin/avatar_from_wikimedia_validate.html',
+                                    {"form": form,
+                                     'queryset': queryset,
+                                     "image_url": image_url,
+                                     "owner_link": form.data["owner_link"]})
 
     @admin.action(description="Import avatar from Wikimedia")
     @transaction.atomic
@@ -433,8 +475,10 @@ class SpeciesAdmin(admin.ModelAdmin):
         elif request.POST.get("post"):
             return self.import_avatar_from_wikimedia_execute(request, queryset)
         else:
-            return TemplateResponse(request, 'admin/avatar_from_wikimedia.html', {
-                                    "form": ImportAvatarFromWikimediaForm(), 'queryset': queryset})
+            return TemplateResponse(request,
+                                    'admin/avatar_from_wikimedia.html',
+                                    {"form": ImportAvatarFromWikimediaForm(),
+                                     'queryset': queryset})
 
     @admin.display(
         description="Avatar"
@@ -445,7 +489,9 @@ class SpeciesAdmin(admin.ModelAdmin):
             image_url = cropped_image(avatar.imagefile.image, avatar.cropping)
             url = reverse('admin:species_imagecrop_change', args=([avatar.id]))
             return format_html(
-                '<a href="{}"><img src="{}" class="species-avatar"/></a>', url, image_url)
+                '<a href="{}"><img src="{}" class="species-avatar"/></a>',
+                url,
+                image_url)
         else:
             return "-"
 
@@ -465,7 +511,13 @@ class SpeciesAdmin(admin.ModelAdmin):
         wikimedia_img_url = static('species/Wikimedia Commons Logo.svg')
         return format_html(
             '<a title="GBIF" href="{}"><img class="image-link" src={}></a> | <a title="Wikipedia" href="{}"><img class="image-link" src={}></a> | <a href="{}"><img title="Wikimedia Image Search" class="image-link" src={}></a> | <a title="Plantnet" href="{}"><img class="image-link" src={}></a>',
-            gbif_url, gbif_img_url, wikipedia_url, wikipedia_img_url, wikimedia_url, wikimedia_img_url, plantnet_url,
+            gbif_url,
+            gbif_img_url,
+            wikipedia_url,
+            wikipedia_img_url,
+            wikimedia_url,
+            wikimedia_img_url,
+            plantnet_url,
             plantnet_img_url)
 
     @admin.display(
@@ -523,8 +575,12 @@ class SpeciesAdmin(admin.ModelAdmin):
 
             links.append(
                 '<a href="{}"><img class="naturblick-logo-link" src="{}"/></a>')
-            return format_html(' | '.join(links), urls[0], urls[1], f'/species/portrait/{obj.id}',
-                               static('species/logo.svg'))
+            return format_html(
+                ' | '.join(links),
+                urls[0],
+                urls[1],
+                f'/species/portrait/{obj.id}',
+                static('species/logo.svg'))
 
 
 #
@@ -586,8 +642,14 @@ class UnambigousFeatureInline(OrderableAdmin, admin.TabularInline):
 class DescMetaInline(admin.StackedInline):
     extra = 0
     model = DescMeta
-    fields = ['image_orientation', 'display_ratio', 'grid_ratio', 'focus_point_vertical', 'focus_point_horizontal',
-              'text', 'image_file']
+    fields = [
+        'image_orientation',
+        'display_ratio',
+        'grid_ratio',
+        'focus_point_vertical',
+        'focus_point_horizontal',
+        'text',
+        'image_file']
     autocomplete_fields = ['image_file']
     verbose_name = 'Description image'
 
@@ -595,8 +657,14 @@ class DescMetaInline(admin.StackedInline):
 class FunFactMetaInline(admin.StackedInline):
     model = FunFactMeta
     extra = 0
-    fields = ['image_orientation', 'display_ratio', 'grid_ratio', 'focus_point_vertical', 'focus_point_horizontal',
-              'text', 'image_file']
+    fields = [
+        'image_orientation',
+        'display_ratio',
+        'grid_ratio',
+        'focus_point_vertical',
+        'focus_point_horizontal',
+        'text',
+        'image_file']
     autocomplete_fields = ['image_file']
     verbose_name = 'Funfact image'
 
@@ -604,8 +672,14 @@ class FunFactMetaInline(admin.StackedInline):
 class InTheCityMetaInline(admin.StackedInline):
     model = InTheCityMeta
     extra = 0
-    fields = ['image_orientation', 'display_ratio', 'grid_ratio', 'focus_point_vertical', 'focus_point_horizontal',
-              'text', 'image_file']
+    fields = [
+        'image_orientation',
+        'display_ratio',
+        'grid_ratio',
+        'focus_point_vertical',
+        'focus_point_horizontal',
+        'text',
+        'image_file']
     autocomplete_fields = ['image_file']
     verbose_name = 'In the city image'
 
@@ -628,10 +702,11 @@ def copy_portrait_to_eng(modeladmin, request, queryset):
     if queryset.filter(~Q(language='de')).exists():
         messages.error(request, "Please select only german portraits.")
         return
-    if model.objects.filter(
-            Q(species_id__in=queryset.values_list('species__id', flat=True)) & Q(language='en')).exists():
+    if model.objects.filter(Q(species_id__in=queryset.values_list(
+            'species__id', flat=True)) & Q(language='en')).exists():
         messages.error(
-            request, "At least one english portrait for the selected species already exists.")
+            request,
+            "At least one english portrait for the selected species already exists.")
         return
 
     for p in queryset:
@@ -650,16 +725,17 @@ def copy_portrait_to_eng(modeladmin, request, queryset):
                 audio_title=p.audio_title,
                 faunaportrait_audio_file=p.faunaportrait_audio_file)
         else:
-            new_portrait = Floraportrait(species=p.species,
-                                         language='en',
-                                         short_description=p.short_description,
-                                         city_habitat=p.city_habitat,
-                                         human_interaction=p.human_interaction,
-                                         published=False,
-                                         leaf_description=p.leaf_description,
-                                         stem_axis_description=p.stem_axis_description,
-                                         flower_description=p.flower_description,
-                                         fruit_description=p.fruit_description)
+            new_portrait = Floraportrait(
+                species=p.species,
+                language='en',
+                short_description=p.short_description,
+                city_habitat=p.city_habitat,
+                human_interaction=p.human_interaction,
+                published=False,
+                leaf_description=p.leaf_description,
+                stem_axis_description=p.stem_axis_description,
+                flower_description=p.flower_description,
+                fruit_description=p.fruit_description)
         new_portrait.save()
 
         if hasattr(p, 'descmeta'):
@@ -706,8 +782,7 @@ def move_portrait_to_accepted(modeladmin, request, queryset):
         modeladmin.message_user(
             request,
             "Not all selected portraits have an accepted species - use filter 'portrait is synonym species'.",
-            level=messages.WARNING
-        )
+            level=messages.WARNING)
         return
 
     for portrait in queryset:
@@ -776,9 +851,14 @@ class FloraportraitAdmin(admin.ModelAdmin):
     list_filter = ('published', 'language',
                    PortraitIsSynonymFilter, 'species__group')
     inlines = [
-        UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline,
-        DescMetaInline, InTheCityMetaInline, FunFactMetaInline
-    ]
+        UnambigousFeatureInline,
+        SimilarSpeciesInline,
+        GoodToKnowInline,
+        AdditionalLinkInline,
+        SourceInline,
+        DescMetaInline,
+        InTheCityMetaInline,
+        FunFactMetaInline]
     ordering = ('species__sciname',)
     autocomplete_fields = ['species']
     formfield_overrides = {
@@ -819,9 +899,14 @@ class FaunaportraitAdmin(admin.ModelAdmin):
     list_filter = ('published', 'language',
                    PortraitIsSynonymFilter, 'species__group')
     inlines = [
-        UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline,
-        DescMetaInline, InTheCityMetaInline, FunFactMetaInline
-    ]
+        UnambigousFeatureInline,
+        SimilarSpeciesInline,
+        GoodToKnowInline,
+        AdditionalLinkInline,
+        SourceInline,
+        DescMetaInline,
+        InTheCityMetaInline,
+        FunFactMetaInline]
     ordering = ["species__sciname"]
     autocomplete_fields = ['species', 'faunaportrait_audio_file']
     formfield_overrides = {
@@ -836,11 +921,27 @@ class FaunaportraitAdmin(admin.ModelAdmin):
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     radio_fields = {"nature": admin.VERTICAL}
-    list_display = ['name', 'nature', 'admin_thumbnail', 'svg_preview', 'has_portraits', 'is_fieldbookfilter',
-                    'has_characters']
+    list_display = [
+        'name',
+        'nature',
+        'admin_thumbnail',
+        'svg_preview',
+        'has_portraits',
+        'is_fieldbookfilter',
+        'has_characters']
     list_filter = ['nature']
-    fields = ['name', 'nature', 'image', 'admin_thumbnail', 'svg', 'svg_preview', 'gername', 'engname', 'has_portraits',
-              'is_fieldbookfilter', 'has_characters']
+    fields = [
+        'name',
+        'nature',
+        'image',
+        'admin_thumbnail',
+        'svg',
+        'svg_preview',
+        'gername',
+        'engname',
+        'has_portraits',
+        'is_fieldbookfilter',
+        'has_characters']
     readonly_fields = ['admin_thumbnail', 'svg_preview']
 
     admin_thumbnail = AdminThumbnail(image_field=cached_thumb)
@@ -849,7 +950,8 @@ class GroupAdmin(admin.ModelAdmin):
     def svg_preview(self, obj):
         if obj.svg and obj.svg.name.endswith('.svg'):
             return format_html(
-                '<img src="{}" alt="icon" height="50" width="50" />', obj.svg.url)
+                '<img src="{}" alt="icon" height="50" width="50" />',
+                obj.svg.url)
         return "N/A"
 
     svg_preview.short_description = "SVG"
@@ -903,8 +1005,11 @@ class PlantnetPowoidMappingAdmin(admin.ModelAdmin):
     def species(self, obj):
         link = reverse("admin:species_species_change",
                        args=[obj.species_plantnetpowoid.id])
-        return format_html('<a href="{}">{} ({})</a>', link, obj.species_plantnetpowoid.plantnetpowoid,
-                           obj.species_plantnetpowoid)
+        return format_html(
+            '<a href="{}">{} ({})</a>',
+            link,
+            obj.species_plantnetpowoid.plantnetpowoid,
+            obj.species_plantnetpowoid)
 
 
 @admin.register(BirdnetIdMapping)
@@ -916,8 +1021,11 @@ class BirdnetIdMappingAdmin(admin.ModelAdmin):
     def species(self, obj):
         link = reverse("admin:species_species_change",
                        args=[obj.species_birdnetid.id])
-        return format_html('<a href="{}">{} ({})</a>', link, obj.species_birdnetid.birdnetid,
-                           obj.species_birdnetid)
+        return format_html(
+            '<a href="{}">{} ({})</a>',
+            link,
+            obj.species_birdnetid.birdnetid,
+            obj.species_birdnetid)
 
 
 class LeichtRecognizeInline(OrderableAdmin, admin.TabularInline):
@@ -989,8 +1097,11 @@ class ImageFileAdmin(admin.ModelAdmin):
 @admin.register(ImageCrop)
 class ImageCropAdmin(ImageCroppingMixin, admin.ModelAdmin):
     list_display = ['cropped_image']
-    search_fields = ['imagefile__owner', 'imagefile__species__sciname', 'imagefile__species__gername',
-                     'imagefile__species__speciesid']
+    search_fields = [
+        'imagefile__owner',
+        'imagefile__species__sciname',
+        'imagefile__species__gername',
+        'imagefile__species__speciesid']
     autocomplete_fields = ['imagefile']
 
     @admin.display(
@@ -1035,7 +1146,11 @@ class LeichtPortraitAdmin(admin.ModelAdmin):
     )
     def avatar_thumb(self, obj):
         image_url = cropped_image(
-            obj.avatar.imagefile.image, cropping=obj.avatar.cropping, size=(100, 100))
+            obj.avatar.imagefile.image,
+            cropping=obj.avatar.cropping,
+            size=(
+                100,
+                100))
         return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
 
     @admin.display(

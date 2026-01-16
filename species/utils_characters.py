@@ -18,7 +18,7 @@ def insert_characters(sqlite_cursor):
 
     data = [a for a in char_cursor.execute(
         "SELECT * FROM character_value_species")]
-    sqlite_cursor.executemany("INSERT INTO character_value_species VALUES (?, ?, ?, ?, ?)",
-                              data)
+    sqlite_cursor.executemany(
+        "INSERT INTO character_value_species VALUES (?, ?, ?, ?, ?)", data)
 
     conn.close()

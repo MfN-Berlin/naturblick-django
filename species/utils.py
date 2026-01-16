@@ -35,15 +35,25 @@ class DbPortrait:
 
 def insert_image_size(sqlite_cursor, img, portrait_image_id):
     if img:
-        sqlite_cursor.execute("INSERT INTO portrait_image_size VALUES (?, ?, ? ,?)",
-                              (portrait_image_id, img.width, img.height, img.url))
+        sqlite_cursor.execute(
+            "INSERT INTO portrait_image_size VALUES (?, ?, ? ,?)",
+            (portrait_image_id,
+             img.width,
+             img.height,
+             img.url))
 
 
 def insert_image(sqlite_cursor, meta, portrait_image_id):
     text = meta.text
     image_file = meta.image_file
-    sqlite_cursor.execute("INSERT INTO portrait_image VALUES (?, ?, ?, ?, ?, ?)",
-                          (portrait_image_id, image_file.owner, image_file.owner_link, image_file.source, text, image_file.license))
+    sqlite_cursor.execute(
+        "INSERT INTO portrait_image VALUES (?, ?, ?, ?, ?, ?)",
+        (portrait_image_id,
+         image_file.owner,
+         image_file.owner_link,
+         image_file.source,
+         text,
+         image_file.license))
 
     insert_image_size(sqlite_cursor, image_file.image, portrait_image_id)
     insert_image_size(sqlite_cursor, image_file.small, portrait_image_id)
@@ -85,7 +95,9 @@ def insert_portrait_image_and_sizes(sqlite_cursor, portraits):
                                  in_the_city=p.db_in_the_city,
                                  sources=p.db_sources)
 
-        if hasattr(p, 'faunaportrait_audio_file') and p.faunaportrait_audio_file:
+        if hasattr(
+                p,
+                'faunaportrait_audio_file') and p.faunaportrait_audio_file:
             db_portrait.audio_url = p.faunaportrait_audio_file.audio_file.url
 
         if hasattr(p, 'descmeta'):
@@ -130,13 +142,14 @@ def insert_portrait(sqlite_cursor, db_portrait):
                db_portrait.focus
                )
     sqlite_cursor.execute(
-        "INSERT INTO portrait VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?)", db_data)
+        "INSERT INTO portrait VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?)",
+        db_data)
 
 
 def insert_similar_species(sqlite_cursor, portrait_id, portrait):
     if hasattr(portrait, 'similarspecies_set'):
-        data = list(map(lambda s: (portrait_id, s.species.id, allow_break_on_hyphen(s.differences)),
-                        portrait.similarspecies_set.all()))
+        data = list(map(lambda s: (portrait_id, s.species.id, allow_break_on_hyphen(
+            s.differences)), portrait.similarspecies_set.all()))
         sqlite_cursor.executemany(
             "INSERT INTO similar_species VALUES (?, ?, ?);", data)
 
@@ -160,24 +173,30 @@ def insert_good_to_know(sqlite_cursor, portrait_id, portrait):
             "lifeform": "Lebensform: " if is_de else "Lifeform: "
         }
 
-        data = list(map(lambda gtk: (portrait_id, labels.get(gtk.type, "") + gtk.fact),
-                        portrait.goodtoknow_set.all()))
+        data = list(map(lambda gtk: (portrait_id, labels.get(
+            gtk.type, "") + gtk.fact), portrait.goodtoknow_set.all()))
         sqlite_cursor.executemany(
             "INSERT INTO good_to_know VALUES (?, ?);", data)
 
 
 def insert_sources_translations(sqlite_cursor):
-    data = list(map(lambda st: (lang_to_int(st.language), f"{{{{{st.key}}}}}", st.value),
+    data = list(map(lambda st: (lang_to_int(st.language),
+                                f"{{{{{st.key}}}}}",
+                                st.value),
                     SourcesTranslation.objects.all()))
     sqlite_cursor.executemany(
         "INSERT INTO sources_translations VALUES (?, ?, ?);", data)
 
 
 def insert_sources_imprint(sqlite_cursor):
-    data = list(map(lambda si: (
-        si.id, si.name, si.scie_name, si.scie_name_eng if si.scie_name_eng else '', si.image_source, si.licence,
-        si.author),
-        SourcesImprint.objects.all()))
+    data = list(map(lambda si: (si.id,
+                                si.name,
+                                si.scie_name,
+                                si.scie_name_eng if si.scie_name_eng else '',
+                                si.image_source,
+                                si.licence,
+                                si.author),
+                    SourcesImprint.objects.all()))
     sqlite_cursor.executemany(
         "INSERT INTO sources_imprint VALUES (?, ?, ?, ?, ?, ?, ?);", data)
 
@@ -189,7 +208,9 @@ def insert_current_version(sqlite_cursor):
     response = requests.get(url)
     if response.status_code == 200:
         sqlite_cursor.execute(
-            "INSERT INTO species_current_version VALUES (?, ?);", (1, response.json()["version"]))
+            "INSERT INTO species_current_version VALUES (?, ?);",
+            (1,
+             response.json()["version"]))
     else:
         raise Exception(
             f"Playback not available: response [ {response.text} ]")
@@ -218,8 +239,8 @@ def insert_timezone_polygon(sqlite_cursor):
                 polygon_id += 1
             elif f.geometry.type == 'MultiPolygon':
                 for c in f.geometry.coordinates:
-                    sqlite_cursor.execute("INSERT INTO time_zone_polygon VALUES (?, ?)",
-                                          (polygon_id, f.properties.tzid))
+                    sqlite_cursor.execute(
+                        "INSERT INTO time_zone_polygon VALUES (?, ?)", (polygon_id, f.properties.tzid))
                     # First is boundary, all holes are ignored and therefore
                     # coordinates[0]
                     for v in c[0]:
@@ -230,9 +251,14 @@ def insert_timezone_polygon(sqlite_cursor):
 
 
 def insert_groups(sqlite_cursor):
-    data = list(
-        map(lambda g: (g.name, g.nature, g.gername, g.engname, g.has_portraits, g.is_fieldbookfilter, g.has_characters),
-            Group.objects.all()))
+    data = list(map(lambda g: (g.name,
+                               g.nature,
+                               g.gername,
+                               g.engname,
+                               g.has_portraits,
+                               g.is_fieldbookfilter,
+                               g.has_characters),
+                    Group.objects.all()))
     sqlite_cursor.executemany(
         "INSERT INTO groups VALUES (?, ?, ?, ?, ?, ?, ?);", data)
 
@@ -246,8 +272,19 @@ def create_sqlite_file():
 
     create_tables(sqlite_cursor)
 
-    portraits = (list(Faunaportrait.objects.filter(published=True, language__in=['de', 'en']))
-                 + list(Floraportrait.objects.filter(published=True, language__in=['de', 'en'])))
+    portraits = (
+        list(
+            Faunaportrait.objects.filter(
+                published=True,
+                language__in=[
+                    'de',
+                    'en'])) +
+        list(
+            Floraportrait.objects.filter(
+                published=True,
+                language__in=[
+                    'de',
+                    'en'])))
 
     insert_groups(sqlite_cursor)
     insert_species(sqlite_cursor)
@@ -266,7 +303,9 @@ def create_sqlite_file():
 
 def get_synonyms(all_synonyms_dict, language, species_id):
     synonyms = ", ".join(
-        (s.name for s in all_synonyms_dict.get(species_id, []) if s.language == language))
+        (s.name for s in all_synonyms_dict.get(
+            species_id,
+            []) if s.language == language))
     return allow_break_on_hyphen(synonyms) or None
 
 
@@ -283,7 +322,8 @@ def insert_species(sqlite_cursor):
     data = list(map(map_species(all_synonyms_dict), Species.objects.select_related(
         "group", "avatar_new", "female_avatar_new").all()))
     sqlite_cursor.executemany(
-        "INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
+        "INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+        data)
 
     # could be done on insert level
     sqlite_cursor.execute("""
@@ -400,8 +440,7 @@ def create_tables(sqlite_cursor):
     )
     sqlite_cursor.execute(
         "CREATE TABLE IF NOT EXISTS `species_current_version` (`rowid` INTEGER NOT NULL," +
-        "`version` INTEGER NOT NULL, PRIMARY KEY(`rowid`));"
-    )
+        "`version` INTEGER NOT NULL, PRIMARY KEY(`rowid`));")
 
 
 class ArtistLinkParser(HTMLParser):
@@ -456,16 +495,18 @@ def get_metadata(url):
 
     response = requests.get(
         f"https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&format=json&iiprop=extmetadata&iilimit=1&titles={wiki_file}",
-        headers={'User-Agent': user_agent})
+        headers={
+            'User-Agent': user_agent})
     response.raise_for_status()
     metadata = list(response.json()['query']['pages'].values())[
         0]['imageinfo'][0]['extmetadata']
     raw_license = metadata['License']['value']
     license_version = re.search(r"\d.\d", metadata['License']['value'])
     if raw_license.startswith("cc") and license_version:
-        license = (raw_license[:license_version.start() - 1].replace("-", " ", 1) + raw_license[
-            license_version.start() - 1:].replace(
-            "-", " ")).upper()
+        license = (raw_license[:license_version.start() -
+                               1].replace("-", " ", 1) +
+                   raw_license[license_version.start() -
+                               1:].replace("-", " ")).upper()
     else:
         license = raw_license.replace("-", " ", 1).upper()
     parser = ArtistLinkParser()

@@ -79,7 +79,11 @@ def app_content_leicht_image_list(request):
     writer = csv.writer(response)
     for portrait in leicht_portrait():
         writer.writerow(
-            ('avatar', cropped_image(portrait.avatar.imagefile.image, portrait.avatar.cropping), portrait.id))
+            ('avatar',
+             cropped_image(
+                 portrait.avatar.imagefile.image,
+                 portrait.avatar.cropping),
+                portrait.id))
         writer.writerow(
             ('recognize', portrait.avatar.imagefile.image.url, portrait.id))
         writer.writerow(
@@ -107,15 +111,14 @@ def filter_species_by_query(species_qs, query, lang):
         return species_qs
 
     if lang and (lang == 'de' or lang == 'dels'):
-        return species_qs.filter(
-            Q(sciname__icontains=query) | Q(gername__icontains=query) | Q(speciesname__name__icontains=query))
+        return species_qs.filter(Q(sciname__icontains=query) | Q(
+            gername__icontains=query) | Q(speciesname__name__icontains=query))
     elif lang and lang == 'en':
-        return species_qs.filter(
-            Q(sciname__icontains=query) | Q(engname__icontains=query) | Q(speciesname__name__icontains=query))
+        return species_qs.filter(Q(sciname__icontains=query) | Q(
+            engname__icontains=query) | Q(speciesname__name__icontains=query))
     else:
-        return species_qs.filter(
-            Q(sciname__icontains=query) | Q(engname__icontains=query) | Q(gername__icontains=query) | Q(
-                speciesname__name__icontains=query))
+        return species_qs.filter(Q(sciname__icontains=query) | Q(engname__icontains=query) | Q(
+            gername__icontains=query) | Q(speciesname__name__icontains=query))
 
 
 def filter_species_tags(species_qs, tags):
@@ -244,30 +247,48 @@ class PortraitDetail(generics.GenericAPIView):
         if not species_id:
             raise NotFound()
 
-        species_qs = Species.objects.all().select_related('group', 'avatar_new').prefetch_related(
-            Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
-                     to_attr="prefetched_speciesnames"),
-            Prefetch("faunaportraitaudiofile_set", queryset=FaunaportraitAudioFile.objects.all(),
-                     to_attr="prefetched_audiofile")
-        )
+        species_qs = Species.objects.all().select_related(
+            'group',
+            'avatar_new').prefetch_related(
+            Prefetch(
+                "speciesname_set",
+                queryset=SpeciesName.objects.filter(
+                    language=lang),
+                to_attr="prefetched_speciesnames"),
+            Prefetch(
+                "faunaportraitaudiofile_set",
+                queryset=FaunaportraitAudioFile.objects.all(),
+                to_attr="prefetched_audiofile"))
         species_qs = species_qs.filter(id=species_id)
         species_qs = species_qs.first()
 
         is_fauna = species_qs.group.nature == 'fauna'
-        portrait_qs = Faunaportrait.objects.select_related('faunaportrait_audio_file', 'descmeta', 'funfactmeta',
-                                                           'inthecitymeta') if is_fauna else Floraportrait.objects.select_related(
-            'descmeta', 'funfactmeta', 'inthecitymeta')
+        portrait_qs = Faunaportrait.objects.select_related(
+            'faunaportrait_audio_file',
+            'descmeta',
+            'funfactmeta',
+            'inthecitymeta') if is_fauna else Floraportrait.objects.select_related(
+            'descmeta',
+            'funfactmeta',
+            'inthecitymeta')
 
         portrait_qs = portrait_qs.filter(species__id=species_id)
 
         portrait_qs = (
-            portrait_qs.prefetch_related(Prefetch('goodtoknow_set', queryset=GoodToKnow.objects.order_by('ordering')),
-                                         Prefetch('unambigousfeature_set',
-                                                  queryset=UnambigousFeature.objects.order_by('ordering')),
-                                         Prefetch('similarspecies_set',
-                                                  queryset=SimilarSpecies.objects.order_by('ordering')),
-                                         Prefetch('source_set', queryset=Source.objects.order_by('ordering')))
-            .filter(language=lang))
+            portrait_qs.prefetch_related(
+                Prefetch(
+                    'goodtoknow_set',
+                    queryset=GoodToKnow.objects.order_by('ordering')),
+                Prefetch(
+                    'unambigousfeature_set',
+                    queryset=UnambigousFeature.objects.order_by('ordering')),
+                Prefetch(
+                    'similarspecies_set',
+                    queryset=SimilarSpecies.objects.order_by('ordering')),
+                Prefetch(
+                    'source_set',
+                    queryset=Source.objects.order_by('ordering'))) .filter(
+                language=lang))
 
         portrait_qs = portrait_qs.first()
 
@@ -276,8 +297,11 @@ class PortraitDetail(generics.GenericAPIView):
 
         species_serializer = SpeciesSerializer(
             species_qs, context={'request': request})
-        portrait_serializer = FaunaPortraitSerializer(portrait_qs, context={'request': request}) if is_fauna \
-            else FloraportraitSerializer(portrait_qs, context={'request': request})
+        portrait_serializer = FaunaPortraitSerializer(
+            portrait_qs, context={
+                'request': request}) if is_fauna else FloraportraitSerializer(
+            portrait_qs, context={
+                'request': request})
 
         descmeta_serializer = DescMetaSerializer(portrait_qs)
         funfact_data = FunfactMetaSerializer(portrait_qs).data
@@ -354,12 +378,18 @@ def species(request, id):
         if id:
             lang = get_lang_queryparam(request)
 
-            species_qs = Species.objects.all().select_related('group', 'avatar_new').prefetch_related(
-                Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
-                         to_attr="prefetched_speciesnames"),
-                Prefetch("faunaportraitaudiofile_set", queryset=FaunaportraitAudioFile.objects.all(),
-                         to_attr="prefetched_audiofile")
-            )
+            species_qs = Species.objects.all().select_related(
+                'group',
+                'avatar_new').prefetch_related(
+                Prefetch(
+                    "speciesname_set",
+                    queryset=SpeciesName.objects.filter(
+                        language=lang),
+                    to_attr="prefetched_speciesnames"),
+                Prefetch(
+                    "faunaportraitaudiofile_set",
+                    queryset=FaunaportraitAudioFile.objects.all(),
+                    to_attr="prefetched_audiofile"))
             species_qs = species_qs.filter(id=id)
             species_qs = species_qs.first()
 
@@ -381,12 +411,18 @@ def species_list(request):
         species_ids = request.query_params.getlist('speciesid_in')
         lang = get_lang_queryparam(request)
 
-        species_qs = Species.objects.all().select_related('group', 'avatar_new').prefetch_related(
-            Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
-                     to_attr="prefetched_speciesnames"),
-            Prefetch("faunaportraitaudiofile_set", queryset=FaunaportraitAudioFile.objects.all(),
-                     to_attr="prefetched_audiofile")
-        )
+        species_qs = Species.objects.all().select_related(
+            'group',
+            'avatar_new').prefetch_related(
+            Prefetch(
+                "speciesname_set",
+                queryset=SpeciesName.objects.filter(
+                    language=lang),
+                to_attr="prefetched_speciesnames"),
+            Prefetch(
+                "faunaportraitaudiofile_set",
+                queryset=FaunaportraitAudioFile.objects.all(),
+                to_attr="prefetched_audiofile"))
         species_qs = species_qs.filter(speciesid__in=species_ids)
 
         if not species_qs:
@@ -410,19 +446,26 @@ class SpeciesList(generics.ListAPIView):
         sort_and_order = self.request.query_params.get(
             'sort') or 'localname:ASC'
 
-        species_qs = (Species.objects.select_related('avatar_new', 'group')
-                      .prefetch_related(
-            Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang).order_by('name'),
-                     to_attr="prefetched_speciesnames"),
-            Prefetch(
-                "portrait_set", to_attr="prefetched_portraits"
-            )
-        ))
+        species_qs = (
+            Species.objects.select_related(
+                'avatar_new',
+                'group') .prefetch_related(
+                Prefetch(
+                    "speciesname_set",
+                    queryset=SpeciesName.objects.filter(
+                        language=lang).order_by('name'),
+                    to_attr="prefetched_speciesnames"),
+                Prefetch(
+                    "portrait_set",
+                    to_attr="prefetched_portraits")))
 
         species_qs = filter_species_by_query(species_qs, query, lang)
         species_qs = filter_species_tags(species_qs, tags)
         species_qs = species_qs.filter(
-            Q(avatar_new__isnull=False) & Q(portrait__language=lang) & Q(portrait__published=True) & Q(
+            Q(
+                avatar_new__isnull=False) & Q(
+                portrait__language=lang) & Q(
+                portrait__published=True) & Q(
                 portrait__descmeta__image_file__isnull=False))
         species_qs = sort_species(species_qs, sort_and_order, lang)
 

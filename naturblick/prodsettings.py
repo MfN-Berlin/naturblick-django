@@ -57,5 +57,6 @@ STATIC_URL = '/django/static/'
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = ['https://staging.naturblick.museumfuernaturkunde.berlin',
-                        'https://naturblick.museumfuernaturkunde.berlin']
+CSRF_TRUSTED_ORIGINS = [
+    'https://staging.naturblick.museumfuernaturkunde.berlin',
+    'https://naturblick.museumfuernaturkunde.berlin']

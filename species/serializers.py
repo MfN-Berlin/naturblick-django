@@ -80,8 +80,19 @@ class SpeciesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Species
-        fields = ['id', 'speciesid', 'localname', 'group', 'sciname', 'synonym', 'avatar_url', 'avatar_owner',
-                  'avatar_license', 'avatar_source', 'red_list_germany', 'audio_filename']
+        fields = [
+            'id',
+            'speciesid',
+            'localname',
+            'group',
+            'sciname',
+            'synonym',
+            'avatar_url',
+            'avatar_owner',
+            'avatar_license',
+            'avatar_source',
+            'red_list_germany',
+            'audio_filename']
 
     def create_audio_filename(self, obj):
         if obj.prefetched_audiofile:
@@ -132,8 +143,15 @@ class SimilarSpeciesSerilizer(serializers.ModelSerializer):
 
     class Meta:
         model = SimilarSpecies
-        fields = ['differences', 'localname', 'sciname', 'similar_species_id', 'avatar_url', 'has_portrait',
-                  'speciesid', 'group']
+        fields = [
+            'differences',
+            'localname',
+            'sciname',
+            'similar_species_id',
+            'avatar_url',
+            'has_portrait',
+            'speciesid',
+            'group']
 
 
 class GoodtoknowSerilizer(serializers.ModelSerializer):
@@ -186,10 +204,10 @@ class DescMetaSerializer(serializers.Serializer):
         source="descmeta.image_file.image_medium.url", read_only=True)
     image_large = serializers.URLField(
         source="descmeta.image_file.image_large.url", read_only=True)
-    image_large_width = serializers.IntegerField(source="descmeta.image_file.image_large.width",
-                                                 read_only=True)
-    image_large_height = serializers.IntegerField(source="descmeta.image_file.image_large.height",
-                                                  read_only=True)
+    image_large_width = serializers.IntegerField(
+        source="descmeta.image_file.image_large.width", read_only=True)
+    image_large_height = serializers.IntegerField(
+        source="descmeta.image_file.image_large.height", read_only=True)
     owner = serializers.CharField(
         source="descmeta.image_file.owner", read_only=True)
     owner_link = serializers.CharField(
@@ -295,8 +313,14 @@ class FaunaPortraitSerializer(PortraitSerializer):
 
     class Meta:
         model = Faunaportrait
-        fields = PortraitSerializer.Meta.fields + ['male_description', 'female_description', 'juvenile_description',
-                                                   'audio_title', 'audio_license', 'audio_filename', 'is_floraportrait']
+        fields = PortraitSerializer.Meta.fields + [
+            'male_description',
+            'female_description',
+            'juvenile_description',
+            'audio_title',
+            'audio_license',
+            'audio_filename',
+            'is_floraportrait']
 
     def create_audio_filename(self, obj):
         try:
@@ -311,8 +335,12 @@ class FloraportraitSerializer(PortraitSerializer):
 
     class Meta:
         model = Floraportrait
-        fields = PortraitSerializer.Meta.fields + ['leaf_description', 'stem_axis_description', 'flower_description',
-                                                   'fruit_description', 'is_floraportrait']
+        fields = PortraitSerializer.Meta.fields + [
+            'leaf_description',
+            'stem_axis_description',
+            'flower_description',
+            'fruit_description',
+            'is_floraportrait']
 
 
 class SpeciesImageListSerializer(serializers.ModelSerializer):
@@ -328,8 +356,16 @@ class SpeciesImageListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Species
-        fields = ['id', 'localname', 'group', 'sciname', 'synonym', 'avatar_url', 'desc_url', 'desc_width',
-                  'desc_height']
+        fields = [
+            'id',
+            'localname',
+            'group',
+            'sciname',
+            'synonym',
+            'avatar_url',
+            'desc_url',
+            'desc_width',
+            'desc_height']
 
 
 class GroupSerializer(serializers.ModelSerializer):
