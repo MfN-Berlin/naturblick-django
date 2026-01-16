@@ -270,7 +270,7 @@ class Species(models.Model):
                 next_insert_id = int(
                     last_insert_id[len(last_insert_id) - 4: len(last_insert_id)], 16) + 1
                 self.speciesid = f'{self.group}_ffff{next_insert_id:04x}'
-            except:
+            except BaseException:
                 self.speciesid = f'{self.group}_ffff0000'
 
     def clean(self):

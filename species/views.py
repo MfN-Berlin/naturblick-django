@@ -33,7 +33,8 @@ def get_lang_queryparam(request):
 
 
 def is_data_valid():
-    return not Portrait.objects.filter(species__accepted_species__isnull=False).exists()
+    return not Portrait.objects.filter(
+        species__accepted_species__isnull=False).exists()
 
 
 # returns sqlite database used by android/ios
@@ -59,7 +60,8 @@ def app_content_leicht_db(request):
 
     sqlite_db = create_leicht_db()
 
-    return FileResponse(open(sqlite_db, "rb"), as_attachment=True, filename='species-db.sqlite3')
+    return FileResponse(open(sqlite_db, "rb"),
+                        as_attachment=True, filename='species-db.sqlite3')
 
 
 # return CSV image list for naturblick leicht
@@ -140,7 +142,8 @@ class TagsList(generics.ListAPIView):
             else:
                 queryset = queryset.filter(Q(name__icontains=query))
 
-        # only those tags, that are left by filtering the already selected species
+        # only those tags, that are left by filtering the already selected
+        # species
         if tags:
             species_ids_with_tags = Species.objects.filter(
                 tag__in=tags).values_list('id', flat=True)
@@ -290,7 +293,8 @@ class PortraitDetail(generics.GenericAPIView):
         })
 
 
-# ordering by synonym is no more possible unless it becomes (direct) part of the query
+# ordering by synonym is no more possible unless it becomes (direct) part
+# of the query
 def order_suffix(sort, lang):
     match sort:
         case 'sciname':
@@ -363,7 +367,8 @@ def species(request, id):
                 raise NotFound()
             serializer = SpeciesSerializer(species_qs)
             return Response(serializer.data)
-        return Response({"error": "Species ID is required"}, status=HTTP_400_BAD_REQUEST)
+        return Response({"error": "Species ID is required"},
+                        status=HTTP_400_BAD_REQUEST)
 
     else:
         raise MethodNotAllowed(method=request.method)
@@ -388,7 +393,8 @@ def species_list(request):
             raise NotFound()
         serializer = SpeciesSerializer(species_qs, many=True)
         return Response(serializer.data)
-    return Response({"error": "Species ID is required"}, status=HTTP_400_BAD_REQUEST)
+    return Response({"error": "Species ID is required"},
+                    status=HTTP_400_BAD_REQUEST)
 
 
 class GroupsList(generics.ListAPIView):

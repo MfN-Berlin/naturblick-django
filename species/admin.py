@@ -368,7 +368,8 @@ class SpeciesAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.resolver_match.view_name.endswith('changelist'):
-            return qs.select_related('avatar_new', 'group').prefetch_related('portrait_set')
+            return qs.select_related(
+                'avatar_new', 'group').prefetch_related('portrait_set')
         return qs
 
     @admin.action(description="Mark selected species as available for autoid")
@@ -394,9 +395,11 @@ class SpeciesAdmin(admin.ModelAdmin):
                 "owner_link": meta.author_url,
                 "license": meta.license
             }
-            return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html', {"form": ValidateAvtarForm(initial=data), 'queryset': queryset, "image_url": form.cleaned_data['wikimedia_url'], "owner_link": meta.author_url})
+            return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html', {"form": ValidateAvtarForm(
+                initial=data), 'queryset': queryset, "image_url": form.cleaned_data['wikimedia_url'], "owner_link": meta.author_url})
         else:
-            return TemplateResponse(request, 'admin/avatar_from_wikimedia.html', {"form": form, 'queryset': queryset})
+            return TemplateResponse(
+                request, 'admin/avatar_from_wikimedia.html', {"form": form, 'queryset': queryset})
 
     def import_avatar_from_wikimedia_execute(self, request, queryset):
         form = ValidateAvtarForm(request.POST)
@@ -408,9 +411,11 @@ class SpeciesAdmin(admin.ModelAdmin):
             avatar_crop = ImageCrop.objects.create(
                 imagefile=avatar_image_file, cropping=None)
             queryset.update(avatar_new=avatar_crop.id)
-            return HttpResponseRedirect(reverse('admin:species_imagecrop_change', args=(avatar_crop.id,)))
+            return HttpResponseRedirect(
+                reverse('admin:species_imagecrop_change', args=(avatar_crop.id,)))
         else:
-            return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html', {"form": form, 'queryset': queryset, "image_url": image_url, "owner_link": form.data["owner_link"]})
+            return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html', {
+                                    "form": form, 'queryset': queryset, "image_url": image_url, "owner_link": form.data["owner_link"]})
 
     @admin.action(description="Import avatar from Wikimedia")
     @transaction.atomic
@@ -423,11 +428,13 @@ class SpeciesAdmin(admin.ModelAdmin):
             )
             return
         if request.POST.get("validate"):
-            return self.import_avatar_from_wikimedia_validate(request, queryset)
+            return self.import_avatar_from_wikimedia_validate(
+                request, queryset)
         elif request.POST.get("post"):
             return self.import_avatar_from_wikimedia_execute(request, queryset)
         else:
-            return TemplateResponse(request, 'admin/avatar_from_wikimedia.html', {"form": ImportAvatarFromWikimediaForm(), 'queryset': queryset})
+            return TemplateResponse(request, 'admin/avatar_from_wikimedia.html', {
+                                    "form": ImportAvatarFromWikimediaForm(), 'queryset': queryset})
 
     @admin.display(
         description="Avatar"
@@ -437,7 +444,8 @@ class SpeciesAdmin(admin.ModelAdmin):
         if avatar:
             image_url = cropped_image(avatar.imagefile.image, avatar.cropping)
             url = reverse('admin:species_imagecrop_change', args=([avatar.id]))
-            return format_html('<a href="{}"><img src="{}" class="species-avatar"/></a>', url, image_url)
+            return format_html(
+                '<a href="{}"><img src="{}" class="species-avatar"/></a>', url, image_url)
         else:
             return "-"
 
@@ -468,7 +476,8 @@ class SpeciesAdmin(admin.ModelAdmin):
             return '-'
         else:
             plantnet_url = f'https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:{obj.plantnetpowoid}'
-            return format_html(f'<a href="{{}}">{obj.plantnetpowoid}</a>', plantnet_url)
+            return format_html(
+                f'<a href="{{}}">{obj.plantnetpowoid}</a>', plantnet_url)
 
     @admin.display()
     def gbif(self, obj):
@@ -476,7 +485,8 @@ class SpeciesAdmin(admin.ModelAdmin):
             return '-'
         else:
             gbif_url = f'https://www.gbif.org/species/{obj.gbifusagekey}'
-            return format_html(f'<a href="{{}}">{obj.gbifusagekey}</a>', gbif_url)
+            return format_html(
+                f'<a href="{{}}">{obj.gbifusagekey}</a>', gbif_url)
 
     @admin.display(description='Synonym of')
     def accepted(self, obj):
@@ -485,7 +495,8 @@ class SpeciesAdmin(admin.ModelAdmin):
         else:
             url = reverse('admin:species_species_change',
                           args=(obj.accepted_species.id,))
-            return format_html(f'<a href="{{}}">{obj.accepted_species.sciname}</a>', url)
+            return format_html(
+                f'<a href="{{}}">{obj.accepted_species.sciname}</a>', url)
 
     @admin.display()
     def portrait(self, obj):
@@ -837,7 +848,8 @@ class GroupAdmin(admin.ModelAdmin):
 
     def svg_preview(self, obj):
         if obj.svg and obj.svg.name.endswith('.svg'):
-            return format_html('<img src="{}" alt="icon" height="50" width="50" />', obj.svg.url)
+            return format_html(
+                '<img src="{}" alt="icon" height="50" width="50" />', obj.svg.url)
         return "N/A"
 
     svg_preview.short_description = "SVG"

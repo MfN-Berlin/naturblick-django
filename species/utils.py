@@ -66,7 +66,8 @@ def lang_to_int(lang):
 
 
 def get_focus(descmeta, ratio):
-    if float(descmeta.image_file.width) / float(descmeta.image_file.height) > ratio:
+    if float(descmeta.image_file.width) / \
+            float(descmeta.image_file.height) > ratio:
         return descmeta.focus_point_horizontal if descmeta.focus_point_horizontal else 50.0
     else:
         return descmeta.focus_point_vertical if descmeta.focus_point_vertical else 50.0
@@ -208,7 +209,8 @@ def insert_timezone_polygon(sqlite_cursor):
             if f.geometry.type == 'Polygon':
                 sqlite_cursor.execute(
                     "INSERT INTO time_zone_polygon VALUES (?, ?)", (polygon_id, f.properties.tzid))
-                # First is boundary, all holes are ignored and therefore coordinates[0]
+                # First is boundary, all holes are ignored and therefore
+                # coordinates[0]
                 for v in f.geometry.coordinates[0]:
                     sqlite_cursor.execute(
                         "INSERT INTO time_zone_vertex (polygon_id, longitude, latitude) VALUES (?, ?, ?)",
@@ -218,7 +220,8 @@ def insert_timezone_polygon(sqlite_cursor):
                 for c in f.geometry.coordinates:
                     sqlite_cursor.execute("INSERT INTO time_zone_polygon VALUES (?, ?)",
                                           (polygon_id, f.properties.tzid))
-                    # First is boundary, all holes are ignored and therefore coordinates[0]
+                    # First is boundary, all holes are ignored and therefore
+                    # coordinates[0]
                     for v in c[0]:
                         sqlite_cursor.execute(
                             "INSERT INTO time_zone_vertex (polygon_id, longitude, latitude) VALUES (?, ?, ?)",
@@ -287,16 +290,16 @@ def insert_species(sqlite_cursor):
         UPDATE species
                     SET gersearchfield = coalesce(gername, '') || '|' || coalesce(gersynonym, '') || '|' || coalesce(sciname, ''),
                         engsearchfield = coalesce(engname, '') || '|' || coalesce(engsynonym, '') || '|' || coalesce(sciname, '')
-                    WHERE accepted IS NULL OR 
+                    WHERE accepted IS NULL OR
                         (accepted IS NOT NULL AND NOT EXISTS (SELECT * FROM species as s2 WHERE s2.rowid = species.accepted));
         """)
     sqlite_cursor.execute("""
-        UPDATE species 
+        UPDATE species
         SET gersearchfield = gersearchfield || '|' || accepting.gsf,
             engsearchfield = engsearchfield || '|' || accepting.esf
         FROM (
-            SELECT accepted.rowid as accepted_id, 
-                coalesce(accepting.gername, '') || '|' ||  coalesce(accepting.gersynonym, '') || '|' || coalesce(accepting.sciname, '') as gsf, 
+            SELECT accepted.rowid as accepted_id,
+                coalesce(accepting.gername, '') || '|' ||  coalesce(accepting.gersynonym, '') || '|' || coalesce(accepting.sciname, '') as gsf,
                 coalesce(accepting.engname, '') || '|' || coalesce(accepting.engsynonym, '') || '|' || coalesce(accepting.sciname, '') as esf
             FROM species as accepting
             JOIN species as accepted ON accepting.accepted = accepted.rowid

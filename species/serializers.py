@@ -85,7 +85,8 @@ class SpeciesSerializer(serializers.ModelSerializer):
 
     def create_audio_filename(self, obj):
         if obj.prefetched_audiofile:
-            return os.path.basename(obj.prefetched_audiofile[0].audio_file.name)
+            return os.path.basename(
+                obj.prefetched_audiofile[0].audio_file.name)
         else:
             return None
 
@@ -299,7 +300,8 @@ class FaunaPortraitSerializer(PortraitSerializer):
 
     def create_audio_filename(self, obj):
         try:
-            return os.path.basename(obj.faunaportrait_audio_file.audio_file.name)
+            return os.path.basename(
+                obj.faunaportrait_audio_file.audio_file.name)
         except AttributeError:
             return None
 
