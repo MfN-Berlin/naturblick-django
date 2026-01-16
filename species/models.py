@@ -227,7 +227,7 @@ class Species(models.Model):
                         {"gbifusagekey": "Accepted species must be set for a GBIF species that is NOT accepted"})
             if scientific_name != self.sciname:
                 raise ValidationError(
-                    {"sciname": "The scientific name does not match the canonical name of the provided gbifusagekey"})
+                    {"sciname": f"The scientific name does not match the canonical name ({scientific_name}) of the provided gbifusagekey"})
         else:
 
             if not self.id:
