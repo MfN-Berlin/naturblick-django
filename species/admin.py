@@ -45,7 +45,8 @@ class SpeciesNameAdmin(admin.ModelAdmin):
     list_filter = ['language']
     list_display = ['name', 'language', 'species_link']
     list_display_links = ['name']
-    search_fields = ['name', 'species__sciname', 'species__gername', 'species__engname']
+    search_fields = ['name', 'species__sciname',
+                     'species__gername', 'species__engname']
     autocomplete_fields = ['species']
 
     @admin.display(
@@ -194,7 +195,8 @@ class HasPrimaryName(admin.SimpleListFilter):
             )
         if self.value() == "i":
             return queryset.filter(
-                models.Q(engname__isnull=False) | models.Q(gername__isnull=False)
+                models.Q(engname__isnull=False) | models.Q(
+                    gername__isnull=False)
             )
         if self.value() == "n":
             return queryset.filter(
@@ -288,6 +290,7 @@ class HasWikipediaFilter(YesNoFilter):
                 wikipedia__isnull=True
             )
 
+
 class HasBirdnetIdFilter(YesNoFilter):
     title = "birdnetid"
     parameter_name = "has_birdnetid"
@@ -301,15 +304,18 @@ class HasBirdnetIdFilter(YesNoFilter):
             return queryset.filter(
                 birdnetid__isnull=True
             )
-        
+
 
 class ImportAvatarFromWikimediaForm(forms.Form):
     wikimedia_url = forms.URLField(label="Wikimedia image URL")
 
+
 class ValidateAvtarForm(forms.Form):
     owner = forms.CharField(label="Owner name", max_length=255)
-    owner_link = forms.URLField(label="Owner homepage URL", required=False, max_length=255)
+    owner_link = forms.URLField(
+        label="Owner homepage URL", required=False, max_length=255)
     license = forms.CharField(label="License", max_length=64)
+
 
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
@@ -397,8 +403,10 @@ class SpeciesAdmin(admin.ModelAdmin):
         image_url = request.POST["image_url"]
         if form.is_valid():
             image = utils.get_wikimedia_image(image_url)
-            avatar_image_file = ImageFile.objects.create(owner=form.cleaned_data["owner"], owner_link=form.cleaned_data["owner_link"], source=image_url, license=form.cleaned_data["license"], image=image, species=queryset.first())
-            avatar_crop = ImageCrop.objects.create(imagefile=avatar_image_file, cropping=None)
+            avatar_image_file = ImageFile.objects.create(owner=form.cleaned_data["owner"], owner_link=form.cleaned_data[
+                                                         "owner_link"], source=image_url, license=form.cleaned_data["license"], image=image, species=queryset.first())
+            avatar_crop = ImageCrop.objects.create(
+                imagefile=avatar_image_file, cropping=None)
             queryset.update(avatar_new=avatar_crop.id)
             return HttpResponseRedirect(reverse('admin:species_imagecrop_change', args=(avatar_crop.id,)))
         else:
@@ -475,7 +483,8 @@ class SpeciesAdmin(admin.ModelAdmin):
         if obj.accepted_species is None:
             return "-"
         else:
-            url = reverse('admin:species_species_change', args=(obj.accepted_species.id,))
+            url = reverse('admin:species_species_change',
+                          args=(obj.accepted_species.id,))
             return format_html(f'<a href="{{}}">{obj.accepted_species.sciname}</a>', url)
 
     @admin.display()
@@ -487,17 +496,22 @@ class SpeciesAdmin(admin.ModelAdmin):
             urls = []
 
             for lang in ['de', 'en']:
-                portrait = [portrait for portrait in obj.portrait_set.all() if portrait.language == lang]
+                portrait = [portrait for portrait in obj.portrait_set.all(
+                ) if portrait.language == lang]
                 if portrait:
-                    url = reverse(f'admin:species_{obj.group.nature}portrait_change', args=([portrait[0].id]))
-                    links.append(f'<a href="{{}}" class="changelink">{lang}</a>')
+                    url = reverse(
+                        f'admin:species_{obj.group.nature}portrait_change', args=([portrait[0].id]))
+                    links.append(
+                        f'<a href="{{}}" class="changelink">{lang}</a>')
                     urls.append(url)
                 else:
-                    url = reverse(f'admin:species_{obj.group.nature}portrait_add')
+                    url = reverse(
+                        f'admin:species_{obj.group.nature}portrait_add')
                     links.append(f'<a href="{{}}"  class="addlink">{lang}</a>')
                     urls.append(f'{url}?species={obj.id}&language={lang}')
 
-            links.append('<a href="{}"><img class="naturblick-logo-link" src="{}"/></a>')
+            links.append(
+                '<a href="{}"><img class="naturblick-logo-link" src="{}"/></a>')
             return format_html(' | '.join(links), urls[0], urls[1], f'/species/portrait/{obj.id}',
                                static('species/logo.svg'))
 
@@ -605,7 +619,8 @@ def copy_portrait_to_eng(modeladmin, request, queryset):
         return
     if model.objects.filter(
             Q(species_id__in=queryset.values_list('species__id', flat=True)) & Q(language='en')).exists():
-        messages.error(request, "At least one english portrait for the selected species already exists.")
+        messages.error(
+            request, "At least one english portrait for the selected species already exists.")
         return
 
     for p in queryset:
@@ -685,7 +700,8 @@ def move_portrait_to_accepted(modeladmin, request, queryset):
         return
 
     for portrait in queryset:
-        all_lang_portrait_ids = Portrait.objects.filter(species=portrait.species).values_list('id', flat=True)
+        all_lang_portrait_ids = Portrait.objects.filter(
+            species=portrait.species).values_list('id', flat=True)
         qs_portrait_ids = queryset.values_list('id', flat=True)
         if not all(p in qs_portrait_ids for p in all_lang_portrait_ids):
             modeladmin.message_user(
@@ -710,16 +726,20 @@ def move_portrait_to_accepted(modeladmin, request, queryset):
                     accepted_species.save()
 
                 # remove accepted species from similar species
-                portrait.similarspecies_set.filter(species_id=accepted_species.id).delete()
+                portrait.similarspecies_set.filter(
+                    species_id=accepted_species.id).delete()
 
                 # move species
                 portrait.species = accepted_species
                 portrait.save()
 
                 # move portrait image files
-                move_portrait_image_file(getattr(portrait, 'descmeta', None), accepted_species)
-                move_portrait_image_file(getattr(portrait, 'funfactmeta', None), accepted_species)
-                move_portrait_image_file(getattr(portrait, 'inthecitymeta', None), accepted_species)
+                move_portrait_image_file(
+                    getattr(portrait, 'descmeta', None), accepted_species)
+                move_portrait_image_file(
+                    getattr(portrait, 'funfactmeta', None), accepted_species)
+                move_portrait_image_file(
+                    getattr(portrait, 'inthecitymeta', None), accepted_species)
 
 
 def portrait_fieldorder(fields):
@@ -737,10 +757,13 @@ def portrait_fieldorder(fields):
 
 @admin.register(Floraportrait)
 class FloraportraitAdmin(admin.ModelAdmin):
-    list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
-    search_fields = ('id', 'species__speciesid', 'species__sciname', 'species__gername')
+    list_display = ['id', 'species__speciesid', 'species__sciname',
+                    'species__gername', 'published', 'language']
+    search_fields = ('id', 'species__speciesid',
+                     'species__sciname', 'species__gername')
     search_help_text = 'Sucht über alle Artnamen'
-    list_filter = ('published', 'language', PortraitIsSynonymFilter, 'species__group')
+    list_filter = ('published', 'language',
+                   PortraitIsSynonymFilter, 'species__group')
     inlines = [
         UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline,
         DescMetaInline, InTheCityMetaInline, FunFactMetaInline
@@ -770,16 +793,20 @@ class FaunaportraitAudioFileAdmin(admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        form.base_fields['species'].queryset = Species.objects.filter(group__nature='fauna')
+        form.base_fields['species'].queryset = Species.objects.filter(
+            group__nature='fauna')
         return form
 
 
 @admin.register(Faunaportrait)
 class FaunaportraitAdmin(admin.ModelAdmin):
-    list_display = ['id', 'species__speciesid', 'species__sciname', 'species__gername', 'published', 'language']
-    search_fields = ('id', 'species__speciesid', 'species__sciname', 'species__gername')
+    list_display = ['id', 'species__speciesid', 'species__sciname',
+                    'species__gername', 'published', 'language']
+    search_fields = ('id', 'species__speciesid',
+                     'species__sciname', 'species__gername')
     search_help_text = 'Sucht über alle Artnamen'
-    list_filter = ('published', 'language', PortraitIsSynonymFilter, 'species__group')
+    list_filter = ('published', 'language',
+                   PortraitIsSynonymFilter, 'species__group')
     inlines = [
         UnambigousFeatureInline, SimilarSpeciesInline, GoodToKnowInline, AdditionalLinkInline, SourceInline,
         DescMetaInline, InTheCityMetaInline, FunFactMetaInline
@@ -823,11 +850,13 @@ class HasSpecies(YesNoFilter):
     def queryset(self, request, queryset):
         if self.value() == "y":
             return queryset.filter(
-                Q(avatar_new_species__isnull=False) | Q(female_avatar_new_species__isnull=False)
+                Q(avatar_new_species__isnull=False) | Q(
+                    female_avatar_new_species__isnull=False)
             )
         if self.value() == "n":
             return queryset.filter(
-                Q(avatar_new_species__isnull=True) & Q(female_avatar_new_species__isnull=True)
+                Q(avatar_new_species__isnull=True) & Q(
+                    female_avatar_new_species__isnull=True)
             )
 
 
@@ -860,9 +889,11 @@ class PlantnetPowoidMappingAdmin(admin.ModelAdmin):
 
     @admin.display(description="Species plantnetpowoid")
     def species(self, obj):
-        link = reverse("admin:species_species_change", args=[obj.species_plantnetpowoid.id])
+        link = reverse("admin:species_species_change",
+                       args=[obj.species_plantnetpowoid.id])
         return format_html('<a href="{}">{} ({})</a>', link, obj.species_plantnetpowoid.plantnetpowoid,
                            obj.species_plantnetpowoid)
+
 
 @admin.register(BirdnetIdMapping)
 class BirdnetIdMappingAdmin(admin.ModelAdmin):
@@ -871,7 +902,8 @@ class BirdnetIdMappingAdmin(admin.ModelAdmin):
 
     @admin.display(description="Species birdnetid")
     def species(self, obj):
-        link = reverse("admin:species_species_change", args=[obj.species_birdnetid.id])
+        link = reverse("admin:species_species_change",
+                       args=[obj.species_birdnetid.id])
         return format_html('<a href="{}">{} ({})</a>', link, obj.species_birdnetid.birdnetid,
                            obj.species_birdnetid)
 
@@ -910,9 +942,12 @@ class HasCropFilter(YesNoFilter):
 
 @admin.register(ImageFile)
 class ImageFileAdmin(admin.ModelAdmin):
-    list_display = ['id', 'admin_thumbnail', 'owner', 'species__gername', 'add_crop_link']
-    search_fields = ['image', 'owner', 'species__sciname', 'species__gername', 'species__speciesid']
-    fields = ['image', 'species', 'owner', 'owner_link', 'source', 'license', 'width', 'height']
+    list_display = ['id', 'admin_thumbnail',
+                    'owner', 'species__gername', 'add_crop_link']
+    search_fields = ['image', 'owner', 'species__sciname',
+                     'species__gername', 'species__speciesid']
+    fields = ['image', 'species', 'owner', 'owner_link',
+              'source', 'license', 'width', 'height']
     readonly_fields = ['admin_thumbnail', 'width', 'height']
     list_display_links = ['id', 'admin_thumbnail']
     autocomplete_fields = ['species']
@@ -926,12 +961,13 @@ class ImageFileAdmin(admin.ModelAdmin):
         maybe_imagecrop = ImageCrop.objects.filter(imagefile_id=obj.id)
         if maybe_imagecrop:
             # for now only 1 imagecrop per imagefile and therefore [0] ok
-            url = reverse('admin:species_imagecrop_change', args=([maybe_imagecrop[0].id]))
+            url = reverse('admin:species_imagecrop_change',
+                          args=([maybe_imagecrop[0].id]))
             return format_html('<a href="{}" class="changelink"></a>', url)
         else:
             url = (
-                    reverse('admin:species_imagecrop_add')
-                    + f'?imagefile={obj.id}'
+                reverse('admin:species_imagecrop_add')
+                + f'?imagefile={obj.id}'
             )
             return format_html('<a href="{}" class="addlink"></a>', url)
 
@@ -949,14 +985,16 @@ class ImageCropAdmin(ImageCroppingMixin, admin.ModelAdmin):
         description="Cropped Image"
     )
     def cropped_image(self, obj):
-        image_url = cropped_image(obj.imagefile.image, obj.cropping, (100, 100))
+        image_url = cropped_image(
+            obj.imagefile.image, obj.cropping, (100, 100))
         return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
 
 
 @admin.register(AudioFile)
 class AudioFileAdmin(admin.ModelAdmin):
     list_display = ['id', 'audio_file', 'owner', 'species__gername']
-    search_fields = ['owner', 'audio_file', 'species__sciname', 'species__gername', 'species__speciesid']
+    search_fields = ['owner', 'audio_file', 'species__sciname',
+                     'species__gername', 'species__speciesid']
     fields = ['audio_file',
               'species',
               'owner',
@@ -984,12 +1022,14 @@ class LeichtPortraitAdmin(admin.ModelAdmin):
         description="Avatar"
     )
     def avatar_thumb(self, obj):
-        image_url = cropped_image(obj.avatar.imagefile.image, cropping=obj.avatar.cropping, size=(100, 100))
+        image_url = cropped_image(
+            obj.avatar.imagefile.image, cropping=obj.avatar.cropping, size=(100, 100))
         return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
 
     @admin.display(
         description="Goodtoknow Image"
     )
     def goodtoknow_thumb(self, obj):
-        image_url = cropped_image(obj.goodtoknow_image.image, cropping=None, size=(100, 100))
+        image_url = cropped_image(
+            obj.goodtoknow_image.image, cropping=None, size=(100, 100))
         return mark_safe(f'<img src="{image_url}" width="100" height="100" />')

@@ -13,8 +13,10 @@ urlpatterns = [
     re_path(r'^specgram/(?P<filename>.+\.mp3\.png)$', specgram),
     path('tags/filter/', TagsList.as_view(), name="tags-filter"),
     path("app-content/db/", app_content_db, name="app-content-db"),
-    path("app-content/leicht-db/", app_content_leicht_db, name="app-content-leicht-db"),
-    path("app-content/leicht-image-list/", app_content_leicht_image_list, name="app-content-leicht-image-list"),
+    path("app-content/leicht-db/", app_content_leicht_db,
+         name="app-content-leicht-db"),
+    path("app-content/leicht-image-list/", app_content_leicht_image_list,
+         name="app-content-leicht-image-list"),
     path("app-content/character-values/", AppContentCharacterValue.as_view()),
     path("tags/", SimpleTagsList.as_view(), name="tags"),
     path("groups/", GroupsList.as_view(), name="groups")

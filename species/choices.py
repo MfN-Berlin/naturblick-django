@@ -62,9 +62,9 @@ GOOD_TO_KNOW_CHOICES = [
     ('originofname', 'Origin of name'),
     ('origin', 'Origin'),
     ('toxicityorusage', 'Toxicity or usage'),
-    ('blossom','Blossom'),
-    ('lifeform','Lifeform'),
-    ('distribution','Distribution'),
+    ('blossom', 'Blossom'),
+    ('lifeform', 'Lifeform'),
+    ('distribution', 'Distribution'),
     ('other', 'Other'),
 ]
 
@@ -98,7 +98,7 @@ SOURCES_IMPRINT_CHOICES = [
     ('ident_keys', 'Bestimmungsschlüssel'),
 ]
 
-SOURCES_TRANSLATION_CHOICES= [
+SOURCES_TRANSLATION_CHOICES = [
     ('page', 'Page'),
     ('wiki', 'Wiki'),
     ('revision', 'Revision'),
@@ -113,6 +113,3 @@ SOURCES_TRANSLATION_CHOICES= [
     ('part', 'Part'),
     ('changedby', 'Changed by'),
 ]
-
-
-

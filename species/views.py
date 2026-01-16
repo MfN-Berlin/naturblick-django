@@ -70,18 +70,22 @@ def get_backend():
 def app_content_leicht_image_list(request):
     response = HttpResponse(
         content_type="text/csv",
-        headers={"Content-Disposition": 'attachment; filename="leicht-image-list.csv"'},
+        headers={
+            "Content-Disposition": 'attachment; filename="leicht-image-list.csv"'},
     )
 
     writer = csv.writer(response)
     for portrait in leicht_portrait():
         writer.writerow(
             ('avatar', cropped_image(portrait.avatar.imagefile.image, portrait.avatar.cropping), portrait.id))
-        writer.writerow(('recognize', portrait.avatar.imagefile.image.url, portrait.id))
-        writer.writerow(('goodtoknow', portrait.goodtoknow_image.image.url, portrait.id))
+        writer.writerow(
+            ('recognize', portrait.avatar.imagefile.image.url, portrait.id))
+        writer.writerow(
+            ('goodtoknow', portrait.goodtoknow_image.image.url, portrait.id))
 
         if hasattr(portrait, 'audio') and portrait.audio:
-            writer.writerow(('audio', portrait.audio.audio_file.url, portrait.id))
+            writer.writerow(
+                ('audio', portrait.audio.audio_file.url, portrait.id))
 
     return response
 
@@ -138,8 +142,10 @@ class TagsList(generics.ListAPIView):
 
         # only those tags, that are left by filtering the already selected species
         if tags:
-            species_ids_with_tags = Species.objects.filter(tag__in=tags).values_list('id', flat=True)
-            queryset = queryset.filter(Q(species__id__in=species_ids_with_tags) & ~Q(id__in=tags)).distinct()
+            species_ids_with_tags = Species.objects.filter(
+                tag__in=tags).values_list('id', flat=True)
+            queryset = queryset.filter(
+                Q(species__id__in=species_ids_with_tags) & ~Q(id__in=tags)).distinct()
 
         if lang == 'en':
             queryset = queryset.order_by('english_name')
@@ -216,13 +222,16 @@ class PortraitDetail(generics.GenericAPIView):
 
     def get(self, request):
         id = request.query_params.get('id')  # int-id
-        speciesid = request.query_params.get('speciesid')  # old fashioned species_id
+        speciesid = request.query_params.get(
+            'speciesid')  # old fashioned species_id
         lang = get_lang_queryparam(self.request)
 
         if id:
-            species_id, is_redirected_from = get_accepted_portrait_species_id(s_id=id, lang=lang)
+            species_id, is_redirected_from = get_accepted_portrait_species_id(
+                s_id=id, lang=lang)
         elif speciesid:
-            species_id, is_redirected_from = get_accepted_portrait_species_id(speciesid=speciesid, lang=lang)
+            species_id, is_redirected_from = get_accepted_portrait_species_id(
+                speciesid=speciesid, lang=lang)
         else:
             return Response(
                 {"detail": "Missing required parameters: species_id"},
@@ -262,7 +271,8 @@ class PortraitDetail(generics.GenericAPIView):
         if not portrait_qs:
             raise NotFound()
 
-        species_serializer = SpeciesSerializer(species_qs, context={'request': request})
+        species_serializer = SpeciesSerializer(
+            species_qs, context={'request': request})
         portrait_serializer = FaunaPortraitSerializer(portrait_qs, context={'request': request}) if is_fauna \
             else FloraportraitSerializer(portrait_qs, context={'request': request})
 
@@ -300,9 +310,11 @@ def sort_species(species_qs, sort_and_order, lang):
 
 @api_view(['GET'])
 def specgram(request, filename):
-    specgram_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'spectrogram_images'), filename)
+    specgram_path = os.path.join(os.path.join(
+        settings.MEDIA_ROOT, 'spectrogram_images'), filename)
     mp3 = filename.rsplit('.', 1)[0]
-    mp3_path = os.path.join(os.path.join(settings.MEDIA_ROOT, 'audio_files'), mp3)
+    mp3_path = os.path.join(os.path.join(
+        settings.MEDIA_ROOT, 'audio_files'), mp3)
 
     with tempfile.NamedTemporaryFile(suffix=".wav") as wav, tempfile.NamedTemporaryFile(suffix=".png") as sox_png:
         subprocess.run(["ffmpeg", "-y", "-i", mp3_path, wav.name], check=True)
@@ -389,10 +401,11 @@ class SpeciesList(generics.ListAPIView):
         lang = get_lang_queryparam(self.request)
         query = self.request.query_params.get('query')
         tags = self.request.query_params.getlist('tag')
-        sort_and_order = self.request.query_params.get('sort') or 'localname:ASC'
+        sort_and_order = self.request.query_params.get(
+            'sort') or 'localname:ASC'
 
         species_qs = (Species.objects.select_related('avatar_new', 'group')
-        .prefetch_related(
+                      .prefetch_related(
             Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang).order_by('name'),
                      to_attr="prefetched_speciesnames"),
             Prefetch(

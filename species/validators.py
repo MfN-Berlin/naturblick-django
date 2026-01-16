@@ -10,6 +10,7 @@ def min_max(min_value, max_value):
         MaxValueValidator(max_value)
     ]
 
+
 def validate_svg(value):
     ext = os.path.splitext(value.name)[1]
     valid_extensions = ['.svg']
@@ -36,4 +37,3 @@ def validate_group_image(image):
     height = image.height
     if width != 170 or height != 170:
         raise ValidationError('Group images must be 170x170')
-    

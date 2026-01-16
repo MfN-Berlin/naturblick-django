@@ -128,21 +128,24 @@ def insert_portrait(sqlite_cursor, db_portrait):
                db_portrait.landscape,
                db_portrait.focus
                )
-    sqlite_cursor.execute("INSERT INTO portrait VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?)", db_data)
+    sqlite_cursor.execute(
+        "INSERT INTO portrait VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?)", db_data)
 
 
 def insert_similar_species(sqlite_cursor, portrait_id, portrait):
     if hasattr(portrait, 'similarspecies_set'):
         data = list(map(lambda s: (portrait_id, s.species.id, allow_break_on_hyphen(s.differences)),
                         portrait.similarspecies_set.all()))
-        sqlite_cursor.executemany("INSERT INTO similar_species VALUES (?, ?, ?);", data)
+        sqlite_cursor.executemany(
+            "INSERT INTO similar_species VALUES (?, ?, ?);", data)
 
 
 def insert_unambiguous_feature(sqlite_cursor, portrait_id, portrait):
     if hasattr(portrait, 'unambigousfeature_set'):
         data = list(map(lambda u: (portrait_id, u.description),
                         portrait.unambigousfeature_set.all()))
-        sqlite_cursor.executemany("INSERT INTO unambiguous_feature VALUES (?, ?);", data)
+        sqlite_cursor.executemany(
+            "INSERT INTO unambiguous_feature VALUES (?, ?);", data)
 
 
 def insert_good_to_know(sqlite_cursor, portrait_id, portrait):
@@ -158,21 +161,24 @@ def insert_good_to_know(sqlite_cursor, portrait_id, portrait):
 
         data = list(map(lambda gtk: (portrait_id, labels.get(gtk.type, "") + gtk.fact),
                         portrait.goodtoknow_set.all()))
-        sqlite_cursor.executemany("INSERT INTO good_to_know VALUES (?, ?);", data)
+        sqlite_cursor.executemany(
+            "INSERT INTO good_to_know VALUES (?, ?);", data)
 
 
 def insert_sources_translations(sqlite_cursor):
     data = list(map(lambda st: (lang_to_int(st.language), f"{{{{{st.key}}}}}", st.value),
                     SourcesTranslation.objects.all()))
-    sqlite_cursor.executemany("INSERT INTO sources_translations VALUES (?, ?, ?);", data)
+    sqlite_cursor.executemany(
+        "INSERT INTO sources_translations VALUES (?, ?, ?);", data)
 
 
 def insert_sources_imprint(sqlite_cursor):
     data = list(map(lambda si: (
         si.id, si.name, si.scie_name, si.scie_name_eng if si.scie_name_eng else '', si.image_source, si.licence,
         si.author),
-                    SourcesImprint.objects.all()))
-    sqlite_cursor.executemany("INSERT INTO sources_imprint VALUES (?, ?, ?, ?, ?, ?, ?);", data)
+        SourcesImprint.objects.all()))
+    sqlite_cursor.executemany(
+        "INSERT INTO sources_imprint VALUES (?, ?, ?, ?, ?, ?, ?);", data)
 
 
 def insert_current_version(sqlite_cursor):
@@ -181,9 +187,11 @@ def insert_current_version(sqlite_cursor):
     url = "http://playback:9000/speciesdbversion"
     response = requests.get(url)
     if response.status_code == 200:
-        sqlite_cursor.execute("INSERT INTO species_current_version VALUES (?, ?);", (1, response.json()["version"]))
+        sqlite_cursor.execute(
+            "INSERT INTO species_current_version VALUES (?, ?);", (1, response.json()["version"]))
     else:
-        raise Exception(f"Playback not available: response [ {response.text} ]")
+        raise Exception(
+            f"Playback not available: response [ {response.text} ]")
 
 
 def insert_timezone_polygon(sqlite_cursor):
@@ -198,7 +206,8 @@ def insert_timezone_polygon(sqlite_cursor):
         polygons = json.load(j, object_hook=lambda d: SimpleNamespace(**d))
         for f in polygons.features:
             if f.geometry.type == 'Polygon':
-                sqlite_cursor.execute("INSERT INTO time_zone_polygon VALUES (?, ?)", (polygon_id, f.properties.tzid))
+                sqlite_cursor.execute(
+                    "INSERT INTO time_zone_polygon VALUES (?, ?)", (polygon_id, f.properties.tzid))
                 # First is boundary, all holes are ignored and therefore coordinates[0]
                 for v in f.geometry.coordinates[0]:
                     sqlite_cursor.execute(
@@ -221,7 +230,8 @@ def insert_groups(sqlite_cursor):
     data = list(
         map(lambda g: (g.name, g.nature, g.gername, g.engname, g.has_portraits, g.is_fieldbookfilter, g.has_characters),
             Group.objects.all()))
-    sqlite_cursor.executemany("INSERT INTO groups VALUES (?, ?, ?, ?, ?, ?, ?);", data)
+    sqlite_cursor.executemany(
+        "INSERT INTO groups VALUES (?, ?, ?, ?, ?, ?, ?);", data)
 
 
 def create_sqlite_file():
@@ -267,7 +277,8 @@ def insert_species(sqlite_cursor):
     for synonym in all_synonyms:
         all_synonyms_dict.setdefault(synonym.species_id, []).append(synonym)
 
-    data = list(map(map_species(all_synonyms_dict), Species.objects.select_related("group", "avatar_new", "female_avatar_new").all()))
+    data = list(map(map_species(all_synonyms_dict), Species.objects.select_related(
+        "group", "avatar_new", "female_avatar_new").all()))
     sqlite_cursor.executemany(
         "INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
 
@@ -296,7 +307,7 @@ def insert_species(sqlite_cursor):
     sqlite_cursor.execute("ALTER TABLE species DROP COLUMN gbifusagekey;")
 
 
-def cropped_image(image, cropping, size = (400,400)):
+def cropped_image(image, cropping, size=(400, 400)):
     return get_backend().get_thumbnail_url(
         image,
         {
@@ -310,18 +321,22 @@ def cropped_image(image, cropping, size = (400,400)):
 
 def map_species(all_synonyms):
     return lambda s: (
-        s.id, s.group.name, allow_break_on_hyphen(s.sciname), allow_break_on_hyphen(s.gername),
+        s.id, s.group.name, allow_break_on_hyphen(
+            s.sciname), allow_break_on_hyphen(s.gername),
         allow_break_on_hyphen(s.engname),
         s.wikipedia,
-        cropped_image(s.avatar_new.imagefile.image, s.avatar_new.cropping) if s.avatar_new else None,
+        cropped_image(s.avatar_new.imagefile.image,
+                      s.avatar_new.cropping) if s.avatar_new else None,
         s.avatar_new.imagefile.image.url if s.avatar_new else None,
         s.avatar_new.imagefile.owner if s.avatar_new else None,
         s.avatar_new.imagefile.owner_link if s.avatar_new else None,
         s.avatar_new.imagefile.source if s.avatar_new else None,
         s.avatar_new.imagefile.license if s.avatar_new else None,
-        cropped_image(s.female_avatar_new.imagefile.image, s.female_avatar_new.cropping) if s.female_avatar_new else None,
+        cropped_image(s.female_avatar_new.imagefile.image,
+                      s.female_avatar_new.cropping) if s.female_avatar_new else None,
         get_synonyms(all_synonyms, 'de', s.id),
-        get_synonyms(all_synonyms, 'en', s.id), s.red_list_germany, s.iucncategory, s.speciesid, s.gbifusagekey,
+        get_synonyms(all_synonyms, 'en',
+                     s.id), s.red_list_germany, s.iucncategory, s.speciesid, s.gbifusagekey,
         s.accepted_species_id,
         None,  # gersearchfield - per update later
         None)  # engsearchfield - per update later
@@ -334,8 +349,10 @@ def create_tables(sqlite_cursor):
     sqlite_cursor.execute(
         "CREATE TABLE `species` (`rowid` INTEGER NOT NULL, `group_id` TEXT NOT NULL, `sciname` TEXT NOT NULL, `gername` TEXT, `engname` TEXT, `wikipedia` TEXT, `image_url` TEXT, `image_url_orig` TEXT, `image_url_owner` TEXT, `image_url_owner_link` TEXT, `image_url_source` TEXT, `image_url_license` TEXT, `female_image_url` TEXT, `gersynonym` TEXT, `engsynonym` TEXT, `red_list_germany` TEXT, `iucn_category` TEXT, `old_species_id` TEXT NOT NULL, `gbifusagekey` INTEGER, `accepted` INTEGER, `gersearchfield` TEXT, `engsearchfield` TEXT, PRIMARY KEY(`rowid`), FOREIGN KEY(`group_id`) REFERENCES `groups`(`name`));"
     )
-    sqlite_cursor.execute("CREATE INDEX idx_species_gername ON species(gername);")
-    sqlite_cursor.execute("CREATE INDEX idx_species_engname ON species(engname);")
+    sqlite_cursor.execute(
+        "CREATE INDEX idx_species_gername ON species(gername);")
+    sqlite_cursor.execute(
+        "CREATE INDEX idx_species_engname ON species(engname);")
     sqlite_cursor.execute(
         "CREATE TABLE `portrait` (`rowid` INTEGER NOT NULL, `species_id` INTEGER NOT NULL, `description` TEXT NOT NULL, `description_image_id` INTEGER, `language` INTEGER NOT NULL, `in_the_city` TEXT NOT NULL, `in_the_city_image_id` INTEGER, `good_to_know_image_id` INTEGER, `sources` TEXT, `audio_url` TEXT, `landscape` INTEGER NOT NULL, `focus` REAL NOT NULL, PRIMARY KEY(`rowid`), FOREIGN KEY(`species_id`) REFERENCES `species`(`rowid`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`description_image_id`) REFERENCES `portrait_image`(`rowid`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`in_the_city_image_id`) REFERENCES `portrait_image`(`rowid`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`good_to_know_image_id`) REFERENCES `portrait_image`(`rowid`) ON UPDATE NO ACTION ON DELETE SET NULL );"
     )
@@ -426,7 +443,9 @@ class ImageMetadata:
     author: str
     author_url: str
 
+
 user_agent = 'Naturblick-Django (https://naturblick.museumfuernaturkunde.berlin/; naturblick@mfn.berlin)'
+
 
 def get_metadata(url):
     path = urlparse(url).path
@@ -436,12 +455,13 @@ def get_metadata(url):
         f"https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&format=json&iiprop=extmetadata&iilimit=1&titles={wiki_file}",
         headers={'User-Agent': user_agent})
     response.raise_for_status()
-    metadata = list(response.json()['query']['pages'].values())[0]['imageinfo'][0]['extmetadata']
+    metadata = list(response.json()['query']['pages'].values())[
+        0]['imageinfo'][0]['extmetadata']
     raw_license = metadata['License']['value']
     license_version = re.search(r"\d.\d", metadata['License']['value'])
     if raw_license.startswith("cc") and license_version:
         license = (raw_license[:license_version.start() - 1].replace("-", " ", 1) + raw_license[
-                                                                                    license_version.start() - 1:].replace(
+            license_version.start() - 1:].replace(
             "-", " ")).upper()
     else:
         license = raw_license.replace("-", " ", 1).upper()
@@ -450,17 +470,20 @@ def get_metadata(url):
 
     return ImageMetadata(license, parser.author, parser.href)
 
+
 def get_wikimedia_image(url):
     path = urlparse(url).path
     wiki_file = path[path.index("File"):]
-    image_filename = str(uuid.uuid4()) + wiki_file[wiki_file.index("."):].lower()
+    image_filename = str(uuid.uuid4()) + \
+        wiki_file[wiki_file.index("."):].lower()
 
     file_meta_response = requests.get(
         f"https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&format=json&iiprop=url&iilimit=1&titles={wiki_file}",
         headers={'User-Agent': user_agent})
     file_meta_response.raise_for_status()
 
-    file_url = list(file_meta_response.json()['query']['pages'].values())[0]['imageinfo'][0]['url']
+    file_url = list(file_meta_response.json()['query']['pages'].values())[
+        0]['imageinfo'][0]['url']
 
     file_response = requests.get(file_url, headers={
         'User-Agent': user_agent})

@@ -28,7 +28,8 @@ class SpeciesTestCase(TestCase):
         bird = Group.objects.get(name="bird")
         amsel = Species.objects.create(sciname="Turdus merula", group=bird, gername="Amsel", speciesid="bird_0",
                                        plantnetpowoid="4321-5")
-        SpeciesName.objects.create(species=amsel, name="Schwarzdrossel", language="de")
+        SpeciesName.objects.create(
+            species=amsel, name="Schwarzdrossel", language="de")
         imagefile = ImageFile.objects.create(species=amsel, owner="Test", source="127.0.0.1", license="CC0",
                                              image=test_amsel)
         # remove in future
@@ -48,13 +49,15 @@ class SpeciesTestCase(TestCase):
         Tag.objects.create(name="nachtaktiv", english_name="nocturnal")
         amsel.tag.add(amsel_tag)
 
-        PlantnetPowoidMapping.objects.create(plantnetpowoid="1234-1", species_plantnetpowoid=amsel)
+        PlantnetPowoidMapping.objects.create(
+            plantnetpowoid="1234-1", species_plantnetpowoid=amsel)
 
         # Leicht
-        leicht_portrait = LeichtPortrait.objects.create(name="Vogel", avatar=crop, goodtoknow_image=imagefile)
+        leicht_portrait = LeichtPortrait.objects.create(
+            name="Vogel", avatar=crop, goodtoknow_image=imagefile)
         LeichtRecognize(text="foo", portrait=leicht_portrait, ordering=1)
         LeichtGoodToKnow(text="foo", portrait=leicht_portrait, ordering=1)
-        
+
     def test_speciesfilter_ok(self):
         url = reverse("species-filter")
         response = self.client.get(url)
@@ -65,7 +68,8 @@ class SpeciesTestCase(TestCase):
 
     def test_specieslist_ok(self):
         url = reverse("species-list")
-        response = self.client.get(url, query_params={"speciesid_in": "bird_0"})
+        response = self.client.get(
+            url, query_params={"speciesid_in": "bird_0"})
         self.assertEqual(response.status_code, 200)
         content = json.loads(response.content)
         self.assertEqual(len(content), 1)
@@ -73,7 +77,8 @@ class SpeciesTestCase(TestCase):
 
     def test_specieslist_not_found(self):
         url = reverse("species-list")
-        response = self.client.get(url, query_params={"speciesid_in": "bird_foo"})
+        response = self.client.get(
+            url, query_params={"speciesid_in": "bird_foo"})
         self.assertEqual(response.status_code, 404)
 
     def test_species_ok(self):
