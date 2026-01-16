@@ -11,6 +11,15 @@ export DJANGO_POSTGRES_PASSWORD="CxxOKzBllAQPnt1qgldN"
 source env/bin/activate
 ```
 
+## Auto formatting
+Setup:
+```
+pip install autopep8
+```
+Format:
+```
+find {species/,naturblick} -type f -name '*.py' ! -path '*/migrations/*' -exec autopep8 -i '{}' \;
+```
 
 ## Some sample dev tasks and corresponding commands
 
@@ -31,9 +40,9 @@ export DJANGO_POSTGRES="species"
 export DJANGO_POSTGRES_USER="naturblick"
 export DJANGO_POSTGRES_PASSWORD="CxxOKzBllAQPnt1qgldN"
 ```
-* Start developement DB `docker compose -f resources/docker-compose.yaml up -d` with or without `resources/pg_dump.sql` 
+* Start developement DB `docker compose -f resources/docker-compose.yaml up -d` with or without `resources/pg_dump.sql`
 * `virtualenv env`
-* `source env/bin/activate` 
+* `source env/bin/activate`
 * `pip install --no-cache-dir -r requirements.txt`
 * `python manage.py migrate`
 * If no dump was used: `python manage.py createsuperuser`
@@ -47,7 +56,7 @@ rm -r env
 
 ## Creating a new django-db container and prepare for replication
 
-WAL-Level is already set in docker-compose. Just execute 
+WAL-Level is already set in docker-compose. Just execute
 
 ```
 \set pass `echo "$REP_USER_PASS"`

@@ -4,17 +4,20 @@ on:
   pull_request:
     branches: [ main ]
 
-permissions:
-  contents: read
-
 jobs:
   build:
     runs-on: ubuntu-latest  # Use GitHub-hosted runner
     steps:
       - uses: actions/checkout@v4
-      - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          cache: 'pip' # caching pip dependencies
+      - name: Install pycodestyle
+        run: pip install pycodestyle
+      - name: Validate PEP8
+        run: pycodestyle --exclude="*/migrations/*" species/ naturblick/
       - name: Build Docker image
-        run: docker build -t ghcr.io/mfn-berlin/naturblick/django:pullrequest_${{ github.run_id }} .
+        run: docker build .
       - name: Run Django tests
         run: docker run -e DJANGO_ENV=development --rm ghcr.io/mfn-berlin/naturblick/django:pullrequest_${{ github.run_id }} sh -c "python manage.py test"

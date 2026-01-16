@@ -1,11 +1,11 @@
 import os
 
-env = os.getenv('DJANGO_ENV')
+env = os.getenv("DJANGO_ENV")
 
 match env:
-    case 'production':
+    case "production":
         from .prodsettings import *
-    case 'development':
+    case "development":
         from .devsettings import *
     case _:
-        raise Exception('Missing environment variable DJANGO_ENV')
+        raise Exception("Missing environment variable DJANGO_ENV")
