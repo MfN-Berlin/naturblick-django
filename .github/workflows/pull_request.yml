@@ -15,7 +15,7 @@ jobs:
           cache: 'pip' # caching pip dependencies
       - name: Install pycodestyle
         run: pip install pycodestyle
-      - Validate PEP8
+      - name: Validate PEP8
         run: pycodestyle -qq species/ naturblick/
       - name: Build Docker image
         run: docker build .
