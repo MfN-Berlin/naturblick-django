@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Naturblick</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    {% for og in og_list %}
+        <meta property="{{ og.property }}" content="{{ og.content }}">
+    {% endfor %}
+    <script src="https://cdn.usefathom.com/script.js" data-spa="auto" data-site="TZBNRXXT" defer></script>
+</head>
+<body>
+    <app-root></app-root>
+    <script src="/runtime.js" type="module"></script>
+    <script src="/polyfills.js" type="module"></script>
+    <script src="/vendor.js" type="module"></script>
+    <script src="/main.js" type="module"></script>
+</body>
+</html>
