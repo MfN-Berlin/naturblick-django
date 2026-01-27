@@ -16,14 +16,14 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',  # Database file stored in the project's base directory
     }
-    #'default': {
-    #    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #    'NAME': os.getenv('DJANGO_POSTGRES'),
-    #    'USER': os.getenv('DJANGO_POSTGRES_USER'),
-    #    'PASSWORD': os.getenv('DJANGO_POSTGRES_PASSWORD'),
-    #    'HOST': 'localhost',
-    #    'PORT': '5558',
-    #}
+    # 'default': {
+    #   'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #   'NAME': os.getenv('DJANGO_POSTGRES'),
+    #   'USER': os.getenv('DJANGO_POSTGRES_USER'),
+    #   'PASSWORD': os.getenv('DJANGO_POSTGRES_PASSWORD'),
+    #   'HOST': 'localhost',
+    #   'PORT': '5558',
+    # }
 }
 
 LOGGING = {
