@@ -2,7 +2,10 @@ import os
 
 from admin_ordering.admin import OrderableAdmin
 from django import forms
-from django.contrib import admin, messages
+from django.contrib import admin
+from django.contrib import messages
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -29,6 +32,16 @@ from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, Ad
     FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, LeichtPortrait, LeichtRecognize, LeichtGoodToKnow, \
     AudioFile, ImageCrop, ImageFile, BirdnetIdMapping
 from .utils import cropped_image, find_similar_imagefile
+
+admin.site.unregister(User)
+
+
+class CustomUserAdmin(UserAdmin):
+    list_display = ("username", "first_name",
+                    "last_name", "email", "is_active", "is_staff")
+
+
+admin.site.register(User, CustomUserAdmin)
 
 
 class AdminThumbnailSpec(ImageSpec):
