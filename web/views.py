@@ -41,7 +41,7 @@ def artportrait(request, id):
 
         desc_meta = p.descmeta
         if desc_meta:
-            image = desc_meta.image_file.large if desc_meta.image_file.large else desc_meta.image
+            image = desc_meta.image_file.large if desc_meta.image_file.large else desc_meta.image_file.image
             ogs_list = add_image_ogs(request, ogs_list, image)
 
     return default_response(request, ogs_list)
