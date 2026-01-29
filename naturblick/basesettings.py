@@ -48,6 +48,8 @@ MIDDLEWARE = [
     'django_currentuser.middleware.ThreadLocalUserMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'web.langmiddleware.set_lang_middleware',
 ]
 
 ROOT_URLCONF = 'naturblick.urls'
@@ -91,7 +93,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_TZ = True
 
@@ -119,7 +120,6 @@ STATICFILES_DIRS = [
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "static-root"
 
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media-root"
 
@@ -145,3 +145,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
 }
+
+LANGUAGES = [
+    ("en", "English"),
+    ("de", "German"),
+]
