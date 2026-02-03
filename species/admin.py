@@ -751,6 +751,9 @@ def move_portrait_to_accepted(modeladmin, request, queryset):
                 move_portrait_image_file(getattr(portrait, 'funfactmeta', None), accepted_species)
                 move_portrait_image_file(getattr(portrait, 'inthecitymeta', None), accepted_species)
 
+                # Update audiofiles
+                FaunaportraitAudioFile.objects.filter(species_id=synonym_species.id).update(species_id=accepted_species.id)
+
 
 def portrait_fieldorder(fields):
     fields.remove('published')
