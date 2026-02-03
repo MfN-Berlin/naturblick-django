@@ -1,5 +1,3 @@
-{% load i18n %}
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -16,15 +14,10 @@
     <script src="https://cdn.usefathom.com/script.js" data-spa="auto" data-site="TZBNRXXT" defer></script>
 </head>
 <body>
-Naturblick
-
-{% translate "Welche Sprache?" %}
-<p>
-    {% get_current_language as LANGUAGE_CODE %}
-    {{ LANGUAGE_CODE }}
-</p>
-
-<p>Parameter "description": {{ description }}</p>
-
+    <app-root></app-root>
+    <script src="/runtime.js" type="module"></script>
+    <script src="/polyfills.js" type="module"></script>
+    <script src="/vendor.js" type="module"></script>
+    <script src="/main.js" type="module"></script>
 </body>
 </html>
