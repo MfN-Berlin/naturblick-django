@@ -8,7 +8,6 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from species.models import Species, Portrait
-from django.utils.translation import gettext as _
 
 
 class Og:
@@ -18,18 +17,17 @@ class Og:
 
 
 def home(request):
-    description = _("Discover Nature")
+    lang = extract_language(request)
     ogs_list = [Og("og:title", "Naturblick"),
-                Og("og:description", description),
+                Og("og:description", "Discover Nature" if lang == "en" else "Erlebe Natur"),
                 Og("og:twitter:image",
                    "https://naturblick.museumfuernaturkunde.berlin/strapi/uploads/large_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg"),
                 Og("og:twitter:image",
                    "https://naturblick.museumfuernaturkunde.berlin/strapi/uploads/large_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg"),
                 Og("og:image:width", 1200),
-                Og("og:image:height", 521)
-                ] + default_ogs(request)
+                Og("og:image:height", 521)]
 
-    return render(request, "web/index.html", {"og_list": ogs_list, "description": description})
+    return default_response(request, ogs_list)
 
 
 def artportrait(request, id):
@@ -102,16 +100,12 @@ def map_page(request, obs_id):
 def default_response(request, more_ogs=None):
     if more_ogs is None:
         more_ogs = []
-    ogs_list = more_ogs + default_ogs(request)
+    og_list = [Og("og:type", "website"),
+               Og("og:site-name", "Naturblick"),
+               Og("og:url", og_url(request))
+               ] + more_ogs
 
-    return render(request, "web/base.html", {"og_list": ogs_list})
-
-
-def default_ogs(request: WSGIRequest) -> list[Og]:
-    return [Og("og:type", "website"),
-            Og("og:site-name", "Naturblick"),
-            Og("og:url", og_url(request))
-            ]
+    return render(request, "web/index.html", {"og_list": og_list})
 
 
 def extract_language(request: WSGIRequest | Any):
