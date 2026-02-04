@@ -148,4 +148,5 @@ REST_FRAMEWORK = {
 LANGUAGES = [
     ("en", "English"),
     ("de", "German"),
+    ("dels", "Leichte Sprache"),
 ]

@@ -1,0 +1,45 @@
+body {
+    margin: 0;
+}
+
+header {
+    position: relative;
+    background-image: url("../img/background_grain_opt.png");
+    text-align: center;
+    padding: 96px 15% 64px;
+    color: white;
+
+    h1 {
+        font-weight: 900;
+    }
+}
+
+.brick {
+    width: 29px;
+    height: 6px;
+    border: none;
+    margin: 64px auto;
+    margin-top: 48px;
+    margin-bottom: 32px;
+}
+
+.brick-orange {
+    background-color: #ffcf4a;
+}
+
+.brick-blue {
+    background-color: #2f99c6;
+}
+
+.column-3 {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    -moz-column-gap: 32px;
+    column-gap: 32px;
+    row-gap: 32px;
+}
+
+.card {
+    border-radius: 8px;
+    background-color: gray;
+}

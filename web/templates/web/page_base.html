@@ -1,0 +1,37 @@
+{% load i18n %}
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Naturblick</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {% for og in og_list %}
+        <meta property="{{ og.property }}" content="{{ og.content }}">
+    {% endfor %}
+    <script src="https://cdn.usefathom.com/script.js" data-spa="auto" data-site="TZBNRXXT" defer></script>
+    <link rel="stylesheet" href="{% static 'web/css/styles.css' %}">
+
+</head>
+<body>
+    <header>
+        <h1>{% block title %}{% endblock %}</h1>
+        <hr class="brick brick-orange">
+        <p>{% block subtitle %}{% endblock %}</p>
+
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        Kontakt
+        Datenschutz
+        Impressum
+        Digitale Barrierefreiheit
+    </footer>
+</body>
+</html>

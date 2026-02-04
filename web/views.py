@@ -6,6 +6,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils import translation
 
 from species.models import Species, Portrait
 from django.utils.translation import gettext as _
@@ -97,6 +98,16 @@ def map_page(request, obs_id):
         pass
 
     return default_response(request, ogs_list)
+
+
+def about(request):
+    lang = translation.get_language()
+    if lang == "en":
+        return render(request, "web/about.en.html")
+    elif lang == "dels":
+        return render(request, "web/about.dels.html")
+    else:
+        return render(request, "web/about.de.html")
 
 
 def default_response(request, more_ogs=None):
