@@ -1,0 +1,121 @@
+{% extends "web/page_base.html" %}
+
+{% load web_tags static %}
+
+{% block dels %}<a href="{% toggle_dels request %}">Leichte Sprache</a>{% endblock %}
+
+{# Not with il8n because there will be an icon in the future #}
+{% block lang %}de{% endblock %}
+
+{% block title %}Datenschutz{% endblock %}
+{% block page_title %}Datenschutz{% endblock %}
+
+
+{% block content %}
+    <h3>Datenschutz dieser Website</h3>
+    <p><strong>1. Einleitung</strong>
+        <br>Bei der Nutzung unserer Webseite und unserer weiteren Angebote werden personenbezogene Daten erhoben und in
+        Datenbanken, Protokolldateien oder anderen Systemen gespeichert. Bei der Verarbeitung der erfassten Daten werden
+        die Datenschutzvorschriften von uns konsequent eingehalten.</p>
+    <p><strong>2. Name und Anschrift des für die Verarbeitung Verantwortlichen und Kontaktdaten des
+        Datenschutzbeauftragten</strong>
+        <br>Verantwortlich für die Verarbeitung personenbezogener Daten ist:
+        <br>Museum für Naturkunde Berlin
+        <br>Invalidenstr. 43
+        <br>10115 Berlin</p>
+    <p><strong>Geschäftsführer</strong>
+        <br>Stephan Junker
+        <br>Tel.: 030/889140-8798
+        <br>E-Mail: stephan.junker[at]mfn.berlin</p>
+    <p><strong>Datenschutzbeauftragter des Museums für Naturkunde</strong>
+        <br>Tel.: 030/889140-8440
+        <br>E-Mail: datenschutz@mfn.berlin</p>
+    <p>Für diese Webseite des Museum für Naturkunde Berlin gilt die folgende <a
+            href="https://www.museumfuernaturkunde.berlin/de/datenschutzerklaerung">Datenschutzerklärung</a></p>
+    <p><strong>Abweichend davon gilt folgendes:</strong></p>
+    <p><strong>3. Protokollierung des Besuchs der Internetseiten und des Zugriffs auf Daten und Webdienste</strong>
+        <br>Bei Zugriffen auf Internet-Angebote des MfN werden für Datenschutz und Datensicherheit relevante
+        Zugriffsdaten über diesen Vorgang in einer Protokolldatei gespeichert. Dafür wird kein Google Analytics
+        verwendet. Je nach verwendetem Zugriffsprotokoll beinhaltet der Protokolldatensatz Angaben mit folgenden
+        Inhalten:</p>
+
+    <ul>
+        <li>IP-Adresse des anfordernden Rechners</li>
+        <li>Host-Name der IP-Adresse</li>
+        <li>Name der angeforderten Webseite, Datei oder Aktion</li>
+        <li>Datum und Uhrzeit der Anforderung</li>
+        <li>Übertragene Datenmenge</li>
+        <li>Zugriffsstatus des Web-Servers (Datei übertragen, Datei nicht gefunden, Kommando nicht ausgeführt, etc.)
+        </li>
+        <li>Beschreibung des verwendeten Webbrowsers</li>
+        <li>URL von der aus der Zugriff veranlasst wurde.</li>
+    </ul>
+    <p><br>Die gespeicherten Daten werden ausschließlich zu Zwecken der Identifikation und Nachverfolgung unzulässiger
+        Zugriffsversuche oder Zugriffe auf den Web-Server sowie für allgemeine statistische Auswertungen verwendet.
+        Profile einzelner Nutzer werden nicht erstellt. Die Auswertung erfolgt durch autorisierte Mitarbeiter des
+        Museums für Naturkunde Berlin. Die protokollierten Daten werden bis zu drei Monate gespeichert und alle nicht
+        anonymisierten Daten anschließend gelöscht. Die Daten der Protokolldatei werden getrennt von allen durch eine
+        betroffene Person angegebenen personenbezogenen Daten gespeichert.</p>
+    <h3>Datenschutz der App Naturblick</h3>
+    <p><strong>1. Einleitung</strong>
+        <br>Bei der Nutzung von Naturblick werden personenbezogene Daten erhoben und in Datenbanken gespeichert. Bei der
+        Verarbeitung der erfassten Daten werden die Datenschutzvorschriften von uns konsequent eingehalten</p>
+    <p><strong>2. Name und Anschrift des für die Verarbeitung Verantwortlichen und Kontaktdaten des
+        Datenschutzbeauftragten</strong>
+        <br>Verantwortlich für die Verarbeitung personenbezogener Daten ist:
+        <br>Museum für Naturkunde Berlin
+        <br>Invalidenstr. 43
+        <br>10115 Berlin</p>
+    <p>Prof. Johannes Vogel, PhD, Generaldirektor
+        <br>Tel.: +49 30 889140 – 8544
+        <br>E–Mail: johannes.vogel@mfn.berlin</p>
+    <p>Stephan Junker, Geschäftsführer
+        <br>Tel.: +49 30 889140 – 8330
+        <br>E-Mail: stephan.junker@mfn.berlin</p>
+    <p>Datenschutzbeauftragter des Museums für Naturkunde
+        <br>Tel.: 030/889140-8440
+        <br>E-Mail: datenschutz@mfn.berlin</p>
+    <p><strong>3. Nutzung und Weitergabe personenbezogener Daten</strong></p>
+    <p>Protokolldaten: </p>
+    <p>Bei der Nutzung der Naturblick-App werden für Datenschutz und Datensicherheit relevante Nutzungsdaten in einer
+        Protokolldatei gespeichert. Je nach verwendetem Zugriffsprotokoll beinhaltet der Protokolldatensatz Angaben mit
+        folgenden Inhalten: </p>
+
+    <ul>
+        <li>Ton- und Bildaufnahmen</li>
+        <li>Metadaten der Beobachtung (Artname, Geokoordinaten, Zeit, Anzahl, Notizen)</li>
+        <li>Crashreports (Stacktraces, Art des Absturzes, Trends und Version des Handys und der Software)</li>
+        <li>Geräte-ID und Metadaten der Bestimmungsergebnisse (Koordinaten, Zeit, Bestimmungsverlauf)</li>
+        <li>anonyme Nutzungsdaten (Informationen über deine Interaktionen mit der App)</li>
+        <li>Ereignisdaten (Details zu spezifischen Benutzeraktionen wie das Klicken auf Buttons)</li>
+        <li>Gerätedaten (Angaben zu deinem Gerät, einschließlich Gerätetyp, Betriebssystem und Bildschirmauflösung).
+        </li>
+    </ul>
+    <p><br>Die gespeicherten Daten werden ausschließlich zu wissenschaftlichen Zwecken erhoben und verwendet. Sobald die
+        Daten nicht mehr benötigt werden, werden diese gelöscht. Welche Daten in welchem Umfang erhoben werden, kann
+        sich teilweise auch durch technische Notwendigkeiten ergeben. Profile einzelner Nutzenden werden nicht erstellt.
+        Die Auswertung erfolgt durch autorisierte Mitarbeitende des Museums für Naturkunde Berlin. Die Nutzungsdaten
+        werden getrennt von allen durch eine betroffene Person angegebenen personenbezogenen Daten gespeichert. Es
+        erfolgt keine unberechtigte Weitergabe der Daten an unbeteiligte Dritte. Eine Weitergabe an staatliche Stellen
+        erfolgt nur im Rahmen von zwingenden Rechtsvorschriften oder in Fällen von Angriffen auf unsere Systeme zum
+        Zweck der Strafverfolgung. </p>
+    <p>Klarnamen: </p>
+    <p>Nutzenden ist es freigestellt einen Namen für die Autorenschaft von Medien und Beobachtungen anzugeben. Eine
+        Verwendung von Klarnamen wird nicht ausgeschlossen und ist damit auf freiwilliger Basis möglich. Beobachtungen
+        (Artname, Geokoordinaten, Zeit, Anzahl) und Medien erhalten gemäß den Nutzungsbedingungen die Lizenz CC BY-SA
+        4.0. Dieser Lizenz folgenden werden Beobachtungsdaten und Medien ausschließlich in Verbindung zum angegeben
+        Autorennamen weitergegeben und veröffentlicht. Beobachtungen und Medien werden an wissenschaftliche Projekte
+        weitergegeben und nach einer datenschutzrechtlichen und inhaltlichen Prüfung auf der Naturblick-Karte
+        veröffentlicht.</p>
+    <p>E-Mail-Adresse:</p>
+    <p>Für die Registrierung eines Accounts benötigen wir deine E-Mail-Adresse. Die Anmeldung wird erst gültig, nachdem
+        du in einer von uns an dich verschickten E-Mail einen Bestätigungslink angeklickt hast. Die E-Mail-Adresse wird
+        von uns ausschließlich für die Verwaltung des Accounts verwendet. Die Registrierung/Anmeldung erfolgt freiwillig
+        und kann jederzeit widerrufen werden. Deine personenbezogenen Daten (E-Mail-Adresse) werden mit dem Löschen des
+        Accounts aus unserem System gelöscht. Die Verarbeitung der Daten erfolgt unter Beachtung der geltenden
+        datenschutzrechtlichen Bestimmungen. Die Übertragung deiner Eingaben erfolgt verschlüsselt. Um die Daten vor
+        Verlust, Manipulation oder Zugriff durch unberechtigte Personen zu schützen, werden durch das Museum für
+        Naturkunde Berlin technisch-organisatorische Maßnahmen eingesetzt, die dem aktuellen Stand der Technik
+        entsprechen.</p>
+
+{% endblock %}

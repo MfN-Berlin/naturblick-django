@@ -1,0 +1,101 @@
+{% extends "web/page_base.html" %}
+
+{% load web_tags static %}
+
+{# Not with il8n because there will be an icon in the future #}
+{% block lang %}en{% endblock %}
+
+{% block title %}FAQ{% endblock %}
+{% block page_title %}FAQ{% endblock %}
+
+{% block subtitle %}
+    <hr class="brick brick-orange">
+    <h1>Frequently asked questions</h1>
+    <p>Here you will find answers to the questions we frequently receive. If you have questions that you cannot find
+        here, further feedback, suggestions or if you found errors, please write us an email to:
+        naturblick@mfn.berlin</p>
+{% endblock %}
+
+{% block content %}
+
+    <h2>Identifying a species</h2>
+    <h4>Which species can be identified with Naturblick?</h4>
+    <p>With Naturblick you can identify plants and animal species. These include amphibians, bees, wild flowers, trees,
+        reptiles, butterflies, mammals and birds. Here you can find the species list for <a
+                href="https://naturblick.museumfuernaturkunde.berlin/speciesaudiorecognition?lang=en">sound
+            recognition</a> and the <a
+                href="https://naturblick.museumfuernaturkunde.berlin/speciesimagerecognition?lang=en">species list for
+            image recognition</a>.
+        The selection of species is constantly being expanded. Help us select further species and species groups and
+        write us an e-mail with your suggestions to naturblick@mfn.berlin.</p>
+    <h3>Why does the result list of the identification keys always show so many species?</h3>
+    <p>The results list of the identification keys is sorted by probability. All the characteristics you select are
+        weighted equally. It is not always easy to select a characteristic correctly. Therefore, species are also
+        displayed to which the selected characteristics only partially apply. You will therefore get the best results if
+        you only select the characteristics that you are sure about.</p>
+    <h3>How does pattern recognition work?</h3>
+    <p>Pattern recognition always shows the three species with the closest match to the trained reference material. The
+        closer the score is to 100%, the more similar the photo or sound recording is to the reference material of a
+        species with which the pattern recognition was trained. This means that only species that have been trained can
+        be recognized and the recognition works best if there is a great similarity to the recording situation and
+        quality (e.g. microphone quality). Here you can find the species list for <a
+                href="https://naturblick.museumfuernaturkunde.berlin/speciesaudiorecognition?lang=en">sound
+            recognition</a> and the <a
+                href="https://naturblick.museumfuernaturkunde.berlin/speciesimagerecognition?lang=en">species list for
+            image recognition</a> here. </p>
+    <h3>Can I also identify photos that I did not take with the app?</h3>
+    <p>You can use the field book to select photos of plants from your gallery and identify them using image
+        recognition. To save the observation, we ask you to enter the time when you saw the plant. You can then add the
+        location of your observation to the map in the field book.</p>
+
+
+
+    <h2>Making observations</h2>
+    <h3>How can I save when I have seen an animal or plant?</h3>
+    <p>Naturblick offers you various ways to save your observations. You can take a photo of a plant or record a bird
+        song, have it automatically identified and then save it as an observation. You can also add an observation using
+        the plus symbol in the species portraits or in the field book. On the details page of an observation, you can
+        then change the location of the observation on the map and enter further details.</p>
+    <h3>How can I transfer the data from my field book to my new cell phone?</h3>
+    <p>With the Naturblick account, it is easy to display your observations on a new cell phone. All observations are
+        saved across multiple mobile devices and are displayed on all connected devices. </p>
+    <h3>What happens to my observations?</h3>
+    <p>Your observations will be saved in your field book and in our database. All media made or imported with
+        Naturblick are licensed under CC BY-SA 4.0, which means that they may be reused. You can enter your name for
+        authorship in the settings, otherwise "MfN Naturblick" will be named as the author.
+        The joy of experiencing nature and the protection of our users is our top priority. Therefore, we do not share
+        observation data (species name, location, time, number, further details and notes) and media (including metadata
+        such as authorship) that have not been previously checked by us or explicitly agreed to be shared with a
+        specific project. We check whether personal data or copyright infringements are involved.<br>In addition, we
+        gradually review all observations to give you and other users the opportunity to assess whether the observations
+        are plausible. However, only the observer can really say which species he or she has seen. We can therefore only
+        give hints to take a closer look if necessary and pay attention to certain characteristics. You can find all
+        verified and plausible observations on the <a
+                href="https://naturblick.museumfuernaturkunde.berlin/map?lat=51.16556659836182&amp;lng=10.437011718750002&amp;zoomLevel=6">Naturblick
+            map</a>.</p>
+    <h3>Where can I see observations from other Naturblick users?</h3>
+    <p>We only publish observations (species name, location, time, number, further details and notes) and media
+        (including metadata such as authorship) that have not been checked by us beforehand. We gradually check all
+        observations for plausibility and whether personal data or copyright infringements are present. All checked and
+        plausible observations can be found on the <a
+                href="https://naturblick.museumfuernaturkunde.berlin/map?lat=51.16556659836182&amp;lng=10.437011718750002&amp;zoomLevel=6">Naturblick
+            map</a>.</p>
+
+
+    <h2>Technology</h2>
+    <h3>How can I change the language in the app?</h3>
+    <p>You can use Naturblick in German and in the English translation. The language is taken from the device settings
+        and you can use it to change the language. You can find an <a
+                href="https://support.google.com/android/answer/12395118?hl=en&amp;sjid=5851480253402034538-EU#zippy=%2Csie-%C3%A4ndern-die-app-einstellung-aber-die-app-sprache-wird-nicht-gewechselt">explanation
+            for Android here</a>. </p>
+    <h3>Why doesn't Naturblick work on my old Android phone?</h3>
+    <p>Unfortunately, we are bound by the requirements of the Google Play Store. The regulations stipulate that all apps
+        must be designed for newer Android versions in order to increase security for users. We very much regret this,
+        but it is unavoidable when using the Play Store. We are considering the use of alternative app stores.</p>
+    <h3>Is offline recognition planned?</h3>
+    <p>We specialize in Urban nature and our users are primarily active in urban areas, where network coverage is
+        typically available. This is why our online recognition function works very well. However, we are constantly
+        working on improving our App and strive to develop offline recognition in the long run.</p>
+
+
+{% endblock %}

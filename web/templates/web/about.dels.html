@@ -1,0 +1,80 @@
+{% extends "web/page_base.html" %}
+
+{% load web_tags static %}
+
+{% block title %}Über uns{% endblock %}
+{% block page_title %}Über uns{% endblock %}
+
+{% block dels %}<a href="{% toggle_dels request %}">Leichte Sprache</a>{% endblock %}
+
+{% block lang %}de{% endblock %}
+
+{% block subtitle %}
+    <hr class="brick brick-orange">
+    Wir möchten allen zeigen,<br>
+    wie toll Natur in der Stadt ist.{% endblock %}
+
+{% block content %}
+    <img alt="" src={% static 'web/img/Final_2_364f311ace.jpg' %}
+            srcset="{% static 'web/img/large_Final_2_364f311ace.jpg' %} 1000w,
+         srcset="{% static 'web/img/small_Final_2_364f311ace.jpg' %} 500w,
+            srcset="{% static 'web/img/medium_Final_2_364f311ace.jpg' %} 750w,
+         srcset="{% static 'web/img/thumbnail_Final_2_364f311ace.jpg' %} 245w,
+    {% static 'web/img/maps_Karte_6912873a82.jpg' %}"
+         sizes="(max-width: 400px) 500px, (max-width: 767px) 750px, (max-width: 1023px) 1000px, 1000px">
+
+    <p><strong>Wir finden Natur in der Stadt wichtig.</strong></p>
+    <p>Wir wollen Menschen helfen Natur zu erleben.</p>
+
+    <p><strong>Wir erstellen eine App für das Handy.</strong></p>
+    <p>Die App heißt Natur-Blick.</p>
+    <p>Mit der App kannst du Tiere und Pflanzen er-kennen.</p>
+    <p>Du kannst ein Foto von einer Pflanze machen.</p>
+    <p>Dann zeigt dir die App den Namen von der Pflanze.</p>
+    <p>Du kannst den Gesang von einem Vogel auf-nehmen.</p>
+    <p>Dann zeigt dir die App den Namen von dem Vogel.</p>
+    <p><strong>Wir speichern wo Leute Tiere und Pflanzen sehen.</strong></p>
+    <p>Du kannst auf der Karte ansehen was andere gesehen haben.</p>
+    <p>Forscher nutzen diese Infos.</p><p><strong>Schreibe uns deine Ideen und Probleme</strong></p>
+    <p>Wir versuchen die App und die Texte besser zu machen.</p>
+    <p>Dabei helfen uns deine Ideen.</p>
+
+    <p><strong>Infos zum Projekt</strong></p>
+    <p>Unser Projekt heißt Natur-Blick – Stadt-Natur entdecken.</p>
+    <p>Wir arbeiten am Natur-Kunde-Museum in Berlin.</p>
+    <p>Das Bundes-Ministerium für Umwelt und Natur-Schutz (BMU) fördert das Projekt.</p>
+    <p>Das Projekt gibt es von März 2016 bis April 2021.</p>
+    <p>Wir haben Preise für das Projekt gewonnen.</p>
+
+    <p><strong>Partner</strong></p>
+    <p>Viele Leuten haben uns beraten und unterstützt:</p>
+
+    <ul>
+        <li>Botanischer Garten Berlin</li>
+        <li>Bundes-Ministerium für Umwelt und Natur-Schutz (BMU)</li>
+        <li>Bund für Umwelt und Natur-Schutz Deutschland (BUND) in Berlin</li>
+        <li>Grün Berlin GmbH</li>
+        <li>GRÜNE LIGA Berlin e.V.</li>
+        <li>Leibniz-Institut für Zoo- und Wild-Tier-Forschung (IZW)</li>
+        <li>NABU Berlin</li>
+        <li>Öko-Werk Berlin e.V.</li>
+        <li>Senats-Verwaltung für Umwelt, Verkehr und Klima-Schutz</li>
+    </ul>
+
+    <p><strong>Bei uns haben früher gearbeitet:</strong></p>
+
+    <ul>
+        <li>Dr. Omid Khorramshahi (Software-Entwicklung)</li>
+        <li>Oliver Adameck (Student)</li>
+        <li>Tina Birnbach (Studentin)</li>
+        <li>Alexander Buhl (App-Entwicklung)</li>
+        <li>Gregor Hagedorn (Projekt-Leitung)</li>
+        <li>Saskia Gennrich (Software-Entwicklung)</li>
+        <li>Madeleine Hallmann (Studentin)</li>
+        <li>Laura Hermlin-Leder (Studentin)</li>
+        <li>Alice Kracht (Studentin)</li>
+        <li>Joanna Mitchell (Studentin)</li>
+        <li>Paul Pienkny (Studentin)</li>
+        <li>Marcel Stehle (Praktikant)</li>
+    </ul>
+{% endblock %}

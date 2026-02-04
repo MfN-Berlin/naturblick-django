@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 10:57+0100\n"
+"POT-Creation-Date: 2026-02-05 13:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: views.py:21
+#: templates/web/page_base.html:36
+msgid "Kontakt"
+msgstr "Contact"
+
+#: templates/web/page_base.html:37
+msgid "Datenschutz"
+msgstr "General Privacy Notice"
+
+#: templates/web/page_base.html:38
+msgid "Impressum"
+msgstr "Imprint"
+
+#: templates/web/page_base.html:39
+msgid "Digitale Barrierefreiheit"
+msgstr "Digital accessibility statement"
+
+#: views.py:22
 msgid "Discover Nature"
 msgstr "Discover Nature"
 
-#: views.py:129
+#: views.py:156
 #, python-brace-format
 msgid "Seen by {user} at {date} in {coords}"
 msgstr "Seen by {user} at {date} in {coords}"

@@ -1,0 +1,94 @@
+{% extends "web/page_base.html" %}
+
+{% load web_tags static %}
+
+{# Not with il8n because there will be an icon in the future #}
+{% block lang %}de{% endblock %}
+
+{% block title %}Digital accessibility statement{% endblock %}
+{% block page_title %}Digital accessibility statement{% endblock %}
+
+
+{% block content %}
+    <h1>Accessibility Statement</h1>
+    <h2>Scope</h2>
+    <p>This digital accessibility statement applies to the mobile application <strong>Naturblick</strong> of the Museum
+        für Naturkunde Berlin in the following versions:</p>
+
+    <ul>
+        <li><strong>Android Version:</strong> 4.1.3.1</li>
+        <li><strong>iOS Version:</strong> 4.0.51</li>
+    </ul>
+    <p>&nbsp;</p>
+    <p><strong>Download links:</strong></p>
+
+    <ul>
+        <li>Naturblick on Google Play Store</li>
+        <li>Naturblick on Apple App Store</li>
+    </ul>
+    <p>&nbsp;</p>
+    <h2>Compatibility with Accessibility Requirements</h2>
+    <p>This app currently does not fully meet the requirements of the Berlin Accessible ICT Ordinance (BIKTG Bln) in
+        conjunction with EU Directive 2016/2102. The assessment is based on a comprehensive review by the Berlin
+        Monitoring Body for Digital Accessibility in accordance with Implementing Decision (EU) 2018/1524.</p>
+    <p>&nbsp;</p>
+    <h2>Non-accessible Content</h2>
+    <h3>Android Version (4.1.3.1)</h3>
+    <p>According to the audit report dated <strong>21 November 2024</strong>, <strong>33 out of 64 requirements were not
+        met</strong>.<br><strong>Compliance rate: 48.4%</strong></p>
+    <p><strong>Examples of existing barriers:</strong></p>
+
+    <ul>
+        <li>Missing or insufficient alternative texts for images, buttons, and map content</li>
+        <li>No media alternatives (text or transcription) for audio content (e.g., animal sounds)</li>
+        <li>Cut-off text when using screen readers (e.g., TalkBack)</li>
+        <li>Missing semantic structure (e.g., no heading levels)</li>
+        <li>The app cannot be fully operated via keyboard or alternative input methods</li>
+        <li>No accessibility statement available within the app</li>
+    </ul>
+    <p>&nbsp;</p>
+    <h3>iOS Version (4.0.51)</h3>
+    <p>According to the audit report dated <strong>21 November 2024</strong>, <strong>36 out of 61 requirements were not
+        met</strong>.<br><strong>Compliance rate: 41%</strong></p>
+    <p><strong>Examples of existing barriers:</strong></p>
+
+    <ul>
+        <li>Missing alternative texts similar to the Android version</li>
+        <li>No textual explanations for audio content</li>
+        <li>Navigation possible only in portrait mode</li>
+        <li>Navigation elements not always clearly labeled</li>
+        <li>Inconsistent use of structural features for assistive technologies</li>
+    </ul>
+    <p>&nbsp;</p>
+    <h2>Justification</h2>
+    <p>The identified issues stem from technical and design limitations of the current app architecture as well as a
+        lack of resources for comprehensive revision. Full accessibility is not yet achieved but is being pursued step
+        by step.</p>
+    <p>&nbsp;</p>
+    <h2>Planned Measures</h2>
+    <p>The Museum für Naturkunde is working with its development partners to revise the app with the aim of removing
+        identified barriers.</p>
+    <p><strong>Planned actions for 2025 include:</strong></p>
+
+    <ul>
+        <li>Adding alternative texts and accessible components</li>
+        <li>Creating text-based media alternatives for audio content</li>
+        <li>Reviewing content in German Sign Language</li>
+    </ul>
+    <p>&nbsp;</p>
+    <h2>Feedback and Contact</h2>
+    <p>If you notice any barriers in the app or have suggestions for improvement, please contact us:<br><strong>naturblick@mfn.berlin</strong>
+    </p>
+    <p>&nbsp;</p>
+    <h2>Enforcement Procedure</h2>
+    <p>If your contact with us was unsuccessful, you have the option to contact the Berlin Enforcement Office:</p>
+    <p><strong>Commissioner for Digital Accessibility Berlin</strong><br>Senate Chancellery – Department V<br>Jüdenstraße
+        1<br>10178 Berlin<br><strong>barrierefreiheit@senatskanzlei.berlin.de</strong><br><a
+                href="https://www.berlin.de/lb/digitale-barrierefreiheit">www.berlin.de/lb/digitale-barrierefreiheit</a>
+    </p>
+    <p>&nbsp;</p>
+    <h2>Status of this Statement</h2>
+    <p>This statement was created on <strong>30 April 2025</strong> based on audit reports by the Berlin Monitoring
+        Body.</p>
+
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "web/page_base.html" %}
+
+{% load web_tags static %}
+
+{% block dels %}<a href="{% toggle_dels request %}">Leichte Sprache</a>{% endblock %}
+
+{# Not with il8n because there will be an icon in the future #}
+{% block lang %}de{% endblock %}
+
+{% block title %}Impressum{% endblock %}
+{% block page_title %}Impressum{% endblock %}
+
+
+{% block content %}
+    <p>Museum für Naturkunde
+        <br>Leibniz-Institut für Evolutions- und Biodiversitätsforschung
+        <br>Invalidenstraße 43
+        <br>10115 Berlin, Germany</p>
+    <p>Landesunmittelbare rechtsfähige Stiftung des öffentlichen Rechts</p>
+    <p>Telefon: +49 (0)30 2093-8591
+        <br>Fax: +49 (0)30 2093-8561</p>
+    <p>E-Mail: info(at)mfn.berlin
+        <br>Internet: <a
+                href="https://www.museumfuernaturkunde.berlin/de">https://www.museumfuernaturkunde.berlin/de</a></p>
+    <p><strong>Vertretungsberechtigte Person</strong>
+        <br>Prof. Johannes Vogel, PhD (Generaldirektor),
+        <br>Stephan Junker (Geschäftsführer)</p>
+    <p><strong>Zuständige Aufsichtsbehörde</strong>
+        <br>Senatsverwaltung für Wirtschaft, Technologie und Forschung
+        <br>Martin-Luther-Straße 105, 10825 Berlin</p>
+    <p><strong>Inhaltlich Verantwortliche gemäß § 55 Abs. 2 RStV</strong>
+        <br>Ulrike Sturm</p>
+    <p><strong>Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz</strong>
+        <br>DE262426477
+        <br>Bankverbindung
+        <br>Berliner Bank AG
+        <br>Konto-Nummer: 512 087 800
+        <br>Bankleitzahl: 100 708 48
+        <br>IBAN: DE40 1007 0848 051 2087 800
+        <br>BIC/SWIFT: DEUTDEDB110</p>
+    <p>Titelbild: © Torben Geeck</p>
+    <p><strong>Weitere Bestimmungen</strong></p>
+    <p><strong>Copyright</strong>
+        <br>Alle Inhalte, Bilder oder Grafiken sind urheberrechtlich geschützt und dürfen nur mit schriftlicher
+        Genehmigung des jeweiligen Rechteinhabers verwendet werden.</p>
+    <p><strong>Haftung für Inhalte</strong>
+        <br>Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und
+        Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.
+        <br>Als Diensteanbieter sind wir gemäß § 6 Abs.1 MDStV und § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten
+        nach den allgemeinen Gesetzen verantwortlich. Diensteanbieter sind jedoch nicht verpflichtet, die von ihnen
+        übermittelten oder gespeicherten fremden Informationen zu überwachen oder nach Umständen zu forschen, die auf
+        eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von
+        Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch
+        erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von
+        entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
+    <p><strong>Urheberrecht</strong>
+        <br>Die Betreiber der Seiten sind bemüht, stets die Urheberrechte Anderer zu beachten bzw. auf selbst erstellte
+        sowie lizenzfreie Werke zurückzugreifen.
+        <br>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen
+        Urheberrecht. Beiträge Dritter sind als solche gekennzeichnet. Die Vervielfältigung, Bearbeitung, Verbreitung
+        und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des
+        jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht
+        kommerziellen Gebrauch gestattet.</p>
+    <p><strong>Allgemeiner Haftungsausschluss</strong>
+        <br>Über die weiter oben dargelegten Punkte hinaus gilt für alle Seiten dieses Webauftritts der allgemeine <a
+                href="https://www.disclaimer.de/disclaimer.htm">Haftungsausschluss</a>.
+        <br>© Museum für Naturkunde Berlin</p>
+{% endblock %}

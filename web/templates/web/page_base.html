@@ -1,0 +1,41 @@
+{% load i18n static web_tags %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <base href="/">
+    <link rel="icon" href="{% static 'favicon.ico' %}">
+    {% for og in og_list %}
+        <meta property="{{ og.property }}" content="{{ og.content }}">
+    {% endfor %}
+    <script src="https://cdn.usefathom.com/script.js" data-spa="auto" data-site="TZBNRXXT" defer></script>
+    <link rel="stylesheet" href="{% static 'web/css/styles.css' %}">
+
+</head>
+<body>
+<header>
+    <a class="home" href="{% url 'home' %}{% querystring %}">Naturblick</a>
+
+    <div class="menu">
+        {% block dels %}{% endblock %}
+        Schriftgröße
+        <a href="{% toggle_lang request %}">{% block lang %}{% endblock %}</a>
+        Menu
+    </div>
+
+    <h1>{% block page_title %}{% endblock %}</h1>
+    <p>{% block subtitle %}{% endblock %}</p>
+</header>
+<main>
+    {% block content %}{% endblock %}
+</main>
+<footer>
+    <a href="{% url 'kontakt' %}{% querystring %}">{% translate "Kontakt" %}</a>
+    <a href="{% url 'privacy' %}{% querystring %}">{% translate "Datenschutz" %}</a>
+    <a href="{% url 'imprint' %}{% querystring %}">{% translate "Impressum" %}</a>
+    <a href="{% url 'digitalaccessibilitystatement' %}{% querystring %}">{% translate "Digitale Barrierefreiheit" %}</a>
+</footer>
+</body>
+</html>

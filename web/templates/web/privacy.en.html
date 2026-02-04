@@ -1,0 +1,109 @@
+{% extends "web/page_base.html" %}
+
+{% load web_tags static %}
+
+{% block dels %}<a href="{% toggle_dels request %}">Leichte Sprache</a>{% endblock %}
+
+{# Not with il8n because there will be an icon in the future #}
+{% block lang %}en{% endblock %}
+
+{% block title %}General Privacy Notice{% endblock %}
+{% block page_title %}General Privacy Notice{% endblock %}
+
+
+{% block content %}
+    <p><strong>1. Introduction</strong>
+        <br>When using our online content, personal data is collected and stored in databases, protocol files or other
+        systems. We consistently abide by data protection regulations when processing the data collected.</p>
+    <p><strong>2. Name and address of the controller responsible for data processing and contact of the data protection
+        officer</strong>
+        <br>Processing of personal data is the responsibility of:
+        <br>Museum für Naturkunde Berlin
+        <br>Invalidenstr. 43
+        <br>10115 Berlin</p>
+    <p>Managing Director Stephan Junker
+        <br>Phone: +49(0)30/889140-8798
+        <br>Email: stephan.junker@mfn.berlin</p>
+    <p>Data protection officer of the Museum für Naturkunde:
+        <br>Phone: +49(0)30/889140-8440
+        <br>Email: datenschutz@mfn.berlin</p>
+    <p>The following <a href="https://www.museumfuernaturkunde.berlin/en/general-privacy-notice">privacy notice</a>
+        applies to this website of the Museum für Naturkunde Berlin.</p>
+    <p><strong>The following shall apply in derogation of the above:</strong></p>
+    <p><strong>3. Logging of visits to the Internet pages and access to data and web services</strong>
+        <br> When accessing the MfN's internet offers, access data relevant to data protection and data security are
+        stored in a log file. Google Analytics is not used for this purpose. Depending on the access protocol used, the
+        protocol data record contains information with the following contents:</p>
+
+    <ul>
+        <li>IP address of the requesting computer</li>
+        <li>Host name of the IP address</li>
+        <li>Name of the requested web page, file or action</li>
+        <li>Date and time of the request</li>
+        <li>Amount of data transmitted</li>
+        <li>Access status of the web server (file transferred, file not found, command not executed, etc.)</li>
+        <li>Description of the web browser used</li>
+        <li>URL from which the access was initiated.</li>
+    </ul>
+    <p><br>The stored data is used exclusively for the purpose of identification and tracing of unauthorised access
+        attempts or access to the web server as well as for general statistical evaluations. Profiles of individual
+        users are not created. The evaluation is carried out by authorised employees of the Museum für Naturkunde
+        Berlin. The logged data is stored for up to three months, and all non-anonymised data is then deleted. The data
+        in the log file are stored separately from all personal data provided by a person concerned.</p>
+    <h3>Privacy Policy of the Naturblick App</h3>
+    <p><strong>1. Introduction</strong>
+        <br>When using Naturblick, personal data is collected and stored in databases. When processing the collected
+        data, we strictly comply with data protection regulations.</p>
+    <p><strong>2. Name and address of the controller and contact details of the data protection officer</strong>
+        <br>Responsible for the processing of personal data is:
+        <br>Museum für Naturkunde Berlin
+        <br>Invalidenstr. 43
+        <br>10115 Berlin</p>
+    <p>Prof. Johannes Vogel, PhD, Director General
+        <br>Tel.: +49 30 889140 – 8544
+        <br>E–Mail: johannes.vogel@mfn.berlin</p>
+    <p>Stephan Junker, Managing Director
+        <br>Tel.: +49 30 889140 – 8330
+        <br>E-Mail: stephan.junker@mfn.berlin</p>
+    <p>Data Protection Officer of the Museum für Naturkunde
+        <br>Tel.: 030/889140-8440
+        <br>E-Mail: datenschutz@mfn.berlin</p>
+    <p><strong>3. Use and disclosure of personal data</strong></p>
+    <p>Log data: </p>
+    <p>When using the Naturblick app, usage data relevant to data protection and data security is stored in a log file.
+        Depending on the access protocol used, the log dataset may include information with the following contents: </p>
+
+    <ul>
+        <li>Audio and image recordings</li>
+        <li>Observation metadata (species name, geocoordinates, time, quantity, notes)</li>
+        <li>Crash reports (stack traces, type of crash, trends and version of the device and software)</li>
+        <li>Device ID and metadata of identification results (coordinates, time, identification history)</li>
+        <li>Anonymous usage data (information about your interactions with the app)</li>
+        <li>Event data (details of specific user actions such as clicking on buttons)</li>
+        <li>Device data (information about your device, including device type, operating system and screen
+            resolution).
+        </li>
+    </ul>
+    <p><br>The stored data is collected and used exclusively for scientific purposes. Once the data is no longer needed,
+        it will be deleted. The scope of the data collected may also result from technical requirements. No profiles of
+        individual users are created. The analysis is carried out by authorized staff of the Museum für Naturkunde
+        Berlin. Usage data is stored separately from all personal data provided by an affected person. There is no
+        unauthorized disclosure of data to unrelated third parties. Disclosure to government authorities occurs only
+        within the framework of mandatory legal provisions or in cases of attacks on our systems for the purpose of
+        criminal prosecution. </p>
+    <p>Real names: </p>
+    <p>Users are free to provide a name for the authorship of media and observations. The use of real names is not
+        excluded and is therefore possible on a voluntary basis. Observations (species name, geocoordinates, time,
+        quantity) and media are licensed under CC BY-SA 4.0 in accordance with the terms of use. According to this
+        license, observation data and media are shared and published only in connection with the provided author name.
+        Observations and media are passed on to scientific projects and, after a data protection and content review,
+        published on the Naturblick map.</p>
+    <p>E-mail address:</p>
+    <p>To register an account, we require your e-mail address. Registration only becomes valid after you have clicked on
+        a confirmation link sent to you by us. The e-mail address will be used exclusively for account management.
+        Registration/login is voluntary and can be revoked at any time. Your personal data (e-mail address) will be
+        deleted from our system when the account is deleted. Data processing is carried out in compliance with
+        applicable data protection regulations. Your entries are transmitted in encrypted form. To protect the data
+        against loss, manipulation or access by unauthorized persons, the Museum für Natur</p>
+
+{% endblock %}
