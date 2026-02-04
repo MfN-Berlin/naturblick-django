@@ -92,7 +92,7 @@ def map_page(request, obs_id):
                                f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/audio.mp4"))
 
         ogs_list.append(Og("og:description",
-                           seenBy(lang, cc_name, date, coords)))
+                           seen_by(cc_name, date, coords)))
     except:
         pass
 
@@ -113,7 +113,6 @@ def default_ogs(request: WSGIRequest) -> list[Og]:
             Og("og:url", og_url(request))
             ]
 
-
 def extract_language(request: WSGIRequest | Any):
     allowed_langs = {"de", "en", "dels"}
     lang = request.GET.get("lang", "de")
@@ -126,7 +125,7 @@ def og_url(request):
     return f'{request.get_host()}{request.get_full_path().replace("/index", "")}'
 
 
-def seenBy(lang, user, date, coords):
+def seen_by(user, date, coords):
     return _("Seen by {user} at {date} in {coords}").format(user=user, date=date, coords=coords)
 
 def add_image_ogs(request, ogs_list, image):
