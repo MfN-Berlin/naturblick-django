@@ -29,7 +29,7 @@ def home(request):
                 Og("og:image:height", 521)
                 ] + default_ogs(request)
 
-    return render(request, "web/index.html", {"og_list": ogs_list, "description": description})
+    return render(request, "web/index.html", {"og_list": ogs_list})
 
 
 def artportrait(request, id):

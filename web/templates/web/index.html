@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static %}
 
 <!doctype html>
 <html lang="en">
@@ -9,22 +10,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="{% static 'web/css/styles.css' %}">
     {% for og in og_list %}
         <meta property="{{ og.property }}" content="{{ og.content }}">
     {% endfor %}
     <script src="https://cdn.usefathom.com/script.js" data-spa="auto" data-site="TZBNRXXT" defer></script>
 </head>
-<body>
-Naturblick
+<body class="body">
+<header class="header">
+    <img class="hero_image"
+        alt=""
+         src="https://naturblick.museumfuernaturkunde.berlin/strapi/uploads/Header_2023_klein_beschnitten_belichted_7cca538a55.jpg"
+         srcset="https://naturblick.museumfuernaturkunde.berlin/strapi/uploads/large_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg 1200w, https://naturblick.museumfuernaturkunde.berlin/strapi/uploads/small_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg 400w, https://naturblick.museumfuernaturkunde.berlin/strapi/uploads/medium_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg 800w, https://naturblick.museumfuernaturkunde.berlin/strapi/uploads/thumbnail_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg 245w, https://naturblick.museumfuernaturkunde.berlin/strapi/uploads/Header_2023_klein_beschnitten_belichted_7cca538a55.jpg"
+         sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, (max-width: 1023px) 1200px">
+{#    <button style="#}
+{#      position:absolute;#}
+{#      top:16px;#}
+{#      right:16px;#}
+{#      padding:8px 12px;#}
+{#      border:0;#}
+{#      background:#000;#}
+{#      color:#fff;#}
+{#      cursor:pointer;">#}
+{#        ☰#}
+{#    </button>#}
 
-{% translate "Welche Sprache?" %}
-<p>
-    {% get_current_language as LANGUAGE_CODE %}
-    {{ LANGUAGE_CODE }}
-</p>
+    <div class="hero_title">Erlebe Natur</div>
+</header>
 
-<p>Parameter "description": {{ description }}</p>
+<main style="padding:24px;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+    <div style="background:#fff;padding:16px;border-radius:8px">Über die App</div>
+    <div style="background:#fff;padding:16px;border-radius:8px">Über uns</div>
+    <div style="background:#fff;padding:16px;border-radius:8px">Häufige Fragen</div>
+</main>
+
+<footer style="padding:16px;text-align:center;font-size:14px;color:#555">
+    <a href="#about">About</a> ·
+    <a href="#impressum">Impressum</a> ·
+    <a href="#privacy">Privacy</a>
+</footer>
+
 
 </body>
 </html>

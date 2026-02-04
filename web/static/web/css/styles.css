@@ -1,0 +1,21 @@
+.body {
+    margin: 0;
+}
+
+.header {
+    position: relative;
+    text-align: center;
+}
+
+.hero_title {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+}
+
+.hero_image {
+    width: 100%;
+}
+

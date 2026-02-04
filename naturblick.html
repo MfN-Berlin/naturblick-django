@@ -1,0 +1,2909 @@
+<!DOCTYPE html>
+<html lang="en" style="--dels-li-bottom-margin: 0px;">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>.header-title[_ngcontent-ng-c1933515739], nav[_ngcontent-ng-c1933515739] {
+        margin: 25px
+    }
+
+    a[_ngcontent-ng-c1933515739] {
+        padding: 10px 20px 0 0
+    }
+
+    .active-route[_ngcontent-ng-c1933515739] {
+        font-weight: 700
+    }
+
+    .content[_ngcontent-ng-c1933515739] {
+        width: 100%;
+        height: 100%
+    }</style>
+    <style>mat-icon, mat-icon.mat-primary, mat-icon.mat-accent, mat-icon.mat-warn {
+        color: var(--mat-icon-color)
+    }
+
+    .mat-icon {
+        -webkit-user-select: none;
+        user-select: none;
+        background-repeat: no-repeat;
+        display: inline-block;
+        fill: currentColor;
+        height: 24px;
+        width: 24px;
+        overflow: hidden
+    }
+
+    .mat-icon.mat-icon-inline {
+        font-size: inherit;
+        height: inherit;
+        line-height: inherit;
+        width: inherit
+    }
+
+    .mat-icon.mat-ligature-font[fontIcon]::before {
+        content: attr(fontIcon)
+    }
+
+    [dir=rtl] .mat-icon-rtl-mirror {
+        transform: scale(-1, 1)
+    }
+
+    .mat-form-field:not(.mat-form-field-appearance-legacy) .mat-form-field-prefix .mat-icon, .mat-form-field:not(.mat-form-field-appearance-legacy) .mat-form-field-suffix .mat-icon {
+        display: block
+    }
+
+    .mat-form-field:not(.mat-form-field-appearance-legacy) .mat-form-field-prefix .mat-icon-button .mat-icon, .mat-form-field:not(.mat-form-field-appearance-legacy) .mat-form-field-suffix .mat-icon-button .mat-icon {
+        margin: auto
+    }</style>
+    <style>.mdc-text-field {
+        border-top-left-radius: 4px;
+        border-top-left-radius: var(--mdc-shape-small, 4px);
+        border-top-right-radius: 4px;
+        border-top-right-radius: var(--mdc-shape-small, 4px);
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        display: inline-flex;
+        align-items: baseline;
+        padding: 0 16px;
+        position: relative;
+        box-sizing: border-box;
+        overflow: hidden;
+        will-change: opacity, transform, color
+    }
+
+    .mdc-text-field .mdc-floating-label {
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none
+    }
+
+    .mdc-text-field__input {
+        height: 28px;
+        width: 100%;
+        min-width: 0;
+        border: none;
+        border-radius: 0;
+        background: none;
+        appearance: none;
+        padding: 0
+    }
+
+    .mdc-text-field__input::-ms-clear {
+        display: none
+    }
+
+    .mdc-text-field__input::-webkit-calendar-picker-indicator {
+        display: none
+    }
+
+    .mdc-text-field__input:focus {
+        outline: none
+    }
+
+    .mdc-text-field__input:invalid {
+        box-shadow: none
+    }
+
+    @media all {
+        .mdc-text-field__input::placeholder {
+            opacity: 0
+        }
+    }
+
+    @media all {
+        .mdc-text-field__input:-ms-input-placeholder {
+            opacity: 0
+        }
+    }
+
+    @media all {
+        .mdc-text-field--no-label .mdc-text-field__input::placeholder, .mdc-text-field--focused .mdc-text-field__input::placeholder {
+            opacity: 1
+        }
+    }
+
+    @media all {
+        .mdc-text-field--no-label .mdc-text-field__input:-ms-input-placeholder, .mdc-text-field--focused .mdc-text-field__input:-ms-input-placeholder {
+            opacity: 1
+        }
+    }
+
+    .mdc-text-field__affix {
+        height: 28px;
+        opacity: 0;
+        white-space: nowrap
+    }
+
+    .mdc-text-field--label-floating .mdc-text-field__affix, .mdc-text-field--no-label .mdc-text-field__affix {
+        opacity: 1
+    }
+
+    @supports (-webkit-hyphens: none) {
+        .mdc-text-field--outlined .mdc-text-field__affix {
+            align-items: center;
+            align-self: center;
+            display: inline-flex;
+            height: 100%
+        }
+    }
+
+    .mdc-text-field__affix--prefix {
+        padding-left: 0;
+        padding-right: 2px
+    }
+
+    [dir=rtl] .mdc-text-field__affix--prefix, .mdc-text-field__affix--prefix[dir=rtl] {
+        padding-left: 2px;
+        padding-right: 0
+    }
+
+    .mdc-text-field--end-aligned .mdc-text-field__affix--prefix {
+        padding-left: 0;
+        padding-right: 12px
+    }
+
+    [dir=rtl] .mdc-text-field--end-aligned .mdc-text-field__affix--prefix, .mdc-text-field--end-aligned .mdc-text-field__affix--prefix[dir=rtl] {
+        padding-left: 12px;
+        padding-right: 0
+    }
+
+    .mdc-text-field__affix--suffix {
+        padding-left: 12px;
+        padding-right: 0
+    }
+
+    [dir=rtl] .mdc-text-field__affix--suffix, .mdc-text-field__affix--suffix[dir=rtl] {
+        padding-left: 0;
+        padding-right: 12px
+    }
+
+    .mdc-text-field--end-aligned .mdc-text-field__affix--suffix {
+        padding-left: 2px;
+        padding-right: 0
+    }
+
+    [dir=rtl] .mdc-text-field--end-aligned .mdc-text-field__affix--suffix, .mdc-text-field--end-aligned .mdc-text-field__affix--suffix[dir=rtl] {
+        padding-left: 0;
+        padding-right: 2px
+    }
+
+    .mdc-text-field--filled {
+        height: 56px
+    }
+
+    .mdc-text-field--filled::before {
+        display: inline-block;
+        width: 0;
+        height: 40px;
+        content: "";
+        vertical-align: 0
+    }
+
+    .mdc-text-field--filled .mdc-floating-label {
+        left: 16px;
+        right: initial
+    }
+
+    [dir=rtl] .mdc-text-field--filled .mdc-floating-label, .mdc-text-field--filled .mdc-floating-label[dir=rtl] {
+        left: initial;
+        right: 16px
+    }
+
+    .mdc-text-field--filled .mdc-floating-label--float-above {
+        transform: translateY(-106%) scale(0.75)
+    }
+
+    .mdc-text-field--filled.mdc-text-field--no-label .mdc-text-field__input {
+        height: 100%
+    }
+
+    .mdc-text-field--filled.mdc-text-field--no-label .mdc-floating-label {
+        display: none
+    }
+
+    .mdc-text-field--filled.mdc-text-field--no-label::before {
+        display: none
+    }
+
+    @supports (-webkit-hyphens: none) {
+        .mdc-text-field--filled.mdc-text-field--no-label .mdc-text-field__affix {
+            align-items: center;
+            align-self: center;
+            display: inline-flex;
+            height: 100%
+        }
+    }
+
+    .mdc-text-field--outlined {
+        height: 56px;
+        overflow: visible
+    }
+
+    .mdc-text-field--outlined .mdc-floating-label--float-above {
+        transform: translateY(-37.25px) scale(1)
+    }
+
+    .mdc-text-field--outlined.mdc-notched-outline--upgraded .mdc-floating-label--float-above, .mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+        transform: translateY(-34.75px) scale(0.75)
+    }
+
+    .mdc-text-field--outlined .mdc-floating-label--float-above {
+        font-size: .75rem
+    }
+
+    .mdc-text-field--outlined.mdc-notched-outline--upgraded .mdc-floating-label--float-above, .mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+        font-size: 1rem
+    }
+
+    .mdc-text-field--outlined .mdc-text-field__input {
+        height: 100%
+    }
+
+    .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading {
+        border-top-left-radius: 4px;
+        border-top-left-radius: var(--mdc-shape-small, 4px);
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 4px;
+        border-bottom-left-radius: var(--mdc-shape-small, 4px)
+    }
+
+    [dir=rtl] .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading, .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading[dir=rtl] {
+        border-top-left-radius: 0;
+        border-top-right-radius: 4px;
+        border-top-right-radius: var(--mdc-shape-small, 4px);
+        border-bottom-right-radius: 4px;
+        border-bottom-right-radius: var(--mdc-shape-small, 4px);
+        border-bottom-left-radius: 0
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading {
+            width: max(12px, var(--mdc-shape-small, 4px))
+        }
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__notch {
+            max-width: calc(100% - max(12px, var(--mdc-shape-small, 4px)) * 2)
+        }
+    }
+
+    .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing {
+        border-top-left-radius: 0;
+        border-top-right-radius: 4px;
+        border-top-right-radius: var(--mdc-shape-small, 4px);
+        border-bottom-right-radius: 4px;
+        border-bottom-right-radius: var(--mdc-shape-small, 4px);
+        border-bottom-left-radius: 0
+    }
+
+    [dir=rtl] .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing, .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing[dir=rtl] {
+        border-top-left-radius: 4px;
+        border-top-left-radius: var(--mdc-shape-small, 4px);
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 4px;
+        border-bottom-left-radius: var(--mdc-shape-small, 4px)
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined {
+            padding-left: max(16px, calc(var(--mdc-shape-small, 4px) + 4px))
+        }
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined {
+            padding-right: max(16px, var(--mdc-shape-small, 4px))
+        }
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined + .mdc-text-field-helper-line {
+            padding-left: max(16px, calc(var(--mdc-shape-small, 4px) + 4px))
+        }
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined + .mdc-text-field-helper-line {
+            padding-right: max(16px, var(--mdc-shape-small, 4px))
+        }
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--with-leading-icon {
+        padding-left: 0
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined.mdc-text-field--with-leading-icon {
+            padding-right: max(16px, var(--mdc-shape-small, 4px))
+        }
+    }
+
+    [dir=rtl] .mdc-text-field--outlined.mdc-text-field--with-leading-icon, .mdc-text-field--outlined.mdc-text-field--with-leading-icon[dir=rtl] {
+        padding-right: 0
+    }
+
+    @supports (top: max(0%)) {
+        [dir=rtl] .mdc-text-field--outlined.mdc-text-field--with-leading-icon, .mdc-text-field--outlined.mdc-text-field--with-leading-icon[dir=rtl] {
+            padding-left: max(16px, var(--mdc-shape-small, 4px))
+        }
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--with-trailing-icon {
+        padding-right: 0
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined.mdc-text-field--with-trailing-icon {
+            padding-left: max(16px, calc(var(--mdc-shape-small, 4px) + 4px))
+        }
+    }
+
+    [dir=rtl] .mdc-text-field--outlined.mdc-text-field--with-trailing-icon, .mdc-text-field--outlined.mdc-text-field--with-trailing-icon[dir=rtl] {
+        padding-left: 0
+    }
+
+    @supports (top: max(0%)) {
+        [dir=rtl] .mdc-text-field--outlined.mdc-text-field--with-trailing-icon, .mdc-text-field--outlined.mdc-text-field--with-trailing-icon[dir=rtl] {
+            padding-right: max(16px, calc(var(--mdc-shape-small, 4px) + 4px))
+        }
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--with-leading-icon.mdc-text-field--with-trailing-icon {
+        padding-left: 0;
+        padding-right: 0
+    }
+
+    .mdc-text-field--outlined .mdc-notched-outline--notched .mdc-notched-outline__notch {
+        padding-top: 1px
+    }
+
+    .mdc-text-field--outlined .mdc-floating-label {
+        left: 4px;
+        right: initial
+    }
+
+    [dir=rtl] .mdc-text-field--outlined .mdc-floating-label, .mdc-text-field--outlined .mdc-floating-label[dir=rtl] {
+        left: initial;
+        right: 4px
+    }
+
+    .mdc-text-field--outlined .mdc-text-field__input {
+        display: flex;
+        border: none !important;
+        background-color: rgba(0, 0, 0, 0)
+    }
+
+    .mdc-text-field--outlined .mdc-notched-outline {
+        z-index: 1
+    }
+
+    .mdc-text-field--textarea {
+        flex-direction: column;
+        align-items: center;
+        width: auto;
+        height: auto;
+        padding: 0
+    }
+
+    .mdc-text-field--textarea .mdc-floating-label {
+        top: 19px
+    }
+
+    .mdc-text-field--textarea .mdc-floating-label:not(.mdc-floating-label--float-above) {
+        transform: none
+    }
+
+    .mdc-text-field--textarea .mdc-text-field__input {
+        flex-grow: 1;
+        height: auto;
+        min-height: 1.5rem;
+        overflow-x: hidden;
+        overflow-y: auto;
+        box-sizing: border-box;
+        resize: none;
+        padding: 0 16px
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--filled::before {
+        display: none
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--filled .mdc-floating-label--float-above {
+        transform: translateY(-10.25px) scale(0.75)
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--filled .mdc-text-field__input {
+        margin-top: 23px;
+        margin-bottom: 9px
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--filled.mdc-text-field--no-label .mdc-text-field__input {
+        margin-top: 16px;
+        margin-bottom: 16px
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--outlined .mdc-notched-outline--notched .mdc-notched-outline__notch {
+        padding-top: 0
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--outlined .mdc-floating-label--float-above {
+        transform: translateY(-27.25px) scale(1)
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--outlined.mdc-notched-outline--upgraded .mdc-floating-label--float-above, .mdc-text-field--textarea.mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+        transform: translateY(-24.75px) scale(0.75)
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--outlined .mdc-floating-label--float-above {
+        font-size: .75rem
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--outlined.mdc-notched-outline--upgraded .mdc-floating-label--float-above, .mdc-text-field--textarea.mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+        font-size: 1rem
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--outlined .mdc-text-field__input {
+        margin-top: 16px;
+        margin-bottom: 16px
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--outlined .mdc-floating-label {
+        top: 18px
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--with-internal-counter .mdc-text-field__input {
+        margin-bottom: 2px
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--with-internal-counter .mdc-text-field-character-counter {
+        align-self: flex-end;
+        padding: 0 16px
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--with-internal-counter .mdc-text-field-character-counter::after {
+        display: inline-block;
+        width: 0;
+        height: 16px;
+        content: "";
+        vertical-align: -16px
+    }
+
+    .mdc-text-field--textarea.mdc-text-field--with-internal-counter .mdc-text-field-character-counter::before {
+        display: none
+    }
+
+    .mdc-text-field__resizer {
+        align-self: stretch;
+        display: inline-flex;
+        flex-direction: column;
+        flex-grow: 1;
+        max-height: 100%;
+        max-width: 100%;
+        min-height: 56px;
+        min-width: fit-content;
+        min-width: -moz-available;
+        min-width: -webkit-fill-available;
+        overflow: hidden;
+        resize: both
+    }
+
+    .mdc-text-field--filled .mdc-text-field__resizer {
+        transform: translateY(-1px)
+    }
+
+    .mdc-text-field--filled .mdc-text-field__resizer .mdc-text-field__input, .mdc-text-field--filled .mdc-text-field__resizer .mdc-text-field-character-counter {
+        transform: translateY(1px)
+    }
+
+    .mdc-text-field--outlined .mdc-text-field__resizer {
+        transform: translateX(-1px) translateY(-1px)
+    }
+
+    [dir=rtl] .mdc-text-field--outlined .mdc-text-field__resizer, .mdc-text-field--outlined .mdc-text-field__resizer[dir=rtl] {
+        transform: translateX(1px) translateY(-1px)
+    }
+
+    .mdc-text-field--outlined .mdc-text-field__resizer .mdc-text-field__input, .mdc-text-field--outlined .mdc-text-field__resizer .mdc-text-field-character-counter {
+        transform: translateX(1px) translateY(1px)
+    }
+
+    [dir=rtl] .mdc-text-field--outlined .mdc-text-field__resizer .mdc-text-field__input, [dir=rtl] .mdc-text-field--outlined .mdc-text-field__resizer .mdc-text-field-character-counter, .mdc-text-field--outlined .mdc-text-field__resizer .mdc-text-field__input[dir=rtl], .mdc-text-field--outlined .mdc-text-field__resizer .mdc-text-field-character-counter[dir=rtl] {
+        transform: translateX(-1px) translateY(1px)
+    }
+
+    .mdc-text-field--with-leading-icon {
+        padding-left: 0;
+        padding-right: 16px
+    }
+
+    [dir=rtl] .mdc-text-field--with-leading-icon, .mdc-text-field--with-leading-icon[dir=rtl] {
+        padding-left: 16px;
+        padding-right: 0
+    }
+
+    .mdc-text-field--with-leading-icon.mdc-text-field--filled .mdc-floating-label {
+        max-width: calc(100% - 48px);
+        left: 48px;
+        right: initial
+    }
+
+    [dir=rtl] .mdc-text-field--with-leading-icon.mdc-text-field--filled .mdc-floating-label, .mdc-text-field--with-leading-icon.mdc-text-field--filled .mdc-floating-label[dir=rtl] {
+        left: initial;
+        right: 48px
+    }
+
+    .mdc-text-field--with-leading-icon.mdc-text-field--filled .mdc-floating-label--float-above {
+        max-width: calc(100% / 0.75 - 64px / 0.75)
+    }
+
+    .mdc-text-field--with-leading-icon.mdc-text-field--outlined .mdc-floating-label {
+        left: 36px;
+        right: initial
+    }
+
+    [dir=rtl] .mdc-text-field--with-leading-icon.mdc-text-field--outlined .mdc-floating-label, .mdc-text-field--with-leading-icon.mdc-text-field--outlined .mdc-floating-label[dir=rtl] {
+        left: initial;
+        right: 36px
+    }
+
+    .mdc-text-field--with-leading-icon.mdc-text-field--outlined :not(.mdc-notched-outline--notched) .mdc-notched-outline__notch {
+        max-width: calc(100% - 60px)
+    }
+
+    .mdc-text-field--with-leading-icon.mdc-text-field--outlined .mdc-floating-label--float-above {
+        transform: translateY(-37.25px) translateX(-32px) scale(1)
+    }
+
+    [dir=rtl] .mdc-text-field--with-leading-icon.mdc-text-field--outlined .mdc-floating-label--float-above, .mdc-text-field--with-leading-icon.mdc-text-field--outlined .mdc-floating-label--float-above[dir=rtl] {
+        transform: translateY(-37.25px) translateX(32px) scale(1)
+    }
+
+    .mdc-text-field--with-leading-icon.mdc-text-field--outlined.mdc-notched-outline--upgraded .mdc-floating-label--float-above, .mdc-text-field--with-leading-icon.mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+        transform: translateY(-34.75px) translateX(-32px) scale(0.75)
+    }
+
+    [dir=rtl] .mdc-text-field--with-leading-icon.mdc-text-field--outlined.mdc-notched-outline--upgraded .mdc-floating-label--float-above, [dir=rtl] .mdc-text-field--with-leading-icon.mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above, .mdc-text-field--with-leading-icon.mdc-text-field--outlined.mdc-notched-outline--upgraded .mdc-floating-label--float-above[dir=rtl], .mdc-text-field--with-leading-icon.mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above[dir=rtl] {
+        transform: translateY(-34.75px) translateX(32px) scale(0.75)
+    }
+
+    .mdc-text-field--with-leading-icon.mdc-text-field--outlined .mdc-floating-label--float-above {
+        font-size: .75rem
+    }
+
+    .mdc-text-field--with-leading-icon.mdc-text-field--outlined.mdc-notched-outline--upgraded .mdc-floating-label--float-above, .mdc-text-field--with-leading-icon.mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+        font-size: 1rem
+    }
+
+    .mdc-text-field--with-trailing-icon {
+        padding-left: 16px;
+        padding-right: 0
+    }
+
+    [dir=rtl] .mdc-text-field--with-trailing-icon, .mdc-text-field--with-trailing-icon[dir=rtl] {
+        padding-left: 0;
+        padding-right: 16px
+    }
+
+    .mdc-text-field--with-trailing-icon.mdc-text-field--filled .mdc-floating-label {
+        max-width: calc(100% - 64px)
+    }
+
+    .mdc-text-field--with-trailing-icon.mdc-text-field--filled .mdc-floating-label--float-above {
+        max-width: calc(100% / 0.75 - 64px / 0.75)
+    }
+
+    .mdc-text-field--with-trailing-icon.mdc-text-field--outlined :not(.mdc-notched-outline--notched) .mdc-notched-outline__notch {
+        max-width: calc(100% - 60px)
+    }
+
+    .mdc-text-field--with-leading-icon.mdc-text-field--with-trailing-icon {
+        padding-left: 0;
+        padding-right: 0
+    }
+
+    .mdc-text-field--with-leading-icon.mdc-text-field--with-trailing-icon.mdc-text-field--filled .mdc-floating-label {
+        max-width: calc(100% - 96px)
+    }
+
+    .mdc-text-field--with-leading-icon.mdc-text-field--with-trailing-icon.mdc-text-field--filled .mdc-floating-label--float-above {
+        max-width: calc(100% / 0.75 - 96px / 0.75)
+    }
+
+    .mdc-text-field-helper-line {
+        display: flex;
+        justify-content: space-between;
+        box-sizing: border-box
+    }
+
+    .mdc-text-field + .mdc-text-field-helper-line {
+        padding-right: 16px;
+        padding-left: 16px
+    }
+
+    .mdc-form-field > .mdc-text-field + label {
+        align-self: flex-start
+    }
+
+    .mdc-text-field--focused .mdc-notched-outline__leading, .mdc-text-field--focused .mdc-notched-outline__notch, .mdc-text-field--focused .mdc-notched-outline__trailing {
+        border-width: 2px
+    }
+
+    .mdc-text-field--focused + .mdc-text-field-helper-line .mdc-text-field-helper-text:not(.mdc-text-field-helper-text--validation-msg) {
+        opacity: 1
+    }
+
+    .mdc-text-field--focused.mdc-text-field--outlined .mdc-notched-outline--notched .mdc-notched-outline__notch {
+        padding-top: 2px
+    }
+
+    .mdc-text-field--focused.mdc-text-field--outlined.mdc-text-field--textarea .mdc-notched-outline--notched .mdc-notched-outline__notch {
+        padding-top: 0
+    }
+
+    .mdc-text-field--invalid + .mdc-text-field-helper-line .mdc-text-field-helper-text--validation-msg {
+        opacity: 1
+    }
+
+    .mdc-text-field--disabled {
+        pointer-events: none
+    }
+
+    @media screen and (forced-colors: active) {
+        .mdc-text-field--disabled .mdc-text-field__input {
+            background-color: Window
+        }
+
+        .mdc-text-field--disabled .mdc-floating-label {
+            z-index: 1
+        }
+    }
+
+    .mdc-text-field--disabled .mdc-floating-label {
+        cursor: default
+    }
+
+    .mdc-text-field--disabled.mdc-text-field--filled .mdc-text-field__ripple {
+        display: none
+    }
+
+    .mdc-text-field--disabled .mdc-text-field__input {
+        pointer-events: auto
+    }
+
+    .mdc-text-field--end-aligned .mdc-text-field__input {
+        text-align: right
+    }
+
+    [dir=rtl] .mdc-text-field--end-aligned .mdc-text-field__input, .mdc-text-field--end-aligned .mdc-text-field__input[dir=rtl] {
+        text-align: left
+    }
+
+    [dir=rtl] .mdc-text-field--ltr-text .mdc-text-field__input, [dir=rtl] .mdc-text-field--ltr-text .mdc-text-field__affix, .mdc-text-field--ltr-text[dir=rtl] .mdc-text-field__input, .mdc-text-field--ltr-text[dir=rtl] .mdc-text-field__affix {
+        direction: ltr
+    }
+
+    [dir=rtl] .mdc-text-field--ltr-text .mdc-text-field__affix--prefix, .mdc-text-field--ltr-text[dir=rtl] .mdc-text-field__affix--prefix {
+        padding-left: 0;
+        padding-right: 2px
+    }
+
+    [dir=rtl] .mdc-text-field--ltr-text .mdc-text-field__affix--suffix, .mdc-text-field--ltr-text[dir=rtl] .mdc-text-field__affix--suffix {
+        padding-left: 12px;
+        padding-right: 0
+    }
+
+    [dir=rtl] .mdc-text-field--ltr-text .mdc-text-field__icon--leading, .mdc-text-field--ltr-text[dir=rtl] .mdc-text-field__icon--leading {
+        order: 1
+    }
+
+    [dir=rtl] .mdc-text-field--ltr-text .mdc-text-field__affix--suffix, .mdc-text-field--ltr-text[dir=rtl] .mdc-text-field__affix--suffix {
+        order: 2
+    }
+
+    [dir=rtl] .mdc-text-field--ltr-text .mdc-text-field__input, .mdc-text-field--ltr-text[dir=rtl] .mdc-text-field__input {
+        order: 3
+    }
+
+    [dir=rtl] .mdc-text-field--ltr-text .mdc-text-field__affix--prefix, .mdc-text-field--ltr-text[dir=rtl] .mdc-text-field__affix--prefix {
+        order: 4
+    }
+
+    [dir=rtl] .mdc-text-field--ltr-text .mdc-text-field__icon--trailing, .mdc-text-field--ltr-text[dir=rtl] .mdc-text-field__icon--trailing {
+        order: 5
+    }
+
+    [dir=rtl] .mdc-text-field--ltr-text.mdc-text-field--end-aligned .mdc-text-field__input, .mdc-text-field--ltr-text.mdc-text-field--end-aligned[dir=rtl] .mdc-text-field__input {
+        text-align: right
+    }
+
+    [dir=rtl] .mdc-text-field--ltr-text.mdc-text-field--end-aligned .mdc-text-field__affix--prefix, .mdc-text-field--ltr-text.mdc-text-field--end-aligned[dir=rtl] .mdc-text-field__affix--prefix {
+        padding-right: 12px
+    }
+
+    [dir=rtl] .mdc-text-field--ltr-text.mdc-text-field--end-aligned .mdc-text-field__affix--suffix, .mdc-text-field--ltr-text.mdc-text-field--end-aligned[dir=rtl] .mdc-text-field__affix--suffix {
+        padding-left: 2px
+    }
+
+    .mdc-floating-label {
+        position: absolute;
+        left: 0;
+        -webkit-transform-origin: left top;
+        transform-origin: left top;
+        line-height: 1.15rem;
+        text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: text;
+        overflow: hidden;
+        will-change: transform
+    }
+
+    [dir=rtl] .mdc-floating-label, .mdc-floating-label[dir=rtl] {
+        right: 0;
+        left: auto;
+        -webkit-transform-origin: right top;
+        transform-origin: right top;
+        text-align: right
+    }
+
+    .mdc-floating-label--float-above {
+        cursor: auto
+    }
+
+    .mdc-floating-label--required:not(.mdc-floating-label--hide-required-marker)::after {
+        margin-left: 1px;
+        margin-right: 0px;
+        content: "*"
+    }
+
+    [dir=rtl] .mdc-floating-label--required:not(.mdc-floating-label--hide-required-marker)::after, .mdc-floating-label--required:not(.mdc-floating-label--hide-required-marker)[dir=rtl]::after {
+        margin-left: 0;
+        margin-right: 1px
+    }
+
+    .mdc-notched-outline {
+        display: flex;
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        text-align: left;
+        pointer-events: none
+    }
+
+    [dir=rtl] .mdc-notched-outline, .mdc-notched-outline[dir=rtl] {
+        text-align: right
+    }
+
+    .mdc-notched-outline__leading, .mdc-notched-outline__notch, .mdc-notched-outline__trailing {
+        box-sizing: border-box;
+        height: 100%;
+        pointer-events: none
+    }
+
+    .mdc-notched-outline__trailing {
+        flex-grow: 1
+    }
+
+    .mdc-notched-outline__notch {
+        flex: 0 0 auto;
+        width: auto
+    }
+
+    .mdc-notched-outline .mdc-floating-label {
+        display: inline-block;
+        position: relative;
+        max-width: 100%
+    }
+
+    .mdc-notched-outline .mdc-floating-label--float-above {
+        text-overflow: clip
+    }
+
+    .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+        max-width: 133.3333333333%
+    }
+
+    .mdc-notched-outline--notched .mdc-notched-outline__notch {
+        padding-left: 0;
+        padding-right: 8px;
+        border-top: none
+    }
+
+    [dir=rtl] .mdc-notched-outline--notched .mdc-notched-outline__notch, .mdc-notched-outline--notched .mdc-notched-outline__notch[dir=rtl] {
+        padding-left: 8px;
+        padding-right: 0
+    }
+
+    .mdc-notched-outline--no-label .mdc-notched-outline__notch {
+        display: none
+    }
+
+    .mdc-line-ripple::before, .mdc-line-ripple::after {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        border-bottom-style: solid;
+        content: ""
+    }
+
+    .mdc-line-ripple::before {
+        z-index: 1
+    }
+
+    .mdc-line-ripple::after {
+        transform: scaleX(0);
+        opacity: 0;
+        z-index: 2
+    }
+
+    .mdc-line-ripple--active::after {
+        transform: scaleX(1);
+        opacity: 1
+    }
+
+    .mdc-line-ripple--deactivating::after {
+        opacity: 0
+    }
+
+    .mdc-floating-label--float-above {
+        transform: translateY(-106%) scale(0.75)
+    }
+
+    .mdc-notched-outline__leading, .mdc-notched-outline__notch, .mdc-notched-outline__trailing {
+        border-top: 1px solid;
+        border-bottom: 1px solid
+    }
+
+    .mdc-notched-outline__leading {
+        border-left: 1px solid;
+        border-right: none;
+        width: 12px
+    }
+
+    [dir=rtl] .mdc-notched-outline__leading, .mdc-notched-outline__leading[dir=rtl] {
+        border-left: none;
+        border-right: 1px solid
+    }
+
+    .mdc-notched-outline__trailing {
+        border-left: none;
+        border-right: 1px solid
+    }
+
+    [dir=rtl] .mdc-notched-outline__trailing, .mdc-notched-outline__trailing[dir=rtl] {
+        border-left: 1px solid;
+        border-right: none
+    }
+
+    .mdc-notched-outline__notch {
+        max-width: calc(100% - 12px * 2)
+    }
+
+    .mdc-line-ripple::before {
+        border-bottom-width: 1px
+    }
+
+    .mdc-line-ripple::after {
+        border-bottom-width: 2px
+    }
+
+    .mdc-text-field--filled {
+        border-top-left-radius: var(--mdc-filled-text-field-container-shape);
+        border-top-right-radius: var(--mdc-filled-text-field-container-shape);
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0
+    }
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input {
+        caret-color: var(--mdc-filled-text-field-caret-color)
+    }
+
+    .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-text-field__input {
+        caret-color: var(--mdc-filled-text-field-error-caret-color)
+    }
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input {
+        color: var(--mdc-filled-text-field-input-text-color)
+    }
+
+    .mdc-text-field--filled.mdc-text-field--disabled .mdc-text-field__input {
+        color: var(--mdc-filled-text-field-disabled-input-text-color)
+    }
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-floating-label, .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-floating-label--float-above {
+        color: var(--mdc-filled-text-field-label-text-color)
+    }
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label, .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label--float-above {
+        color: var(--mdc-filled-text-field-focus-label-text-color)
+    }
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-floating-label, .mdc-text-field--filled:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-floating-label--float-above {
+        color: var(--mdc-filled-text-field-hover-label-text-color)
+    }
+
+    .mdc-text-field--filled.mdc-text-field--disabled .mdc-floating-label, .mdc-text-field--filled.mdc-text-field--disabled .mdc-floating-label--float-above {
+        color: var(--mdc-filled-text-field-disabled-label-text-color)
+    }
+
+    .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-floating-label, .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-floating-label--float-above {
+        color: var(--mdc-filled-text-field-error-label-text-color)
+    }
+
+    .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label, .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label--float-above {
+        color: var(--mdc-filled-text-field-error-focus-label-text-color)
+    }
+
+    .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-floating-label, .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-floating-label--float-above {
+        color: var(--mdc-filled-text-field-error-hover-label-text-color)
+    }
+
+    .mdc-text-field--filled .mdc-floating-label {
+        font-family: var(--mdc-filled-text-field-label-text-font);
+        font-size: var(--mdc-filled-text-field-label-text-size);
+        font-weight: var(--mdc-filled-text-field-label-text-weight);
+        letter-spacing: var(--mdc-filled-text-field-label-text-tracking)
+    }
+
+    @media all {
+        .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input::placeholder {
+            color: var(--mdc-filled-text-field-input-text-placeholder-color)
+        }
+    }
+
+    @media all {
+        .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input:-ms-input-placeholder {
+            color: var(--mdc-filled-text-field-input-text-placeholder-color)
+        }
+    }
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+        background-color: var(--mdc-filled-text-field-container-color)
+    }
+
+    .mdc-text-field--filled.mdc-text-field--disabled {
+        background-color: var(--mdc-filled-text-field-disabled-container-color)
+    }
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::before {
+        border-bottom-color: var(--mdc-filled-text-field-active-indicator-color)
+    }
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-line-ripple::before {
+        border-bottom-color: var(--mdc-filled-text-field-hover-active-indicator-color)
+    }
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::after {
+        border-bottom-color: var(--mdc-filled-text-field-focus-active-indicator-color)
+    }
+
+    .mdc-text-field--filled.mdc-text-field--disabled .mdc-line-ripple::before {
+        border-bottom-color: var(--mdc-filled-text-field-disabled-active-indicator-color)
+    }
+
+    .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-line-ripple::before {
+        border-bottom-color: var(--mdc-filled-text-field-error-active-indicator-color)
+    }
+
+    .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-line-ripple::before {
+        border-bottom-color: var(--mdc-filled-text-field-error-hover-active-indicator-color)
+    }
+
+    .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-line-ripple::after {
+        border-bottom-color: var(--mdc-filled-text-field-error-focus-active-indicator-color)
+    }
+
+    .mdc-text-field--filled .mdc-line-ripple::before {
+        border-bottom-width: var(--mdc-filled-text-field-active-indicator-height)
+    }
+
+    .mdc-text-field--filled .mdc-line-ripple::after {
+        border-bottom-width: var(--mdc-filled-text-field-focus-active-indicator-height)
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input {
+        caret-color: var(--mdc-outlined-text-field-caret-color)
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-text-field__input {
+        caret-color: var(--mdc-outlined-text-field-error-caret-color)
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input {
+        color: var(--mdc-outlined-text-field-input-text-color)
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--disabled .mdc-text-field__input {
+        color: var(--mdc-outlined-text-field-disabled-input-text-color)
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-floating-label, .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-floating-label--float-above {
+        color: var(--mdc-outlined-text-field-label-text-color)
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label, .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label--float-above {
+        color: var(--mdc-outlined-text-field-focus-label-text-color)
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-floating-label, .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-floating-label--float-above {
+        color: var(--mdc-outlined-text-field-hover-label-text-color)
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--disabled .mdc-floating-label, .mdc-text-field--outlined.mdc-text-field--disabled .mdc-floating-label--float-above {
+        color: var(--mdc-outlined-text-field-disabled-label-text-color)
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-floating-label, .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-floating-label--float-above {
+        color: var(--mdc-outlined-text-field-error-label-text-color)
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label, .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label--float-above {
+        color: var(--mdc-outlined-text-field-error-focus-label-text-color)
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-floating-label, .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-floating-label--float-above {
+        color: var(--mdc-outlined-text-field-error-hover-label-text-color)
+    }
+
+    .mdc-text-field--outlined .mdc-floating-label {
+        font-family: var(--mdc-outlined-text-field-label-text-font);
+        font-size: var(--mdc-outlined-text-field-label-text-size);
+        font-weight: var(--mdc-outlined-text-field-label-text-weight);
+        letter-spacing: var(--mdc-outlined-text-field-label-text-tracking)
+    }
+
+    @media all {
+        .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input::placeholder {
+            color: var(--mdc-outlined-text-field-input-text-placeholder-color)
+        }
+    }
+
+    @media all {
+        .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input:-ms-input-placeholder {
+            color: var(--mdc-outlined-text-field-input-text-placeholder-color)
+        }
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--textarea.mdc-text-field--outlined .mdc-floating-label--float-above {
+        font-size: calc(.75 * var(--mdc-outlined-text-field-label-text-size))
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--textarea.mdc-text-field--outlined.mdc-notched-outline--upgraded .mdc-floating-label--float-above, .mdc-text-field--outlined.mdc-text-field--textarea.mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+        font-size: var(--mdc-outlined-text-field-label-text-size)
+    }
+
+    .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading {
+        border-top-left-radius: var(--mdc-outlined-text-field-container-shape);
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: var(--mdc-outlined-text-field-container-shape)
+    }
+
+    [dir=rtl] .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading, .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading[dir=rtl] {
+        border-top-left-radius: 0;
+        border-top-right-radius: var(--mdc-outlined-text-field-container-shape);
+        border-bottom-right-radius: var(--mdc-outlined-text-field-container-shape);
+        border-bottom-left-radius: 0
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading {
+            width: max(12px, var(--mdc-outlined-text-field-container-shape))
+        }
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__notch {
+            max-width: calc(100% - max(12px, var(--mdc-outlined-text-field-container-shape)) * 2)
+        }
+    }
+
+    .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing {
+        border-top-left-radius: 0;
+        border-top-right-radius: var(--mdc-outlined-text-field-container-shape);
+        border-bottom-right-radius: var(--mdc-outlined-text-field-container-shape);
+        border-bottom-left-radius: 0
+    }
+
+    [dir=rtl] .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing, .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing[dir=rtl] {
+        border-top-left-radius: var(--mdc-outlined-text-field-container-shape);
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: var(--mdc-outlined-text-field-container-shape)
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined {
+            padding-left: max(16px, calc(var(--mdc-outlined-text-field-container-shape) + 4px))
+        }
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined {
+            padding-right: max(16px, var(--mdc-outlined-text-field-container-shape))
+        }
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined + .mdc-text-field-helper-line {
+            padding-left: max(16px, calc(var(--mdc-outlined-text-field-container-shape) + 4px))
+        }
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined + .mdc-text-field-helper-line {
+            padding-right: max(16px, var(--mdc-outlined-text-field-container-shape))
+        }
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--with-leading-icon {
+        padding-left: 0
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined.mdc-text-field--with-leading-icon {
+            padding-right: max(16px, var(--mdc-outlined-text-field-container-shape))
+        }
+    }
+
+    [dir=rtl] .mdc-text-field--outlined.mdc-text-field--with-leading-icon, .mdc-text-field--outlined.mdc-text-field--with-leading-icon[dir=rtl] {
+        padding-right: 0
+    }
+
+    @supports (top: max(0%)) {
+        [dir=rtl] .mdc-text-field--outlined.mdc-text-field--with-leading-icon, .mdc-text-field--outlined.mdc-text-field--with-leading-icon[dir=rtl] {
+            padding-left: max(16px, var(--mdc-outlined-text-field-container-shape))
+        }
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--with-trailing-icon {
+        padding-right: 0
+    }
+
+    @supports (top: max(0%)) {
+        .mdc-text-field--outlined.mdc-text-field--with-trailing-icon {
+            padding-left: max(16px, calc(var(--mdc-outlined-text-field-container-shape) + 4px))
+        }
+    }
+
+    [dir=rtl] .mdc-text-field--outlined.mdc-text-field--with-trailing-icon, .mdc-text-field--outlined.mdc-text-field--with-trailing-icon[dir=rtl] {
+        padding-left: 0
+    }
+
+    @supports (top: max(0%)) {
+        [dir=rtl] .mdc-text-field--outlined.mdc-text-field--with-trailing-icon, .mdc-text-field--outlined.mdc-text-field--with-trailing-icon[dir=rtl] {
+            padding-right: max(16px, calc(var(--mdc-outlined-text-field-container-shape) + 4px))
+        }
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--with-leading-icon.mdc-text-field--with-trailing-icon {
+        padding-left: 0;
+        padding-right: 0
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading, .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch, .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+        border-color: var(--mdc-outlined-text-field-outline-color)
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__leading, .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__notch, .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__trailing {
+        border-color: var(--mdc-outlined-text-field-hover-outline-color)
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__leading, .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__notch, .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__trailing {
+        border-color: var(--mdc-outlined-text-field-focus-outline-color)
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--disabled .mdc-notched-outline__leading, .mdc-text-field--outlined.mdc-text-field--disabled .mdc-notched-outline__notch, .mdc-text-field--outlined.mdc-text-field--disabled .mdc-notched-outline__trailing {
+        border-color: var(--mdc-outlined-text-field-disabled-outline-color)
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-notched-outline__leading, .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-notched-outline__notch, .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+        border-color: var(--mdc-outlined-text-field-error-outline-color)
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__leading, .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__notch, .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__trailing {
+        border-color: var(--mdc-outlined-text-field-error-hover-outline-color)
+    }
+
+    .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__leading, .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__notch, .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__trailing {
+        border-color: var(--mdc-outlined-text-field-error-focus-outline-color)
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline .mdc-notched-outline__leading, .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline .mdc-notched-outline__notch, .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline .mdc-notched-outline__trailing {
+        border-width: var(--mdc-outlined-text-field-outline-width)
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__leading, .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__notch, .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__trailing {
+        border-width: var(--mdc-outlined-text-field-focus-outline-width)
+    }
+
+    .mat-mdc-form-field-textarea-control {
+        vertical-align: middle;
+        resize: vertical;
+        box-sizing: border-box;
+        height: auto;
+        margin: 0;
+        padding: 0;
+        border: none;
+        overflow: auto
+    }
+
+    .mat-mdc-form-field-input-control.mat-mdc-form-field-input-control {
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        font: inherit;
+        letter-spacing: inherit;
+        text-decoration: inherit;
+        text-transform: inherit;
+        border: none
+    }
+
+    .mat-mdc-form-field .mat-mdc-floating-label.mdc-floating-label {
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        line-height: normal;
+        pointer-events: all;
+        will-change: auto
+    }
+
+    .mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-floating-label.mdc-floating-label {
+        cursor: inherit
+    }
+
+    .mdc-text-field--no-label:not(.mdc-text-field--textarea) .mat-mdc-form-field-input-control.mdc-text-field__input, .mat-mdc-text-field-wrapper .mat-mdc-form-field-input-control {
+        height: auto
+    }
+
+    .mat-mdc-text-field-wrapper .mat-mdc-form-field-input-control.mdc-text-field__input[type=color] {
+        height: 23px
+    }
+
+    .mat-mdc-text-field-wrapper {
+        height: auto;
+        flex: auto;
+        will-change: auto
+    }
+
+    .mat-mdc-form-field-has-icon-prefix .mat-mdc-text-field-wrapper {
+        padding-left: 0;
+        --mat-mdc-form-field-label-offset-x: -16px
+    }
+
+    .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
+        padding-right: 0
+    }
+
+    [dir=rtl] .mat-mdc-text-field-wrapper {
+        padding-left: 16px;
+        padding-right: 16px
+    }
+
+    [dir=rtl] .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
+        padding-left: 0
+    }
+
+    [dir=rtl] .mat-mdc-form-field-has-icon-prefix .mat-mdc-text-field-wrapper {
+        padding-right: 0
+    }
+
+    .mat-form-field-disabled .mdc-text-field__input::placeholder {
+        color: var(--mat-form-field-disabled-input-text-placeholder-color)
+    }
+
+    .mat-form-field-disabled .mdc-text-field__input::-moz-placeholder {
+        color: var(--mat-form-field-disabled-input-text-placeholder-color)
+    }
+
+    .mat-form-field-disabled .mdc-text-field__input::-webkit-input-placeholder {
+        color: var(--mat-form-field-disabled-input-text-placeholder-color)
+    }
+
+    .mat-form-field-disabled .mdc-text-field__input:-ms-input-placeholder {
+        color: var(--mat-form-field-disabled-input-text-placeholder-color)
+    }
+
+    .mat-mdc-form-field-label-always-float .mdc-text-field__input::placeholder {
+        transition-delay: 40ms;
+        transition-duration: 110ms;
+        opacity: 1
+    }
+
+    .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix .mat-mdc-floating-label {
+        left: auto;
+        right: auto
+    }
+
+    .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mdc-text-field__input {
+        display: inline-block
+    }
+
+    .mat-mdc-form-field .mat-mdc-text-field-wrapper.mdc-text-field .mdc-notched-outline__notch {
+        padding-top: 0
+    }
+
+    .mat-mdc-text-field-wrapper::before {
+        content: none
+    }
+
+    .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
+        border-left: 1px solid rgba(0, 0, 0, 0)
+    }
+
+    [dir=rtl] .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
+        border-left: none;
+        border-right: 1px solid rgba(0, 0, 0, 0)
+    }
+
+    .mat-mdc-form-field-infix {
+        min-height: var(--mat-form-field-container-height);
+        padding-top: var(--mat-form-field-filled-with-label-container-padding-top);
+        padding-bottom: var(--mat-form-field-filled-with-label-container-padding-bottom)
+    }
+
+    .mdc-text-field--outlined .mat-mdc-form-field-infix, .mdc-text-field--no-label .mat-mdc-form-field-infix {
+        padding-top: var(--mat-form-field-container-vertical-padding);
+        padding-bottom: var(--mat-form-field-container-vertical-padding)
+    }
+
+    .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+        top: calc(var(--mat-form-field-container-height) / 2)
+    }
+
+    .mdc-text-field--filled .mat-mdc-floating-label {
+        display: var(--mat-form-field-filled-label-display, block)
+    }
+
+    .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+        --mat-mdc-form-field-label-transform: translateY(calc(calc(6.75px + var(--mat-form-field-container-height) / 2) * -1)) scale(var(--mat-mdc-form-field-floating-label-scale, 0.75));
+        transform: var(--mat-mdc-form-field-label-transform)
+    }
+
+    .mat-mdc-form-field-subscript-wrapper {
+        box-sizing: border-box;
+        width: 100%;
+        position: relative
+    }
+
+    .mat-mdc-form-field-hint-wrapper, .mat-mdc-form-field-error-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 0 16px
+    }
+
+    .mat-mdc-form-field-subscript-dynamic-size .mat-mdc-form-field-hint-wrapper, .mat-mdc-form-field-subscript-dynamic-size .mat-mdc-form-field-error-wrapper {
+        position: static
+    }
+
+    .mat-mdc-form-field-bottom-align::before {
+        content: "";
+        display: inline-block;
+        height: 16px
+    }
+
+    .mat-mdc-form-field-bottom-align.mat-mdc-form-field-subscript-dynamic-size::before {
+        content: unset
+    }
+
+    .mat-mdc-form-field-hint-end {
+        order: 1
+    }
+
+    .mat-mdc-form-field-hint-wrapper {
+        display: flex
+    }
+
+    .mat-mdc-form-field-hint-spacer {
+        flex: 1 0 1em
+    }
+
+    .mat-mdc-form-field-error {
+        display: block;
+        color: var(--mat-form-field-error-text-color)
+    }
+
+    .mat-mdc-form-field-subscript-wrapper, .mat-mdc-form-field-bottom-align::before {
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        font-family: var(--mat-form-field-subscript-text-font);
+        line-height: var(--mat-form-field-subscript-text-line-height);
+        font-size: var(--mat-form-field-subscript-text-size);
+        letter-spacing: var(--mat-form-field-subscript-text-tracking);
+        font-weight: var(--mat-form-field-subscript-text-weight)
+    }
+
+    .mat-mdc-form-field-focus-overlay {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+        background-color: var(--mat-form-field-state-layer-color)
+    }
+
+    .mat-mdc-text-field-wrapper:hover .mat-mdc-form-field-focus-overlay {
+        opacity: var(--mat-form-field-hover-state-layer-opacity)
+    }
+
+    .mat-mdc-form-field.mat-focused .mat-mdc-form-field-focus-overlay {
+        opacity: var(--mat-form-field-focus-state-layer-opacity)
+    }
+
+    select.mat-mdc-form-field-input-control {
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        background-color: rgba(0, 0, 0, 0);
+        display: inline-flex;
+        box-sizing: border-box
+    }
+
+    select.mat-mdc-form-field-input-control:not(:disabled) {
+        cursor: pointer
+    }
+
+    select.mat-mdc-form-field-input-control:not(.mat-mdc-native-select-inline) option {
+        color: var(--mat-form-field-select-option-text-color)
+    }
+
+    select.mat-mdc-form-field-input-control:not(.mat-mdc-native-select-inline) option:disabled {
+        color: var(--mat-form-field-select-disabled-option-text-color)
+    }
+
+    .mat-mdc-form-field-type-mat-native-select .mat-mdc-form-field-infix::after {
+        content: "";
+        width: 0;
+        height: 0;
+        border-left: 5px solid rgba(0, 0, 0, 0);
+        border-right: 5px solid rgba(0, 0, 0, 0);
+        border-top: 5px solid;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        margin-top: -2.5px;
+        pointer-events: none;
+        color: var(--mat-form-field-enabled-select-arrow-color)
+    }
+
+    [dir=rtl] .mat-mdc-form-field-type-mat-native-select .mat-mdc-form-field-infix::after {
+        right: auto;
+        left: 0
+    }
+
+    .mat-mdc-form-field-type-mat-native-select.mat-focused .mat-mdc-form-field-infix::after {
+        color: var(--mat-form-field-focus-select-arrow-color)
+    }
+
+    .mat-mdc-form-field-type-mat-native-select.mat-form-field-disabled .mat-mdc-form-field-infix::after {
+        color: var(--mat-form-field-disabled-select-arrow-color)
+    }
+
+    .mat-mdc-form-field-type-mat-native-select .mat-mdc-form-field-input-control {
+        padding-right: 15px
+    }
+
+    [dir=rtl] .mat-mdc-form-field-type-mat-native-select .mat-mdc-form-field-input-control {
+        padding-right: 0;
+        padding-left: 15px
+    }
+
+    .cdk-high-contrast-active .mat-form-field-appearance-fill .mat-mdc-text-field-wrapper {
+        outline: solid 1px
+    }
+
+    .cdk-high-contrast-active .mat-form-field-appearance-fill.mat-form-field-disabled .mat-mdc-text-field-wrapper {
+        outline-color: GrayText
+    }
+
+    .cdk-high-contrast-active .mat-form-field-appearance-fill.mat-focused .mat-mdc-text-field-wrapper {
+        outline: dashed 3px
+    }
+
+    .cdk-high-contrast-active .mat-mdc-form-field.mat-focused .mdc-notched-outline {
+        border: dashed 3px
+    }
+
+    .mat-mdc-form-field-input-control[type=date], .mat-mdc-form-field-input-control[type=datetime], .mat-mdc-form-field-input-control[type=datetime-local], .mat-mdc-form-field-input-control[type=month], .mat-mdc-form-field-input-control[type=week], .mat-mdc-form-field-input-control[type=time] {
+        line-height: 1
+    }
+
+    .mat-mdc-form-field-input-control::-webkit-datetime-edit {
+        line-height: 1;
+        padding: 0;
+        margin-bottom: -2px
+    }
+
+    .mat-mdc-form-field {
+        --mat-mdc-form-field-floating-label-scale: 0.75;
+        display: inline-flex;
+        flex-direction: column;
+        min-width: 0;
+        text-align: left;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        font-family: var(--mat-form-field-container-text-font);
+        line-height: var(--mat-form-field-container-text-line-height);
+        font-size: var(--mat-form-field-container-text-size);
+        letter-spacing: var(--mat-form-field-container-text-tracking);
+        font-weight: var(--mat-form-field-container-text-weight)
+    }
+
+    [dir=rtl] .mat-mdc-form-field {
+        text-align: right
+    }
+
+    .mat-mdc-form-field .mdc-text-field--outlined .mdc-floating-label--float-above {
+        font-size: calc(var(--mat-form-field-outlined-label-text-populated-size) * var(--mat-mdc-form-field-floating-label-scale))
+    }
+
+    .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+        font-size: var(--mat-form-field-outlined-label-text-populated-size)
+    }
+
+    .mat-mdc-form-field-flex {
+        display: inline-flex;
+        align-items: baseline;
+        box-sizing: border-box;
+        width: 100%
+    }
+
+    .mat-mdc-text-field-wrapper {
+        width: 100%;
+        z-index: 0
+    }
+
+    .mat-mdc-form-field-icon-prefix, .mat-mdc-form-field-icon-suffix {
+        align-self: center;
+        line-height: 0;
+        pointer-events: auto;
+        position: relative;
+        z-index: 1
+    }
+
+    .mat-mdc-form-field-icon-prefix > .mat-icon, .mat-mdc-form-field-icon-suffix > .mat-icon {
+        padding: 0 12px;
+        box-sizing: content-box
+    }
+
+    .mat-mdc-form-field-icon-prefix {
+        color: var(--mat-form-field-leading-icon-color)
+    }
+
+    .mat-form-field-disabled .mat-mdc-form-field-icon-prefix {
+        color: var(--mat-form-field-disabled-leading-icon-color)
+    }
+
+    .mat-mdc-form-field-icon-suffix {
+        color: var(--mat-form-field-trailing-icon-color)
+    }
+
+    .mat-form-field-disabled .mat-mdc-form-field-icon-suffix {
+        color: var(--mat-form-field-disabled-trailing-icon-color)
+    }
+
+    .mat-form-field-invalid .mat-mdc-form-field-icon-suffix {
+        color: var(--mat-form-field-error-trailing-icon-color)
+    }
+
+    .mat-form-field-invalid:not(.mat-focused):not(.mat-form-field-disabled) .mat-mdc-text-field-wrapper:hover .mat-mdc-form-field-icon-suffix {
+        color: var(--mat-form-field-error-hover-trailing-icon-color)
+    }
+
+    .mat-form-field-invalid.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-icon-suffix {
+        color: var(--mat-form-field-error-focus-trailing-icon-color)
+    }
+
+    .mat-mdc-form-field-icon-prefix, [dir=rtl] .mat-mdc-form-field-icon-suffix {
+        padding: 0 4px 0 0
+    }
+
+    .mat-mdc-form-field-icon-suffix, [dir=rtl] .mat-mdc-form-field-icon-prefix {
+        padding: 0 0 0 4px
+    }
+
+    .mat-mdc-form-field-subscript-wrapper .mat-icon, .mat-mdc-form-field label .mat-icon {
+        width: 1em;
+        height: 1em;
+        font-size: inherit
+    }
+
+    .mat-mdc-form-field-infix {
+        flex: auto;
+        min-width: 0;
+        width: 180px;
+        position: relative;
+        box-sizing: border-box
+    }
+
+    .mat-mdc-form-field .mdc-notched-outline__notch {
+        margin-left: -1px;
+        -webkit-clip-path: inset(-9em -999em -9em 1px);
+        clip-path: inset(-9em -999em -9em 1px)
+    }
+
+    [dir=rtl] .mat-mdc-form-field .mdc-notched-outline__notch {
+        margin-left: 0;
+        margin-right: -1px;
+        -webkit-clip-path: inset(-9em 1px -9em -999em);
+        clip-path: inset(-9em 1px -9em -999em)
+    }
+
+    .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input {
+        transition: opacity 150ms 0ms cubic-bezier(0.4, 0, 0.2, 1)
+    }
+
+    @media all {
+        .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input::placeholder {
+            transition: opacity 67ms 0ms cubic-bezier(0.4, 0, 0.2, 1)
+        }
+    }
+
+    @media all {
+        .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input:-ms-input-placeholder {
+            transition: opacity 67ms 0ms cubic-bezier(0.4, 0, 0.2, 1)
+        }
+    }
+
+    @media all {
+        .mdc-text-field--no-label .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input::placeholder, .mdc-text-field--focused .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input::placeholder {
+            transition-delay: 40ms;
+            transition-duration: 110ms
+        }
+    }
+
+    @media all {
+        .mdc-text-field--no-label .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input:-ms-input-placeholder, .mdc-text-field--focused .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input:-ms-input-placeholder {
+            transition-delay: 40ms;
+            transition-duration: 110ms
+        }
+    }
+
+    .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__affix {
+        transition: opacity 150ms 0ms cubic-bezier(0.4, 0, 0.2, 1)
+    }
+
+    .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field--filled.mdc-ripple-upgraded--background-focused .mdc-text-field__ripple::before, .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field--filled:not(.mdc-ripple-upgraded):focus .mdc-text-field__ripple::before {
+        transition-duration: 75ms
+    }
+
+    .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field--outlined .mdc-floating-label--shake {
+        animation: mdc-floating-label-shake-float-above-text-field-outlined 250ms 1
+    }
+
+    @keyframes mdc-floating-label-shake-float-above-text-field-outlined {
+        0% {
+            transform: translateX(calc(0% - 0%)) translateY(calc(0% - 34.75px)) scale(0.75)
+        }
+        33% {
+            animation-timing-function: cubic-bezier(0.5, 0, 0.701732, 0.495819);
+            transform: translateX(calc(4% - 0%)) translateY(calc(0% - 34.75px)) scale(0.75)
+        }
+        66% {
+            animation-timing-function: cubic-bezier(0.302435, 0.381352, 0.55, 0.956352);
+            transform: translateX(calc(-4% - 0%)) translateY(calc(0% - 34.75px)) scale(0.75)
+        }
+        100% {
+            transform: translateX(calc(0% - 0%)) translateY(calc(0% - 34.75px)) scale(0.75)
+        }
+    }
+
+    .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field--textarea {
+        transition: none
+    }
+
+    .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field--textarea.mdc-text-field--filled .mdc-floating-label--shake {
+        animation: mdc-floating-label-shake-float-above-textarea-filled 250ms 1
+    }
+
+    @keyframes mdc-floating-label-shake-float-above-textarea-filled {
+        0% {
+            transform: translateX(calc(0% - 0%)) translateY(calc(0% - 10.25px)) scale(0.75)
+        }
+        33% {
+            animation-timing-function: cubic-bezier(0.5, 0, 0.701732, 0.495819);
+            transform: translateX(calc(4% - 0%)) translateY(calc(0% - 10.25px)) scale(0.75)
+        }
+        66% {
+            animation-timing-function: cubic-bezier(0.302435, 0.381352, 0.55, 0.956352);
+            transform: translateX(calc(-4% - 0%)) translateY(calc(0% - 10.25px)) scale(0.75)
+        }
+        100% {
+            transform: translateX(calc(0% - 0%)) translateY(calc(0% - 10.25px)) scale(0.75)
+        }
+    }
+
+    .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field--textarea.mdc-text-field--outlined .mdc-floating-label--shake {
+        animation: mdc-floating-label-shake-float-above-textarea-outlined 250ms 1
+    }
+
+    @keyframes mdc-floating-label-shake-float-above-textarea-outlined {
+        0% {
+            transform: translateX(calc(0% - 0%)) translateY(calc(0% - 24.75px)) scale(0.75)
+        }
+        33% {
+            animation-timing-function: cubic-bezier(0.5, 0, 0.701732, 0.495819);
+            transform: translateX(calc(4% - 0%)) translateY(calc(0% - 24.75px)) scale(0.75)
+        }
+        66% {
+            animation-timing-function: cubic-bezier(0.302435, 0.381352, 0.55, 0.956352);
+            transform: translateX(calc(-4% - 0%)) translateY(calc(0% - 24.75px)) scale(0.75)
+        }
+        100% {
+            transform: translateX(calc(0% - 0%)) translateY(calc(0% - 24.75px)) scale(0.75)
+        }
+    }
+
+    .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field--with-leading-icon.mdc-text-field--outlined .mdc-floating-label--shake {
+        animation: mdc-floating-label-shake-float-above-text-field-outlined-leading-icon 250ms 1
+    }
+
+    @keyframes mdc-floating-label-shake-float-above-text-field-outlined-leading-icon {
+        0% {
+            transform: translateX(calc(0% - 32px)) translateY(calc(0% - 34.75px)) scale(0.75)
+        }
+        33% {
+            animation-timing-function: cubic-bezier(0.5, 0, 0.701732, 0.495819);
+            transform: translateX(calc(4% - 32px)) translateY(calc(0% - 34.75px)) scale(0.75)
+        }
+        66% {
+            animation-timing-function: cubic-bezier(0.302435, 0.381352, 0.55, 0.956352);
+            transform: translateX(calc(-4% - 32px)) translateY(calc(0% - 34.75px)) scale(0.75)
+        }
+        100% {
+            transform: translateX(calc(0% - 32px)) translateY(calc(0% - 34.75px)) scale(0.75)
+        }
+    }
+
+    [dir=rtl] .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field--with-leading-icon.mdc-text-field--outlined .mdc-floating-label--shake, .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field--with-leading-icon.mdc-text-field--outlined[dir=rtl] .mdc-floating-label--shake {
+        animation: mdc-floating-label-shake-float-above-text-field-outlined-leading-icon 250ms 1
+    }
+
+    @keyframes mdc-floating-label-shake-float-above-text-field-outlined-leading-icon-rtl {
+        0% {
+            transform: translateX(calc(0% - -32px)) translateY(calc(0% - 34.75px)) scale(0.75)
+        }
+        33% {
+            animation-timing-function: cubic-bezier(0.5, 0, 0.701732, 0.495819);
+            transform: translateX(calc(4% - -32px)) translateY(calc(0% - 34.75px)) scale(0.75)
+        }
+        66% {
+            animation-timing-function: cubic-bezier(0.302435, 0.381352, 0.55, 0.956352);
+            transform: translateX(calc(-4% - -32px)) translateY(calc(0% - 34.75px)) scale(0.75)
+        }
+        100% {
+            transform: translateX(calc(0% - -32px)) translateY(calc(0% - 34.75px)) scale(0.75)
+        }
+    }
+
+    .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-floating-label {
+        transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1)
+    }
+
+    .mdc-floating-label--shake {
+        animation: mdc-floating-label-shake-float-above-standard 250ms 1
+    }
+
+    @keyframes mdc-floating-label-shake-float-above-standard {
+        0% {
+            transform: translateX(calc(0% - 0%)) translateY(calc(0% - 106%)) scale(0.75)
+        }
+        33% {
+            animation-timing-function: cubic-bezier(0.5, 0, 0.701732, 0.495819);
+            transform: translateX(calc(4% - 0%)) translateY(calc(0% - 106%)) scale(0.75)
+        }
+        66% {
+            animation-timing-function: cubic-bezier(0.302435, 0.381352, 0.55, 0.956352);
+            transform: translateX(calc(-4% - 0%)) translateY(calc(0% - 106%)) scale(0.75)
+        }
+        100% {
+            transform: translateX(calc(0% - 0%)) translateY(calc(0% - 106%)) scale(0.75)
+        }
+    }
+
+    .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-line-ripple::after {
+        transition: transform 180ms cubic-bezier(0.4, 0, 0.2, 1), opacity 180ms cubic-bezier(0.4, 0, 0.2, 1)
+    }
+
+    .mdc-notched-outline .mdc-floating-label {
+        max-width: calc(100% + 1px)
+    }
+
+    .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+        max-width: calc(133.3333333333% + 1px)
+    }</style>
+    <style>div.mat-mdc-autocomplete-panel {
+        width: 100%;
+        max-height: 256px;
+        visibility: hidden;
+        transform-origin: center top;
+        overflow: auto;
+        padding: 8px 0;
+        box-sizing: border-box;
+        position: static;
+        border-radius: var(--mat-autocomplete-container-shape);
+        box-shadow: var(--mat-autocomplete-container-elevation-shadow);
+        background-color: var(--mat-autocomplete-background-color)
+    }
+
+    .cdk-high-contrast-active div.mat-mdc-autocomplete-panel {
+        outline: solid 1px
+    }
+
+    .cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) div.mat-mdc-autocomplete-panel {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0
+    }
+
+    .mat-mdc-autocomplete-panel-above div.mat-mdc-autocomplete-panel {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        transform-origin: center bottom
+    }
+
+    div.mat-mdc-autocomplete-panel.mat-mdc-autocomplete-visible {
+        visibility: visible
+    }
+
+    div.mat-mdc-autocomplete-panel.mat-mdc-autocomplete-hidden {
+        visibility: hidden;
+        pointer-events: none
+    }
+
+    mat-autocomplete {
+        display: none
+    }</style>
+    <style>.mdc-evolution-chip-set {
+        display: flex
+    }
+
+    .mdc-evolution-chip-set:focus {
+        outline: none
+    }
+
+    .mdc-evolution-chip-set__chips {
+        display: flex;
+        flex-flow: wrap;
+        min-width: 0
+    }
+
+    .mdc-evolution-chip-set--overflow .mdc-evolution-chip-set__chips {
+        flex-flow: nowrap
+    }
+
+    .mdc-evolution-chip-set .mdc-evolution-chip-set__chips {
+        margin-left: -8px;
+        margin-right: 0
+    }
+
+    [dir=rtl] .mdc-evolution-chip-set .mdc-evolution-chip-set__chips, .mdc-evolution-chip-set .mdc-evolution-chip-set__chips[dir=rtl] {
+        margin-left: 0;
+        margin-right: -8px
+    }
+
+    .mdc-evolution-chip-set .mdc-evolution-chip {
+        margin-left: 8px;
+        margin-right: 0
+    }
+
+    [dir=rtl] .mdc-evolution-chip-set .mdc-evolution-chip, .mdc-evolution-chip-set .mdc-evolution-chip[dir=rtl] {
+        margin-left: 0;
+        margin-right: 8px
+    }
+
+    .mdc-evolution-chip-set .mdc-evolution-chip {
+        margin-top: 4px;
+        margin-bottom: 4px
+    }
+
+    .mat-mdc-chip-set .mdc-evolution-chip-set__chips {
+        min-width: 100%
+    }
+
+    .mat-mdc-chip-set-stacked {
+        flex-direction: column;
+        align-items: flex-start
+    }
+
+    .mat-mdc-chip-set-stacked .mat-mdc-chip {
+        width: 100%
+    }
+
+    .mat-mdc-chip-set-stacked .mdc-evolution-chip__graphic {
+        flex-grow: 0
+    }
+
+    .mat-mdc-chip-set-stacked .mdc-evolution-chip__action--primary {
+        flex-basis: 100%;
+        justify-content: start
+    }
+
+    input.mat-mdc-chip-input {
+        flex: 1 0 150px;
+        margin-left: 8px
+    }
+
+    [dir=rtl] input.mat-mdc-chip-input {
+        margin-left: 0;
+        margin-right: 8px
+    }</style>
+    <style>.mat-mdc-option {
+        display: flex;
+        position: relative;
+        align-items: center;
+        justify-content: flex-start;
+        overflow: hidden;
+        padding: 0;
+        padding-left: 16px;
+        padding-right: 16px;
+        -webkit-user-select: none;
+        user-select: none;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        cursor: pointer;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        color: var(--mat-option-label-text-color);
+        font-family: var(--mat-option-label-text-font);
+        line-height: var(--mat-option-label-text-line-height);
+        font-size: var(--mat-option-label-text-size);
+        letter-spacing: var(--mat-option-label-text-tracking);
+        font-weight: var(--mat-option-label-text-weight);
+        min-height: 48px
+    }
+
+    .mat-mdc-option:focus {
+        outline: none
+    }
+
+    [dir=rtl] .mat-mdc-option, .mat-mdc-option[dir=rtl] {
+        padding-left: 16px;
+        padding-right: 16px
+    }
+
+    .mat-mdc-option:hover:not(.mdc-list-item--disabled) {
+        background-color: var(--mat-option-hover-state-layer-color)
+    }
+
+    .mat-mdc-option:focus.mdc-list-item, .mat-mdc-option.mat-mdc-option-active.mdc-list-item {
+        background-color: var(--mat-option-focus-state-layer-color)
+    }
+
+    .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
+        color: var(--mat-option-selected-state-label-text-color)
+    }
+
+    .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(.mat-mdc-option-multiple) {
+        background-color: var(--mat-option-selected-state-layer-color)
+    }
+
+    .mat-mdc-option.mdc-list-item {
+        align-items: center;
+        background: rgba(0, 0, 0, 0)
+    }
+
+    .mat-mdc-option.mdc-list-item--disabled {
+        cursor: default;
+        pointer-events: none
+    }
+
+    .mat-mdc-option.mdc-list-item--disabled .mat-mdc-option-pseudo-checkbox, .mat-mdc-option.mdc-list-item--disabled .mdc-list-item__primary-text, .mat-mdc-option.mdc-list-item--disabled > mat-icon {
+        opacity: .38
+    }
+
+    .mat-mdc-optgroup .mat-mdc-option:not(.mat-mdc-option-multiple) {
+        padding-left: 32px
+    }
+
+    [dir=rtl] .mat-mdc-optgroup .mat-mdc-option:not(.mat-mdc-option-multiple) {
+        padding-left: 16px;
+        padding-right: 32px
+    }
+
+    .mat-mdc-option .mat-icon, .mat-mdc-option .mat-pseudo-checkbox-full {
+        margin-right: 16px;
+        flex-shrink: 0
+    }
+
+    [dir=rtl] .mat-mdc-option .mat-icon, [dir=rtl] .mat-mdc-option .mat-pseudo-checkbox-full {
+        margin-right: 0;
+        margin-left: 16px
+    }
+
+    .mat-mdc-option .mat-pseudo-checkbox-minimal {
+        margin-left: 16px;
+        flex-shrink: 0
+    }
+
+    [dir=rtl] .mat-mdc-option .mat-pseudo-checkbox-minimal {
+        margin-right: 16px;
+        margin-left: 0
+    }
+
+    .mat-mdc-option .mat-mdc-option-ripple {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        position: absolute;
+        pointer-events: none
+    }
+
+    .mat-mdc-option .mdc-list-item__primary-text {
+        white-space: normal;
+        font-size: inherit;
+        font-weight: inherit;
+        letter-spacing: inherit;
+        line-height: inherit;
+        font-family: inherit;
+        text-decoration: inherit;
+        text-transform: inherit;
+        margin-right: auto
+    }
+
+    [dir=rtl] .mat-mdc-option .mdc-list-item__primary-text {
+        margin-right: 0;
+        margin-left: auto
+    }
+
+    .cdk-high-contrast-active .mat-mdc-option.mdc-list-item--selected:not(.mat-mdc-option-multiple)::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 16px;
+        transform: translateY(-50%);
+        width: 10px;
+        height: 0;
+        border-bottom: solid 10px;
+        border-radius: 10px
+    }
+
+    [dir=rtl] .cdk-high-contrast-active .mat-mdc-option.mdc-list-item--selected:not(.mat-mdc-option-multiple)::after {
+        right: auto;
+        left: 16px
+    }
+
+    .mat-mdc-option-multiple {
+        --mdc-list-list-item-selected-container-color: var(--mdc-list-list-item-container-color, transparent)
+    }
+
+    .mat-mdc-option-active .mat-mdc-focus-indicator::before {
+        content: ""
+    }</style>
+</head>
+<body>
+<app-root _nghost-ng-c1933515739="" ng-version="17.3.5">
+    <router-outlet _ngcontent-ng-c1933515739=""></router-outlet>
+    <app-home>
+        <app-frame frametype="card">
+            <div class="frame frame--menu" style="background: url(&quot;/assets/imgs/background_grain.png&quot;);">
+                <div class="frame__main">
+                    <app-header>
+                        <header class="dark-background header header--dark-page header--hero-Image">
+                            <app-image class="hero_image"><img alt=""
+                                                               src="/strapi/uploads/Header_2023_klein_beschnitten_belichted_7cca538a55.jpg"
+                                                               srcset="/strapi/uploads/large_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg 1200w, /strapi/uploads/small_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg 400w, /strapi/uploads/medium_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg 800w, /strapi/uploads/thumbnail_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg 245w, /strapi/uploads/Header_2023_klein_beschnitten_belichted_7cca538a55.jpg"
+                                                               sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, (max-width: 1023px) 1200px">
+                            </app-image>
+                            <div class="home_header">
+                                <div class="header__top-container">
+                                    <div class="header__top">
+                                        <app-breadcrumbs>
+                                            <div class="header__breadcrumbs">
+                                                <button class="button button--big button--lined button--home"
+                                                        title="Zur Startseite">
+                                                    <div class="button--home__logo"><img src="/assets/svgs/logo.svg"
+                                                                                         alt="" class="menu__eye"><h5>
+                                                        Naturblick</h5></div>
+                                                </button><!----></div>
+                                        </app-breadcrumbs>
+                                        <app-global-buttons>
+                                            <div class="global-buttons_container">
+                                                <app-dels class="global-button">
+                                                    <button queryparamshandling="merge"
+                                                            title="Sprache wechseln: Leichte Sprache" tabindex="0"
+                                                            class="button button--lined button--menu button--menu--start">
+                                                        Leichte Sprache
+                                                    </button><!----></app-dels><!---->
+                                                <app-font-size class="global-button">
+                                                    <button class="button button--lined button--menu button--menu--start language-selector"
+                                                            title="Schriftgröße erhöhen"><span
+                                                            class="global-button__activated">A</span><span
+                                                            class="with-zoom">A</span></button><!----></app-font-size>
+                                                <app-language class="global-button">
+                                                    <button queryparamshandling="merge"
+                                                            class="button button--lined button--menu button--menu--start language-selector"
+                                                            tabindex="0" title="Sprache wechseln: Englisch">
+                                                        <mat-icon role="img"
+                                                                  class="mat-icon notranslate mat-icon-no-color"
+                                                                  aria-hidden="true" data-mat-icon-type="svg"
+                                                                  data-mat-icon-name="lang_de">
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                 viewBox="0 0 6.356 6.351" height="100%" width="100%"
+                                                                 fit="" preserveAspectRatio="xMidYMid meet"
+                                                                 focusable="false">
+                                                                <path d="M3.454.001L3.374 0A2.974 2.974 0 00.773 1.527l-.044.082a2.973 2.973 0 00.025 2.775l.036.065-.77 1.618-.01.024a.199.199 0 00.275.24l1.617-.77.054.03A2.977 2.977 0 103.454 0zm-.08.396a2.58 2.58 0 11-1.357 4.77l-.025-.013a.198.198 0 00-.165.003L.62 5.732l.575-1.208a.198.198 0 00-.01-.19A2.576 2.576 0 013.373.397z"
+                                                                      fill-rule="evenodd"></path>
+                                                                <path d="M2.146 3.77a.657.657 0 00.298-.07.671.671 0 00.12-.079.975.975 0 00.106-.103l.032.157c.016.048.049.071.1.071h.24V1.387h-.393v.86a.565.565 0 00-.406-.16.637.637 0 00-.51.243.819.819 0 00-.14.27 1.319 1.319 0 00-.006.692c.029.104.07.191.123.261a.54.54 0 00.436.217zm.133-.31a.33.33 0 01-.138-.029.251.251 0 01-.104-.09.477.477 0 01-.066-.162 1.089 1.089 0 01-.023-.242c0-.094.009-.176.027-.245a.494.494 0 01.077-.172.315.315 0 01.122-.1.429.429 0 01.33 0c.053.021.1.06.145.114v.73a.618.618 0 01-.162.144.4.4 0 01-.208.051zm1.878.31c.058 0 .117-.004.177-.012a.894.894 0 00.349-.127.654.654 0 00.146-.127l-.114-.143a.091.091 0 00-.03-.027.09.09 0 00-.042-.01.148.148 0 00-.075.022 2.853 2.853 0 01-.09.05.768.768 0 01-.121.048.54.54 0 01-.165.023.42.42 0 01-.31-.118c-.08-.078-.124-.201-.136-.368h1.007a.114.114 0 00.044-.007.06.06 0 00.028-.024.118.118 0 00.014-.046.875.875 0 00-.048-.387.62.62 0 00-.37-.375.791.791 0 00-.283-.05.811.811 0 00-.327.064.729.729 0 00-.401.427 1.057 1.057 0 00.008.69c.041.11.098.2.17.274.072.074.156.13.254.167a.87.87 0 00.316.056zm.334-1.025h-.737a.478.478 0 01.124-.275.362.362 0 01.268-.097.37.37 0 01.153.03.3.3 0 01.108.08c.028.034.05.073.063.118.014.045.02.093.02.144z"></path>
+                                                            </svg>
+                                                        </mat-icon>
+                                                    </button><!----></app-language>
+                                                <button queryparamshandling="merge"
+                                                        class="button button--lined button--menu button--menu--start"
+                                                        tabindex="0" title="Menü öffnen">
+                                                    <div><h5>Menü</h5>
+                                                        <mat-icon role="img"
+                                                                  class="mat-icon notranslate mat-icon-no-color"
+                                                                  aria-hidden="true" data-mat-icon-type="svg"
+                                                                  data-mat-icon-name="menu_bars">
+                                                            <svg width="100%" height="100%" viewBox="0 0 24 24"
+                                                                 version="1.1" xmlns="http://www.w3.org/2000/svg"
+                                                                 xmlns:xlink="http://www.w3.org/1999/xlink" fit=""
+                                                                 preserveAspectRatio="xMidYMid meet" focusable="false">
+                                                                <path id="menu_bars" d="
+    M3,3.05663847 L21,3.05663847 C21.5522847,3.05663847 22,3.50435372 22,4.05663847 L22,6.18434379 C22,6.73662854 21.5522847,7.18434379 21,7.18434379 L3,7.18434379 C2.44771525,7.18434379 2,6.73662854 2,6.18434379 L2,4.05663847 C2,3.50435372 2.44771525,3.05663847 3,3.05663847 Z
+    M3,9.93614734 L16.5263332,9.93614734 C17.0786179,9.93614734 17.5263332,10.3838626 17.5263332,10.9361473 L17.5263332,13.0638527 C17.5263332,13.6161374 17.0786179,14.0638527 16.5263332,14.0638527 L3,14.0638527 C2.44771525,14.0638527 2,13.6161374 2,13.0638527 L2,10.9361473 C2,10.3838626 2.44771525,9.93614734 3,9.93614734 Z
+    M3,16.8156562 L21.3849532,16.8156562 C21.5522847,16.8156562 22,17.2633715 22,17.8156562 L22,19.9433615 C22,20.4956463 21.5522847,20.9433615 21,20.9433615 L3,20.9433615 C2.44771525,20.9433615 2,20.4956463 2,19.9433615 L2,17.8156562 C2,17.2633715 2.44771525,16.8156562 3,16.8156562 Z
+    ">
+                                                                </path>
+                                                            </svg>
+                                                        </mat-icon>
+                                                    </div><!----><!----></button><!----></div><!---->
+                                        </app-global-buttons>
+                                    </div>
+                                </div>
+                                <div class="home_header__titles"><h1 class="jumbo" style="white-space: nowrap;">Erlebe
+                                    Natur</h1>
+                                    <p class="big subtitle">Bestimme Tiere und Pflanzen und erkunde deine Stadt.</p>
+                                </div>
+                            </div><!----><!----><!----><!----></header>
+                    </app-header><!---->
+                    <div>
+                        <div class="no-top-padding">
+                            <div class="container container--extra_top_padding dark-background">
+                                <app-species-gallery>
+                                    <div class="species-gallery ng-star-inserted">
+                                        <div class="species-gallery__filter">
+                                            <app-species-name-query class="name-query-filter">
+                                                <div class="species-filter__container">
+                                                    <mat-icon role="img" svgicon="search"
+                                                              class="mat-icon notranslate species-filter__search mat-icon-no-color"
+                                                              aria-hidden="true" data-mat-icon-type="svg"
+                                                              data-mat-icon-name="search">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                                                             xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                             xmlns:svgjs="http://svgjs.com/svgjs" viewBox="0 0 24 24"
+                                                             width="100%" height="100%" fit=""
+                                                             preserveAspectRatio="xMidYMid meet" focusable="false">
+                                                            <g transform="matrix(1,0,0,1,0,0)">
+                                                                <path d="M23.414,20.591l-4.645-4.645a10.256,10.256,0,1,0-2.828,2.829l4.645,4.644a2.025,2.025,0,0,0,2.828,0A2,2,0,0,0,23.414,20.591ZM10.25,3.005A7.25,7.25,0,1,1,3,10.255,7.258,7.258,0,0,1,10.25,3.005Z"
+                                                                      stroke="none" stroke-linecap="round"
+                                                                      stroke-linejoin="round" stroke-width="0"></path>
+                                                            </g>
+                                                        </svg>
+                                                    </mat-icon>
+                                                    <form novalidate=""
+                                                          class="species-form ng-untouched ng-pristine ng-valid">
+                                                        <mat-form-field floatlabel="auto"
+                                                                        class="mat-mdc-form-field ng-tns-c3736059725-0 mat-mdc-form-field-type-mat-input mat-form-field-appearance-fill mat-primary ng-untouched ng-pristine ng-valid ng-star-inserted">
+                                                            <!---->
+                                                            <div class="mat-mdc-text-field-wrapper mdc-text-field ng-tns-c3736059725-0 mdc-text-field--filled mdc-text-field--no-label">
+                                                                <div class="mat-mdc-form-field-focus-overlay ng-tns-c3736059725-0 ng-star-inserted"></div>
+                                                                <!---->
+                                                                <div class="mat-mdc-form-field-flex ng-tns-c3736059725-0">
+                                                                    <!----><!----><!---->
+                                                                    <div class="mat-mdc-form-field-infix ng-tns-c3736059725-0">
+                                                                        <!----><!----><!----><input type="text"
+                                                                                                    matautocompleteposition="below"
+                                                                                                    aria-label="Query"
+                                                                                                    matinput=""
+                                                                                                    class="mat-mdc-input-element mat-mdc-autocomplete-trigger ng-tns-c3736059725-0 mat-mdc-form-field-input-control mdc-text-field__input ng-untouched ng-pristine ng-valid cdk-text-field-autofill-monitored"
+                                                                                                    placeholder="Artname"
+                                                                                                    id="mat-input-0"
+                                                                                                    aria-invalid="false"
+                                                                                                    aria-required="false"
+                                                                                                    autocomplete="off"
+                                                                                                    role="combobox"
+                                                                                                    aria-autocomplete="list"
+                                                                                                    aria-expanded="false"
+                                                                                                    aria-haspopup="listbox">
+                                                                        <!---->
+                                                                        <mat-autocomplete autoactivefirstoption="true"
+                                                                                          class="ng-tns-c3736059725-0 ng-star-inserted">
+                                                                            <!----></mat-autocomplete>
+                                                                    </div><!----><!----></div>
+                                                                <div matformfieldlineripple=""
+                                                                     class="mdc-line-ripple ng-tns-c3736059725-0 mdc-line-ripple--deactivating ng-star-inserted"></div>
+                                                                <!----></div>
+                                                            <div class="mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align ng-tns-c3736059725-0">
+                                                                <div class="mat-mdc-form-field-hint-wrapper ng-tns-c3736059725-0 ng-trigger ng-trigger-transitionMessages ng-star-inserted"
+                                                                     style="opacity: 1; transform: translateY(0%);">
+                                                                    <!---->
+                                                                    <div class="mat-mdc-form-field-hint-spacer ng-tns-c3736059725-0"></div>
+                                                                </div><!----><!----></div>
+                                                        </mat-form-field>
+                                                    </form>
+                                                </div>
+                                            </app-species-name-query>
+                                            <app-species-tags class="tags-filter">
+                                                <div class="species-filter__container">
+                                                    <mat-icon role="img" svgicon="search"
+                                                              class="mat-icon notranslate species-filter__search mat-icon-no-color"
+                                                              aria-hidden="true" data-mat-icon-type="svg"
+                                                              data-mat-icon-name="search">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                                                             xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                             xmlns:svgjs="http://svgjs.com/svgjs" viewBox="0 0 24 24"
+                                                             width="100%" height="100%" fit=""
+                                                             preserveAspectRatio="xMidYMid meet" focusable="false">
+                                                            <g transform="matrix(1,0,0,1,0,0)">
+                                                                <path d="M23.414,20.591l-4.645-4.645a10.256,10.256,0,1,0-2.828,2.829l4.645,4.644a2.025,2.025,0,0,0,2.828,0A2,2,0,0,0,23.414,20.591ZM10.25,3.005A7.25,7.25,0,1,1,3,10.255,7.258,7.258,0,0,1,10.25,3.005Z"
+                                                                      stroke="none" stroke-linecap="round"
+                                                                      stroke-linejoin="round" stroke-width="0"></path>
+                                                            </g>
+                                                        </svg>
+                                                    </mat-icon>
+                                                    <form novalidate=""
+                                                          class="species-form ng-untouched ng-pristine ng-valid">
+                                                        <mat-form-field floatlabel="auto"
+                                                                        class="mat-mdc-form-field tags-form-field ng-tns-c3736059725-2 mat-mdc-form-field-type-mat-chip-grid mat-form-field-appearance-fill mat-primary ng-star-inserted">
+                                                            <!---->
+                                                            <div class="mat-mdc-text-field-wrapper mdc-text-field ng-tns-c3736059725-2 mdc-text-field--filled mdc-text-field--no-label">
+                                                                <div class="mat-mdc-form-field-focus-overlay ng-tns-c3736059725-2 ng-star-inserted"></div>
+                                                                <!---->
+                                                                <div class="mat-mdc-form-field-flex ng-tns-c3736059725-2">
+                                                                    <!----><!----><!---->
+                                                                    <div class="mat-mdc-form-field-infix ng-tns-c3736059725-2">
+                                                                        <!----><!----><!---->
+                                                                        <mat-chip-grid aria-label="selected tags"
+                                                                                       class="mat-mdc-chip-set mat-mdc-chip-grid mdc-evolution-chip-set ng-tns-c3736059725-2"
+                                                                                       tabindex="-1"
+                                                                                       aria-disabled="false"
+                                                                                       aria-invalid="false">
+                                                                            <div role="presentation"
+                                                                                 class="mdc-evolution-chip-set__chips">
+                                                                                <div class="selected-tags"><!----></div>
+                                                                            </div>
+                                                                        </mat-chip-grid>
+                                                                        <input type="text"
+                                                                               matautocompleteposition="below"
+                                                                               class="mat-mdc-chip-input mat-mdc-input-element mdc-text-field__input mat-input-element mat-mdc-autocomplete-trigger tag-name-input mat-mdc-form-field-input-control ng-tns-c3736059725-2 ng-untouched ng-pristine ng-valid"
+                                                                               id="mat-mdc-chip-list-input-0"
+                                                                               placeholder="Schlagwort"
+                                                                               autocomplete="off" role="combobox"
+                                                                               aria-autocomplete="list"
+                                                                               aria-expanded="false"
+                                                                               aria-haspopup="listbox"><!---->
+                                                                        <mat-autocomplete autoactivefirstoption="true"
+                                                                                          class="ng-tns-c3736059725-2 ng-star-inserted">
+                                                                            <!----></mat-autocomplete>
+                                                                    </div><!----><!----></div>
+                                                                <div matformfieldlineripple=""
+                                                                     class="mdc-line-ripple ng-tns-c3736059725-2 mdc-line-ripple--deactivating ng-star-inserted"></div>
+                                                                <!----></div>
+                                                            <div class="mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align ng-tns-c3736059725-2">
+                                                                <div class="mat-mdc-form-field-hint-wrapper ng-tns-c3736059725-2 ng-trigger ng-trigger-transitionMessages ng-star-inserted"
+                                                                     style="opacity: 1; transform: translateY(0%);">
+                                                                    <!---->
+                                                                    <div class="mat-mdc-form-field-hint-spacer ng-tns-c3736059725-2"></div>
+                                                                </div><!----><!----></div>
+                                                        </mat-form-field><!----></form>
+                                                </div>
+                                            </app-species-tags>
+                                        </div>
+                                        <p class="species-gallery__filter_info">Finde Tiere und Pflanzen, indem du einen
+                                            Artnamen eingibst oder nach Schlagwörtern sortierst.</p>
+                                        <div class="ng-star-inserted">
+                                            <app-species-masonry>
+                                                <div class="masonry-root grid-container">
+                                                    <div class="masonry-cell ng-star-inserted">
+                                                        <div class="masonry-item ng-star-inserted"><img loading="lazy"
+                                                                                                        alt=""
+                                                                                                        src="/media/auto-resized-images/images/ff55038201a052c32e8accc6_2c3084e6d6/7e4573e6126fa389d1c965512ccc97be.jpg">
+                                                            <div class="masonry-item__info">
+                                                                <mat-icon role="img"
+                                                                          class="mat-icon notranslate masonry-item__icon mat-icon-no-color"
+                                                                          aria-hidden="true" data-mat-icon-type="svg"
+                                                                          data-mat-icon-name="herb">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                         version="1.1"
+                                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                         xmlns:svgjs="http://svgjs.com/svgjs"
+                                                                         viewBox="0 0 24 24" width="100%" height="100%"
+                                                                         fit="" preserveAspectRatio="xMidYMid meet"
+                                                                         focusable="false">
+                                                                        <g transform="matrix(1,0,0,1,0,0)">
+                                                                            <path d="M15.011,6.35c0,3.083-3.006,5.583-3.006,5.583S9,9.433,9,6.35,12.005.766,12.005.766,15.011,3.266,15.011,6.35Z"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M20.187,20.2C17.079,23.313,12,23.266,12,23.266s-.047-5.084,3.061-8.192,8.192-3.06,8.192-3.06S23.294,17.1,20.187,20.2Z"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M3.808,20.2C6.916,23.313,12,23.266,12,23.266s.047-5.084-3.061-8.192S.748,12.014.748,12.014.7,17.1,3.808,20.2Z"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M12.005 11.933L12.005 23.266"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                        </g>
+                                                                    </svg>
+                                                                </mat-icon>
+                                                                <a class="masonry-item__text"><h3>Acker-Kratzdistel</h3>
+                                                                    <p>Cirsium arvense</p></a></div>
+                                                        </div><!----><!---->
+                                                        <div class="masonry-item ng-star-inserted"><img loading="lazy"
+                                                                                                        alt=""
+                                                                                                        src="/media/auto-resized-images/images/9b57b36a6b7893095175bea7_d9da5159cc/9a3c2d1a56df0f21223d17b925a5057d.jpg">
+                                                            <div class="masonry-item__info">
+                                                                <mat-icon role="img"
+                                                                          class="mat-icon notranslate masonry-item__icon mat-icon-no-color"
+                                                                          aria-hidden="true" data-mat-icon-type="svg"
+                                                                          data-mat-icon-name="bird">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                         version="1.1"
+                                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                         xmlns:svgjs="http://svgjs.com/svgjs"
+                                                                         viewBox="0 0 24 24" width="100%" height="100%"
+                                                                         fit="" preserveAspectRatio="xMidYMid meet"
+                                                                         focusable="false">
+                                                                        <g transform="matrix(1,0,0,1,0,0)">
+                                                                            <path d="M6.05,10.5A10.569,10.569,0,0,1,9.3,7.517,5.216,5.216,0,0,1,9.05,6a5.25,5.25,0,1,1,9.731,2.7c.543,1.33.842,3.732-1.481,7.05-4.326,6.18-11.2,7.268-13.483,7.459A.751.751,0,0,1,3,22.49C2.928,20.453,3.02,14.742,6.05,10.5Z"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M14.3 6.75L14.3 8.25" fill="none"
+                                                                                  stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M20.3.75c-3,0-6,3.75-6,3.75S10.55.75,7.55.75"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M11.3,12.75s-3.156,2.367-2.994,9.53"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M13.413 19.701L14.3 23.25"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M12.8 23.25L16.55 23.25"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                        </g>
+                                                                    </svg>
+                                                                </mat-icon>
+                                                                <a class="masonry-item__text"><h3>Bachstelze</h3>
+                                                                    <p>Motacilla alba</p></a></div>
+                                                        </div><!----><!---->
+                                                        <div class="masonry-item ng-star-inserted"><img loading="lazy"
+                                                                                                        alt=""
+                                                                                                        src="/media/auto-resized-images/images/51891e7cd0fccffe80ecd57d_98700f103f/b719ce38f23c63c9a7d939ea5bbf8c7a.jpg">
+                                                            <div class="masonry-item__info">
+                                                                <mat-icon role="img"
+                                                                          class="mat-icon notranslate masonry-item__icon mat-icon-no-color"
+                                                                          aria-hidden="true" data-mat-icon-type="svg"
+                                                                          data-mat-icon-name="tree">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                         version="1.1"
+                                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                         xmlns:svgjs="http://svgjs.com/svgjs"
+                                                                         viewBox="0 0 24 24" width="100%" height="100%"
+                                                                         fit="" preserveAspectRatio="xMidYMid meet"
+                                                                         focusable="false">
+                                                                        <g transform="matrix(1,0,0,1,0,0)">
+                                                                            <path d="M22.5,11.25A5.24,5.24,0,0,0,19.45,6.5,2.954,2.954,0,0,0,16.5,3c-.063,0-.122.015-.185.019a5.237,5.237,0,0,0-8.63,0C7.622,3.015,7.563,3,7.5,3A2.954,2.954,0,0,0,4.55,6.5a5.239,5.239,0,0,0,1.106,9.885A4.082,4.082,0,0,0,12,17.782a4.082,4.082,0,0,0,6.344-1.4A5.248,5.248,0,0,0,22.5,11.25Z"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M12 8.25L12 23.25" fill="none"
+                                                                                  stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M12,15q4.5,0,4.5-4.5" fill="none"
+                                                                                  stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M12,12A3.543,3.543,0,0,1,8.25,8.25"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                        </g>
+                                                                    </svg>
+                                                                </mat-icon>
+                                                                <a class="masonry-item__text"><h3>Gemeine Walnuss</h3>
+                                                                    <p>Juglans regia</p></a></div>
+                                                        </div><!----><!---->
+                                                        <div class="masonry-item ng-star-inserted"><img loading="lazy"
+                                                                                                        alt=""
+                                                                                                        src="/media/auto-resized-images/images/615100dbd39a04326e127c70_d61e5c46f0/c64af2621bfcb35139fc6f2b64661f6b.jpg">
+                                                            <div class="masonry-item__info">
+                                                                <mat-icon role="img"
+                                                                          class="mat-icon notranslate masonry-item__icon mat-icon-no-color"
+                                                                          aria-hidden="true" data-mat-icon-type="svg"
+                                                                          data-mat-icon-name="amphibian">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                         version="1.1"
+                                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                         xmlns:svgjs="http://svgjs.com/svgjs"
+                                                                         viewBox="0 0 24 24" width="100%" height="100%"
+                                                                         fit="" preserveAspectRatio="xMidYMid meet"
+                                                                         focusable="false">
+                                                                        <g transform="matrix(1,0,0,1,0,0)">
+                                                                            <path d="M16.29,14.386c.664-1.091,1.611-1.956,2.793-1.47,1.979.815-.333,5.625-.333,5.625"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M7.5,14.791c1.321-2.2.286-5.948-.516-8.34a2.5,2.5,0,0,1,.832-2.78l3.417-2.658a1.249,1.249,0,0,1,1.534,0l3.417,2.658a2.5,2.5,0,0,1,.832,2.78c-.8,2.392-1.837,6.139-.516,8.34"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M5.25,18.541s-2.312-4.81-.333-5.625c1.181-.486,2.128.378,2.793,1.47"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M1.375,16.041s.506,6.25,4.048,6.25c3.035,0,3.035-3.125,3.035-3.125A8.66,8.66,0,0,0,12,20.416a8.66,8.66,0,0,0,3.542-1.25s0,3.125,3.035,3.125c3.542,0,4.048-6.25,4.048-6.25"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M7.115,6.848c-.293,1.129-.851,2.318-2.059,2.318-1.459,0-2.431-2.5-2.431-2.5"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M0.75 5.416L2.625 6.666 3.25 4.791"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M16.885,6.848c.293,1.129.851,2.318,2.059,2.318,1.459,0,2.431-2.5,2.431-2.5"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M23.25 5.416L21.375 6.666 20.75 4.791"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M12 8.791L12 14.041" fill="none"
+                                                                                  stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                        </g>
+                                                                    </svg>
+                                                                </mat-icon>
+                                                                <a class="masonry-item__text"><h3>Teichfrosch</h3>
+                                                                    <p>Pelophylax kl. esculentus</p></a></div>
+                                                        </div><!----><!----><!----></div>
+                                                    <div class="masonry-cell ng-star-inserted">
+                                                        <div class="masonry-item ng-star-inserted"><img loading="lazy"
+                                                                                                        alt=""
+                                                                                                        src="/media/auto-resized-images/images/fd6094a1cbc94a6d0ac2c5a5_f69e23d405/aff4ee9d65a8bdf461395cd3d03c66d9.jpg">
+                                                            <div class="masonry-item__info">
+                                                                <mat-icon role="img"
+                                                                          class="mat-icon notranslate masonry-item__icon mat-icon-no-color"
+                                                                          aria-hidden="true" data-mat-icon-type="svg"
+                                                                          data-mat-icon-name="butterfly">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                         version="1.1"
+                                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                         xmlns:svgjs="http://svgjs.com/svgjs"
+                                                                         viewBox="0 0 24 24" width="100%" height="100%"
+                                                                         fit="" preserveAspectRatio="xMidYMid meet"
+                                                                         focusable="false">
+                                                                        <g transform="matrix(1,0,0,1,0,0)">
+                                                                            <path d="M13.522,19.25a1.5,1.5,0,0,1-3,0V8a1.5,1.5,0,1,1,3,0Z"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M13.356,7.314l4.106-1.579A4.275,4.275,0,1,1,19,14H16.681a4.34,4.34,0,0,1,4.341,4.341V18.5a3.75,3.75,0,0,1-7.5,0"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M10.688,7.314,6.582,5.735A4.275,4.275,0,1,0,5.047,14H7.363a4.34,4.34,0,0,0-4.341,4.341V18.5a3.75,3.75,0,0,0,7.5,0"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M15.022,2a3,3,0,0,0-3,3V6.5"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M9.022,2a3,3,0,0,1,3,3V6.5"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                        </g>
+                                                                    </svg>
+                                                                </mat-icon>
+                                                                <a class="masonry-item__text"><h3>Aurorafalter</h3>
+                                                                    <p>Anthocharis cardamines</p></a></div>
+                                                        </div><!----><!---->
+                                                        <div class="masonry-item ng-star-inserted"><img loading="lazy"
+                                                                                                        alt=""
+                                                                                                        src="/media/auto-resized-images/images/2ffdb36b08f8b09ad8041e67_dbaf7a692b/b59d845b95727f3ba40d17e4ad668fad.jpg">
+                                                            <div class="masonry-item__info">
+                                                                <mat-icon role="img"
+                                                                          class="mat-icon notranslate masonry-item__icon mat-icon-no-color"
+                                                                          aria-hidden="true" data-mat-icon-type="svg"
+                                                                          data-mat-icon-name="mammal">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                         version="1.1"
+                                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                         xmlns:svgjs="http://svgjs.com/svgjs"
+                                                                         viewBox="0 0 24 24" width="100%" height="100%"
+                                                                         fit="" preserveAspectRatio="xMidYMid meet"
+                                                                         focusable="false">
+                                                                        <g transform="matrix(1,0,0,1,0,0)">
+                                                                            <path d="M3,22.72V15.241A3.533,3.533,0,0,1,6.734,11.5H8.978c2.244,0,4.488-1.5,4.488-2.992V6.265c0-3.74,2.992-3.74,2.992-3.74l.748,2.244s2.244,0,2.992,1.5,2.992,1.5,2.992,1.5.748,2.992-2.992,3.74c-2.32.464-2.992,2.992-2.992,4.488V22.72"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M3,19.729s3.739.748,4.487-2.992"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M6.9,18.233h5.817A4.642,4.642,0,0,0,17.237,15.4"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M3.4,13.4,3,13A8.26,8.26,0,0,1,.751,7.761,6.551,6.551,0,0,1,5.986,1.03c1.5.747,1.5,2.991,0,5.983A7.343,7.343,0,0,0,5.238,11.5l.053.237"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M2.247,3.273s0,3.178,4.093,2.984"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M18.328,7.76a.375.375,0,0,1,.375.375"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M17.953,8.135a.375.375,0,0,1,.375-.375"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M18.328,8.51a.375.375,0,0,1-.375-.375"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M18.7,8.135a.375.375,0,0,1-.375.375"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                        </g>
+                                                                    </svg>
+                                                                </mat-icon>
+                                                                <a class="masonry-item__text"><h3>Braunbrustigel</h3>
+                                                                    <p>Erinaceus europaeus</p></a></div>
+                                                        </div><!----><!---->
+                                                        <div class="masonry-item ng-star-inserted"><img loading="lazy"
+                                                                                                        alt=""
+                                                                                                        src="/media/auto-resized-images/images/00e5327b62458cd5255c4972_5a11c50c76/9ac8260789f5a669d5b94e6b0a18142d.jpg">
+                                                            <div class="masonry-item__info">
+                                                                <mat-icon role="img"
+                                                                          class="mat-icon notranslate masonry-item__icon mat-icon-no-color"
+                                                                          aria-hidden="true" data-mat-icon-type="svg"
+                                                                          data-mat-icon-name="tree">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                         version="1.1"
+                                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                         xmlns:svgjs="http://svgjs.com/svgjs"
+                                                                         viewBox="0 0 24 24" width="100%" height="100%"
+                                                                         fit="" preserveAspectRatio="xMidYMid meet"
+                                                                         focusable="false">
+                                                                        <g transform="matrix(1,0,0,1,0,0)">
+                                                                            <path d="M22.5,11.25A5.24,5.24,0,0,0,19.45,6.5,2.954,2.954,0,0,0,16.5,3c-.063,0-.122.015-.185.019a5.237,5.237,0,0,0-8.63,0C7.622,3.015,7.563,3,7.5,3A2.954,2.954,0,0,0,4.55,6.5a5.239,5.239,0,0,0,1.106,9.885A4.082,4.082,0,0,0,12,17.782a4.082,4.082,0,0,0,6.344-1.4A5.248,5.248,0,0,0,22.5,11.25Z"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M12 8.25L12 23.25" fill="none"
+                                                                                  stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M12,15q4.5,0,4.5-4.5" fill="none"
+                                                                                  stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M12,12A3.543,3.543,0,0,1,8.25,8.25"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                        </g>
+                                                                    </svg>
+                                                                </mat-icon>
+                                                                <a class="masonry-item__text"><h3>Ginkgo</h3>
+                                                                    <p>Ginkgo biloba</p></a></div>
+                                                        </div><!----><!---->
+                                                        <div class="masonry-item ng-star-inserted"><img loading="lazy"
+                                                                                                        alt=""
+                                                                                                        src="/media/auto-resized-images/images/Bombus_lapidarius_male_Centaurea_scabiosa_Keila_57cde2226d/e106a93f2c554b23f2a250dd0d8979ff.jpg">
+                                                            <div class="masonry-item__info">
+                                                                <mat-icon role="img"
+                                                                          class="mat-icon notranslate masonry-item__icon mat-icon-no-color"
+                                                                          aria-hidden="true" data-mat-icon-type="svg"
+                                                                          data-mat-icon-name="hymenoptera">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                         version="1.1"
+                                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                         xmlns:svgjs="http://svgjs.com/svgjs"
+                                                                         viewBox="0 0 24 24" width="100%" height="100%"
+                                                                         fit="" preserveAspectRatio="xMidYMid meet"
+                                                                         focusable="false">
+                                                                        <g transform="matrix(1,0,0,1,0,0)">
+                                                                            <path d="M17.25,13.5c0,5.25-3.75,8.25-5.25,8.25s-5.25-3-5.25-8.25C6.75,9.358,9.1,6.75,12,6.75S17.25,9.358,17.25,13.5Z"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M12 21.75L12 23.25" fill="none"
+                                                                                  stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M8.325,5.25a3.751,3.751,0,0,1,7.35,0"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M13.5,2.564V2.25s0-1.5,2.25-1.5"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M10.5,2.564V2.25s0-1.5-2.25-1.5"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M8.449,8.382A10.279,10.279,0,0,0,3,6.75C0,6.75,0,12,3,12a10.274,10.274,0,0,0,4.037-.87"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M15.551,8.382A10.279,10.279,0,0,1,21,6.75c3,0,3,5.25,0,5.25a10.274,10.274,0,0,1-4.037-.87"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M6.779,12.721A6.428,6.428,0,0,1,12,10.5a6.432,6.432,0,0,1,5.221,2.221"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                            <path d="M7.265,16.735A6.374,6.374,0,0,1,12,15a6.381,6.381,0,0,1,4.735,1.735"
+                                                                                  fill="none" stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  stroke-width="1.5"></path>
+                                                                        </g>
+                                                                    </svg>
+                                                                </mat-icon>
+                                                                <a class="masonry-item__text"><h3>Steinhummel</h3>
+                                                                    <p>Bombus lapidarius</p></a></div>
+                                                        </div><!----><!----><!----></div><!----><!----><!----></div>
+                                            </app-species-masonry>
+                                            <app-species-groups-view class="species-content"><!----><!----><!---->
+                                                <!----><!----></app-species-groups-view>
+                                        </div><!---->
+                                        <div class="species-gallery__link"><p><a routeorurl="/species/portrait">Entdecke
+                                            mehr Arten</a><img src="/assets/svgs/arrow_right.svg" alt=""></p></div>
+                                    </div><!----></app-species-gallery>
+                                <hr class="brick">
+                                <app-home-content>
+                                    <div class="element">
+                                        <app-home-card-grid>
+                                            <div class="columns-2-1">
+                                                <app-homecard>
+                                                    <section class="card card--transparent">
+                                                        <app-image class="card__picture"><img alt=""
+                                                                                              src="/strapi/uploads/Karte_Nachtigall_bf227c6efb.png"
+                                                                                              srcset="/strapi/uploads/large_Karte_Nachtigall_bf227c6efb.png 1200w, /strapi/uploads/small_Karte_Nachtigall_bf227c6efb.png 400w, /strapi/uploads/medium_Karte_Nachtigall_bf227c6efb.png 800w, /strapi/uploads/thumbnail_Karte_Nachtigall_bf227c6efb.png 245w, /strapi/uploads/Karte_Nachtigall_bf227c6efb.png"
+                                                                                              sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, (max-width: 1023px) 1200px, 1200px">
+                                                        </app-image>
+                                                        <div class="card__inner"><!---->
+                                                            <div class="card__headline">Beobachtungen mit Naturblick
+                                                            </div>
+                                                            <div class="card__body"><p>Schau dir Beobachtungen der
+                                                                anderen Naturblick-Nutzer:innen an.</p>
+                                                            </div>
+                                                            <app-home-card-link class="card__cta card__cta--goto"><a>Finde
+                                                                Beobachtungen in deiner Nähe</a><span>&nbsp;→</span>
+                                                            </app-home-card-link><!----></div>
+                                                    </section>
+                                                </app-homecard>
+                                                <app-homecard>
+                                                    <section class="card card--transparent">
+                                                        <app-image class="card__picture"><img alt=""
+                                                                                              src="/strapi/uploads/large_Fuchs_714a85ac29_32f2114fc6.jpg"
+                                                                                              srcset="/strapi/uploads/small_large_Fuchs_714a85ac29_32f2114fc6.jpg 400w, /strapi/uploads/medium_large_Fuchs_714a85ac29_32f2114fc6.jpg 800w, /strapi/uploads/thumbnail_large_Fuchs_714a85ac29_32f2114fc6.jpg 245w, /strapi/uploads/large_Fuchs_714a85ac29_32f2114fc6.jpg"
+                                                                                              sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, 800px">
+                                                        </app-image>
+                                                        <div class="card__inner"><!---->
+                                                            <div class="card__headline">WissensWeiten</div>
+                                                            <div class="card__body"><p>Hier behandeln wir Themen zu
+                                                                Biodiversität, Klimawandel und eigenem Handeln rund um
+                                                                das Leben von Tieren und Pflanzen in der Stadt. Erfahre
+                                                                mehr z.B über die Stadtbrache als Lebensraum,
+                                                                Wissenswertes rund um Nadelbäume
+                                                                oder entdecke die Stadt aus der Sicht von
+                                                                Gebäudebrüter. </p>
+                                                            </div>
+                                                            <app-home-card-link class="card__cta card__cta--goto"><a>Hier
+                                                                geht es zu den WissensWeiten </a><span>&nbsp;→</span>
+                                                            </app-home-card-link><!----></div>
+                                                    </section>
+                                                </app-homecard><!----></div>
+                                        </app-home-card-grid><!----></div>
+                                </app-home-content>
+                                <app-home-content>
+                                    <div class="element">
+                                        <app-text>
+                                            <div class="container__text container__text--center markdown-container text">
+                                                <hr class="brick">
+                                            </div>
+                                        </app-text><!----></div>
+                                </app-home-content>
+                                <app-home-content>
+                                    <div class="element">
+                                        <app-home-card-grid>
+                                            <div class="columns-3">
+                                                <app-homecard>
+                                                    <section class="card card--transparent">
+                                                        <app-image class="card__picture"><img alt=""
+                                                                                              src="/strapi/uploads/Naturblick_Screen_klein_32cca05fc4.jpg"
+                                                                                              srcset="/strapi/uploads/small_Naturblick_Screen_klein_32cca05fc4.jpg 400w, /strapi/uploads/medium_Naturblick_Screen_klein_32cca05fc4.jpg 800w, /strapi/uploads/thumbnail_Naturblick_Screen_klein_32cca05fc4.jpg 208w, /strapi/uploads/Naturblick_Screen_klein_32cca05fc4.jpg"
+                                                                                              sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, 800px">
+                                                        </app-image>
+                                                        <div class="card__inner"><!---->
+                                                            <div class="card__headline">Über die App</div>
+                                                            <div class="card__body"><p>Mit Naturblick kannst du Tiere
+                                                                und Pflanzen einfach bestimmen und mehr über die Natur
+                                                                in deiner Nachbarschaft erfahren.</p>
+                                                            </div>
+                                                            <app-home-card-link class="card__cta card__cta--goto"><a>Erfahre
+                                                                mehr über die App</a><span>&nbsp;→</span>
+                                                            </app-home-card-link><!----></div>
+                                                    </section>
+                                                </app-homecard>
+                                                <app-homecard>
+                                                    <section class="card card--transparent">
+                                                        <app-image class="card__picture"><img alt=""
+                                                                                              src="/strapi/uploads/medium_140926_science_slam_012_fassade_ccarola_radke_mfn_3325ebcc62_75b5a3de46.jpg"
+                                                                                              srcset="/strapi/uploads/small_medium_140926_science_slam_012_fassade_ccarola_radke_mfn_3325ebcc62_75b5a3de46.jpg 400w, /strapi/uploads/thumbnail_medium_140926_science_slam_012_fassade_ccarola_radke_mfn_3325ebcc62_75b5a3de46.jpg 208w, /strapi/uploads/medium_140926_science_slam_012_fassade_ccarola_radke_mfn_3325ebcc62_75b5a3de46.jpg"
+                                                                                              sizes="(max-width: 400px) 400px">
+                                                        </app-image>
+                                                        <div class="card__inner"><!---->
+                                                            <div class="card__headline">Über uns</div>
+                                                            <div class="card__body"><p>Wir sind ein interdisziplinäres
+                                                                Team und forschen zu Mensch-Natur-Beziehungen und
+                                                                digitalen Werkzeugen für die Naturerfahrung.</p>
+                                                            </div>
+                                                            <app-home-card-link class="card__cta card__cta--goto"><a>Erfahre
+                                                                mehr über uns</a><span>&nbsp;→</span>
+                                                            </app-home-card-link><!----></div>
+                                                    </section>
+                                                </app-homecard>
+                                                <app-homecard>
+                                                    <section class="card card--transparent">
+                                                        <app-image class="card__picture"><img alt=""
+                                                                                              src="/strapi/uploads/large_Unbenannt_9_5cdfe5cd44_f029cab684.jpeg"
+                                                                                              srcset="/strapi/uploads/small_large_Unbenannt_9_5cdfe5cd44_f029cab684.jpeg 400w, /strapi/uploads/medium_large_Unbenannt_9_5cdfe5cd44_f029cab684.jpeg 800w, /strapi/uploads/thumbnail_large_Unbenannt_9_5cdfe5cd44_f029cab684.jpeg 208w, /strapi/uploads/large_Unbenannt_9_5cdfe5cd44_f029cab684.jpeg"
+                                                                                              sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, 800px">
+                                                        </app-image>
+                                                        <div class="card__inner"><!---->
+                                                            <div class="card__headline">Häufige Fragen</div>
+                                                            <div class="card__body"><p>Hier findest du Antworten auf
+                                                                deine wichtigsten Fragen.</p>
+                                                            </div>
+                                                            <app-home-card-link class="card__cta card__cta--goto"><a>Lese
+                                                                hier Antworten auf deine Fragen</a><span>&nbsp;→</span>
+                                                            </app-home-card-link><!----></div>
+                                                    </section>
+                                                </app-homecard><!----></div>
+                                        </app-home-card-grid><!----></div>
+                                </app-home-content>
+                                <app-home-content>
+                                    <div class="element">
+                                        <app-text>
+                                            <div class="container__text container__text--center markdown-container text">
+                                                <hr class="brick">
+                                            </div>
+                                        </app-text><!----></div>
+                                </app-home-content>
+                                <app-home-content>
+                                    <div class="element">
+                                        <app-home-card-grid>
+                                            <div class="columns-2">
+                                                <app-homecard>
+                                                    <section class="card card--transparent">
+                                                        <app-image class="card__picture"><img alt=""
+                                                                                              src="/strapi/uploads/appstore_klein_8df243dbe5.jpg"
+                                                                                              srcset="/strapi/uploads/large_appstore_klein_8df243dbe5.jpg 1200w, /strapi/uploads/small_appstore_klein_8df243dbe5.jpg 400w, /strapi/uploads/medium_appstore_klein_8df243dbe5.jpg 800w, /strapi/uploads/thumbnail_appstore_klein_8df243dbe5.jpg 245w, /strapi/uploads/appstore_klein_8df243dbe5.jpg"
+                                                                                              sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, (max-width: 1023px) 1200px, 800px">
+                                                        </app-image>
+                                                        <div class="card__inner"><!---->
+                                                            <div class="card__headline">Naturblick im Playstore</div>
+                                                            <div class="card__body"><p>Lade die App für Android</p>
+                                                            </div>
+                                                            <app-home-card-link class="card__cta card__cta--goto"><a>Klicke
+                                                                hier für den Download im
+                                                                Playstore</a><span>&nbsp;→</span></app-home-card-link>
+                                                            <!----></div>
+                                                    </section>
+                                                </app-homecard>
+                                                <app-homecard>
+                                                    <section class="card card--transparent">
+                                                        <app-image class="card__picture"><img alt=""
+                                                                                              src="/strapi/uploads/large_appstore_klein_917e71dd30_eb20a50221.jpg"
+                                                                                              srcset="/strapi/uploads/small_large_appstore_klein_917e71dd30_eb20a50221.jpg 400w, /strapi/uploads/medium_large_appstore_klein_917e71dd30_eb20a50221.jpg 800w, /strapi/uploads/thumbnail_large_appstore_klein_917e71dd30_eb20a50221.jpg 245w, /strapi/uploads/large_appstore_klein_917e71dd30_eb20a50221.jpg"
+                                                                                              sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, 800px">
+                                                        </app-image>
+                                                        <div class="card__inner"><!---->
+                                                            <div class="card__headline">Naturblick im Appstore</div>
+                                                            <div class="card__body"><p>Lade die App für iOS</p>
+                                                            </div>
+                                                            <app-home-card-link class="card__cta card__cta--goto"><a>Klicke
+                                                                hier für den Download im
+                                                                Appstore</a><span>&nbsp;→</span></app-home-card-link>
+                                                            <!----></div>
+                                                    </section>
+                                                </app-homecard><!----></div>
+                                        </app-home-card-grid><!----></div>
+                                </app-home-content><!---->
+                                <hr class="brick">
+                            </div><!----></div>
+                    </div><!----></div>
+                <app-footer>
+                    <footer class="dark-background footer">
+                        <div class="footer__inner">
+                            <button class="footer__up-button button button--lined button--big button--square"
+                                    title="Zurück nach oben"><img src="/assets/svgs/arrow_up.svg" alt=""></button>
+                            <!---->
+                            <nav class="footer__navigation">
+                                <ul class="footer__navigation__primary">
+                                    <li><a>Kontakt</a></li><!----></ul>
+                                <ul class="footer__navigation__secondary">
+                                    <li><a>Datenschutz</a></li>
+                                    <li><a>Impressum</a></li>
+                                    <li><a>Digitale Barrierefreiheit</a></li><!----></ul>
+                            </nav>
+                            <div class="footer__signature">
+                                <div class="footer__signature__logo"><a href="https://www.museumfuernaturkunde.berlin/"><img
+                                        src="/assets/imgs/footer_mfnlogo_inverted.svg"
+                                        alt="Museum für Naturkunde Berlin"><!----><!----></a></div>
+                                <div> Naturblick 2020<br> Museum für Naturkunde Berlin</div>
+                            </div>
+                        </div>
+                    </footer><!----></app-footer>
+            </div><!----></app-frame><!----></app-home><!----></app-root>
+<script src="/runtime.js" type="module"></script>
+<script src="/polyfills.js" type="module"></script>
+<script src="/vendor.js" type="module"></script>
+<script src="/main.js" type="module"></script>
+
+</body>
+</html>
