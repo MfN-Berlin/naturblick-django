@@ -29,7 +29,7 @@ def home(request):
                 Og("og:image:height", 521)
                 ] + default_ogs(request)
 
-    return render(request, "web/index.html", {"og_list": ogs_list, "description": description})
+    return render(request, "web/base.html", {"og_list": ogs_list})
 
 
 def artportrait(request, id):
@@ -127,11 +127,7 @@ def og_url(request):
 
 
 def seenBy(lang, user, date, coords):
-    if lang == "de":
-        return f"Gesehen am {date} von {user} in {coords}"
-    else:
-        return f"Seen by {user} at {date} in {coords}"
-
+    return _("Seen by {user} at {date} in {coords}").format(user=user, date=date, coords=coords)
 
 def add_image_ogs(request, ogs_list, image):
     ogs_list.append(Og("og:image:width", image.width))
