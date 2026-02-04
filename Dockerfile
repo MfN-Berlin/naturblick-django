@@ -9,7 +9,7 @@ RUN mkdir /logs
 COPY requirements.txt /app/
 
 RUN pip install --no-cache-dir -r requirements.txt
-RUN apk update && apk add --no-cache sox imagemagick ffmpeg
+RUN apk update && apk add --no-cache sox imagemagick ffmpeg && apk add gettext
                                          
 COPY . /app/
 
