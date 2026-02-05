@@ -104,6 +104,14 @@ def about(request):
     lang = translation.get_language()
     return render(request, f"web/about.{lang}.html")
 
+def mobileapp(request):
+    lang = translation.get_language()
+    return render(request, f"web/mobileapp.{lang}.html")
+
+def faq(request):
+    lang = translation.get_language()
+    return render(request, f"web/faq.{lang}.html")
+
 
 def kontakt(request):
     lang = translation.get_language()

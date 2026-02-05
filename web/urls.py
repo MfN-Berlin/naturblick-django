@@ -3,6 +3,8 @@ from django.urls import path, re_path
 from web import views
 
 urlpatterns = [
+    path("faq", views.faq, name="faq"),
+    path("mobileapp", views.mobileapp, name="mobileapp"),
     path("about", views.about, name="about"),
     path("kontakt", views.kontakt, name="kontakt"),
     path("privacy", views.privacy, name="privacy"),
