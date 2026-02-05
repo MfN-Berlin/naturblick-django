@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load static %}
+{% load web_tags %}
 
 <!doctype html>
 <html lang="en">
@@ -19,10 +20,16 @@
 </head>
 <body>
     <header>
+        <a class="home" href="/">Naturblick</a>
+        <div class="menu">
+            {% block dels %}{% endblock %}
+            Schriftgröße
+            <a href="{% toggle_lang request %}">{% block lang %}{% endblock %}</a>
+            Menu
+        </div>
         <h1>{% block title %}{% endblock %}</h1>
         <hr class="brick brick-orange">
         <p>{% block subtitle %}{% endblock %}</p>
-
     </header>
     <main>
         {% block content %}{% endblock %}
