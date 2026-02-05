@@ -75,3 +75,9 @@ header {
     right: 16px;
     display: flex;
 }
+
+.person-card {
+    img {
+        width: 100%;
+    }
+}

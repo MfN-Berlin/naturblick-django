@@ -18,13 +18,12 @@
         erkunden, Tiere und Pflanzen bestimmen und deine Beobachtungen speichern.</p>
 
     <div class="column-3">
-        <div class="card">Susan</div>
-        <div class="card">Ulrike</div>
-        <div class="card">Martin</div>
-        <div class="card">Mario</div>
-        <div class="card">Omid</div>
-        <div class="card">Petter</div>
-        <div class="card">Johannes</div>
+        {% include "partials/person.html" with name="Ulrike Sturm" position="Project lead"  only %}
+        {% include "partials/person.html" with name="Susan Karlebowski" position="Scientific collaboration"  only %}
+        {% include "partials/person.html" with name="Petter Arvidsson" position="Full-Stack developer"  only %}
+        {% include "partials/person.html" with name="Martin Tscholl" position="Scientific collaboration"  only %}
+        {% include "partials/person.html" with name="Mario Lasseck" position="Pattern recognition development"  only %}
+        {% include "partials/person.html" with name="Johannes Ebbighausen" position="Full-Stack developer"  only %}
     </div>
 
     <h5>For nature</h5>
@@ -79,9 +78,10 @@
         <li><a href="https://www.berlin.de/sen/uvk/en/">Senate Department for the Environment, Transport and Climate
             Protection</a></li>
     </ul>
-    <h5>Former Team members</h5>
 
+    <h5>Former Team members</h5>
     <ul>
+        <li>Dr. Omid Khorramshahi (Software development)</li>
         <li>Oliver Adameck (student assistant)</li>
         <li>Tina Birnbach (student assistant)</li>
         <li>Alexander Buhl (App developer), now with Mediasphere for Nature</li>
@@ -97,8 +97,8 @@
         <li>Marcel Stehle (intern)</li>
         <li>Madeleine Dontschev (student assistant)</li>
     </ul>
-    <h5>Awards</h5>
 
+    <h5>Awards</h5>
     <ul>
         <li>Awarded by UN Decade of Biodiversity 2020</li>
         <li>Awarded by UN Decade of Biodiversity 2018</li>

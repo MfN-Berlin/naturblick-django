@@ -1,9 +1,10 @@
 {% extends "web/page_base.html" %}
 
-{% load web_tags %}
+{% load web_tags static %}
 
 {% block dels %}<a href="{% toggle_dels request %}">Leichte Sprache</a>{% endblock %}
 
+{# Not with il8n because there will be an icon in the future #}
 {% block lang %}de{% endblock %}
 
 {% block title %}Über uns{% endblock %}
@@ -22,13 +23,12 @@
     </p>
 
     <div class="column-3">
-        <div class="card">Susan</div>
-        <div class="card">Ulrike</div>
-        <div class="card">Martin</div>
-        <div class="card">Mario</div>
-        <div class="card">Omid</div>
-        <div class="card">Petter</div>
-        <div class="card">Johannes</div>
+        {% include "partials/person.html" with name="Ulrike Sturm" position="Projektleitung"  only %}
+        {% include "partials/person.html" with name="Susan Karlebowski" position="Wissenschaftliche Mitarbeit"  only %}
+        {% include "partials/person.html" with name="Petter Arvidsson" position="Full-Stack Entwicklung"  only %}
+        {% include "partials/person.html" with name="Martin Tscholl" position="Wissenschaftliche Mitarbeit"  only %}
+        {% include "partials/person.html" with name="Mario Lasseck" position="Entwicklung Mustererkennung"  only %}
+        {% include "partials/person.html" with name="Johannes Ebbighausen" position="Full-Stack Entwicklung"  only %}
     </div>
 
     <h5>Für Natur</h5>
@@ -85,9 +85,10 @@
         <li><a href="https://www.oekowerk.de/">Ökowerk Berlin e.V.</a></li>
         <li><a href="https://www.berlin.de/sen/uvk/">Senatsverwaltung für Umwelt, Verkehr und Klimaschutz</a></li>
     </ul>
-    <h5>Ehemalige Teammitglieder</h5>
 
+    <h5>Ehemalige Teammitglieder</h5>
     <ul>
+        <li>Dr. Omid Khorramshahi (Software-Entwicklung)</li>
         <li>Oliver Adameck (studentische Hilfskraft)</li>
         <li>Tina Birnbach (studentische Hilfskraft)</li>
         <li>Alexander Buhl (App-Entwicklung), jetzt bei Mediasphere for Nature</li>
@@ -103,8 +104,8 @@
         <li>Marcel Stehle (Praktikant)</li>
         <li>Madeleine Dontschev (studentische Hilfskraft)</li>
     </ul>
-    <h5>Auszeichnungen</h5>
 
+    <h5>Auszeichnungen</h5>
     <ul>
         <li>Ausgezeichnetes Projekt "UN-Dekade biologische Vielfalt 2020"</li>
         <li>Ausgezeichnetes Projekt "UN-Dekade biologische Vielfalt 2018"</li>
@@ -113,15 +114,16 @@
         </li>
         <li>Ausgezeichnet durch den Nachhaltigkeitsrat "Werkstatt-N Projekt 2016"</li>
     </ul>
+
     <h5>Förderung</h5>
     <p><br>Das Projekt wird durch das Bundesministerium für Umwelt, Naturschutz, nukleare Sicherheit und
         Verbraucherschutz
         (BMUV) gefördert.
         <br>Zeitraum: März 2015 bis April 2021</p>
     <hr class="brick">
+
     <h5>Veröffentlichungen</h5>
     <h5>Citizen Science</h5>
-
     <ul>
         <li>Bessert-Nettelbeck M., Bischof A., Sturm U., Nagy E., Schraudner M., Backhaus J., Bruckermann T., Hecker S.,
             Henke J., Köpferl K., Kirschke S., Liedtke C., Mahr F., Maibaum A., Podann A.C., Rössig W., Schäfer M.,

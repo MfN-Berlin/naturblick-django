@@ -1,6 +1,4 @@
-{% load i18n %}
-{% load static %}
-{% load web_tags %}
+{% load i18n static web_tags %}
 
 <!doctype html>
 <html lang="en">
@@ -19,26 +17,26 @@
 
 </head>
 <body>
-    <header>
-        <a class="home" href="/">Naturblick</a>
-        <div class="menu">
-            {% block dels %}{% endblock %}
-            Schriftgröße
-            <a href="{% toggle_lang request %}">{% block lang %}{% endblock %}</a>
-            Menu
-        </div>
-        <h1>{% block title %}{% endblock %}</h1>
-        <hr class="brick brick-orange">
-        <p>{% block subtitle %}{% endblock %}</p>
-    </header>
-    <main>
-        {% block content %}{% endblock %}
-    </main>
-    <footer>
-        Kontakt
-        Datenschutz
-        Impressum
-        Digitale Barrierefreiheit
-    </footer>
+<header>
+    <a class="home" href="{% url 'home'%}{% querystring %}">Naturblick</a>
+    <div class="menu">
+        {% block dels %}{% endblock %}
+        Schriftgröße
+        <a href="{% toggle_lang request %}">{% block lang %}{% endblock %}</a>
+        Menu
+    </div>
+    <h1>{% block title %}{% endblock %}</h1>
+    <hr class="brick brick-orange">
+    <p>{% block subtitle %}{% endblock %}</p>
+</header>
+<main>
+    {% block content %}{% endblock %}
+</main>
+<footer>
+    <a href="{% url 'kontakt'%}{% querystring %}">{% translate "Kontakt" %}</a>
+    <a href="{% url 'privacy'%}{% querystring %}">{% translate "Datenschutz" %}</a>
+    <a href="{% url 'imprint'%}{% querystring %}">{% translate "Impressum" %}</a>
+    <a href="{% url 'digitalaccessibilitystatement'%}{% querystring %}">{% translate "Digitale Barrierefreiheit" %}</a>
+</footer>
 </body>
 </html>

@@ -1,6 +1,6 @@
 {% extends "web/page_base.html" %}
 
-{% load web_tags %}
+{% load web_tags static %}
 
 {% block title %}Über uns{% endblock %}
 
@@ -12,22 +12,25 @@
     wie toll Natur in der Stadt ist.{% endblock %}
 
 {% block content %}
-    IMAGE
-{#    <img alt="" src="/strapi/uploads/Final_2_364f311ace.jpg"#}
-{#         srcset="/strapi/uploads/large_Final_2_364f311ace.jpg 1000w, /strapi/uploads/small_Final_2_364f311ace.jpg 500w, /strapi/uploads/medium_Final_2_364f311ace.jpg 750w, /strapi/uploads/thumbnail_Final_2_364f311ace.jpg 245w, /strapi/uploads/Final_2_364f311ace.jpg"#}
-{#         sizes="(max-width: 400px) 500px, (max-width: 767px) 750px, (max-width: 1023px) 1000px, 1000px">#}
+    <img alt="" src={% static 'web/img/Final_2_364f311ace.jpg' %}
+            srcset="{% static 'web/img/large_Final_2_364f311ace.jpg' %} 1000w,
+         srcset="{% static 'web/img/small_Final_2_364f311ace.jpg' %} 500w,
+            srcset="{% static 'web/img/medium_Final_2_364f311ace.jpg' %} 750w,
+         srcset="{% static 'web/img/thumbnail_Final_2_364f311ace.jpg' %} 245w,
+    {% static 'web/img/maps_Karte_6912873a82.jpg' %}"
+         sizes="(max-width: 400px) 500px, (max-width: 767px) 750px, (max-width: 1023px) 1000px, 1000px">
 
     <p><strong>Wir finden Natur in der Stadt wichtig.</strong></p>
     <p>Wir wollen Menschen helfen Natur zu erleben.</p>
 
-    <p><strong>Wir bauen eine App für das Handy.</strong></p>
+    <p><strong>Wir erstellen eine App für das Handy.</strong></p>
     <p>Die App heißt Natur-Blick.</p>
     <p>Mit der App kannst du Tiere und Pflanzen er-kennen.</p>
     <p>Du kannst ein Foto von einer Pflanze machen.</p>
     <p>Dann zeigt dir die App den Namen von der Pflanze.</p>
     <p>Du kannst den Gesang von einem Vogel auf-nehmen.</p>
     <p>Dann zeigt dir die App den Namen von dem Vogel.</p>
-    <p><strong>Wir speichern wo Leute Tieren und Pflanzen sehen.</strong></p>
+    <p><strong>Wir speichern wo Leute Tiere und Pflanzen sehen.</strong></p>
     <p>Du kannst auf der Karte ansehen was andere gesehen haben.</p>
     <p>Forscher nutzen diese Infos.</p><p><strong>Schreibe uns deine Ideen und Probleme</strong></p>
     <p>Wir versuchen die App und die Texte besser zu machen.</p>
@@ -58,6 +61,7 @@
     <p><strong>Bei uns haben früher gearbeitet:</strong></p>
 
     <ul>
+        <li>Dr. Omid Khorramshahi (Software-Entwicklung)</li>
         <li>Oliver Adameck (Student)</li>
         <li>Tina Birnbach (Studentin)</li>
         <li>Alexander Buhl (App-Entwicklung)</li>
