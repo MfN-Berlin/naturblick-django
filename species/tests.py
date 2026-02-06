@@ -5,7 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Species, Group, SpeciesName, ImageFile, ImageCrop, DescMeta, PortraitImageFile, \
+from .models import Species, Group, SpeciesName, ImageFile, ImageCrop, DescMeta, \
     Faunaportrait, Tag, PlantnetPowoidMapping, LeichtPortrait, LeichtRecognize, LeichtGoodToKnow
 
 
@@ -31,9 +31,6 @@ class SpeciesTestCase(TestCase):
         SpeciesName.objects.create(species=amsel, name="Schwarzdrossel", language="de")
         imagefile = ImageFile.objects.create(species=amsel, owner="Test", source="127.0.0.1", license="CC0",
                                              image=test_amsel)
-        # remove in future
-        pif = PortraitImageFile.objects.create(species=amsel, owner="Test", source="127.0.0.1", license="CC0",
-                                               image=test_amsel)
 
         crop = ImageCrop.objects.create(imagefile=imagefile, cropping=None)
         amsel.avatar_new = crop
@@ -42,7 +39,7 @@ class SpeciesTestCase(TestCase):
         portrait = Faunaportrait.objects.create(species=amsel, language="de", short_description="Foobar",
                                                 city_habitat="Foobar", published=True)
         DescMeta.objects.create(display_ratio="1:1", grid_ratio="1:1", text="Foobar", portrait=portrait,
-                                portrait_image_file=pif, image_file=imagefile)
+                                image_file=imagefile)
 
         amsel_tag = Tag.objects.create(name="Vogel", english_name="Bird")
         Tag.objects.create(name="nachtaktiv", english_name="nocturnal")
@@ -54,7 +51,7 @@ class SpeciesTestCase(TestCase):
         leicht_portrait = LeichtPortrait.objects.create(name="Vogel", avatar=crop, goodtoknow_image=imagefile)
         LeichtRecognize(text="foo", portrait=leicht_portrait, ordering=1)
         LeichtGoodToKnow(text="foo", portrait=leicht_portrait, ordering=1)
-        
+
     def test_speciesfilter_ok(self):
         url = reverse("species-filter")
         response = self.client.get(url)

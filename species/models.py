@@ -288,72 +288,6 @@ class SpeciesName(models.Model):
         ]
 
 
-class PortraitImageFile(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    species = models.ForeignKey(Species, on_delete=models.CASCADE)
-    owner = models.CharField(max_length=255)
-    owner_link = URLField(blank=True, null=True, max_length=255)
-    source = URLField(max_length=1024)
-    license = models.CharField(max_length=64)
-    image = models.ImageField(upload_to="portrait_images", max_length=255, width_field='width', height_field='height')
-    width = models.IntegerField(default=0)
-    height = models.IntegerField(default=0)
-
-    @property
-    def large(self):
-        if self.width > LARGE_WIDTH:
-            return self.image_large
-        return None
-
-    @property
-    def medium(self):
-        if self.width > MEDIUM_WIDTH:
-            return self.image_medium
-        return None
-
-    @property
-    def small(self):
-        if self.width > SMALL_WIDTH:
-            return self.image_small
-        return None
-
-    image_large = ImageSpecField(
-        source='image',
-        processors=[ResizeToFit(LARGE_WIDTH, None)],
-        options={'quality': 90}
-    )
-    image_medium = ImageSpecField(
-        source='image',
-        processors=[ResizeToFit(MEDIUM_WIDTH, None)],
-        options={'quality': 90}
-    )
-    image_small = ImageSpecField(
-        source='image',
-        processors=[ResizeToFit(SMALL_WIDTH, None)],
-        options={'quality': 90}
-    )
-
-    def clean(self):
-        super().clean()
-        desc = DescMeta.objects.filter(portrait_image_file=self.id).first()
-        if desc and desc.portrait.species != self.species:
-            raise ValidationError(
-                f"This Image is already set as a 'description' in the portrait of {desc.portrait.species}. The species can not be changed until it's unset")
-
-        funfact = FunFactMeta.objects.filter(portrait_image_file=self.id).first()
-        if funfact and funfact.portrait.species != self.species:
-            raise ValidationError(
-                f"This Image is already set as a 'fun fact' in the portrait of {funfact.portrait.species}. The species can not be changed until it's unset")
-
-        inthecity = InTheCityMeta.objects.filter(portrait_image_file=self.id).first()
-        if inthecity and inthecity.portrait.species != self.species:
-            raise ValidationError(
-                f"This Image is already set as an 'in the city' in the portrait of {funfact.portrait.species}. The species can not be changed until it's unset")
-
-    class Meta:
-        db_table = 'portrait_image_file'
-
-
 class PortraitImageMeta(models.Model):
     image_orientation = models.CharField(max_length=10, choices=IMAGE_ORIENTATION_CHOICES,
                                          null=True)  # this should be not null
@@ -411,8 +345,7 @@ class Portrait(models.Model):
 
 class DescMeta(PortraitImageMeta):
     portrait = models.OneToOneField(Portrait, on_delete=CASCADE)
-    portrait_image_file = models.ForeignKey(PortraitImageFile, on_delete=CASCADE)
-    image_file = models.ForeignKey(ImageFile, on_delete=CASCADE, db_default=1)
+    image_file = models.ForeignKey(ImageFile, on_delete=CASCADE)
 
     def clean(self):
         super().clean()
@@ -430,8 +363,7 @@ class DescMeta(PortraitImageMeta):
 
 class FunFactMeta(PortraitImageMeta):
     portrait = models.OneToOneField(Portrait, on_delete=CASCADE)
-    portrait_image_file = models.ForeignKey(PortraitImageFile, on_delete=CASCADE)
-    image_file = models.ForeignKey(ImageFile, on_delete=CASCADE, db_default=1)
+    image_file = models.ForeignKey(ImageFile, on_delete=CASCADE)
 
     def clean(self):
         super().clean()
@@ -449,8 +381,7 @@ class FunFactMeta(PortraitImageMeta):
 
 class InTheCityMeta(PortraitImageMeta):
     portrait = models.OneToOneField(Portrait, on_delete=CASCADE)
-    portrait_image_file = models.ForeignKey(PortraitImageFile, on_delete=CASCADE)
-    image_file = models.ForeignKey(ImageFile, on_delete=CASCADE, db_default=1)
+    image_file = models.ForeignKey(ImageFile, on_delete=CASCADE)
 
     def clean(self):
         super().clean()
