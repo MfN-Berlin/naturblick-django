@@ -561,6 +561,12 @@ class SimilarSpecies(OrderableModel):
     class Meta(OrderableModel.Meta):
         db_table = 'similar_species'
 
+        constraints = [
+            UniqueConstraint(
+                fields=("species", "portrait"), name="unique_species_portrait"
+            ),
+        ]
+
 
 class SourcesImprint(models.Model):
     id = models.BigAutoField(primary_key=True)
