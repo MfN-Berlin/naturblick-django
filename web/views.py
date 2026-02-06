@@ -6,9 +6,10 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils import translation
+from django.utils.translation import gettext as _
 
 from species.models import Species, Portrait
-from django.utils.translation import gettext as _
 
 
 class Og:
@@ -99,6 +100,39 @@ def map_page(request, obs_id):
     return default_response(request, ogs_list)
 
 
+def about(request):
+    lang = translation.get_language()
+    return render(request, f"web/about.{lang}.html")
+
+def mobileapp(request):
+    lang = translation.get_language()
+    return render(request, f"web/mobileapp.{lang}.html")
+
+def faq(request):
+    lang = translation.get_language()
+    return render(request, f"web/faq.{lang}.html")
+
+
+def kontakt(request):
+    lang = translation.get_language()
+    return render(request, f"web/contact.{lang}.html")
+
+
+def privacy(request):
+    lang = translation.get_language()
+    return render(request, f"web/privacy.{lang}.html")
+
+
+def imprint(request):
+    lang = translation.get_language()
+    return render(request, f"web/imprint.{lang}.html")
+
+
+def digitalaccessibilitystatement(request):
+    lang = translation.get_language()
+    return render(request, f"web/digitalaccessibilitystatement.{lang}.html")
+
+
 def default_response(request, more_ogs=None):
     if more_ogs is None:
         more_ogs = []
@@ -112,6 +146,7 @@ def default_ogs(request: WSGIRequest) -> list[Og]:
             Og("og:site-name", "Naturblick"),
             Og("og:url", og_url(request))
             ]
+
 
 def extract_language(request: WSGIRequest | Any):
     allowed_langs = {"de", "en", "dels"}
@@ -127,6 +162,7 @@ def og_url(request):
 
 def seen_by(user, date, coords):
     return _("Seen by {user} at {date} in {coords}").format(user=user, date=date, coords=coords)
+
 
 def add_image_ogs(request, ogs_list, image):
     ogs_list.append(Og("og:image:width", image.width))
