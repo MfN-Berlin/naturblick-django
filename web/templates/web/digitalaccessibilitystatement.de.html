@@ -1,0 +1,97 @@
+{% extends "web/page_base.html" %}
+
+{% load web_tags static %}
+
+{% block dels %}<a href="{% toggle_dels request %}">Leichte Sprache</a>{% endblock %}
+
+{# Not with il8n because there will be an icon in the future #}
+{% block lang %}de{% endblock %}
+
+{% block title %}Digitale Barrierefreiheit{% endblock %}
+{% block page_title %}Digitale Barrierefreiheit{% endblock %}
+
+{% block content %}
+    <h1>Erklärung zur Barrierefreiheit</h1>
+    <h2>Geltungsbereich</h2>
+    <p>Diese Erklärung zur digitalen Barrierefreiheit gilt für die mobile Anwendung <strong>Naturblick</strong> des
+        Museum für Naturkunde Berlin in den folgenden Versionen:</p>
+
+    <ul>
+        <li><strong>Android-Version:</strong> 4.1.31</li>
+        <li><strong>iOS-Version:</strong> 4.0.51</li>
+    </ul>
+    <p>&nbsp;</p>
+    <p><strong>Downloadlinks:</strong></p>
+
+    <ul>
+        <li>Naturblick im Google Play Store</li>
+        <li>Naturblick im Apple App Store</li>
+    </ul>
+    <p>&nbsp;</p>
+    <h2>Stand der Vereinbarkeit mit den Anforderungen</h2>
+    <p>Diese App entspricht derzeit <strong>nicht vollständig</strong> den Anforderungen der
+        Barrierefreien-IKT-Verordnung Berlin (BIKTG Bln) in Verbindung mit der EU-Richtlinie 2016/2102. Grundlage der
+        Bewertung ist eine eingehende Überwachung durch die Überwachungsstelle für digitale Barrierefreiheit Berlin
+        gemäß Durchführungsbeschluss (EU) 2018/1524.</p>
+    <p>&nbsp;</p>
+    <h2>Nicht barrierefreie Inhalte</h2>
+    <h3>Android-Version (4.1.31)</h3>
+    <p>Laut Prüfbericht vom <strong>21.11.2024</strong> wurden <strong>33 von 64 Anforderungen nicht
+        erfüllt</strong>.<br><strong>Erfüllungsquote: 48,4 %</strong></p>
+    <p><strong>Beispiele für bestehende Barrieren:</strong></p>
+
+    <ul>
+        <li>Fehlende oder unzureichende Alternativtexte für Bilder, Schaltflächen und Karteninhalte</li>
+        <li>Keine Medienalternative (Text oder Transkription) für Audioinhalte (z. B. Tierstimmen)</li>
+        <li>Abgeschnittene Texte bei Nutzung von Screenreadern (z. B. TalkBack)</li>
+        <li>Fehlende semantische Strukturierung (z. B. keine Überschriftenebenen)</li>
+        <li>App ist nicht in allen Bereichen vollständig mit der Tastatur oder alternativen Eingaben bedienbar</li>
+        <li>Keine Erklärung zur Barrierefreiheit in der App vorhanden</li>
+    </ul>
+    <p>&nbsp;</p>
+    <h3>iOS-Version (4.0.51)</h3>
+    <p>Laut Prüfbericht vom <strong>21.11.2024</strong> wurden <strong>36 von 61 Anforderungen nicht
+        erfüllt</strong>.<br><strong>Erfüllungsquote: 41 %</strong></p>
+    <p><strong>Beispiele für bestehende Barrieren:</strong></p>
+
+    <ul>
+        <li>Fehlende Alternativtexte analog zur Android-Version</li>
+        <li>Keine textlichen Erklärungen für Audioinhalte</li>
+        <li>Orientierung nur im Hochformat möglich</li>
+        <li>Navigationselemente nicht immer verständlich benannt</li>
+        <li>Strukturierungsmerkmale für assistive Technologien nicht einheitlich vorhanden</li>
+    </ul>
+    <p>&nbsp;</p>
+    <h2>Begründung</h2>
+    <p>Die genannten Mängel beruhen auf technischen und gestalterischen Einschränkungen der aktuellen App-Architektur
+        sowie auf fehlenden Ressourcen zur umfassenden Überarbeitung. Eine vollständige barrierefreie Umsetzung ist zum
+        jetzigen Zeitpunkt nicht gegeben, wird jedoch schrittweise angestrebt.</p>
+    <p>&nbsp;</p>
+    <h2>Geplante Maßnahmen</h2>
+    <p>Das Museum für Naturkunde arbeitet gemeinsam mit den Entwicklungspartnern an der Überarbeitung der App mit dem
+        Ziel, die identifizierten Barrieren zu beheben.</p>
+    <p><strong>Geplante Maßnahmen für 2025:</strong></p>
+
+    <ul>
+        <li>Ergänzung von Alternativtexten und barrierearmen Komponenten</li>
+        <li>Erstellung einer textbasierten Medienalternative für Audioinhalte</li>
+        <li>Prüfung von Inhalten in Deutscher Gebärdensprache</li>
+    </ul>
+    <p>&nbsp;</p>
+    <h2>Feedback und Kontakt</h2>
+    <p>Wenn Sie Barrieren in der App feststellen oder Hinweise zur Verbesserung haben, kontaktieren Sie uns
+        bitte:<br><strong>naturblick@mfn.berlin</strong></p>
+    <p>&nbsp;</p>
+    <h2>Durchsetzungsverfahren</h2>
+    <p>Falls Ihre Kontaktaufnahme mit uns nicht erfolgreich war, haben Sie die Möglichkeit, sich an die Berliner
+        Durchsetzungsstelle zu wenden:</p>
+    <p><strong>Landesbeauftragte für digitale Barrierefreiheit Berlin</strong><br>Senatskanzlei – Abteilung V<br>Jüdenstraße
+        1<br>10178 Berlin<br><strong>barrierefreiheit@senatskanzlei.berlin.de</strong><br><a
+                href="https://www.berlin.de/lb/digitale-barrierefreiheit">www.berlin.de/lb/digitale-barrierefreiheit</a>
+    </p>
+    <p>&nbsp;</p>
+    <h2>Stand der Erklärung</h2>
+    <p>Diese Erklärung wurde am <strong>30. April 2025</strong> erstellt auf Grundlage der Prüfberichte der
+        Überwachungsstelle Berlin.</p>
+
+{% endblock %}

@@ -1,0 +1,292 @@
+{% extends "web/page_base.html" %}
+
+{% load web_tags static %}
+
+{% block dels %}<a href="{% toggle_dels request %}">Leichte Sprache</a>{% endblock %}
+
+{# Not with il8n because there will be an icon in the future #}
+{% block lang %}de{% endblock %}
+
+{% block title %}Über uns{% endblock %}
+{% block page_title %}Über uns{% endblock %}
+
+{% block subtitle %}
+    <hr class="brick brick-orange">
+    Wir stärken die Aufmerksamkeit für Natur in der Stadt, um gemeinsam für Natur zu
+    handeln.{% endblock %}
+
+{% block content %}
+    <h5>Team</h5>
+
+    <p>In einem interdisziplinären Team erforschen und entwickeln wir digitale Werkzeuge für die urbane Naturerfahrung.
+        Beispielsweise erproben wir den Einsatz von Mustererkennung in der Artbestimmung. Mit unserer App Naturblick
+        unterstützen wir die direkte Naturerfahrung in der Stadt. Mit vielfältigen Funktionen kannst du Natur in der
+        Stadt
+        erkunden, Tiere und Pflanzen bestimmen und deine Beobachtungen speichern.
+    </p>
+
+    <div class="column-3">
+        {% include "partials/person.html" with name="Ulrike Sturm" position="Projektleitung"  only %}
+        {% include "partials/person.html" with name="Susan Karlebowski" position="Wissenschaftliche Mitarbeit"  only %}
+        {% include "partials/person.html" with name="Petter Arvidsson" position="Full-Stack Entwicklung"  only %}
+        {% include "partials/person.html" with name="Martin Tscholl" position="Wissenschaftliche Mitarbeit"  only %}
+        {% include "partials/person.html" with name="Mario Lasseck" position="Entwicklung Mustererkennung"  only %}
+        {% include "partials/person.html" with name="Johannes Ebbighausen" position="Full-Stack Entwicklung"  only %}
+    </div>
+
+    <h5>Für Natur</h5>
+    <p>Nur wenn wir uns als aktiven Teil der Natur sehen, lernen, ihre Mechanismen zu verstehen und uns gemeinsam für
+        Natur
+        einsetzen, können wir zu den größten Herausforderungen unserer Zeit wie dem Klimawandel und dem fortwährenden
+        Artenverlust Lösungen entwickeln und gesellschaftliche Veränderungen anstoßen. </p>
+    <h5>Mensch-Natur-Beziehungen im Anthropozän</h5>
+    <p>Mit unserer Forschung sind wir Teil der Arbeitsgruppe <a
+            href="https://www.museumfuernaturkunde.berlin/de/wissenschaft/mensch-natur-beziehungen-im-anthropozaen">Mensch-Natur-Beziehungen
+        im Anthropozän</a> am Museum für Naturkunde Berlin im <a
+            href="https://www.museumfuernaturkunde.berlin/de/wissenschaft/forschung/gesellschaft-und-natur">Fachbereich
+        Gesellschaft und Natur</a>. Das Ziel der Arbeitsgruppe ist es, gesellschaftliche Veränderungen im Sinne der
+        Ziele
+        für eine nachhaltige Entwicklung anzustoßen.</p>
+    <h5>Kooperationen</h5>
+    <p>Wir freuen uns über die wertschaffende Zusammenarbeit mit themenverwandten Projekten und Organisationen und sind
+        stets offen für neue Kooperationen. Ein Beispiel dafür ist das Projekt <a
+                href="https://naturblick.museumfuernaturkunde.berlin/communities/wissensfluss">WissensFluss</a>, ein
+        Mitmach-Projekt, bei dem Schüler, ihre Familien und die Öffentlichkeit die Artenvielfalt und Lebensräume der
+        Berliner Panke erforschen und entdecken konnten. Im Citizen-Science-Projekt <a
+                href="https://naturblick.museumfuernaturkunde.berlin/communities/wildbeeresearch">Gartenbestäuber</a>
+        wurde
+        untersucht, wie Gartenmerkmale und gärtnerische Praktiken die Wildbienenvielfalt fördern und deren
+        Bestäubungseffizienz unterstützen können. In Kooperation mit dem <a
+                href="https://naturblick.museumfuernaturkunde.berlin/communities/nightingaleproject">Forschungsfall
+            Nachtigall</a> wurden Besiedlungsmuster, Gesangsmuster und die Kulturgeschichte der Nachtigall erforscht.
+        Wenn
+        ihr Interesse an einer Zusammenarbeit habt, schreibt uns an unter naturblick@mfn.berlin.</p>
+    <h5>Open Source</h5>
+    <p>Open Source ist uns wichtig, daher stellen wir die App frei zur Verfügung. So können alle Nutzer den Quellcode
+        einsehen, anpassen und weiterentwickeln. Unter den folgenden Links ist die App für iOS und Android verfügbar:
+        <a href="https://github.com/MfN-Berlin/naturblick-android">https://github.com/MfN-Berlin/naturblick-android</a>
+        <a href="https://github.com/MfN-Berlin/naturblick-ios">https://github.com/MfN-Berlin/naturblick-ios</a></p>
+
+    <hr class="brick brick-blue">
+
+    <h5>Partner</h5>
+    <p>In der Pilotphase (März 2015 bis Mai 2018) wurden wir von Vertreter:innen folgender Berliner Institutionen in
+        einem
+        Beirat beraten und unterstützt:</p>
+
+    <ul>
+        <li><a href="https://www.bgbm.org/">Botanischer Garten und Botanisches Museum Berlin</a></li>
+        <li><a href="https://www.bmu.de/">Bundesministerium für Umwelt, Naturschutz, nukleare Sicherheit und
+            Verbraucherschutz (BMUV)</a></li>
+        <li><a href="https://www.bund-berlin.de/">Bund für Umwelt und Naturschutz Deutschland (BUND) - Landesverband
+            Berlin</a></li>
+        <li><a href="https://gruen-berlin.de/">Grün Berlin GmbH</a></li>
+        <li><a href="https://www.grueneliga-berlin.de/">GRÜNE LIGA Berlin e.V.</a></li>
+        <li><a href="https://www.izw-berlin.de/de/">Leibniz-Institut für Zoo- und Wildtierforschung (IZW) im
+            Forschungsverbund Berlin e.V.</a></li>
+        <li><a href="https://berlin.nabu.de/">NABU-Landesverband Berlin</a></li>
+        <li><a href="https://www.oekowerk.de/">Ökowerk Berlin e.V.</a></li>
+        <li><a href="https://www.berlin.de/sen/uvk/">Senatsverwaltung für Umwelt, Verkehr und Klimaschutz</a></li>
+    </ul>
+
+    <h5>Ehemalige Teammitglieder</h5>
+    <ul>
+        <li>Dr. Omid Khorramshahi (Software-Entwicklung)</li>
+        <li>Oliver Adameck (studentische Hilfskraft)</li>
+        <li>Tina Birnbach (studentische Hilfskraft)</li>
+        <li>Alexander Buhl (App-Entwicklung), jetzt bei Mediasphere for Nature</li>
+        <li>Saskia Gennrich (Software-Entwicklung)</li>
+        <li>Gregor Hagedorn (Projektleitung)</li>
+        <li>Madeleine Hallmann (studentische Hilfskraft)</li>
+        <li>Laura Hermlin-Leder (studentische Hilfskraft)</li>
+        <li>Alice Kracht (studentische Hilfskraft)</li>
+        <li>Anne Lange (studentische Hilfskraft)</li>
+        <li>Joanna Mitchell (studentische Hilfskraft)</li>
+        <li>Paul Pienkny (studentische Hilfskraft)</li>
+        <li>Isabel Steglich (studentische Hilfskraft)</li>
+        <li>Marcel Stehle (Praktikant)</li>
+        <li>Madeleine Dontschev (studentische Hilfskraft)</li>
+    </ul>
+
+    <h5>Auszeichnungen</h5>
+    <ul>
+        <li>Ausgezeichnetes Projekt "UN-Dekade biologische Vielfalt 2020"</li>
+        <li>Ausgezeichnetes Projekt "UN-Dekade biologische Vielfalt 2018"</li>
+        <li>Ausgezeichnet durch den Rat für Nachhaltige Entwicklung im Wettbewerb „Zukunft, fertig, los! - dem
+            Bildungswettbewerb für Nachhaltigkeit“ 2017
+        </li>
+        <li>Ausgezeichnet durch den Nachhaltigkeitsrat "Werkstatt-N Projekt 2016"</li>
+    </ul>
+
+    <h5>Förderung</h5>
+    <p><br>Das Projekt wird durch das Bundesministerium für Umwelt, Naturschutz, nukleare Sicherheit und
+        Verbraucherschutz
+        (BMUV) gefördert.
+        <br>Zeitraum: März 2015 bis April 2021</p>
+    <hr class="brick">
+
+    <h5>Veröffentlichungen</h5>
+    <h5>Citizen Science</h5>
+    <ul>
+        <li>Bessert-Nettelbeck M., Bischof A., Sturm U., Nagy E., Schraudner M., Backhaus J., Bruckermann T., Hecker S.,
+            Henke J., Köpferl K., Kirschke S., Liedtke C., Mahr F., Maibaum A., Podann A.C., Rössig W., Schäfer M.,
+            Schröder
+            C., Schrögel P., Shennan V., Steinhaus N., Stewart M., van den Bogaert V., Voigt-Heucke S. (2023)
+            Participation
+            as a research approach in academia: a converging field. Research Ideas and Outcomes 9: e105155. <a
+                    href="https://doi.org/10.3897/rio.9.e105155">https://doi.org/10.3897/rio.9.e105155</a></li>
+        <li>Jäckel, D., Mortega, K.G., Darwin, S., Brockmeyer, U., Sturm, U., Lasseck, M., Moczek, N., Lehmann, G.U.C.,
+            Voigt-Heucke, S.L. (2023) Community engagement and data quality: Best practices and lessons learned from a
+            citizen science project on birdsong. J. Ornithol. 164, 233–244. <a
+                    href="https://doi.org/10.1007/s10336-022-02018-8">https://doi.org/10.1007/s10336-022-02018-8</a>
+        </li>
+        <li>von Gönner, J., Herrmann, T. M., Bruckermann, T., Eichinger, M., Hecker, S., Klan, F., Lorke, J., Richter,
+            A.,
+            Sturm, U., &amp; Voigt-Heucke, S. (2023). Citizen science's transformative impact on science, citizen
+            empowerment and socio-political processes. Socio-Ecological Practice Research, 5, 1–23. <a
+                    href="https://doi.org/10.1007/s42532-022-00136-4">https://doi.org/10.1007/s42532-022-00136-4</a>
+        </li>
+        <li>Planillo, A., Fiechter, L., Sturm. U., Voigt-Heucke, S., Kramer-Schadt S. (2021) Citizen science data for
+            urban
+            planning: comparing different sampling schemes for modelling urban bird distribution. Landscape and Urban
+            Planning 211(6). <a href="https://doi.org/10.1016/j.landurbplan.2021.104098">https://doi.org/10.1016/j.landurbplan.2021.104098</a>
+        </li>
+        <li>Sturm, U. und Tscholl, M. (2019). The role of digital user feedback in a user-centred development process in
+            citizen science.Journal of Science Communication, 18 (1): 1-19. <a
+                    href="https://doi.org/10.22323/2.18010203">https://doi.org/10.22323/2.18010203</a>
+        </li>
+        <li>Luna, S., Gold, M., Albert, A., Ceccaroni, L., Claramunt, B., Danylo, O., Haklay, M., Kottmann, R., Kyba,
+            C.,
+            Piera, J., Radicchi, A., Schade, S., and Sturm, U. (2018) Developing mobile applications for environmental
+            and
+            biodiversity citizen science: considerations and recommendations. In: Joly, A., Vrochidis, S., Karatzas, K.,
+            Karppinen, A., Bonnet, P. (eds) Multimedia Tools and Applications for Environmental &amp; Biodiversity
+            Informatics. (pp. 9-30) Springer, Cham. <a
+                    href="https://link.springer.com/chapter/10.1007/978-3-319-76445-0_2">https://link.springer.com/chapter/10.1007/978-3-319-76445-0_2</a>
+        </li>
+        <li>Sturm, U., Moormann, A. und Faber, A. (2018) Mobile learning in environmental citizen science: An initial
+            survey
+            of current practice in Germany. it - Information Technology, 60(1), pp. 3-9. <a
+                    href="https://doi.org/10.1515/itit-2017-0021">https://doi.org/10.1515/itit-2017-0021</a></li>
+        <li>Sturm, U., Schade, S., Ceccaroni, L., Gold, M., Kyba, C., Claramunt, B., Haklay, M., Kasperowski, D.,
+            Albert,
+            A., Piera, J., Brier, J., Kullenberg, C., Luna, S. (2018) Defining principles for mobile apps and platforms
+            development in citizen science. Research Ideas and Outcomes 4: e23394. DOI: 10.3897/rio.4.e23394 (V2) <a
+                    href="https://riojournal.com/articles.php?id=23394">https://riojournal.com/articles.php?id=23394</a>
+        </li>
+        <li>Sturm, U., Schade, S., Ceccaroni, L., Gold, M., Kyba, C., Claramunt, B., Haklay, M., Kasperowski, D.,
+            Albert,
+            A., Piera, J., Brier, J., Kullenberg, C., Luna, S. (2017) Defining principles for mobile apps and platforms
+            development in citizen science. Research Ideas and Outcomes 3: e21283. DOI: 10.3897/rio.3.e21283 <a
+                    href="https://riojournal.com/articles.php?id=21283">https://riojournal.com/articles.php?id=21283</a>
+        </li>
+    </ul>
+    <h5>Umweltbildung</h5>
+
+    <ul>
+        <li>Moormann, A., Sturm, U. (2021) Naturerfahrung durch Citizen Science-Projekte. In: Gebhard U., Lude A.,
+            Möller
+            A., Moormann A. (eds) Naturerfahrung und Bildung. Springer VS, Wiesbaden. <a
+                    href="https://doi.org/10.1007/978-3-658-35334-6_21">https://doi.org/10.1007/978-3-658-35334-6_21</a>
+        </li>
+        <li>Sturm, U., Voigt-Heucke, S., Mortega, K.G., Moormann, A. (2020) Die Artenkenntnis von Berliner Schüler_innen
+            am
+            Beispiel einheimischer Vögel. Zeitschrift für Didaktik der Naturwissenschaft. DOI:
+            10.1007/s40573-020-00117-8.
+            <a href="https://link.springer.com/article/10.1007/s40573-020-00117-8">https://link.springer.com/article/10.1007/s40573-020-00117-8</a>
+        </li>
+        <li>Sturm, U. (2020) Mit dem Smartphone in die Natur. Chancen und Herausforderungen der digitalen Umweltbildung
+            für
+            Praxis und Forschung. Mitteilungen aus der Naturschutzakadmie, 31-33.
+        </li>
+    </ul>
+    <h5>Forschung zu Mustererkennung und Bioakustik</h5>
+
+    <ul>
+        <li>Jäckel, D., Mortega, K.G., Darwin S., Brockmeyer, U., Sturm, U., Lasseck, M., Moczek N., Gerlind, U. C.
+            Lehmann,
+            Silke L. Voigt‑Heucke (2023) Community engagement and data quality: best practices and lessons learned from
+            a
+            citizen science project on birdsong. In: Journal of Ornithology 164, 233–244. DOI:
+            10.1007/s10336-022-02018-8.
+            <a href="https://link.springer.com/article/10.1007/s10336-022-02018-8">https://link.springer.com/article/10.1007/s10336-022-02018-8</a>
+        </li>
+        <li>Wägele, JW., Bodesheim, P., Bourlat, S. J., Denzler, J., Diepenbroek, M., Fonseca, V., Frommolt, K.-H.,
+            Geiger,
+            M.F., Gemeinholzer, B., Glöckner, F. O., Haucke, T., Kirse, A., Kölpin, A., Kostadinov, I., Kühl, H. S.,
+            Kurth,
+            F., Lasseck, M., Liedke, S., Losch, F., Müller, S., Wildermann, S. (2022) Towards a multisensor station for
+            automated biodiversity monitoring. In: Basic and Applied Ecology, Volume 59, 2022, ISSN 1439-1791. DOI:
+            10.1016/j.baae.2022.01.003. <a href="https://doi.org/10.1016/j.baae.2022.01.003">https://doi.org/10.1016/j.baae.2022.01.003</a>
+        </li>
+        <li>Jäckel, D., Mortega, K.G., Sturm, U., Brockmeyer, U., Khorramshahi, O., Voigt-Heucke, S.L. (2021)
+            Opportunities
+            and limitations: A comparative analysis of citizen science and expert recordings for bioacoustic research.
+            PLoS
+            ONE 16(6): e0253763. <a href="https://doi.org/10.1371/journal.pone.0253763">https://doi.org/10.1371/journal.pone.0253763</a>
+        </li>
+        <li>Stehle, M., Lasseck, M., Khorramshahi, O., Sturm, U. (2020) Evaluation of acoustic pattern recognition of
+            nightingale (Luscinia megarhynchos) recordings by citizens. Research Ideas and Outcomes 6: e50233. DOI:
+            10.3897/rio.6.e50233. <a
+                    href="https://riojournal.com/article/50233/">https://riojournal.com/article/50233/</a>
+        </li>
+        <li>Lasseck, M. (2019) Bird Species Identification in Soundscapes. In: CEUR Workshop Proceedings. <a
+                href="https://ceur-ws.org/Vol-2380/paper_86.pdf">https://ceur-ws.org/Vol-2380/paper_86.pdf</a></li>
+        <li>Bonnet, P., Goëau, H., Hang, S.T., Lasseck, M., Sulc, M., Malécot, V., Jauzein, P., Melet, J.C., You, C.,
+            Joly,
+            A. (2018) Plant Identification: Experts vs. Machines in the Era of Deep Learning. In: Joly, A., Vrochidis,
+            S.,
+            Karatzas, K., Karppinen, A., Bonnet, P. (eds) Multimedia Tools and Applications for Environmental &amp;
+            Biodiversity Informatics. Multimedia Systems and Applications. Springer, Cham. <a
+                    href="https://link.springer.com/chapter/10.1007/978-3-319-76445-0_8">https://link.springer.com/chapter/10.1007/978-3-319-76445-0_8</a>
+        </li>
+        <li>Lasseck, M. (2018) Acoustic Bird Detection with Deep Convolutional Neural Networks. In: Plumbley MD et al.
+            (eds)
+            Proceedings of the Detection and Classification of Acoustic Scenes and Events 2018 Workshop (DCASE2018), pp.
+            143-147, Tampere University of Technology. <a
+                    href="https://dcase.community/documents/challenge2018/technical_reports/DCASE2018_Lasseck_76.pdf">https://dcase.community/documents/challenge2018/technical_reports/DCASE2018_Lasseck_76.pdf</a>
+        </li>
+        <li>Lasseck, M. (2018) Machines vs. Human Experts: Contribution to the ExpertLifeCLEF 2018 Plant Identification
+            Task. In: CEUR Workshop Proceedings. <a href="https://ceur-ws.org/Vol-2125/paper_151.pdf">https://ceur-ws.org/Vol-2125/paper_151.pdf</a>
+        </li>
+        <li>Lasseck, M. (2018) Audio-based Bird Species Identification with Deep Convolutional Neural Networks. In: CEUR
+            Workshop Proceedings. <a href="https://ceur-ws.org/Vol-2125/paper_140.pdf">https://ceur-ws.org/Vol-2125/paper_140.pdf</a>
+        </li>
+        <li>Lasseck, M. (2017) Image-based Plant Species Identification with Deep Convolutional Neural Networks. In:
+            CEUR
+            Workshop Proceedings., <a href="https://ceur-ws.org/Vol-1866/paper_174.pdf">https://ceur-ws.org/Vol-1866/paper_174.pdf</a>
+        </li>
+        <li>Lasseck, M. (2016) Improving Bird Identification using Multiresolution Template Matching and Feature
+            Selection
+            during Training. In: CEUR Workshop Proceedings. <a href="https://ceur-ws.org/Vol-1609/16090490.pdf">https://ceur-ws.org/Vol-1609/16090490.pdf</a>
+        </li>
+        <li>Lasseck, M. (2015) Towards Automatic Large-Scale Identification of Birds in Audio Recordings. In: Mothe, J.
+            et
+            al. (eds) Experimental IR Meets Multilinguality, Multimodality, and Interaction. CLEF 2015. Lecture Notes in
+            Computer Science, vol 9283. Springer, Cham. <a
+                    href="https://link.springer.com/chapter/10.1007/978-3-319-24027-5_39">https://link.springer.com/chapter/10.1007/978-3-319-24027-5_39</a>
+        </li>
+    </ul>
+    <h5>Mensch-Natur-Beziehungen im Anthropozän</h5>
+
+    <ul>
+        <li>Sturm, U., Heyne, E., Herrmann, E., Arends, B., Dieter, A.-L., Dorfman, E., Drauschke, F., Heller, N., Kahn,
+            R.,
+            Kaiser, K., Koch, G., Kramar, N., Mansilla Sánchez, A., Mauelshagen. F., Nadim, T., Pell, R., Petersen, M.,
+            Schmidt-Loske, K., Scholz, H., Sterling, C., Trischler, H., Wagner, S. (2022) Anthropocenic Objects.
+            Collecting
+            Practices for the Age of Humans. Research Ideas and Outcomes 8: e89446. <a
+                    href="https://doi.org/10.3897/rio.8.e89446">https://doi.org/10.3897/rio.8.e89446</a></li>
+        <li>Tscholl, M. &amp; Sturm, U. (2022) Posting nature: A critical perspective on analysing cultural ecosystem
+            services on Instagram. Journal of Environmental Media, 3 (2): 255 - 271. <a
+                    href="https://doi.org/10.1386/jem_00089_1">https://doi.org/10.1386/jem_00089_1</a></li>
+        <li>Tscholl, M., Weißpflug, M., Wedel, M., Sturm, U. (2022) People and nature – fostering inter- and
+            transdisciplinary collaboration for biodiversity and sustainable human interactions. Innovation: The
+            European
+            Journal of Social Science Research, 35(3). <a href="https://doi.org/10.1080/13511610.2022.2104784">https://doi.org/10.1080/13511610.2022.2104784</a>
+        </li>
+        <li>Tscholl, M., Weißpflug, M., Wedel, M. &amp; Sturm, U. (Hrsg.) (2022) ‘Special Issue: People and Nature’,
+            Innovation: The European Journal of Social Science Research, Volume 35, Issue 3 (2022)
+        </li>
+    </ul>
+{% endblock %}

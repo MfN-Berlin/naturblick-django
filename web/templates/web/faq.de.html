@@ -1,0 +1,103 @@
+{% extends "web/page_base.html" %}
+
+{% load web_tags static %}
+
+{% block dels %}<a href="{% toggle_dels request %}">Leichte Sprache</a>{% endblock %}
+
+{# Not with il8n because there will be an icon in the future #}
+{% block lang %}de{% endblock %}
+
+{% block title %}Häufige Fragen{% endblock %}
+{% block page_title %}Häufige Fragen{% endblock %}
+
+
+{% block subtitle %}
+    <hr class="brick brick-orange">
+    Hier findest du Antworten auf die Fragen, die uns häufig erreichen. Wenn du Fragen hast, die du hier nicht finden
+    kannst, einen Fehler gefunden hast oder weiteren Anregungen hast, schreibe uns einfach unter naturblick@mfn.berlin.
+{% endblock %}
+
+{% block content %}
+    <h2>Arten bestimmen</h2>
+    <h4>Welche Arten können mit Naturblick bestimmt werden?</h4>
+    <p>Mit Naturblick können Pflanzen und Tiere bestimmt werden. Dazu gehören Amphibien, Bienen, Wildblumen, Bäume,
+        Reptilien, Schmetterlinge, Säugetiere und Vögel. Hier findest du die <a
+                href="https://naturblick.museumfuernaturkunde.berlin/speciesaudiorecognition">Artenliste für die
+            Lauterkennung</a> und die hier für die <a
+                href="https://naturblick.museumfuernaturkunde.berlin/speciesimagerecognition">Artenliste für die
+            Bilderkennung</a>. Die Auswahl von Arten wird von uns kontinuierlich erweitert. Hilf uns weitere Arten und
+        Artgruppen auszuwählen und schreibe uns eine Mail mit deinen Vorschlägen an naturblick@mfn.berlin.</p>
+    <h3>Wieso zeigt die Ergebnisliste der Bestimmungsschlüssel immer so viele Arten?</h3>
+    <p>Die Ergebnisliste der Bestimmungsschlüssel ist nach Wahrscheinlichkeit geordnet. Alle von dir ausgewählten
+        Merkmale werden dabei gleich gewichtet. Es ist nicht immer einfach, ein Merkmal richtig auszuwählen. Daher
+        werden auch Arten angezeigt, auf die die ausgewählten Merkmale nur teilweise zutreffen. Die besten Ergebnisse
+        erhältst du daher, wenn du nur die Merkmale auswählst, bei denen du dir sicher bist.</p>
+    <h3>Wie funktioniert die Mustererkennung?</h3>
+    <p>Die Mustererkennung zeigt immer die drei Arten mit der größten Übereinstimmung mit dem trainierten
+        Vergleichsmaterial an. Je näher der Score an 100% liegt, desto ähnlicher ist das Foto oder die Tonaufnahme dem
+        Vergleichsmaterial einer Art, mit dem die Mustererkennung trainiert wurde. Das bedeutet, es können nur Arten
+        erkannt werden, die auch trainiert wurden und die Erkennung funktioniert am besten, wenn eine große Ähnlichkeit
+        zu der Aufnahmesituation und -qualität besteht (z.B. Mikrofonqualität). Hier findest du die <a
+                href="https://naturblick.museumfuernaturkunde.berlin/speciesaudiorecognition">Artenliste für die
+            Lauterkennung</a> und die hier für die <a
+                href="https://naturblick.museumfuernaturkunde.berlin/speciesimagerecognition">Artenliste für die
+            Bilderkennung</a>. </p>
+    <h3>Kann ich auch Fotos, die ich nicht mit der App gemacht habe, bestimmen?</h3>
+    <p>Du kannst über das Feldbuch Fotos von Pflanzen aus deiner Galerie auswählen und mit der Bilderkennung bestimmen.
+        Um die Beobachtung zu speichern, bitten wir dich, den Zeitpunkt, wann du die Pflanze gesehen hast, einzutragen.
+        Im Feldbuch kannst du dann auf der Karte auch den Standort deiner Beobachtung nachtragen.</p>
+
+
+    <h2>Beobachtungen machen</h2>
+    <h3>Wie kann ich speichern, wenn ich ein Tier oder eine Pflanze gesehen habe?</h3>
+    <p>Naturblick bietet dir verschiedene Möglichkeiten deine Beobachtungen zu speichern. Du kannst eine Pflanze
+        fotografieren oder Vogelgesang aufnehmen, automatisch bestimmen lassen und dann als Beobachtung speichern. Du
+        kannst auch über das Plus-Symbol in den Artportraits oder im Feldbuch eine Beobachtung hinzufügen. In der
+        Detailseite einer Beobachtung kannst du dann auf der Karte den Standort der Beobachtung ändern und weitere
+        Details eingeben. </p>
+    <h3>Wie kann ich die Daten aus meinem Feldbuch auf mein neues Handy übertragen?</h3>
+    <p>Mit dem Naturblick-Account ist es einfach möglich, deine Beobachtungen auch auf einem neuen Handy anzuzeigen.
+        Alle Beobachtungen sind über mehrere mobile Geräte gesichert und werden auf allen verbundenen Geräten
+        angezeigt. </p>
+    <h3>Was passiert mit meinen Beobachtungen?</h3>
+    <p>Deine Beobachtungen werden in deinem Feldbuch und in unserer Datenbank gespeichert. Alle Medien, die mit
+        Naturblick gemacht oder importiert werden, erhalten die Lizenz CC BY-SA 4.0. Das bedeutet, sie dürfen
+        weiterverwendet werden. In den Einstellungen kannst du deine Namen für die Autor:innenenschaft eingeben,
+        ansonsten wird “MfN Naturblick” als Autor genannt.
+        Die Freude an der Naturerfahrung und der Schutz unserer Nutzer:innen ist unsere oberste Priorität. Daher geben
+        wir keine Beobachtungsdaten (Artname, Ort, Zeit, Anzahl, weitere Details und Notizen) und Medien (einschließlich
+        Metadaten wie die Autorenschaft) weiter, die nicht vorher von uns geprüft wurden oder nicht explizit dem Teilen
+        mit einem bestimmten Projekt zugestimmt wurde, weiter. Wir prüfen dabei, ob personenbezogene Daten oder
+        Urheberrechtsverletzungen vorliegen.<br>Darüber hinaus prüfen wir nach und nach alle Beobachtungen, um dir und
+        anderen Nutzer:innen die Möglichkeit geben, einschätzen zu können, ob die Beobachtungen plausibel sind. Es kann
+        aber nur der:die Beobachter:in wirklich sagen, welche Art er oder sie gesehen hat. Wir können daher nur Hinweise
+        geben, ggf. noch mal genauer hinzusehen und auf bestimmte Merkmale zu achten. Alle überprüfen und plausiblen
+        Beobachtungen findest du auf der <a
+                href="https://naturblick.museumfuernaturkunde.berlin/map?lat=51.16556659836182&amp;lng=10.437011718750002&amp;zoomLevel=6">Naturblick
+            Karte</a>.</p>
+    <h3>Wo kann ich Beobachtungen von anderen Naturblick-Nutzer:innen sehen?</h3>
+    <p>Wir veröffentlichen nur Beobachtungen (Artname, Ort, Zeit, Anzahl, weitere Details und Notizen) und Medien
+        (einschließlich Metadaten wie die Autorenschaft), die nicht vorher von uns geprüft wurden. Wir prüfen nach und
+        nach alle Beobachtungen auf Plausibilität und ob personenbezogene Daten oder Urheberrechtsverletzungen
+        vorliegen. Alle überprüfen und plausiblen Beobachtungen findest du auf der <a
+                href="https://naturblick.museumfuernaturkunde.berlin/map?lat=51.16556659836182&amp;lng=10.437011718750002&amp;zoomLevel=6">Naturblick
+            Karte</a>.</p>
+
+    <h2>Technik</h2>
+    <h3>Wie kann ich die Sprache in der App verändern?</h3>
+    <p>Du kannst Naturblick auf Deutsch und in der englischen Übersetzung verwenden. Die Sprache wird aus den
+        Geräteeinstellungen übernommen und du kannst darüber die Sprache wechseln. Hier findest du eine <a
+                href="https://support.google.com/android/answer/12395118?hl=de#zippy=%2Csie-%C3%A4ndern-die-app-einstellung-aber-die-app-sprache-wird-nicht-gewechselt">Erklärung
+            für Android</a>. </p>
+    <h3>Warum funktioniert Naturblick nicht auf meinem alten Android Handy?</h3>
+    <p>Wir sind leider an die Vorgaben des Google Play Stores gebunden. Die Bestimmungen legen fest, dass alle Apps für
+        neuere Android-Versionen ausgelegt sein müssen, um die Sicherheit für Nutzer:innen zu erhöhen. Wir bedauern das
+        sehr, das ist aber bei der Nutzung des Play Stores unumgänglich. Die Nutzung von alternativen App Stores
+        überlegen wir.</p>
+    <h3>Ist eine offline Erkennungsfunktion geplant?</h3>
+    <p>Da wir uns auf Stadtnatur spezialisiert haben und unsere Nutzer:innen hauptsächlich in städtischen Gebieten
+        unterwegs sind, wo es in der Regel eine gute Netzabdeckung gibt, funktioniert die Bestimmung sehr gut. Jedoch
+        arbeiten wir stetig an der Weiterentwicklung unserer App und streben die offline Erkennungsfunktion langfristig
+        an.</p>
+
+{% endblock %}

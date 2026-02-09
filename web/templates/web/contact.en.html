@@ -1,0 +1,34 @@
+{% extends "web/page_base.html" %}
+
+{% load web_tags static %}
+
+{# Not with il8n because there will be an icon in the future #}
+{% block lang %}en{% endblock %}
+
+{% block title %}Contact{% endblock %}
+{% block page_title %}Contact{% endblock %}
+
+{% block content %}
+    <img alt="" src={% static 'web/img/maps_Karte_6912873a82.jpg' %}
+            srcset="{% static 'web/img/small_maps_Karte_6912873a82.jpg' %} 500w,
+            {% static 'web/img/medium_maps_Karte_6912873a82.jpg' %} 750w,
+            {% static 'web/img/thumbnail_maps_Karte_6912873a82.jpg' %} 225w,
+    {% static 'web/img/maps_Karte_6912873a82.jpg' %}"
+    sizes="(max-width: 400px) 500px, (max-width: 767px) 750px">
+
+
+    <p>We are continuously developing the Naturblick smartphone app and our platform in terms of content and technology.
+        In doing so we are guided by your feedback.
+        <br>We thank all who point out errors and/or make suggestions for improvement.</p>
+    <p><br><strong>Write us your feedback, or become a beta tester</strong>
+        <br>naturblick[at]mfn.berlin</p>
+    <p>News and updates can be found in our newsletter (in German).
+        <br><a href="https://berlin.us6.list-manage.com/subscribe?u=7cc783779868ff99f465accff&amp;id=456476dc19">Register
+            for the newsletter</a></p>
+    <p><strong>Naturblick Team</strong>
+        <br>Museum für Naturkunde Berlin
+        <br>Leibniz-Institute for Evolution and Biodiversity
+        <br>Invalidenstraße 43
+        <br>10115 Berlin</p>
+
+{% endblock %}
