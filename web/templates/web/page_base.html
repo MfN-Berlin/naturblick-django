@@ -11,21 +11,65 @@
         <meta property="{{ og.property }}" content="{{ og.content }}">
     {% endfor %}
     <script src="https://cdn.usefathom.com/script.js" data-spa="auto" data-site="TZBNRXXT" defer></script>
+    <link rel="stylesheet" href="{% static 'web/css/variables.css' %}">
     <link rel="stylesheet" href="{% static 'web/css/styles.css' %}">
 
+    <script>
+        function font_zoom_toggle() {
+            const root = document.documentElement;
+            const styles = getComputedStyle(root);
+            const def = styles.getPropertyValue('--default-font-zoom').trim();
+            const zoomed = styles.getPropertyValue('--zoomed-font-zoom').trim();
+            const saved = localStorage.getItem('font-zoom');
+            let next;
+            if ((saved ?? def) === def) {
+                next = zoomed
+                root.style.setProperty('--zoomed-color', "#ccc");
+                root.style.setProperty('--unzoomed-color', "inherit");
+            } else {
+                next = def
+                root.style.setProperty('--font-zoom', next);
+                root.style.setProperty('--zoomed-color', "inherit");
+                root.style.setProperty('--unzoomed-color', "#ccc");
+            }
+            root.style.setProperty('--font-zoom', next);
+            localStorage.setItem('font-zoom', next);
+
+
+        }
+    </script>
 </head>
 <body>
 <header>
-    <a class="home" href="{% url 'home' %}{% querystring %}">Naturblick</a>
+
+    <a class="home menu-button" href="{% url 'home' %}{% querystring %}">
+        <img src="{% static 'logo.svg' %}">
+        <h5>Naturblick</h5>
+    </a>
 
     <div class="menu">
-        {% block dels %}{% endblock %}
-        Schriftgröße
-        <a href="{% toggle_lang request %}">{% block lang %}{% endblock %}</a>
-        Menu
+        {% block dels %}{% include "partials/dels.html" %}{% endblock %}
+        <a class="menu-button" href="#" onclick="font_zoom_toggle(); return false;">
+            <div class="initial-zoomed">A&nbsp;</div>
+            <div class="initial-unzoomed">A</div>
+        </a>
+        <a class="menu-button" href="{% toggle_lang request %}">
+            {% block lang %}{% inline_svg 'lang_de.svg' %}{% endblock %}</a>
+        <details class="menu-button">
+            <summary >Menu</summary>
+            <div>
+                <nav>
+{#                    <a href="#">Artportraits - todo</a>#}
+{#                    <a href="#">Beobachtungen mit Naturblick - todo</a>#}
+                    <a href="{% url 'mobileapp' %}{% querystring %}">{% translate "Über die App" %}</a>
+                    <a href="{% url 'about' %}{% querystring %}">{% translate "Über uns" %}</a>
+                    <a href="{% url 'faq' %}{% querystring %}">{% translate "Häufige Fragen" %}</a>
+                </nav>
+            </div>
+        </details>
     </div>
 
-    <h1>{% block page_title %}{% endblock %}</h1>
+    <h1 class="jumbo">{% block page_title %}{% endblock %}</h1>
     <p>{% block subtitle %}{% endblock %}</p>
 </header>
 <main>

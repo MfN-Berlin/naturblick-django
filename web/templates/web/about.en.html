@@ -1,8 +1,10 @@
 {% extends "web/page_base.html" %}
 
+{% load static web_tags %}
+
 {% block dels %}{% endblock %}
 
-{% block lang %}en{% endblock %}
+{% block lang %}{% inline_svg 'lang_en.svg' %}{% endblock %}
 
 {% block title %}About us{% endblock %}
 {% block page_title %}About us{% endblock %}

@@ -2,8 +2,9 @@
 
 {% load web_tags static %}
 
-{# Not with il8n because there will be an icon in the future #}
-{% block lang %}en{% endblock %}
+{% block dels %}{% endblock %}
+
+{% block lang %}{% inline_svg 'lang_en.svg' %}{% endblock %}
 
 {% block title %}About Naturblick{% endblock %}
 {% block page_title %}About Naturblick{% endblock %}

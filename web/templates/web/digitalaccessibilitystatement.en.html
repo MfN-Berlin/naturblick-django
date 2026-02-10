@@ -1,9 +1,10 @@
 {% extends "web/page_base.html" %}
 
-{% load web_tags static %}
+{% load static web_tags %}
 
-{# Not with il8n because there will be an icon in the future #}
-{% block lang %}de{% endblock %}
+{% block dels %}{% endblock %}
+
+{% block lang %}{% inline_svg 'lang_en.svg' %}{% endblock %}
 
 {% block title %}Digital accessibility statement{% endblock %}
 {% block page_title %}Digital accessibility statement{% endblock %}

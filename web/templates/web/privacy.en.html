@@ -1,11 +1,12 @@
 {% extends "web/page_base.html" %}
 
-{% load web_tags static %}
+{% load static web_tags %}
 
-{% block dels %}<a href="{% toggle_dels request %}">Leichte Sprache</a>{% endblock %}
+{% block dels %}{% endblock %}
 
-{# Not with il8n because there will be an icon in the future #}
-{% block lang %}en{% endblock %}
+{% block dels %}{% endblock %}
+
+{% block lang %}{% inline_svg 'lang_en.svg' %}{% endblock %}
 
 {% block title %}General Privacy Notice{% endblock %}
 {% block page_title %}General Privacy Notice{% endblock %}

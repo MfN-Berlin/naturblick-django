@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-05 13:42+0100\n"
+"POT-Creation-Date: 2026-02-10 14:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,27 +18,39 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: templates/web/page_base.html:36
+#: templates/web/page_base.html:64
+msgid "Über die App"
+msgstr "About Naturblick"
+
+#: templates/web/page_base.html:65
+msgid "Über uns"
+msgstr "About us"
+
+#: templates/web/page_base.html:66
+msgid "Häufige Fragen"
+msgstr "FAQ"
+
+#: templates/web/page_base.html:79
 msgid "Kontakt"
 msgstr "Contact"
 
-#: templates/web/page_base.html:37
+#: templates/web/page_base.html:80
 msgid "Datenschutz"
 msgstr "General Privacy Notice"
 
-#: templates/web/page_base.html:38
+#: templates/web/page_base.html:81
 msgid "Impressum"
 msgstr "Imprint"
 
-#: templates/web/page_base.html:39
+#: templates/web/page_base.html:82
 msgid "Digitale Barrierefreiheit"
 msgstr "Digital accessibility statement"
 
-#: views.py:22
+#: views.py:24
 msgid "Discover Nature"
 msgstr "Discover Nature"
 
-#: views.py:156
+#: views.py:171
 #, python-brace-format
 msgid "Seen by {user} at {date} in {coords}"
 msgstr "Seen by {user} at {date} in {coords}"

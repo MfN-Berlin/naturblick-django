@@ -11,18 +11,20 @@ html {
     "Segoe UI Symbol";
 }
 
+body {
+    margin: 0;
+    font-size: var(--font-size-regular);
+    line-height: var(--line-height-regular);
+}
+
 h1 {
     font-size: 36px;
     line-height: 40px;
 }
 
 h5 {
-    font-size: 19px;
-    line-height: 27px;
-}
-
-body {
-    margin: 0;
+    font-size: var(--font-size-big);
+    line-height: var(--line-height-big);
 }
 
 header {
@@ -63,21 +65,85 @@ header {
     background-color: gray;
 }
 
-.home {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-}
-
 .menu {
     position: absolute;
     top: 16px;
     right: 16px;
     display: flex;
+    gap: 10px;
+    height: 40px;
+}
+
+.menu-button {
+    display: flex;
+    align-items: center;
+
+    padding: 0 8px;
+
+    color: inherit;
+    text-decoration: none;
+
+    background: none;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.menu-button:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.menu-button:active {
+    border-color: white;
+}
+
+.menu-button--dels-active {
+    border-color: white;
+}
+
+.home {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+
+    display: inline-flex;
+    align-items: center;
+    padding: 17px 24px;
+
+    h5 {
+        font-size: var(--font-size-big);
+        line-height: var(--font-size-big);
+        margin: 0 0 0 8px;
+    }
+
+    img {
+        height: 19px;
+        margin: 0;
+    }
 }
 
 .person-card {
     img {
         width: 100%;
     }
+}
+
+.jumbo {
+    font-size: var(--font-size-jumbo);
+    line-height: var(--line-height-jumbo);
+}
+
+.initial-zoomed {
+    color: var(--zoomed-color);
+    font-size: var(--font-size-small);
+}
+
+.initial-unzoomed {
+    color: var(--unzoomed-color);
+    font-size: var(--font-size-big);
+}
+
+svg {
+    fill: #fff;
+    stroke: #fff;
+    stroke-width: 0px;
 }
