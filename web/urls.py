@@ -3,13 +3,13 @@ from django.urls import path, re_path
 from web import views
 
 urlpatterns = [
-    path("faq", views.faq, name="faq"),
-    path("mobileapp", views.mobileapp, name="mobileapp"),
-    path("about", views.about, name="about"),
-    path("kontakt", views.kontakt, name="kontakt"),
-    path("privacy", views.privacy, name="privacy"),
-    path("imprint", views.imprint, name="imprint"),
-    path("digitalaccessibilitystatement", views.digitalaccessibilitystatement, name="digitalaccessibilitystatement"),
+    path("dev/faq", views.faq, name="faq"),
+    path("dev/mobileapp", views.mobileapp, name="mobileapp"),
+    path("dev/about", views.about, name="about"),
+    path("dev/kontakt", views.kontakt, name="kontakt"),
+    path("dev/privacy", views.privacy, name="privacy"),
+    path("dev/imprint", views.imprint, name="imprint"),
+    path("dev/digitalaccessibilitystatement", views.digitalaccessibilitystatement, name="digitalaccessibilitystatement"),
     path('', views.home, name="home"),
     re_path(
         r'^species/portrait[^/]*/(?P<id>[0-9]+)/?$', views.artportrait, name="artportrait"),
