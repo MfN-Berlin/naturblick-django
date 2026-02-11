@@ -14,36 +14,12 @@
     <script src="https://cdn.usefathom.com/script.js" data-spa="auto" data-site="TZBNRXXT" defer></script>
     <link rel="stylesheet" href="{% static 'web/css/variables.css' %}">
     <link rel="stylesheet" href="{% static 'web/css/styles.css' %}">
-
-    <script>
-        function font_zoom_toggle() {
-            const root = document.documentElement;
-            const styles = getComputedStyle(root);
-            const def = styles.getPropertyValue('--default-font-zoom').trim();
-            const zoomed = styles.getPropertyValue('--zoomed-font-zoom').trim();
-            const saved = localStorage.getItem('font-zoom');
-            let next;
-            if ((saved ?? def) === def) {
-                next = zoomed
-                root.style.setProperty('--zoomed-color', "#ccc");
-                root.style.setProperty('--unzoomed-color', "inherit");
-            } else {
-                next = def
-                root.style.setProperty('--font-zoom', next);
-                root.style.setProperty('--zoomed-color', "inherit");
-                root.style.setProperty('--unzoomed-color', "#ccc");
-            }
-            root.style.setProperty('--font-zoom', next);
-            localStorage.setItem('font-zoom', next);
-
-
-        }
-    </script>
+    <script src="{% static 'web/js/web.js' %}"></script>
 </head>
 <body>
-<header>
-
-    <a class="top-left" href="{% url 'home' %}{% querystring %}">
+<header class="{{ header_class|default:'' }}">
+    {% block img %}{% endblock %}
+    <a class="top-left" href="{% url 'index' %}{% querystring %}">
         <img src="{% static 'logo.svg' %}">
         <h5>Naturblick</h5>
     </a>
@@ -70,8 +46,10 @@
         </details>
     </div>
 
-    <h1>{% block page_title %}{% endblock %}</h1>
-    <p>{% block subtitle %}{% endblock %}</p>
+    <div class="bottom-mid">
+        <h1>{% block page_title %}{% endblock %}</h1>
+        <p>{% block subtitle %}{% endblock %}</p>
+    </div>
 </header>
 <main>
     {% block content %}{% endblock %}

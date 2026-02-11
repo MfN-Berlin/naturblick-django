@@ -102,6 +102,11 @@ def map_page(request, obs_id):
     return default_response(request, ogs_list)
 
 
+def index(request):
+    return web_render(request, "index", context = {
+        "header_class": "home"
+    })
+
 def about(request):
     return web_render(request, "about")
 
@@ -126,14 +131,14 @@ def imprint(request):
     return web_render(request, "imprint")
 
 
-def web_render(request, template: str) -> HttpResponse:
+def web_render(request, template: str, context=None) -> HttpResponse:
     lang = translation.get_language()
     try:
         get_template(f"web/{template}.{lang}.html")
-        return render(request, f"web/{template}.{lang}.html")
+        return render(request, f"web/{template}.{lang}.html", context)
     except TemplateDoesNotExist:
         print("Fallback to DE ")
-        return render(request, f"web/{template}.de.html")
+        return render(request, f"web/{template}.de.html", context)
 
 
 def digitalaccessibilitystatement(request):

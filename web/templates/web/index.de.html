@@ -1,0 +1,41 @@
+{% extends "web/page_base.html" %}
+
+{% load static i18n web_tags %}
+
+{% block title %}Naturblick{% endblock %}
+{% block page_title %}Erlebe Natur{% endblock %}
+
+{% block subtitle %}Bestimme Tiere und Pflanzen und erkunde deine Stadt.{% endblock %}
+
+{% block img %}
+    {% img "Header_2023_klein_beschnitten_belichted_7cca538a55.jpg" widths='245w,400w,800w,1200w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, (max-width: 1023px) 1200px" %}
+{% endblock %}
+
+{% block content %}
+    <div class="three-column">
+        <div>
+            {% url 'mobileapp' as mobileapp_url %}
+            {% querystring as qs %}
+
+            {% img "Naturblick_Screen_klein_32cca05fc4.jpg" widths='245w,400w,800w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, 800px" %}
+
+            {% include "partials/card.html" with title="Über die App" subtitle="Mit Naturblick kannst du Tiere und Pflanzen einfach bestimmen und mehr über die Natur in deiner Nachbarschaft erfahren." link_text="Erfahre mehr über die App" url=mobileapp_url|add:qs %}
+        </div>
+
+        <div>
+            {% url 'about' as about_url %}
+
+            {% img "medium_140926_science_slam_012_fassade_ccarola_radke_mfn_3325ebcc62_75b5a3de46.jpg" widths='208w,400w' sizes="(max-width: 400px) 400px" %}
+
+            {% include "partials/card.html" with title="Über uns" subtitle="Wir sind ein interdisziplinäres Team und forschen zu Mensch-Natur-Beziehungen und digitalen Werkzeugen für die Naturerfahrung." link_text="Erfahre mehr über uns" url=about_url|add:qs %}
+        </div>
+
+        <div>
+            {% url 'faq' as faq_url %}
+            {% img "large_Unbenannt_9_5cdfe5cd44_f029cab684.jpeg" widths='208w,400w,800w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, 800px" %}
+
+            {% include "partials/card.html" with title="Häufige Fragen" subtitle="Hier findest du Antworten auf deine wichtigsten Fragen." link_text="Lese hier Antworten auf deine Fragen" url=faq_url|add:qs %}
+        </div>
+    </div>
+
+{% endblock %}

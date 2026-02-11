@@ -1,6 +1,6 @@
 {% extends "web/page_base.html" %}
 
-{% load static %}
+{% load static web_tags %}
 
 {% block title %}Über die Naturblick App{% endblock %}
 {% block page_title %}Über die Naturblick App{% endblock %}
@@ -46,13 +46,7 @@
         du die Anzahl der beobachteten Exemplare einer Art angeben und dir eigene Notizen machen.
         Mache dir einen Account und sichere deine Daten.</p>
 
-    <img alt="" src={% static 'web/img/Naturblick_klein_fuer_Homepage_51bf8996c7.jpg' %}
-            srcset="{% static 'web/img/large_Naturblick_klein_fuer_Homepage_51bf8996c7.jpg' %} 1200w,
-            {% static 'web/img/small_Naturblick_klein_fuer_Homepage_51bf8996c7.jpg' %} 400w,
-            {% static 'web/img/medium_Naturblick_klein_fuer_Homepage_51bf8996c7.jpg' %} 800w,
-            {% static 'web/img/thumbnail_Naturblick_klein_fuer_Homepage_51bf8996c7.jpg' %} 234w,
-    {% static 'web/img/Naturblick_klein_fuer_Homepage_51bf8996c7.jpg' %}"
-    sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, (max-width: 1023px) 800px, 800px">
+        {% img "Naturblick_klein_fuer_Homepage_51bf8996c7.jpg" widths='234w,400w,800w,1200w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, (max-width: 1023px) 800px, 800px" %}
 
     <p>Lade dir die App im
         <a href="https://play.google.com/store/apps/details?id=com.mfn_berlin_stadtnatur_entdecken.naturblick">Google
