@@ -2,4 +2,4 @@
 
 {% get_current_language as LANG %}
 
-<a class="menu-button {% if LANG == 'dels' %}menu-button--dels-active{% endif %}" href="{% toggle_dels request %}">Leichte Sprache</a>
+<a class="{% if LANG == 'dels' %}active{% endif %}" href="{% toggle_dels request %}">Leichte Sprache</a>

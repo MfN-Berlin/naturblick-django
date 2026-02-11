@@ -1,3 +1,4 @@
+{% load web_tags %}
 {% load i18n static web_tags %}
 
 <!doctype html>
@@ -42,34 +43,34 @@
 <body>
 <header>
 
-    <a class="home menu-button" href="{% url 'home' %}{% querystring %}">
+    <a class="top-left" href="{% url 'home' %}{% querystring %}">
         <img src="{% static 'logo.svg' %}">
         <h5>Naturblick</h5>
     </a>
 
-    <div class="menu">
+    <div class="top-right">
         {% block dels %}{% include "partials/dels.html" %}{% endblock %}
-        <a class="menu-button" href="#" onclick="font_zoom_toggle(); return false;">
+        <a href="#" onclick="font_zoom_toggle(); return false;">
             <div class="initial-zoomed">A&nbsp;</div>
             <div class="initial-unzoomed">A</div>
         </a>
-        <a class="menu-button" href="{% toggle_lang request %}">
+        <a href="{% toggle_lang request %}">
             {% block lang %}{% inline_svg 'lang_de.svg' %}{% endblock %}</a>
-        <details class="menu-button">
-            <summary >Menu</summary>
-            <div>
-                <nav>
-{#                    <a href="#">Artportraits - todo</a>#}
-{#                    <a href="#">Beobachtungen mit Naturblick - todo</a>#}
-                    <a href="{% url 'mobileapp' %}{% querystring %}">{% translate "Über die App" %}</a>
-                    <a href="{% url 'about' %}{% querystring %}">{% translate "Über uns" %}</a>
-                    <a href="{% url 'faq' %}{% querystring %}">{% translate "Häufige Fragen" %}</a>
-                </nav>
-            </div>
+        <details>
+            <summary>Menu {% inline_svg 'menu_bars.svg' %}</summary>
+            <nav>
+                <ul>
+                    {#                    <a href="#">Artportraits - todo</a>#}
+                    {#                    <a href="#">Beobachtungen mit Naturblick - todo</a>#}
+                    <li><a href="{% url 'mobileapp' %}{% querystring %}">{% translate "Über die App" %}</a></li>
+                    <li><a href="{% url 'about' %}{% querystring %}">{% translate "Über uns" %}</a></li>
+                    <li><a href="{% url 'faq' %}{% querystring %}">{% translate "Häufige Fragen" %}</a></li>
+                </ul>
+            </nav>
         </details>
     </div>
 
-    <h1 class="jumbo">{% block page_title %}{% endblock %}</h1>
+    <h1>{% block page_title %}{% endblock %}</h1>
     <p>{% block subtitle %}{% endblock %}</p>
 </header>
 <main>
