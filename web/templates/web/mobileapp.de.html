@@ -1,18 +1,13 @@
 {% extends "web/page_base.html" %}
 
-{% load web_tags static %}
-
-{% block dels %}<a href="{% toggle_dels request %}">Leichte Sprache</a>{% endblock %}
-
-{# Not with il8n because there will be an icon in the future #}
-{% block lang %}de{% endblock %}
+{% load static %}
 
 {% block title %}Über die Naturblick App{% endblock %}
 {% block page_title %}Über die Naturblick App{% endblock %}
 
 
 {% block subtitle %}
-    <hr class="brick brick-orange">
+    <hr>
     Mit Naturblick kannst du Pflanzen und Tiere einfach bestimmen und mehr über die Natur in deiner Stadt
     erfahren.{% endblock %}
 

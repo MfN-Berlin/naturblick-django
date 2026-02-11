@@ -1,17 +1,12 @@
 {% extends "web/page_base.html" %}
 
-{% load web_tags static %}
-
-{% block dels %}<a href="{% toggle_dels request %}">Leichte Sprache</a>{% endblock %}
-
-{# Not with il8n because there will be an icon in the future #}
-{% block lang %}de{% endblock %}
+{% load static web_tags %}
 
 {% block title %}Über uns{% endblock %}
 {% block page_title %}Über uns{% endblock %}
 
 {% block subtitle %}
-    <hr class="brick brick-orange">
+    <hr>
     Wir stärken die Aufmerksamkeit für Natur in der Stadt, um gemeinsam für Natur zu
     handeln.{% endblock %}
 
@@ -25,14 +20,14 @@
         erkunden, Tiere und Pflanzen bestimmen und deine Beobachtungen speichern.
     </p>
 
-    <div class="column-3">
-        {% include "partials/person.html" with name="Ulrike Sturm" position="Projektleitung"  only %}
-        {% include "partials/person.html" with name="Susan Karlebowski" position="Wissenschaftliche Mitarbeit"  only %}
-        {% include "partials/person.html" with name="Petter Arvidsson" position="Full-Stack Entwicklung"  only %}
-        {% include "partials/person.html" with name="Martin Tscholl" position="Wissenschaftliche Mitarbeit"  only %}
-        {% include "partials/person.html" with name="Mario Lasseck" position="Entwicklung Mustererkennung"  only %}
-        {% include "partials/person.html" with name="Johannes Ebbighausen" position="Full-Stack Entwicklung"  only %}
-    </div>
+    <ul>
+        <li>Ulrike Sturm (Projektleitung)</li>
+        <li>Susan Karlebowski (Wissenschaftliche Mitarbeit)</li>
+        <li>Martin Tscholl (Wissenschaftliche Mitarbeit)</li>
+        <li>Petter Arvidsson (Full-Stack Entwicklung)</li>
+        <li>Johannes Ebbighausen (Full-Stack Entwicklung)</li>
+        <li>Mario Lasseck (Entwicklung Mustererkennung)</li>
+    </ul>
 
     <h5>Für Natur</h5>
     <p>Nur wenn wir uns als aktiven Teil der Natur sehen, lernen, ihre Mechanismen zu verstehen und uns gemeinsam für
@@ -67,7 +62,7 @@
         <a href="https://github.com/MfN-Berlin/naturblick-android">https://github.com/MfN-Berlin/naturblick-android</a>
         <a href="https://github.com/MfN-Berlin/naturblick-ios">https://github.com/MfN-Berlin/naturblick-ios</a></p>
 
-    <hr class="brick brick-blue">
+    <hr>
 
     <h5>Partner</h5>
     <p>In der Pilotphase (März 2015 bis Mai 2018) wurden wir von Vertreter:innen folgender Berliner Institutionen in
@@ -123,7 +118,7 @@
         Verbraucherschutz
         (BMUV) gefördert.
         <br>Zeitraum: März 2015 bis April 2021</p>
-    <hr class="brick">
+    <hr>
 
     <h5>Veröffentlichungen</h5>
     <h5>Citizen Science</h5>

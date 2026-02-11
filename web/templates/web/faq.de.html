@@ -1,18 +1,13 @@
 {% extends "web/page_base.html" %}
 
-{% load web_tags static %}
-
-{% block dels %}<a href="{% toggle_dels request %}">Leichte Sprache</a>{% endblock %}
-
-{# Not with il8n because there will be an icon in the future #}
-{% block lang %}de{% endblock %}
+{% load static %}
 
 {% block title %}Häufige Fragen{% endblock %}
 {% block page_title %}Häufige Fragen{% endblock %}
 
 
 {% block subtitle %}
-    <hr class="brick brick-orange">
+    <hr>
     Hier findest du Antworten auf die Fragen, die uns häufig erreichen. Wenn du Fragen hast, die du hier nicht finden
     kannst, einen Fehler gefunden hast oder weiteren Anregungen hast, schreibe uns einfach unter naturblick@mfn.berlin.
 {% endblock %}

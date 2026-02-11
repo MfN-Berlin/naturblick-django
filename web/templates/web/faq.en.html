@@ -1,15 +1,16 @@
 {% extends "web/page_base.html" %}
 
-{% load web_tags static %}
+{% load static web_tags %}
 
-{# Not with il8n because there will be an icon in the future #}
-{% block lang %}en{% endblock %}
+{% block dels %}{% endblock %}
+
+{% block lang %}{% inline_svg 'lang_en.svg' %}{% endblock %}
 
 {% block title %}FAQ{% endblock %}
 {% block page_title %}FAQ{% endblock %}
 
 {% block subtitle %}
-    <hr class="brick brick-orange">
+    <hr>
     <h1>Frequently asked questions</h1>
     <p>Here you will find answers to the questions we frequently receive. If you have questions that you cannot find
         here, further feedback, suggestions or if you found errors, please write us an email to:

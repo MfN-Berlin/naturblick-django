@@ -1,0 +1,30 @@
+:root {
+  --font-size-jumbo: 40px;
+  --line-height-jumbo: 45px;
+
+  --default-font-zoom: 1;
+  --zoomed-font-zoom: 1.5;
+
+  --font-zoom: var(--default-font-zoom);
+
+  --font-size-regular-no-zoom: 16px;
+  --line-height-regular-no-zoom: 24px;
+
+  --font-size-regular: calc(var(--font-size-regular-no-zoom) * var(--font-zoom));
+  --line-height-regular: calc(var(--line-height-regular-no-zoom) * var(--font-zoom));
+
+  --font-size-big-no-zoom: 19px;
+  --line-height-big-no-zoom: 27px;
+
+  --font-size-big: calc(var(--font-size-big-no-zoom) * var(--font-zoom));
+  --line-height-big: calc(var(--line-height-big-no-zoom) * var(--font-zoom));
+
+  --font-size-small-no-zoom: 14px;
+  --line-height-small-no-zoom: 20px;
+
+  --font-size-small: calc(var(--font-size-small-no-zoom) * var(--font-zoom));
+  --line-height-small: calc(var(--line-height-small-no-zoom) * var(--font-zoom));
+
+  --zoomed-color: inherit;
+  --unzoomed-color: #ccc;
+}

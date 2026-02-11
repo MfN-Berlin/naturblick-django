@@ -1,14 +1,16 @@
 {% extends "web/page_base.html" %}
 
+{% load static web_tags %}
+
 {% block dels %}{% endblock %}
 
-{% block lang %}en{% endblock %}
+{% block lang %}{% inline_svg 'lang_en.svg' %}{% endblock %}
 
 {% block title %}About us{% endblock %}
 {% block page_title %}About us{% endblock %}
 
 {% block subtitle %}
-    <hr class="brick brick-orange">
+    <hr>
     We raise awareness of nature in the city in order to act together for nature.{% endblock %}
 
 {% block content %}
@@ -20,14 +22,14 @@
         support the direct experience of nature in the city. Mit vielfältigen Funktionen kannst du Natur in der Stadt
         erkunden, Tiere und Pflanzen bestimmen und deine Beobachtungen speichern.</p>
 
-    <div class="column-3">
-        {% include "partials/person.html" with name="Ulrike Sturm" position="Project lead"  only %}
-        {% include "partials/person.html" with name="Susan Karlebowski" position="Scientific collaboration"  only %}
-        {% include "partials/person.html" with name="Petter Arvidsson" position="Full-Stack developer"  only %}
-        {% include "partials/person.html" with name="Martin Tscholl" position="Scientific collaboration"  only %}
-        {% include "partials/person.html" with name="Mario Lasseck" position="Pattern recognition development"  only %}
-        {% include "partials/person.html" with name="Johannes Ebbighausen" position="Full-Stack developer"  only %}
-    </div>
+    <ul>
+        <li>Ulrike Sturm (Projektleitung)</li>
+        <li>Susan Karlebowski (Wissenschaftliche Mitarbeit)</li>
+        <li>Martin Tscholl (Wissenschaftliche Mitarbeit)</li>
+        <li>Petter Arvidsson (Full-Stack Entwicklung)</li>
+        <li>Johannes Ebbighausen (Full-Stack Entwicklung)</li>
+        <li>Mario Lasseck (Entwicklung Mustererkennung)</li>
+    </ul>
 
     <h5>For nature</h5>
     <p>Only if we see ourselves as an active part of nature, learn to understand its mechanisms and work together for
@@ -60,7 +62,7 @@
         <a href="https://github.com/MfN-Berlin/naturblick-android">https://github.com/MfN-Berlin/naturblick-android</a>
         <a href="https://github.com/MfN-Berlin/naturblick-ios">https://github.com/MfN-Berlin/naturblick-ios</a></p>
 
-    <hr class="brick brick-blue">
+    <hr>
 
     <h5>Partner</h5>
     <p>During the pilot phase (March 2015 to May 2018) we were advised and supported by representatives of the following
@@ -114,7 +116,7 @@
     <p>The project is funded by the German Federal Ministry for the Environment, Nature Conservation and Nuclear Safety
         (BMU).
         Duration: March 2015 to April 2021</p>
-    <hr class="brick">
+    <hr>
     <h5>Publications</h5>
     <h6>Citizen Science</h6>
 

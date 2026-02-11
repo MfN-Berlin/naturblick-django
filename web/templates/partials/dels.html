@@ -1,0 +1,5 @@
+{% load web_tags i18n %}
+
+{% get_current_language as LANG %}
+
+<a class="{% if LANG == 'dels' %}active{% endif %}" href="{% toggle_dels request %}">Leichte Sprache</a>

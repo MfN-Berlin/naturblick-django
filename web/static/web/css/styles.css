@@ -11,18 +11,20 @@ html {
     "Segoe UI Symbol";
 }
 
+body {
+    margin: 0;
+    font-size: var(--font-size-regular);
+    line-height: var(--line-height-regular);
+}
+
 h1 {
     font-size: 36px;
     line-height: 40px;
 }
 
 h5 {
-    font-size: 19px;
-    line-height: 27px;
-}
-
-body {
-    margin: 0;
+    font-size: var(--font-size-big);
+    line-height: var(--line-height-big);
 }
 
 header {
@@ -31,53 +33,126 @@ header {
     text-align: center;
     padding: 96px 15% 64px;
     color: white;
+
+    h1 {
+        font-size: var(--font-size-jumbo);
+        line-height: var(--line-height-jumbo);
+    }
+
+    a, details {
+        display: flex;
+        align-items: center;
+
+        padding: 0 8px;
+
+        color: inherit;
+        text-decoration: none;
+
+        background: none;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+
+    a:hover, details:hover {
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    a:active, details:active {
+        border-color: white;
+    }
+
+    a.active {
+        border-color: white;
+    }
+
+    details {
+        position: relative;
+
+        > summary {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        > summary::marker {
+            display: none;
+        }
+
+        nav {
+            position: absolute;
+            top: 100%;
+            right: 0;
+
+            margin-top: 14px;
+            min-width: max-content;
+
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+        }
+    }
 }
 
-.brick {
+hr {
     width: 29px;
     height: 6px;
     border: none;
     margin: 64px auto;
     margin-top: 48px;
     margin-bottom: 32px;
-}
-
-.brick-orange {
-    background-color: #ffcf4a;
-}
-
-.brick-blue {
     background-color: #2f99c6;
 }
 
-.column-3 {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    -moz-column-gap: 32px;
-    column-gap: 32px;
-    row-gap: 32px;
+header hr {
+    background-color: #ffcf4a;
 }
 
-.card {
-    border-radius: 8px;
-    background-color: gray;
-}
-
-.home {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-}
-
-.menu {
+.top-right {
     position: absolute;
     top: 16px;
     right: 16px;
     display: flex;
+    gap: 10px;
+    height: 40px;
+
+    .initial-zoomed {
+        color: var(--zoomed-color);
+        font-size: var(--font-size-small);
+    }
+
+    .initial-unzoomed {
+        color: var(--unzoomed-color);
+        font-size: var(--font-size-big);
+    }
 }
 
-.person-card {
-    img {
-        width: 100%;
+.top-left {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+
+    display: inline-flex;
+    align-items: center;
+    padding: 17px 24px;
+
+    h5 {
+        font-size: var(--font-size-big);
+        line-height: var(--font-size-big);
+        margin: 0 0 0 8px;
     }
+
+    img {
+        height: 19px;
+        margin: 0;
+    }
+}
+
+svg {
+    fill: #fff;
+    stroke: #fff;
+    stroke-width: 0px;
 }
