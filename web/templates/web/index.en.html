@@ -16,23 +16,20 @@
 {% block content %}
     <div class="three-column">
         <div>
-            {% url 'mobileapp' as mobileapp_url %}
             {% querystring as qs %}
             {% img "Naturblick_Screen_klein_32cca05fc4.jpg" widths='245w,400w,800w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, 800px" %}
-            {% include "partials/card.html" with title="About the app" subtitle="With Naturblick, you can quickly identify animals and plants and learn more about nature in your neighborhood." link_text="Find out more about the app" url=mobileapp_url|add:qs %}
+            {% include "partials/card.html" with title="About the app" subtitle="With Naturblick, you can quickly identify animals and plants and learn more about nature in your neighborhood." link_text="Find out more about the app" path_name="mobileapp" %}
         </div>
 
         <div>
-            {% url 'about' as about_url %}
             {% img "medium_140926_science_slam_012_fassade_ccarola_radke_mfn_3325ebcc62_75b5a3de46.jpg" widths='208w,400w' sizes="(max-width: 400px) 400px" %}
-            {% include "partials/card.html" with title="About us" subtitle="We are an interdisciplinary team researching human-nature relationships and digital tools for experiencing nature." link_text="Find out more about us" url=about_url|add:qs %}
+            {% include "partials/card.html" with title="About us" subtitle="We are an interdisciplinary team researching human-nature relationships and digital tools for experiencing nature." link_text="Find out more about us" path_name="about" %}
         </div>
 
         <div>
-            {% url 'faq' as faq_url %}
             {% img "large_Unbenannt_9_5cdfe5cd44_f029cab684.jpeg" widths='208w,400w,800w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, 800px" %}
 
-            {% include "partials/card.html" with title="FAQ" subtitle="Here you will find answers to your most important questions." link_text="Click here to read the answers" url=faq_url|add:qs %}
+            {% include "partials/card.html" with title="FAQ" subtitle="Here you will find answers to your most important questions." link_text="Click here to read the answers" path_name="faq" %}
         </div>
     </div>
 {% endblock %}
