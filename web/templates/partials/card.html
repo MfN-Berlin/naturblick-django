@@ -1,3 +1,7 @@
 <h2>{{ title }}</h2>
 <p>{{ subtitle }}</p>
-<a href="{% url path_name %}{% querystring %}">{{ link_text }}</a>
+{% if url %}
+    <a href="{{ url }}">{{ link_text }}</a>
+{% else %}
+    <a href="{% url path_name %}{% querystring %}">{{ link_text }}</a>
+{% endif %}

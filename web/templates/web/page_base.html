@@ -16,8 +16,8 @@
     <link rel="stylesheet" href="{% static 'web/css/styles.css' %}">
     <script src="{% static 'web/js/web.js' %}"></script>
 </head>
-<body>
-<header class="{{ header_class|default:'' }}">
+<body class="{{ header_class|default:'' }}">
+<header>
     {% block img %}{% endblock %}
     <a class="top-left" href="{% url 'index' %}{% querystring %}">
         <img src="{% static 'logo.svg' %}">
