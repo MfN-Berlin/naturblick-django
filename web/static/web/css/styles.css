@@ -30,13 +30,17 @@ h5 {
 header {
     position: relative;
     background-image: url("../img/background_grain_opt.png");
-    text-align: center;
-    padding: 96px 15% 64px;
     color: white;
+    text-align: center;
+
+    .bottom-mid {
+        padding: 96px 15% 64px;
+    }
 
     h1 {
         font-size: var(--font-size-jumbo);
         line-height: var(--line-height-jumbo);
+        white-space: nowrap;
     }
 
     a, details {
@@ -94,6 +98,27 @@ header {
                 margin: 0;
             }
         }
+    }
+}
+
+header.home {
+    background-image: none;
+    padding: 0;
+
+    > img {
+        width: 100%;
+    }
+
+    div a, div details {
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    .bottom-mid {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
     }
 }
 
@@ -155,4 +180,20 @@ svg {
     fill: #fff;
     stroke: #fff;
     stroke-width: 0px;
+}
+
+.three-column {
+
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 10px 15px -3px #0000001a,0 4px 6px -2px #0000000d,0 -2px 8px #4f4f4f0d;
+        margin-bottom: 32px;
+    }
+
+    grid-template-columns: repeat(3, 1fr);
+    display: grid;
+    column-gap: var(--gutterwidth);
+    row-gap: var(--gutterwidth);
 }

@@ -27,4 +27,6 @@
 
   --zoomed-color: inherit;
   --unzoomed-color: #ccc;
+
+  --gutterwidth: 32px;
 }

@@ -1,17 +1,12 @@
 {% extends "web/page_base.html" %}
 
-{% load static %}
+{% load static web_tags %}
 
 {% block title %}Kontakt{% endblock %}
 {% block page_title %}Kontakt{% endblock %}
 
 {% block content %}
-    <img alt="" src={% static 'web/img/maps_Karte_6912873a82.jpg' %}
-            srcset="{% static 'web/img/small_maps_Karte_6912873a82.jpg' %} 500w,
-            {% static 'web/img/medium_maps_Karte_6912873a82.jpg' %} 750w,
-            {% static 'web/img/thumbnail_maps_Karte_6912873a82.jpg' %} 225w,
-    {% static 'web/img/maps_Karte_6912873a82.jpg' %}"
-    sizes="(max-width: 400px) 500px, (max-width: 767px) 750px">
+    {% img "maps_Karte_6912873a82.jpg" widths='225w,500w,750w' sizes="(max-width: 400px) 500px, (max-width: 767px) 750px" %}
 
     <p><strong>Wir verbessern die Web-Seite und App immer weiter.</strong></p>
     <p>Schreib uns die Fehler.</p>

@@ -10,14 +10,7 @@
 {% block page_title %}Contact{% endblock %}
 
 {% block content %}
-    <img alt="" src={% static 'web/img/maps_Karte_6912873a82.jpg' %}
-            srcset="{% static 'web/img/small_maps_Karte_6912873a82.jpg' %} 500w,
-            {% static 'web/img/medium_maps_Karte_6912873a82.jpg' %} 750w,
-            {% static 'web/img/thumbnail_maps_Karte_6912873a82.jpg' %} 225w,
-    {% static 'web/img/maps_Karte_6912873a82.jpg' %}"
-    sizes="(max-width: 400px) 500px, (max-width: 767px) 750px">
-
-
+    {% img "maps_Karte_6912873a82.jpg" widths='225w,500w,750w' sizes="(max-width: 400px) 500px, (max-width: 767px) 750px" %}
     <p>We are continuously developing the Naturblick smartphone app and our platform in terms of content and technology.
         In doing so we are guided by your feedback.
         <br>We thank all who point out errors and/or make suggestions for improvement.</p>

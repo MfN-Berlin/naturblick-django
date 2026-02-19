@@ -1,6 +1,9 @@
 from django import template
 from django.contrib.staticfiles import finders
+from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.templatetags.static import static
+
 
 register = template.Library()
 
@@ -31,3 +34,24 @@ def inline_svg(path):
         with open(full_path, 'r', encoding='utf-8') as f:
             return mark_safe(f.read())
     return ''
+
+
+@register.simple_tag
+def img(path, widths, sizes):  #
+    root = 'web/img/'
+    prefixes = ['thumbnail', 'small', 'medium', 'large']
+    src = static(root + path)
+    srcset = ''
+    widths = widths.split(',')
+
+    for index, w in enumerate(widths):
+        srcset_path = static(f'{root}{prefixes[index]}_{path}')
+        srcset += f'{srcset_path} {w}, '
+    srcset += src
+
+    return format_html(
+        '<img src="{}" srcset="{}" sizes="{}" loading="lazy">',
+        src,
+        srcset,
+        sizes
+    )
