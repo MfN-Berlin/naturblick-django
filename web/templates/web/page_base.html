@@ -55,15 +55,13 @@
     {% block content %}{% endblock %}
 </main>
 <footer>
-    <div>
-        <a href="{% url 'kontakt' %}{% querystring %}">{% translate "Kontakt" %}</a>
-        <p>
-            <a href="{% url 'privacy' %}{% querystring %}">{% translate "Datenschutz" %}</a>
-            <a href="{% url 'imprint' %}{% querystring %}">{% translate "Impressum" %}</a>
-            <a href="
-                    {% url 'digitalaccessibilitystatement' %}{% querystring %}">{% translate "Digitale Barrierefreiheit" %}</a>
-        </p>
-    </div>
+    <a href="{% url 'kontakt' %}{% querystring %}">{% translate "Kontakt" %}</a>
+    <p>
+        <a href="{% url 'privacy' %}{% querystring %}">{% translate "Datenschutz" %}</a>
+        <a href="{% url 'imprint' %}{% querystring %}">{% translate "Impressum" %}</a>
+        <a href="
+                {% url 'digitalaccessibilitystatement' %}{% querystring %}">{% translate "Digitale Barrierefreiheit" %}</a>
+    </p>
     <div class="footer-right">
         <div>
             Naturblick 2020<br>
