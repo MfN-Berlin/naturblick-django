@@ -179,6 +179,8 @@ footer {
     p {
         display: flex;
         gap: 1.5rem;
+        font-size: var(--font-size-small);
+        line-height: var(--line-height-small);
 
         a {
             color: #a9a9a9;

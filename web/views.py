@@ -103,12 +103,19 @@ def map_page(request, obs_id):
 
 
 def index(request):
-    return web_render(request, "index", context = {
+    return web_render(request, "index", context={
         "header_class": "home"
     })
 
+
 def about(request):
     return web_render(request, "about")
+
+
+def portrait(request, id):
+    return web_render(request, "portrait", context={
+        "id": id
+    })
 
 
 def mobileapp(request):

@@ -4,6 +4,8 @@ from web import views
 
 urlpatterns = [
     path("dev", views.index, name="index"),
+    re_path(
+        r'^dev/species/portrait/(?P<id>[0-9]+)$', views.portrait, name="portrait"),
     path("dev/faq", views.faq, name="faq"),
     path("dev/mobileapp", views.mobileapp, name="mobileapp"),
     path("dev/about", views.about, name="about"),
