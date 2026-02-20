@@ -56,9 +56,23 @@
 </main>
 <footer>
     <a href="{% url 'kontakt' %}{% querystring %}">{% translate "Kontakt" %}</a>
-    <a href="{% url 'privacy' %}{% querystring %}">{% translate "Datenschutz" %}</a>
-    <a href="{% url 'imprint' %}{% querystring %}">{% translate "Impressum" %}</a>
-    <a href="{% url 'digitalaccessibilitystatement' %}{% querystring %}">{% translate "Digitale Barrierefreiheit" %}</a>
+    <p>
+        <a href="{% url 'privacy' %}{% querystring %}">{% translate "Datenschutz" %}</a>
+        <a href="{% url 'imprint' %}{% querystring %}">{% translate "Impressum" %}</a>
+        <a href="
+                {% url 'digitalaccessibilitystatement' %}{% querystring %}">{% translate "Digitale Barrierefreiheit" %}</a>
+    </p>
+    <div class="footer-right">
+        <div>
+            Naturblick 2020<br>
+            Museum für Naturkunde Berlin
+        </div>
+        {% if header_class == 'home' %}
+            <img src="{% static 'footer_mfnlogo_inverted.svg' %}">
+        {% else %}
+            <img src="{% static 'footer_mfnlogo.svg' %}">
+        {% endif %}
+    </div>
 </footer>
 </body>
 </html>

@@ -46,6 +46,39 @@ body.home {
     hr {
         background-color: #ffcf4a;
     }
+
+    footer {
+        background-color: #0000001a;
+    }
+}
+
+footer {
+    padding: 32px;
+    background-color: #fbfbfb;
+
+    display: flex;
+
+    .footer-right {
+        margin-left: auto;
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        color: #a9a9a9;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    p {
+        display: flex;
+        gap: 1.5rem;
+
+        a {
+            color: #a9a9a9;
+        }
+    }
 }
 
 h1 {
@@ -133,7 +166,8 @@ header {
 }
 
 main {
-    padding: 64px;
+    padding: 32px;
+
     a {
         border-bottom: 2px solid rgba(255, 255, 255, .5);
         text-decoration: none;
