@@ -1,6 +1,6 @@
 :root {
-  --font-size-jumbo: 40px;
-  --line-height-jumbo: 45px;
+  --font-size-jumbo: 60px; /* 40/ 45 on not tablet/ desktop */
+  --line-height-jumbo: 60px;
 
   --default-font-zoom: 1;
   --zoomed-font-zoom: 1.5;
