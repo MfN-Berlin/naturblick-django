@@ -17,6 +17,37 @@ body {
     line-height: var(--line-height-regular);
 }
 
+body.home {
+
+    background-image: url("../img/background_grain_opt.png");
+    color: white;
+
+    header {
+        background-image: none;
+        padding: 0;
+
+        > img {
+            width: 100%;
+        }
+
+        div a, div details {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .bottom-mid {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+    }
+
+    hr {
+        background-color: #ffcf4a;
+    }
+}
+
 h1 {
     font-size: 36px;
     line-height: 40px;
@@ -101,24 +132,12 @@ header {
     }
 }
 
-header.home {
-    background-image: none;
-    padding: 0;
-
-    > img {
-        width: 100%;
-    }
-
-    div a, div details {
-        background: rgba(0, 0, 0, 0.4);
-    }
-
-    .bottom-mid {
-        position: absolute;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
+main {
+    padding: 64px;
+    a {
+        border-bottom: 2px solid rgba(255, 255, 255, .5);
+        text-decoration: none;
+        color: inherit;
     }
 }
 
@@ -182,18 +201,17 @@ svg {
     stroke-width: 0px;
 }
 
-.three-column {
-
+.columns {
     img {
         max-width: 100%;
         height: auto;
         border-radius: 8px;
-        box-shadow: 0 10px 15px -3px #0000001a,0 4px 6px -2px #0000000d,0 -2px 8px #4f4f4f0d;
+        box-shadow: 0 10px 15px -3px #0000001a, 0 4px 6px -2px #0000000d, 0 -2px 8px #4f4f4f0d;
         margin-bottom: 32px;
     }
 
-    grid-template-columns: repeat(3, 1fr);
     display: grid;
     column-gap: var(--gutterwidth);
     row-gap: var(--gutterwidth);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }

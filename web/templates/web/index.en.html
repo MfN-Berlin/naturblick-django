@@ -14,9 +14,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="three-column">
+    <div class="columns">
         <div>
-            {% querystring as qs %}
             {% img "Naturblick_Screen_klein_32cca05fc4.jpg" widths='245w,400w,800w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, 800px" %}
             {% include "partials/card.html" with title="About the app" subtitle="With Naturblick, you can quickly identify animals and plants and learn more about nature in your neighborhood." link_text="Find out more about the app" path_name="mobileapp" %}
         </div>
@@ -32,4 +31,20 @@
             {% include "partials/card.html" with title="FAQ" subtitle="Here you will find answers to your most important questions." link_text="Click here to read the answers" path_name="faq" %}
         </div>
     </div>
+
+     <hr>
+
+    <div class="columns">
+        <div>
+            {% img "appstore_klein_8df243dbe5.jpg" widths='245w,400w,800w,1200w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, (max-width: 1023px) 1200px, 800px" %}
+            {% include "partials/card.html" with title="Naturblick in the Playstore" subtitle="Download the app for Android" link_text="Click here to download in the Playstore" url="https://play.google.com/store/apps/details?id=com.mfn_berlin_stadtnatur_entdecken.naturblick&hl=en" %}
+        </div>
+
+        <div>
+            {% img "large_appstore_klein_917e71dd30_eb20a50221.jpg" widths='245w,400w,800w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, 800px" %}
+            {% include "partials/card.html" with title="Naturblick in the Appstore" subtitle="Download the app for iOS" link_text="Click here to download in the Appstore" url="https://apps.apple.com/us/app/naturblick/id1206911194" %}
+        </div>
+    </div>
+
+    <hr>
 {% endblock %}
