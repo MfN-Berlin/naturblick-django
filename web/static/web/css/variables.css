@@ -22,6 +22,9 @@
   --font-size-small-no-zoom: 14px;
   --line-height-small-no-zoom: 20px;
 
+  --font-size-super-small: 12px;
+  --line-height-super-small: 16px;
+
   --font-size-small: calc(var(--font-size-small-no-zoom) * var(--font-zoom));
   --line-height-small: calc(var(--line-height-small-no-zoom) * var(--font-zoom));
 
@@ -29,4 +32,41 @@
   --unzoomed-color: #ccc;
 
   --gutterwidth: 32px;
+
+  --font-size-h2: 30px;
+  --line-height-h2: 36px;
+
+  --font-size-h3: 25px;
+  --line-height-h3: 30px;
+
+  --font-size-h5: 19px;
+  --line-height-h5: 27px;
+
+  --white: #fff;
+  --footer-white: #fbfbfb;
+  /* --light: #e9eaeb; */
+  --light-grey: #d1d1d1;
+  --grey: #a9a9a9;
+ /* --dark: #414d54; */
+  --black: #27313c;
+
+ /* --peace: #98bc00; */
+  --happy: #ffcf4a;
+ /* --fun: #ffb546; */
+ /* --dark-fun: #dc9a35; */
+ /* --stress: #ff7600; */
+ /* --pain: #cb4f4f; */
+
+  --mild: #edf4f8;
+  --chill: #3bb4e7;
+  --relax: #2f99c6;
+ /* --sleep: #12466a; */
+
+    --shadow: 0 10px 15px -3px rgba(0,0,0,.1),
+          0 4px 6px -2px rgba(0,0,0,.05),
+          0 -2px 8px 0 rgba(79,79,79,.05);
+
+    --shadow-hover: 0 12px 18px -3px rgba(0,0,0,.25),
+                0 4px 6px -2px rgba(0,0,0,.07),
+                0 -2px 10px 0 rgba(81,81,81,.1);
 }

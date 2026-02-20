@@ -1,0 +1,25 @@
+{% extends "web/page_base.html" %}
+
+{% load static web_tags %}
+
+{% block speciesname %}{{ portrait.species.gername }}
+<p>{{ additional_name }}</p>{% endblock %}
+{% block sciname %}{{ portrait.species.sciname }}{% endblock %}
+
+{% block content %}
+<div>
+    {% include "partials/portrait_section.html" with img_meta=portrait.descmeta title="Beschreibung" descriptions=descriptions only %}
+
+    {% include "partials/features_section.html" %}
+
+    {% if portrait.inthecitymeta %}
+        {% include "partials/portrait_section.html" with img_meta=portrait.inthecitymeta title="In der Stadt" descriptions=inthecity only %}
+    {% endif %}
+
+    {% if goodtoknows %}
+        {% include "partials/portrait_goodtoknow.html" with img_meta=portrait.funfactmeta title="Wissenswertes" goodtoknows=goodtoknows only %}
+    {% endif %}
+
+    {% include "partials/portrait_sources.html" with sources=sources only %}
+</div>
+{% endblock %}

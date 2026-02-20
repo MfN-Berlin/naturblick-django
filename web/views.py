@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Any
 
 import requests
 from django.core.handlers.wsgi import WSGIRequest
@@ -10,8 +9,9 @@ from django.template.loader import get_template
 from django.urls import reverse
 from django.utils import translation
 from django.utils.translation import gettext as _
+from rest_framework.exceptions import NotFound
 
-from species.models import Species, Portrait
+from species.models import Species, Portrait, Floraportrait, Faunaportrait
 
 
 class Og:
@@ -103,12 +103,100 @@ def map_page(request, obs_id):
 
 
 def index(request):
-    return web_render(request, "index", context = {
+    return web_render(request, "index", context={
         "header_class": "home"
     })
 
+
 def about(request):
     return web_render(request, "about")
+
+
+sources_ident_translations = {
+    "page": ["Seite", "Page"],
+    "wiki": ["Wikipedia, Die freie Enzyklopädie", "Wikipedia, The Free Encyclopedia"],
+    "revision": ["Bearbeitungsstand", "Date of last revision"],
+    "accessed": ["Abgerufen", "Accessed"],
+    "version": ["Fassung", "version"],
+    "volume": ["Band", "volume"],
+    "editors": ["Hrsg.", "eds."],
+    "nodate": ["o.J.", "n.d."],
+    "in": ["In", ""],
+    "published": ["veröffentlicht", "published"],
+    "edition": ["Auflage", "edition"],
+    "part": ["Teil", "part"],
+    "changedby": ["verändert von", "changed by"]
+}
+
+
+def translate_ident(source):
+    for key, value in sources_ident_translations.items():
+        source = source.replace(f'{{{{{key}}}}}', value[0])  # todo jetzt immer deutsch
+    return source
+
+
+def source_from_image(meta):
+    return (f'{meta.text}, {meta.image_file.owner}, {meta.image_file.license}, {meta.image_file.source}')
+
+
+def sims(similar_species):
+    return {
+        "name": similar_species.species.gername,
+        "sciname": similar_species.species.sciname,
+        "differences": similar_species.differences,
+        "url": reverse("portrait", kwargs={"id": similar_species.species.id}),
+        "img": similar_species.species.avatar_new.imagefile.image.url
+    }
+
+
+def portrait(request, id):
+    lang = extract_language(request, allowed_langs={"de", "en"})
+    species = Species.objects.get(id=id)
+
+    if species.group.nature == 'fauna':
+        return NotFound("foo")
+    else:
+        portrait = (
+            Floraportrait.objects
+            .select_related(
+                "descmeta",
+                "inthecitymeta",
+                "funfactmeta",
+            )
+            .prefetch_related(
+                "goodtoknow_set",
+                "source_set",
+                "unambigousfeature_set",
+                "similarspecies_set__species__avatar_new__imagefile",
+            )
+            .get(species_id=id, language=lang)
+        )
+        sources = [source_from_image(portrait.descmeta)]
+        if portrait.inthecitymeta:
+            sources.append(source_from_image(portrait.inthecitymeta))
+        if portrait.funfactmeta:
+            sources.append(source_from_image(portrait.funfactmeta))
+        sources += list(portrait.source_set.values_list("text", flat=True))
+        sources = list(map(translate_ident, sources))
+
+        goodtoknows = {gtk.type: gtk.fact for gtk in portrait.goodtoknow_set.all().order_by("ordering")}
+        additional_names = ", ".join(species.speciesname_set.filter(language="de").values_list("name", flat=True))
+        similar_species = [sims(s) for s in portrait.similarspecies_set.all()]
+        unambigousfeature = list(portrait.unambigousfeature_set.all().values_list("description", flat=True))
+
+        return web_render(request, "floraportrait", context={
+            "id": id,
+            "header_class": "portrait",
+            "portrait": portrait,
+            "descriptions": [portrait.short_description, portrait.leaf_description, portrait.stem_axis_description,
+                             portrait.flower_description, portrait.fruit_description],
+            "inthecity": [portrait.city_habitat],
+            "goodtoknows": goodtoknows,
+            "sources": sources,
+            "additional_name": additional_names,
+            "similar_species": similar_species,
+            "unambigousfeatures": unambigousfeature
+        })
 
 
 def mobileapp(request):
@@ -160,8 +248,7 @@ def default_ogs(request: WSGIRequest) -> list[Og]:
             ]
 
 
-def extract_language(request: WSGIRequest | Any):
-    allowed_langs = {"de", "en", "dels"}
+def extract_language(request: WSGIRequest, allowed_langs={"de", "en", "dels"}):
     lang = request.GET.get("lang", "de")
     if lang not in allowed_langs:
         lang = "de"

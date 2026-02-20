@@ -1,0 +1,10 @@
+<section class="sources">
+    <h4>Quellen</h4>
+    <div>
+        {% for source in sources %}
+        <p>
+            {{ source|urlize }}
+        </p>
+        {% endfor %}
+    </div>
+</section>

@@ -1,0 +1,26 @@
+{% load i18n %}
+
+<section class="features">
+    <div>
+        <h4>{% translate "Merkmale" %}</h4>
+        <img  src="{{ portrait.species.avatar_new.imagefile.image.url }}">
+        <ul>
+            {% for unambigousfeature in unambigousfeatures %}
+            <li>{{ unambigousfeature }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        {% for sim in similar_species %}
+        <a href="{{ sim.url }}">
+            <div>
+                <img  src="{{ sim.img }}">
+                <h3>{{ sim.name }}</h3>
+                <h5>{{ sim.sciname }}</h5>
+            </div>
+            {{ sim.differences }}
+        </a>
+        {% endfor %}
+    </div>
+</section>
