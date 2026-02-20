@@ -33,13 +33,13 @@ def get_lang_queryparam(request):
 
 
 def is_data_valid():
-    return not Portrait.objects.filter(species__accepted_species__isnull=False).exists()
+    return not Portrait.objects.filter(species__accepted_species__isnull=False, published=True).exists()
 
 
 # returns sqlite database used by android/ios
 def app_content_db(request):
     if (not is_data_valid()):
-        raise RuntimeError('There are artportraits connected to a synonym')
+        raise RuntimeError('There are published artportraits connected to a synonym')
 
     sqlite_db = create_sqlite_file()
 
@@ -55,7 +55,7 @@ def app_content_leicht_db(request):
     management.call_command("generateimages")
 
     if (not is_data_valid()):
-        raise RuntimeError('There are artportraits connected to a synonym')
+        raise RuntimeError('There are published artportraits connected to a synonym')
 
     sqlite_db = create_leicht_db()
 
