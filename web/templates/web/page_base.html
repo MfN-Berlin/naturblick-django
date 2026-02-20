@@ -9,7 +9,7 @@
     <base href="/">
     <link rel="icon" href="{% static 'favicon.ico' %}">
     {% for og in og_list %}
-        <meta property="{{ og.property }}" content="{{ og.content }}">
+    <meta property="{{ og.property }}" content="{{ og.content }}">
     {% endfor %}
     <script src="https://cdn.usefathom.com/script.js" data-spa="auto" data-site="TZBNRXXT" defer></script>
     <link rel="stylesheet" href="{% static 'web/css/variables.css' %}">
@@ -36,8 +36,8 @@
             <summary>Menu {% inline_svg 'menu_bars.svg' %}</summary>
             <nav>
                 <ul>
-                    {#                    <a href="#">Artportraits - todo</a>#}
-                    {#                    <a href="#">Beobachtungen mit Naturblick - todo</a>#}
+                    {# <a href="#">Artportraits - todo</a>#}
+                    {# <a href="#">Beobachtungen mit Naturblick - todo</a>#}
                     <li><a href="{% url 'mobileapp' %}{% querystring %}">{% translate "Über die App" %}</a></li>
                     <li><a href="{% url 'about' %}{% querystring %}">{% translate "Über uns" %}</a></li>
                     <li><a href="{% url 'faq' %}{% querystring %}">{% translate "Häufige Fragen" %}</a></li>
@@ -46,7 +46,7 @@
         </details>
     </div>
 
-    <div class="bottom-mid">
+    <div class="header-content">
         <h1>{% block page_title %}{% endblock %}</h1>
         <p>{% block subtitle %}{% endblock %}</p>
     </div>
@@ -68,9 +68,9 @@
             Museum für Naturkunde Berlin
         </div>
         {% if header_class == 'home' %}
-            <img src="{% static 'footer_mfnlogo_inverted.svg' %}">
+        <img src="{% static 'footer_mfnlogo_inverted.svg' %}">
         {% else %}
-            <img src="{% static 'footer_mfnlogo.svg' %}">
+        <img src="{% static 'footer_mfnlogo.svg' %}">
         {% endif %}
     </div>
 </footer>
