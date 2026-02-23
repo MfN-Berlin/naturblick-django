@@ -17,6 +17,6 @@ urlpatterns = [
     re_path(
         r'^species/portrait[^/]*/(?P<species_id>[a-z]+_[a-f0-9]{8})/?$', views.old_artportrait),
     path('map/observation/<int:obs_id>', views.map_page),
-    re_path(r'^\w+(?:/\w+){0,1}$', views.sub_page),
     re_path(r'^species/.*$', views.default_response),
-    ]
+    re_path(r'^.*$', views.sub_page), # Match anything and let Angular handle 404
+]
