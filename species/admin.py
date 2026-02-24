@@ -800,6 +800,7 @@ class FaunaportraitAudioFileAdmin(admin.ModelAdmin):
               'source',
               'license'
               ]
+    autocomplete_fields = ['species']
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
