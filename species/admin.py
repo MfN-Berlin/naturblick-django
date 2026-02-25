@@ -292,21 +292,6 @@ class HasPortraitFilter(YesNoFilter):
             return queryset.filter(portrait__isnull=True)
 
 
-class HasWikipediaFilter(YesNoFilter):
-    title = "wikipedia"
-    parameter_name = "has_wikipedia"
-
-    def queryset(self, request, queryset):
-        if self.value() == "y":
-            return queryset.filter(
-                wikipedia__isnull=False
-            )
-        if self.value() == "n":
-            return queryset.filter(
-                wikipedia__isnull=True
-            )
-
-
 class HasBirdnetIdFilter(YesNoFilter):
     title = "birdnetid"
     parameter_name = "has_birdnetid"
@@ -349,7 +334,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, HasSynonymsFilter,
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
                    HasBirdnetIdFilter,
-                   'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, HasWikipediaFilter, 'group', 'rank', 'status']
+                   'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, 'rank', 'status', 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
               'group',
