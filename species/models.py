@@ -203,15 +203,13 @@ class Species(models.Model):
 
             json = response.json()
 
-            is_species = json['rank'] == "SPECIES"
             is_accepted = not ('acceptedKey' in json)
             scientific_name = json['canonicalName']
 
             # Always set rank and status from gbif response
             self.rank = json['rank']
             self.status = json['taxonomicStatus']
-            if not is_species:
-                raise ValidationError({"gbifusagekey": "Only GBIF objects with rank SPECIES are valid"})
+
             if self.accepted_species:
                 if is_accepted:
                     raise ValidationError(
@@ -234,9 +232,6 @@ class Species(models.Model):
 
             if not self.id:
                 raise ValidationError({"gbifusagekey": "All new species must have gbifusagekey set"})
-            if self.accepted_species:
-                raise ValidationError(
-                    {"accepted_species": "Accepted species must NOT be set for a species without gbifusagekey"})
 
             if self.birdnetid:
                 raise ValidationError(
