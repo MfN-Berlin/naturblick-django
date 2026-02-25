@@ -189,7 +189,8 @@ class Species(models.Model):
     birdnetid = models.PositiveIntegerField(blank=True, null=True, unique=True)
 
     is_hidden = models.BooleanField(null=False, default=False)
-    
+    rank = models.CharField(blank=True, null=True, max_length=255)
+    status = models.CharField(blank=True, null=True, max_length=255)
     speciesid.short_description = "Species ID"
 
     def validate_gbif(self):
@@ -206,6 +207,9 @@ class Species(models.Model):
             is_accepted = not ('acceptedKey' in json)
             scientific_name = json['canonicalName']
 
+            # Always set rank and status from gbif response
+            self.rank = json['rank']
+            self.status = json['taxonomicStatus']
             if not is_species:
                 raise ValidationError({"gbifusagekey": "Only GBIF objects with rank SPECIES are valid"})
             if self.accepted_species:
