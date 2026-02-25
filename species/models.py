@@ -211,9 +211,9 @@ class Species(models.Model):
             self.status = json['taxonomicStatus']
 
             if self.accepted_species:
-                if not (json['rank'] in ['SUBSPECIES','VARIETY']) and is_accepted:
+                if not (json['rank'] in ['SUBSPECIES','VARIETY','FORM']) and is_accepted:
                     raise ValidationError(
-                        {"gbifusagekey": "Accepted species can only be set for taxon that are accepted if they are SUBSPECIES or VARIETY"})
+                        {"gbifusagekey": "Accepted species can only be set for taxon that are accepted if they are SUBSPECIES, VARIETY or FORM"})
                 if self.birdnetid:
                     raise ValidationError(
                         {"birdnetid": "Birdnetid can only be set for accepted_species"})
