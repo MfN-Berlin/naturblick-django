@@ -283,7 +283,7 @@ def insert_species(sqlite_cursor):
     data = list(map(map_species(all_synonyms_dict),
                     Species.objects.select_related("group", "avatar_new", "female_avatar_new").all()))
     sqlite_cursor.executemany(
-        "INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
+        "INSERT INTO species VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
 
     # could be done on insert level
     sqlite_cursor.execute("""
@@ -307,7 +307,6 @@ def insert_species(sqlite_cursor):
         ) AS accepting
         WHERE accepting.accepted_id = rowid;
         """)
-    sqlite_cursor.execute("ALTER TABLE species DROP COLUMN gbifusagekey;")
 
 
 def cropped_image(image, cropping, size = (400,400)):
@@ -335,7 +334,7 @@ def map_species(all_synonyms):
         s.avatar_new.imagefile.license if s.avatar_new else None,
         cropped_image(s.female_avatar_new.imagefile.image, s.female_avatar_new.cropping) if s.female_avatar_new else None,
         get_synonyms(all_synonyms, 'de', s.id),
-        get_synonyms(all_synonyms, 'en', s.id), s.red_list_germany, s.iucncategory, s.speciesid, s.gbifusagekey,
+        get_synonyms(all_synonyms, 'en', s.id), s.red_list_germany, s.iucncategory, s.speciesid,
         s.accepted_species_id,
         None,  # gersearchfield - per update later
         None)  # engsearchfield - per update later
@@ -346,7 +345,7 @@ def create_tables(sqlite_cursor):
         "CREATE TABLE `groups` (`name` TEXT NOT NULL, `nature` TEXT, `gername` TEXT, `engname` TEXT, `has_portraits` INTEGER NOT NULL, `is_fieldbookfilter` INTEGER NOT NULL, `has_characters` INTEGER NOT NULL, PRIMARY KEY(`name`));"
     )
     sqlite_cursor.execute(
-        "CREATE TABLE `species` (`rowid` INTEGER NOT NULL, `group_id` TEXT NOT NULL, `sciname` TEXT NOT NULL, `gername` TEXT, `engname` TEXT, `wikipedia` TEXT, `image_url` TEXT, `image_url_orig` TEXT, `image_url_owner` TEXT, `image_url_owner_link` TEXT, `image_url_source` TEXT, `image_url_license` TEXT, `female_image_url` TEXT, `gersynonym` TEXT, `engsynonym` TEXT, `red_list_germany` TEXT, `iucn_category` TEXT, `old_species_id` TEXT NOT NULL, `gbifusagekey` INTEGER, `accepted` INTEGER, `gersearchfield` TEXT, `engsearchfield` TEXT, PRIMARY KEY(`rowid`), FOREIGN KEY(`group_id`) REFERENCES `groups`(`name`));"
+        "CREATE TABLE `species` (`rowid` INTEGER NOT NULL, `group_id` TEXT NOT NULL, `sciname` TEXT NOT NULL, `gername` TEXT, `engname` TEXT, `wikipedia` TEXT, `image_url` TEXT, `image_url_orig` TEXT, `image_url_owner` TEXT, `image_url_owner_link` TEXT, `image_url_source` TEXT, `image_url_license` TEXT, `female_image_url` TEXT, `gersynonym` TEXT, `engsynonym` TEXT, `red_list_germany` TEXT, `iucn_category` TEXT, `old_species_id` TEXT NOT NULL, `accepted` INTEGER, `gersearchfield` TEXT, `engsearchfield` TEXT, PRIMARY KEY(`rowid`), FOREIGN KEY(`group_id`) REFERENCES `groups`(`name`));"
     )
     sqlite_cursor.execute("CREATE INDEX idx_species_gername ON species(gername);")
     sqlite_cursor.execute("CREATE INDEX idx_species_engname ON species(engname);")
