@@ -12,12 +12,14 @@
     <meta property="{{ og.property }}" content="{{ og.content }}">
     {% endfor %}
     <script src="https://cdn.usefathom.com/script.js" data-spa="auto" data-site="TZBNRXXT" defer></script>
-    <link rel="stylesheet" href="{% static 'web/css/variables.css' %}">
-    <link rel="stylesheet" href="{% static 'web/css/styles.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'web/css/variables.css' %}">
+    <link rel="stylesheet" href="{% static 'web/css/base.css' %}">
+    {% block css %}{% endblock %}
+
     <script src="{% static 'web/js/web.js' %}"></script>
 </head>
-<body class="{{ header_class|default:'' }}">
+<body>
 <header>
     {% block img %}{% endblock %}
     <a class="top-left" href="{% url 'index' %}{% querystring %}">
@@ -47,17 +49,12 @@
         </details>
     </div>
 
-    {% if header_class == 'portrait' %}
-        <div class="header-title">
-            <h3>{% block sciname %}{% endblock %}</h3>
-            <h1>{% block speciesname %}{% endblock %}</h1>
-        </div>
-    {% else %}
-        <div class="header-title">
-            <h1>{% block page_title %}{% endblock %}</h1>
-            {% block subtitle %}{% endblock %}
-        </div>
-    {% endif %}
+    <div class="header-title">
+    {% block header_title %}
+        <h1>{% block page_title %}{% endblock %}</h1>
+        {% block subtitle %}{% endblock %}
+    {% endblock %}
+    </div>
 </header>
 <main>
     {% block content %}{% endblock %}
@@ -68,8 +65,7 @@
         <p>
             <a href="{% url 'privacy' %}{% querystring %}">{% translate "Datenschutz" %}</a>
             <a href="{% url 'imprint' %}{% querystring %}">{% translate "Impressum" %}</a>
-            <a href="
-                    {% url 'digitalaccessibilitystatement' %}{% querystring %}">{% translate "Digitale Barrierefreiheit" %}</a>
+            <a href="{% url 'digitalaccessibilitystatement' %}{% querystring %}">{% translate "Digitale Barrierefreiheit" %}</a>
         </p>
     </div>
     <div class="footer-right">

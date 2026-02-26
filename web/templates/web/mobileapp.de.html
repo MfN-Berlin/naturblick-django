@@ -3,7 +3,10 @@
 {% load static web_tags %}
 
 {% block title %}Über die Naturblick App{% endblock %}
-{% block page_title %}Über die Naturblick App{% endblock %}
+
+{% block header_title %}
+<h1>Über die Naturblick App</h1>
+{% endblock %}
 
 
 {% block subtitle %}
@@ -12,7 +15,7 @@
     erfahren.</p>{% endblock %}
 
 {% block content %}
-
+<div class="text-container">
     ==== TODO YOUTUBE ====
 {#    <div class="youtube-container youtube-container--no-consent"><img alt="" src="https://i.ytimg.com/vi/VBVjIRcdsRU/hq720.jpg"><img src="/assets/imgs/yt_icon_mono_light.png" alt="" class="yt-icon"></div>#}
 
@@ -68,5 +71,5 @@
             zum Datenschutz</a>.
         Für Presseanfragen und weitere Informationen schreibe uns gerne unter
         naturblick[at]mfn.berlin.</p>
-
+</div>
 {% endblock %}

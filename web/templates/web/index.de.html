@@ -2,17 +2,22 @@
 
 {% load static i18n web_tags %}
 
-{% block title %}Naturblick{% endblock %}
-{% block page_title %}Erlebe Natur{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'web/css/home.css' %}">{% endblock %}
 
-{% block subtitle %}<p>Bestimme Tiere und Pflanzen und erkunde deine Stadt.</p>{% endblock %}
+{% block title %}Naturblick{% endblock %}
+
+{% block header_title %}
+<h1>Erlebe Natur</h1>
+<hr>
+    <p>Bestimme Tiere und Pflanzen und erkunde deine Stadt.</p>
+{% endblock %}
 
 {% block img %}
     {% img "Header_2023_klein_beschnitten_belichted_7cca538a55.jpg" widths='245w,400w,800w,1200w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, (max-width: 1023px) 1200px" %}
 {% endblock %}
 
 {% block content %}
-    <div class="columns">
+    <div class="columns-3">
         <div>
             {% img "Naturblick_Screen_klein_32cca05fc4.jpg" widths='245w,400w,800w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, 800px" %}
 
@@ -34,7 +39,7 @@
 
     <hr>
 
-    <div class="columns">
+    <div class="columns-2">
         <div>
             {% img "appstore_klein_8df243dbe5.jpg" widths='245w,400w,800w,1200w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, (max-width: 1023px) 1200px, 800px" %}
             {% include "partials/card.html" with title="Naturblick im Playstore" subtitle="Lade die App für Android" link_text="Klicke hier für den Download im Playstore" url="https://play.google.com/store/apps/details?id=com.mfn_berlin_stadtnatur_entdecken.naturblick&hl=de" %}

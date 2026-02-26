@@ -3,14 +3,15 @@
 {% load static web_tags %}
 
 {% block dels %}{% endblock %}
-
 {% block lang %}{% inline_svg 'lang_en.svg' %}{% endblock %}
-
 {% block title %}General Privacy Notice{% endblock %}
-{% block page_title %}General Privacy Notice{% endblock %}
 
+{% block header_title %}
+<h1>General Privacy Notice</h1>
+{% endblock %}
 
 {% block content %}
+<div class="text-container">
     <p><strong>1. Introduction</strong>
         <br>When using our online content, personal data is collected and stored in databases, protocol files or other
         systems. We consistently abide by data protection regulations when processing the data collected.</p>
@@ -104,5 +105,5 @@
         deleted from our system when the account is deleted. Data processing is carried out in compliance with
         applicable data protection regulations. Your entries are transmitted in encrypted form. To protect the data
         against loss, manipulation or access by unauthorized persons, the Museum für Natur</p>
-
+</div>
 {% endblock %}

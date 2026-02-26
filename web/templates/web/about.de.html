@@ -3,14 +3,15 @@
 {% load static web_tags %}
 
 {% block title %}Über uns{% endblock %}
-{% block page_title %}Über uns{% endblock %}
 
-{% block subtitle %}
-    <hr>
-    <p>Wir stärken die Aufmerksamkeit für Natur in der Stadt, um gemeinsam für Natur zu
-    handeln.</p>{% endblock %}
+{% block header_title %}
+<h1>Über uns</h1>
+<hr>
+<p>Wir stärken die Aufmerksamkeit für Natur in der Stadt, um gemeinsam für Natur zu handeln.</p>
+{% endblock %}
 
 {% block content %}
+<div class="text-container">
     <h5>Team</h5>
 
     <p>In einem interdisziplinären Team erforschen und entwickeln wir digitale Werkzeuge für die urbane Naturerfahrung.
@@ -284,4 +285,5 @@
             Innovation: The European Journal of Social Science Research, Volume 35, Issue 3 (2022)
         </li>
     </ul>
+</div>
 {% endblock %}

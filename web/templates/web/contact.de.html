@@ -3,23 +3,30 @@
 {% load static web_tags %}
 
 {% block title %}Kontakt{% endblock %}
-{% block page_title %}Kontakt{% endblock %}
+
+{% block header_title %}
+<h1>Kontakt</h1>
+{% endblock %}
 
 {% block content %}
+<div class="columns-2">
     {% img "maps_Karte_6912873a82.jpg" widths='225w,500w,750w' sizes="(max-width: 400px) 500px, (max-width: 767px) 750px" %}
-
-    <p>Wir entwickeln die App Naturblick und unsere Webseite inhaltlich und technisch kontinuierlich weiter. Wir sind
-        dabei auf Deine Unterstützung und Dein Feedback angewiesen.
-        <br>Wir danken allen die uns auf Fehler hinweisen und/oder Verbesserungsvorschläge machen.</p>
-    <p><strong>Schreibe uns dein Feedback unter</strong>
-        <br>naturblick[at]mfn.berlin</p>
-    <p>News und Updates findest du in unserem Newsletter.
-        <br><a href="https://berlin.us6.list-manage.com/subscribe?u=7cc783779868ff99f465accff&amp;id=456476dc19">Für den
-            Newsletter anmelden</a></p>
-    <p><strong>Naturblick Team</strong>
-        <br>Museum für Naturkunde Berlin
-        <br>Leibniz-Institut für Evolutions- und Biodiversitätsforschung
-        <br>Invalidenstraße 43
-        <br>10115 Berlin</p>
-
+    <div>
+        <p>Wir entwickeln die App Naturblick und unsere Webseite inhaltlich und technisch kontinuierlich weiter. Wir
+            sind
+            dabei auf Deine Unterstützung und Dein Feedback angewiesen.
+            <br>Wir danken allen die uns auf Fehler hinweisen und/oder Verbesserungsvorschläge machen.</p>
+        <p><strong>Schreibe uns dein Feedback unter</strong>
+            <br>naturblick[at]mfn.berlin</p>
+        <p>News und Updates findest du in unserem Newsletter.
+            <br><a href="https://berlin.us6.list-manage.com/subscribe?u=7cc783779868ff99f465accff&amp;id=456476dc19">Für
+                den
+                Newsletter anmelden</a></p>
+        <p><strong>Naturblick Team</strong>
+            <br>Museum für Naturkunde Berlin
+            <br>Leibniz-Institut für Evolutions- und Biodiversitätsforschung
+            <br>Invalidenstraße 43
+            <br>10115 Berlin</p>
+    </div>
+</div>
 {% endblock %}

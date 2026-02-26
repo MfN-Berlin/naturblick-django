@@ -3,14 +3,14 @@
 {% load static web_tags %}
 
 {% block dels %}{% endblock %}
-
 {% block lang %}{% inline_svg 'lang_en.svg' %}{% endblock %}
-
 {% block title %}Imprint{% endblock %}
-{% block page_title %}Imprint{% endblock %}
-
+{% block header_title %}
+<h1>Imprint</h1>
+{% endblock %}
 
 {% block content %}
+<div class="text-container">
     <p>Museum für Naturkunde
         <br>Leibniz Institute for Evolution and Biodiversity Science
         <br>Invalidenstraße 43
@@ -62,5 +62,5 @@
         <br>In addition to the points set out above, the general <a href="https://www.disclaimer.de/disclaimer.htm">disclaimer</a>
         applies to all pages of this website.
         <br>© Museum of Natural History Berlin</p>
-
+</div>
 {% endblock %}

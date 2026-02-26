@@ -3,18 +3,18 @@
 {% load static web_tags %}
 
 {% block dels %}{% endblock %}
-
 {% block lang %}{% inline_svg 'lang_en.svg' %}{% endblock %}
 
 {% block title %}About us{% endblock %}
-{% block page_title %}About us{% endblock %}
 
-{% block subtitle %}
-    <hr>
-    We raise awareness of nature in the city in order to act together for nature.{% endblock %}
+{% block header_title %}
+<h1>About us</h1>
+<hr>
+<p>We raise awareness of nature in the city in order to act together for nature.</p>
+{% endblock %}
 
 {% block content %}
-
+<div class="text-container">
     <h5>Team</h5>
 
     <p>In an interdisciplinary team, we research and develop digital tools for the urban experience of nature.
@@ -245,4 +245,5 @@
             Innovation: The European Journal of Social Science Research, Volume 35, Issue 3 (2022)
         </li>
     </ul>
+</div>
 {% endblock %}
