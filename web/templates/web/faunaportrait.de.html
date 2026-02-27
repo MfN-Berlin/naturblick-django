@@ -2,23 +2,29 @@
 
 {% load static web_tags %}
 
-{% block speciesname %}{{ portrait.species.gername }}
-<p>Schwarzdrossel</p>{% endblock %}
-{% block sciname %}{{ portrait.species.sciname }}{% endblock %}
+{% block header_title %}
+<h3>{{ portrait.species.sciname }}</h3>
+<h1>{{ portrait.species.gername }}
+    <p>{{ additional_name }}</h1>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'web/css/portrait.css' %}">{% endblock %}
 
 {% block content %}
 <main>
-    <div>
-        <img src="{{ portrait.descmeta.image_file.image.url }}">
-        <div>
-            <h2>Beschreibung</h2>
-            <p>{{ portrait.short_description }}</p>
-            <p>W I P !!!</p>
+    {% include "partials/portrait_section.html" with img_meta=portrait.descmeta title="Beschreibung" descriptions=descriptions only %}
 
-            <h2>In der Stadt</h2>
-            <p>{{ portrait.city_habitat }}</p>
+    {% include "partials/features_section.html" %}
 
-        </div>
-    </div>
+    {% if portrait.inthecitymeta %}
+    {% include "partials/portrait_section.html" with img_meta=portrait.inthecitymeta title="In der Stadt" descriptions=inthecity only %}
+    {% endif %}
+
+    {% if goodtoknows %}
+    {% include "partials/portrait_goodtoknow.html" with img_meta=portrait.funfactmeta title="Wissenswertes" goodtoknows=goodtoknows only %}
+    {% endif %}
+
+    {% include "partials/portrait_sources.html" with sources=sources only %}
 </main>
 {% endblock %}
