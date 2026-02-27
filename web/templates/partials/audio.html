@@ -1,0 +1,13 @@
+{% load web_tags %}
+
+<div>
+    <audio controls>
+        <source src="{{ audio.url }}">
+    </audio>
+
+
+    {% inline_svg 'play-media.svg' %}
+    <h5>{{ audio.audio_title }}</h5>
+    <p>{{ audio.licence }}</p>
+    <img src="{{ audio.png }}">
+</div>

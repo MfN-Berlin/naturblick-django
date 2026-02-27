@@ -191,6 +191,7 @@ def portrait(request, id):
     unambigousfeature = list(portrait.unambigousfeature_set.all().values_list("description", flat=True))
 
     audio = {
+        "audio_title": portrait.audio_title,
         "licence": portrait.faunaportrait_audio_file.license,
         "url": portrait.faunaportrait_audio_file.audio_file.url,
         "png": f"{portrait.faunaportrait_audio_file.audio_file.url.replace("audio_files", "spectrogram_images")}.png"

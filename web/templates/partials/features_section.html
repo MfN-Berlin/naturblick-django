@@ -3,7 +3,7 @@
 <section class="features">
     <div>
         <h4>{% translate "Merkmale" %}</h4>
-        <img  src="{{ portrait.species.avatar_new.imagefile.image.url }}">
+        <img src="{{ portrait.species.avatar_new.imagefile.image.url }}">
         <ul>
             {% for unambigousfeature in unambigousfeatures %}
             <li>{{ unambigousfeature }}</li>
@@ -12,18 +12,15 @@
     </div>
 
     {% if audio %}
-        <audio controls>
-            <source src="{{ audio.url }}">
-        </audio>
-        <img src="{{ audio.png }}">
-        {{ audio.licence }}
+    {% include "partials/audio.html" %}
     {% endif %}
 
+    {% if similar_species %}
     <div>
         {% for sim in similar_species %}
         <a href="{{ sim.url }}">
             <div>
-                <img  src="{{ sim.img }}">
+                <img src="{{ sim.img }}">
                 <h3>{{ sim.name }}</h3>
                 <h5>{{ sim.sciname }}</h5>
             </div>
@@ -31,4 +28,5 @@
         </a>
         {% endfor %}
     </div>
+    {% endif %}
 </section>
