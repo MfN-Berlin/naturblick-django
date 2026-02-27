@@ -56,9 +56,7 @@
     {% endblock %}
     </div>
 </header>
-<main>
-    {% block content %}{% endblock %}
-</main>
+{% block content %}{% endblock %}
 <footer>
     <div>
         <a href="{% url 'kontakt' %}{% querystring %}">{% translate "Kontakt" %}</a>
