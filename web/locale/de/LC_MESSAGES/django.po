@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-10 14:10+0100\n"
+"POT-Creation-Date: 2026-02-27 15:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,31 +18,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: templates/web/page_base.html:64
+#: templates/partials/features_section.html:5
+msgid "Merkmale"
+msgstr "Merkmale"
+
+#: templates/partials/portrait_goodtoknow.html:8
+msgid "Nutzung"
+msgstr "Nutzung"
+
+#: templates/partials/portrait_sources.html:4
+msgid "Quellen"
+msgstr "Quellen"
+
+#: templates/web/page_base.html:46
 msgid "Über die App"
 msgstr "Über die App"
 
-#: templates/web/page_base.html:65
+#: templates/web/page_base.html:47
 msgid "Über uns"
 msgstr "Über uns"
 
-#: templates/web/page_base.html:66
+#: templates/web/page_base.html:48
 msgid "Häufige Fragen"
 msgstr "Häufige Fragen"
 
-#: templates/web/page_base.html:79
+#: templates/web/page_base.html:64
 msgid "Kontakt"
 msgstr "Kontakt"
 
-#: templates/web/page_base.html:80
+#: templates/web/page_base.html:66
 msgid "Datenschutz"
 msgstr "Datenschutz"
 
-#: templates/web/page_base.html:81
+#: templates/web/page_base.html:67
 msgid "Impressum"
 msgstr "Impressum"
 
-#: templates/web/page_base.html:82
+#: templates/web/page_base.html:68
 msgid "Digitale Barrierefreiheit"
 msgstr "Digitale Barrierefreiheit"
 
@@ -50,7 +62,7 @@ msgstr "Digitale Barrierefreiheit"
 msgid "Discover Nature"
 msgstr "Entdecke die Natur"
 
-#: views.py:171
+#: views.py:277
 #, python-brace-format
 msgid "Seen by {user} at {date} in {coords}"
 msgstr "Gesehen am {date} von {user} in {coords}"

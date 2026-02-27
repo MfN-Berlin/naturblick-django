@@ -2,9 +2,11 @@
 
 {% load static web_tags %}
 
+{% block dels %}{% endblock %}
+
 {% block header_title %}
 <h3>{{ portrait.species.sciname }}</h3>
-<h1>{{ portrait.species.gername }}
+<h1>{{ species_name }}
     <p>{{ additional_name }}</h1>
 {% endblock %}
 

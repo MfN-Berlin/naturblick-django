@@ -9,6 +9,7 @@ from django.template.loader import get_template
 from django.urls import reverse
 from django.utils import translation
 from django.utils.translation import gettext as _
+from functools import partial
 
 from species.models import Species, Portrait, Floraportrait, Faunaportrait
 
@@ -128,9 +129,9 @@ sources_ident_translations = {
 }
 
 
-def translate_ident(source):
+def translate_ident(lang_index, source):
     for key, value in sources_ident_translations.items():
-        source = source.replace(f'{{{{{key}}}}}', value[0])  # todo jetzt immer deutsch
+        source = source.replace(f'{{{{{key}}}}}', value[lang_index])
     return source
 
 
@@ -139,9 +140,9 @@ def source_from_image(meta):
 
 
 
-def sims(similar_species):
+def sims(language, similar_species):
     return {
-        "name": similar_species.species.gername,
+        "name": similar_species.species.engname if language == "en" else similar_species.species.gername,
         "sciname": similar_species.species.sciname,
         "differences": similar_species.differences,
         "url": reverse("portrait", kwargs={"id": similar_species.species.id}),
@@ -150,7 +151,7 @@ def sims(similar_species):
 
 
 def portrait(request, id):
-    lang = extract_language(request, allowed_langs={"de", "en"})
+    language = extract_language(request, allowed_langs={"de", "en"})
     species = Species.objects.get(id=id)
 
     is_fauna = True if species.group.nature == 'fauna' else False
@@ -170,7 +171,7 @@ def portrait(request, id):
             "unambigousfeature_set",
             "similarspecies_set__species__avatar_new__imagefile",
         )
-        .get(species_id=id, language=lang)
+        .get(species_id=id, language=language)
     )
 
     descriptions = [portrait.short_description, portrait.male_description, portrait.female_description, portrait.juvenile_description] if is_fauna else [portrait.short_description, portrait.leaf_description, portrait.stem_axis_description, portrait.flower_description, portrait.fruit_description]
@@ -181,11 +182,12 @@ def portrait(request, id):
     if portrait.funfactmeta:
         sources.append(source_from_image(portrait.funfactmeta))
     sources += list(portrait.source_set.values_list("text", flat=True))
-    sources = list(map(translate_ident, sources))
+    translate_with_lang = partial(translate_ident, 1 if language == "en" else 0)
+    sources = list(map(translate_with_lang, sources))
 
     goodtoknows = {gtk.type: gtk.fact for gtk in portrait.goodtoknow_set.all().order_by("ordering")}
-    additional_names = ", ".join(species.speciesname_set.filter(language="de").values_list("name", flat=True))
-    similar_species = [sims(s) for s in portrait.similarspecies_set.all()]
+    additional_names = ", ".join(species.speciesname_set.filter(language=language).values_list("name", flat=True))
+    similar_species = [sims(language, s) for s in portrait.similarspecies_set.all()]
     unambigousfeature = list(portrait.unambigousfeature_set.all().values_list("description", flat=True))
 
     audio = {
@@ -205,7 +207,8 @@ def portrait(request, id):
         "additional_name": additional_names,
         "similar_species": similar_species,
         "unambigousfeatures": unambigousfeature,
-        "audio": audio
+        "audio": audio,
+        "species_name": species.engname if language == "en" else species.gername
     })
 
 
@@ -229,11 +232,12 @@ def imprint(request):
     return web_render(request, "imprint")
 
 
-def web_render(request, template: str, context=None) -> HttpResponse:
-    lang = translation.get_language()
+def web_render(request, template: str, context={}) -> HttpResponse:
+    language = translation.get_language()
+    context["language"] = language
     try:
-        get_template(f"web/{template}.{lang}.html")
-        return render(request, f"web/{template}.{lang}.html", context)
+        get_template(f"web/{template}.{language}.html")
+        return render(request, f"web/{template}.{language}.html", context)
     except TemplateDoesNotExist:
         print("Fallback to DE ")
         return render(request, f"web/{template}.de.html", context)

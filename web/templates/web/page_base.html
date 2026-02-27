@@ -34,7 +34,9 @@
             <div class="initial-unzoomed">A</div>
         </a>
         <a href="{% toggle_lang request %}">
-            {% block lang %}{% inline_svg 'lang_de.svg' %}{% endblock %}</a>
+            {% if language == "en" %}{% inline_svg 'lang_en.svg' %}
+            {% else %}{% inline_svg 'lang_de.svg' %}
+            {% endif %}</a>
         <details>
             <summary>Menu {% inline_svg 'menu_bars.svg' %}</summary>
             <nav>
