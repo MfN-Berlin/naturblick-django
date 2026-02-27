@@ -9,7 +9,6 @@ from django.template.loader import get_template
 from django.urls import reverse
 from django.utils import translation
 from django.utils.translation import gettext as _
-from rest_framework.exceptions import NotFound
 
 from species.models import Species, Portrait, Floraportrait, Faunaportrait
 
@@ -139,6 +138,7 @@ def source_from_image(meta):
     return (f'{meta.text}, {meta.image_file.owner}, {meta.image_file.license}, {meta.image_file.source}')
 
 
+
 def sims(similar_species):
     return {
         "name": similar_species.species.gername,
@@ -153,50 +153,60 @@ def portrait(request, id):
     lang = extract_language(request, allowed_langs={"de", "en"})
     species = Species.objects.get(id=id)
 
-    if species.group.nature == 'fauna':
-        return NotFound("foo")
-    else:
-        portrait = (
-            Floraportrait.objects
-            .select_related(
-                "descmeta",
-                "inthecitymeta",
-                "funfactmeta",
-            )
-            .prefetch_related(
-                "goodtoknow_set",
-                "source_set",
-                "unambigousfeature_set",
-                "similarspecies_set__species__avatar_new__imagefile",
-            )
-            .get(species_id=id, language=lang)
+    is_fauna = True if species.group.nature == 'fauna' else False
+    objects = Faunaportrait.objects if is_fauna else Floraportrait.objects
+    template = 'faunaportrait' if is_fauna else 'floraportrait'
+
+    portrait = (
+        objects
+        .select_related(
+            "descmeta",
+            "inthecitymeta",
+            "funfactmeta",
         )
-        sources = [source_from_image(portrait.descmeta)]
-        if portrait.inthecitymeta:
-            sources.append(source_from_image(portrait.inthecitymeta))
-        if portrait.funfactmeta:
-            sources.append(source_from_image(portrait.funfactmeta))
-        sources += list(portrait.source_set.values_list("text", flat=True))
-        sources = list(map(translate_ident, sources))
+        .prefetch_related(
+            "goodtoknow_set",
+            "source_set",
+            "unambigousfeature_set",
+            "similarspecies_set__species__avatar_new__imagefile",
+        )
+        .get(species_id=id, language=lang)
+    )
 
-        goodtoknows = {gtk.type: gtk.fact for gtk in portrait.goodtoknow_set.all().order_by("ordering")}
-        additional_names = ", ".join(species.speciesname_set.filter(language="de").values_list("name", flat=True))
-        similar_species = [sims(s) for s in portrait.similarspecies_set.all()]
-        unambigousfeature = list(portrait.unambigousfeature_set.all().values_list("description", flat=True))
+    descriptions = [portrait.short_description, portrait.male_description, portrait.female_description, portrait.juvenile_description] if is_fauna else [portrait.short_description, portrait.leaf_description, portrait.stem_axis_description, portrait.flower_description, portrait.fruit_description]
 
-        return web_render(request, "floraportrait", context={
-            "id": id,
-            "header_class": "portrait",
-            "portrait": portrait,
-            "descriptions": [portrait.short_description, portrait.leaf_description, portrait.stem_axis_description,
-                             portrait.flower_description, portrait.fruit_description],
-            "inthecity": [portrait.city_habitat],
-            "goodtoknows": goodtoknows,
-            "sources": sources,
-            "additional_name": additional_names,
-            "similar_species": similar_species,
-            "unambigousfeatures": unambigousfeature
-        })
+    sources = [source_from_image(portrait.descmeta)]
+    if portrait.inthecitymeta:
+        sources.append(source_from_image(portrait.inthecitymeta))
+    if portrait.funfactmeta:
+        sources.append(source_from_image(portrait.funfactmeta))
+    sources += list(portrait.source_set.values_list("text", flat=True))
+    sources = list(map(translate_ident, sources))
+
+    goodtoknows = {gtk.type: gtk.fact for gtk in portrait.goodtoknow_set.all().order_by("ordering")}
+    additional_names = ", ".join(species.speciesname_set.filter(language="de").values_list("name", flat=True))
+    similar_species = [sims(s) for s in portrait.similarspecies_set.all()]
+    unambigousfeature = list(portrait.unambigousfeature_set.all().values_list("description", flat=True))
+
+    audio = {
+        "licence": portrait.faunaportrait_audio_file.license,
+        "url": portrait.faunaportrait_audio_file.audio_file.url,
+        "png": f"{portrait.faunaportrait_audio_file.audio_file.url.replace("audio_files", "spectrogram_images")}.png"
+    } if is_fauna else None
+
+    return web_render(request, template, context={
+        "id": id,
+        "header_class": "portrait",
+        "portrait": portrait,
+        "descriptions": [ x for x in descriptions if x is not None],
+        "inthecity": [x for x in [portrait.city_habitat, portrait.human_interaction] if x is not None],
+        "goodtoknows": goodtoknows,
+        "sources": sources,
+        "additional_name": additional_names,
+        "similar_species": similar_species,
+        "unambigousfeatures": unambigousfeature,
+        "audio": audio
+    })
 
 
 def mobileapp(request):

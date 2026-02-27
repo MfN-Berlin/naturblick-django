@@ -11,6 +11,14 @@
         </ul>
     </div>
 
+    {% if audio %}
+        <audio controls>
+            <source src="{{ audio.url }}">
+        </audio>
+        <img src="{{ audio.png }}">
+        {{ audio.licence }}
+    {% endif %}
+
     <div>
         {% for sim in similar_species %}
         <a href="{{ sim.url }}">
