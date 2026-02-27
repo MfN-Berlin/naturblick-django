@@ -1,0 +1,24 @@
+{% extends "web/page_base.html" %}
+
+{% load static web_tags %}
+
+{% block speciesname %}{{ portrait.species.gername }}
+<p>Schwarzdrossel</p>{% endblock %}
+{% block sciname %}{{ portrait.species.sciname }}{% endblock %}
+
+{% block content %}
+<main>
+    <div>
+        <img src="{{ portrait.descmeta.image_file.image.url }}">
+        <div>
+            <h2>Beschreibung</h2>
+            <p>{{ portrait.short_description }}</p>
+            <p>W I P !!!</p>
+
+            <h2>In der Stadt</h2>
+            <p>{{ portrait.city_habitat }}</p>
+
+        </div>
+    </div>
+</main>
+{% endblock %}

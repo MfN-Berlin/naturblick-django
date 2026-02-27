@@ -1,0 +1,17 @@
+<section class="gtk">
+    <div>
+        <h2>{{ title }}</h2>
+        {% for type, fact in goodtoknows.items %}
+        <ul>
+            {% if type == 'usage' %}<li><strong>Nutzung</strong>: {{ fact }}</li>
+            {% elif type == 'blossom' %}<li><strong>Blütezeit</strong>: {{ fact }}</li>
+            {% elif type == 'lifeform' %}<li><strong>Lebensform</strong>: {{ fact }}</li>
+            {% elif type == 'distribution' %}<li><strong>Verbreitung</strong>: {{ fact }}</li>
+            {% else %}<li>{{ fact }}</li>
+            {% endif %}
+            <!-- todo check endangerstatus and coloring -->
+        </ul>
+        {% endfor %}
+    </div>
+    {% include "partials/portrait_img.html" with url=img_meta.image_file.image.url link_text=img_meta.text licence=img_meta.image_file.license owner=img_meta.image_file.owner only %}
+</section>

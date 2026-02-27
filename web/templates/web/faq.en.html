@@ -3,22 +3,19 @@
 {% load static web_tags %}
 
 {% block dels %}{% endblock %}
-
 {% block lang %}{% inline_svg 'lang_en.svg' %}{% endblock %}
-
 {% block title %}FAQ{% endblock %}
-{% block page_title %}FAQ{% endblock %}
 
-{% block subtitle %}
-    <hr>
-    <h1>Frequently asked questions</h1>
+{% block header_title %}
+<h1>FAQ</h1>
+<hr>
     <p>Here you will find answers to the questions we frequently receive. If you have questions that you cannot find
         here, further feedback, suggestions or if you found errors, please write us an email to:
         naturblick@mfn.berlin</p>
 {% endblock %}
 
 {% block content %}
-
+<main class="text-container">
     <h2>Identifying a species</h2>
     <h4>Which species can be identified with Naturblick?</h4>
     <p>With Naturblick you can identify plants and animal species. These include amphibians, bees, wild flowers, trees,
@@ -97,6 +94,5 @@
     <p>We specialize in Urban nature and our users are primarily active in urban areas, where network coverage is
         typically available. This is why our online recognition function works very well. However, we are constantly
         working on improving our App and strive to develop offline recognition in the long run.</p>
-
-
+</main>
 {% endblock %}

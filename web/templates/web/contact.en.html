@@ -2,27 +2,33 @@
 
 {% load static web_tags %}
 
-{% block dels %}{% endblock %}
 
+{% block dels %}{% endblock %}
 {% block lang %}{% inline_svg 'lang_en.svg' %}{% endblock %}
 
 {% block title %}Contact{% endblock %}
-{% block page_title %}Contact{% endblock %}
+{% block header_title %}
+<h1>Contact</h1>
+{% endblock %}
 
 {% block content %}
+<main class="columns-2">
     {% img "maps_Karte_6912873a82.jpg" widths='225w,500w,750w' sizes="(max-width: 400px) 500px, (max-width: 767px) 750px" %}
-    <p>We are continuously developing the Naturblick smartphone app and our platform in terms of content and technology.
-        In doing so we are guided by your feedback.
-        <br>We thank all who point out errors and/or make suggestions for improvement.</p>
-    <p><br><strong>Write us your feedback, or become a beta tester</strong>
-        <br>naturblick[at]mfn.berlin</p>
-    <p>News and updates can be found in our newsletter (in German).
-        <br><a href="https://berlin.us6.list-manage.com/subscribe?u=7cc783779868ff99f465accff&amp;id=456476dc19">Register
-            for the newsletter</a></p>
-    <p><strong>Naturblick Team</strong>
-        <br>Museum für Naturkunde Berlin
-        <br>Leibniz-Institute for Evolution and Biodiversity
-        <br>Invalidenstraße 43
-        <br>10115 Berlin</p>
-
+    <div>
+        <p>We are continuously developing the Naturblick smartphone app and our platform in terms of content and
+            technology.
+            In doing so we are guided by your feedback.
+            <br>We thank all who point out errors and/or make suggestions for improvement.</p>
+        <p><br><strong>Write us your feedback, or become a beta tester</strong>
+            <br>naturblick[at]mfn.berlin</p>
+        <p>News and updates can be found in our newsletter (in German).
+            <br><a href="https://berlin.us6.list-manage.com/subscribe?u=7cc783779868ff99f465accff&amp;id=456476dc19">Register
+                for the newsletter</a></p>
+        <p><strong>Naturblick Team</strong>
+            <br>Museum für Naturkunde Berlin
+            <br>Leibniz-Institute for Evolution and Biodiversity
+            <br>Invalidenstraße 43
+            <br>10115 Berlin</p>
+    </div>
+</div>
 {% endblock %}

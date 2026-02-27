@@ -3,18 +3,19 @@
 {% load web_tags static %}
 
 {% block dels %}{% endblock %}
-
 {% block lang %}{% inline_svg 'lang_en.svg' %}{% endblock %}
-
 {% block title %}About Naturblick{% endblock %}
-{% block page_title %}About Naturblick{% endblock %}
+
+{% block header_title %}
+<h1>About Naturblick</h1>
+{% endblock %}
 
 {% block subtitle %}
     <hr>
-    With Naturblick you can easily identify plants and animals and learn more about nature in your city.{% endblock %}
+    <p>With Naturblick you can easily identify plants and animals and learn more about nature in your city.</p>{% endblock %}
 
 {% block content %}
-
+<main class="text-container">
     ==== TODO YOUTUBE ====
     {#    <div class="youtube-container youtube-container--no-consent"><img alt="" src="https://i.ytimg.com/vi/VBVjIRcdsRU/hq720.jpg"><img src="/assets/imgs/yt_icon_mono_light.png" alt="" class="yt-icon"></div>#}
 
@@ -60,6 +61,5 @@
         questions</a> here. If you want to find out more about how we handle your data, you can find <a
             href="https://www.museumfuernaturkunde.berlin/en/general-privacy-notice">information on data protection</a>
         here. For press inquiries and further information, please write to us at naturblick[at]mfn.berlin.</p>
-
-
+</main>
 {% endblock %}

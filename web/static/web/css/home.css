@@ -1,0 +1,49 @@
+header {
+    background-image: none;
+    padding: 0;
+
+    > img {
+        width: 100%;
+    }
+
+    .header-title {
+        padding: 0;
+        position: absolute;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        p {
+            font-size: var(--font-size-big);
+        }
+    }
+
+    .top-right a, .top-right > details {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+}
+
+body {
+    background-image: url("../img/background_grain_opt.png");
+    color: white;
+
+    main  {
+        a {
+            border-bottom: 2px solid rgba(255, 255, 255, .5);
+        }
+    }
+
+    footer {
+        background-color: rgba(0, 0, 0, 0.1);
+        .footer-right {
+            color: rgba(255, 255, 255, 0.45);
+        }
+        p a {
+            color: rgba(255, 255, 255, 0.45);
+        }
+    }
+
+    hr {
+        background-color: var(--happy);
+    }
+}
