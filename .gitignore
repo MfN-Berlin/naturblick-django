@@ -134,3 +134,4 @@ refresh.sh
 media-root/
 static-root/
 pg_dump.sql
+naturblick/devsettings.py
