@@ -9,7 +9,6 @@ from django.template.loader import get_template
 from django.urls import reverse
 from django.utils import translation
 from django.utils.translation import gettext as _
-from reportlab.lib.PyFontify import replace
 
 from species.models import Species, Portrait, Floraportrait, Faunaportrait
 
@@ -192,7 +191,7 @@ def portrait(request, id):
     audio = {
         "licence": portrait.faunaportrait_audio_file.license,
         "url": portrait.faunaportrait_audio_file.audio_file.url,
-        "png": f"{replace(portrait.faunaportrait_audio_file.audio_file.url, "audio_files", "spectrogram_images")}.png"
+        "png": f"{portrait.faunaportrait_audio_file.audio_file.url.replace("audio_files", "spectrogram_images")}.png"
     } if is_fauna else None
 
     return web_render(request, template, context={
