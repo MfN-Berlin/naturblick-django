@@ -1,6 +1,6 @@
 {% extends "web/page_base.html" %}
 
-{% load static web_tags i18n %}
+{% load static web_tags %}
 
 {% block dels %}{% endblock %}
 
@@ -15,16 +15,16 @@
 
 {% block content %}
 <main>
-    {% include "partials/portrait_section.html" with img_meta=portrait.descmeta title="Beschreibung" descriptions=descriptions only %}
+    {% include "partials/portrait_section.html" with img_meta=portrait.descmeta title="Short Description" descriptions=descriptions only %}
 
     {% include "partials/features_section.html" %}
 
     {% if portrait.inthecitymeta %}
-    {% include "partials/portrait_section.html" with img_meta=portrait.inthecitymeta title="In der Stadt" descriptions=inthecity only %}
+    {% include "partials/portrait_section.html" with img_meta=portrait.inthecitymeta title="In the city" descriptions=inthecity only %}
     {% endif %}
 
     {% if goodtoknows %}
-    {% include "partials/portrait_goodtoknow.html" with img_meta=portrait.funfactmeta title="Wissenswertes" goodtoknows=goodtoknows only %}
+    {% include "partials/portrait_goodtoknow.html" with img_meta=portrait.funfactmeta title="Fun Facts" goodtoknows=goodtoknows only %}
     {% endif %}
 
     {% include "partials/portrait_sources.html" with sources=sources only %}
