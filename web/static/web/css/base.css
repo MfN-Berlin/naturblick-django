@@ -66,16 +66,14 @@ header {
         display: inline-flex;
         align-items: center;
         padding: 17px 24px;
-
-        h5 {
-            font-size: var(--font-size-big);
-            line-height: var(--font-size-big);
-            margin: 0 0 0 8px;
-        }
+        font-size: var(--font-size-big);
+        line-height: var(--font-size-big);
+        margin: 0 0 0 8px;
+        font-weight: 900;
 
         img {
             height: 19px;
-            margin: 0;
+            margin: 0 8px 0 0;
         }
     }
 
