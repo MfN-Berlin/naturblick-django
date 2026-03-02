@@ -2,8 +2,18 @@ header {
     background-image: url("../img/background_grain_opt.png");
     padding: 64px;
 
-    h3 {
+    p:first-of-type {
         color: var(--happy);
+        font-weight: 900;
+        font-size: var(--font-size-h3);
+        line-height: var(--line-height-h3);
+    }
+
+    p:last-of-type {
+        font-style: italic;
+        font-size: var(--font-size-regular);
+        line-height: var(--line-height-regular);
+        opacity: .5;
     }
 }
 
@@ -32,32 +42,47 @@ body {
 
         > section {
             padding: 75px 75px 0;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            column-gap: 64px;
-            row-gap: 32px;
-
             h2:first-of-type {
               margin-top: 0;
             }
         }
 
-        > section.gtk {
-            grid-template-columns: 2fr 1fr;
+        > section.grid-1-2 {
+            display: grid;
+            column-gap: 64px;
+            row-gap: 32px;
+            grid-template-columns: 1fr 2fr;
+        }
 
+        > section.grid-2-1 {
+            display: grid;
+            column-gap: 64px;
+            row-gap: 32px;
+            grid-template-columns: 2fr 1fr;
+        }
+
+        > section.grid-2-3 {
+            display: grid;
+            column-gap: 64px;
+            row-gap: 0;
+            grid-template-columns: 2fr 3fr;
+        }
+
+        > section.gtk {
             ul {
                 padding: 0;
                 list-style: none;
                 li {
                     border-left: 3px var(--chill) solid;
                     padding-left: 20px;
+                    margin-bottom: var(--line-height-regular);
                 }
             }
         }
 
         > section.features {
             background: var(--mild);
-            display: flex;
+
             > div {
                 flex: 1;
                 ul {
@@ -82,6 +107,39 @@ body {
                     width: 80px;
                     height: auto;
                     border-radius: 4px;
+                }
+            }
+
+            .audio {
+                background-color: var(--relax);
+                border-radius: 8px;
+                padding: 16px;
+                box-shadow: var(--shadow);
+
+                audio {
+                    display: none;
+                }
+
+                div {
+                    display: flex;
+                    align-items: flex-start;
+
+                    div {
+                        display: flex;
+                        flex-direction: column;
+                    }
+                }
+
+                img {
+                    overflow: hidden;
+                    height: 100%;
+                    width: auto;
+                    opacity: 1;
+                }
+
+                h3, p {
+                    margin: 0;
+                    padding: 0;
                 }
             }
         }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 15:50+0100\n"
+"POT-Creation-Date: 2026-03-02 10:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,6 +25,18 @@ msgstr "Merkmale"
 #: templates/partials/portrait_goodtoknow.html:8
 msgid "Nutzung"
 msgstr "Nutzung"
+
+#: templates/partials/portrait_goodtoknow.html:9
+msgid "Blütezeit"
+msgstr "Blütezeit"
+
+#: templates/partials/portrait_goodtoknow.html:10
+msgid "Lebensform"
+msgstr "Lebensform"
+
+#: templates/partials/portrait_goodtoknow.html:11
+msgid "Verbreitung"
+msgstr "Verbreitung"
 
 #: templates/partials/portrait_sources.html:4
 msgid "Quellen"
@@ -62,7 +74,7 @@ msgstr "Digitale Barrierefreiheit"
 msgid "Discover Nature"
 msgstr "Entdecke die Natur"
 
-#: views.py:277
+#: views.py:278
 #, python-brace-format
 msgid "Seen by {user} at {date} in {coords}"
 msgstr "Gesehen am {date} von {user} in {coords}"

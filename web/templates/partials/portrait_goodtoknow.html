@@ -1,19 +1,20 @@
 {% load i18n %}
 
-<section class="gtk">
+<section class="gtk grid-2-1">
     <div>
         <h2>{{ title }}</h2>
-        {% for type, fact in goodtoknows.items %}
         <ul>
-            {% if type == 'usage' %}<li><strong>{% translate "Nutzung" %}</strong>: {{ fact }}</li>
-            {% elif type == 'blossom' %}<li><strong>{% translate Blütezeit %}</strong>: {{ fact }}</li>
-            {% elif type == 'lifeform' %}<li><strong>{% translate Lebensform %}</strong>: {{ fact }}</li>
-            {% elif type == 'distribution' %}<li><strong>{% translate Verbreitung %}</strong>: {{ fact }}</li>
-            {% else %}<li>{{ fact }}</li>
-            {% endif %}
-            <!-- todo check endangerstatus and coloring -->
-        </ul>
+        {% for type, facts in goodtoknows.items %}
+            {% for fact in facts %}
+                {% if type == 'usage' %}<li><strong>{% translate "Nutzung" %}</strong>: {{ fact }}</li>
+                {% elif type == 'blossom' %}<li><strong>{% translate "Blütezeit" %}</strong>: {{ fact }}</li>
+                {% elif type == 'lifeform' %}<li><strong>{% translate "Lebensform" %}</strong>: {{ fact }}</li>
+                {% elif type == 'distribution' %}<li><strong>{% translate "Verbreitung" %}</strong>: {{ fact }}</li>
+                {% else %}<li>{{ fact }}</li>
+                {% endif %}
+            {% endfor %}
         {% endfor %}
+        </ul>
     </div>
     {% include "partials/portrait_img.html" with url=img_meta.image_file.image.url link_text=img_meta.text licence=img_meta.image_file.license owner=img_meta.image_file.owner only %}
 </section>

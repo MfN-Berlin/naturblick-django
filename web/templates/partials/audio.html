@@ -1,13 +1,17 @@
 {% load web_tags %}
 
-<div>
+<div class="audio">
+    <div>
+        {% inline_svg 'play-media.svg' %}
+        <div>
+            <h3>{{ audio.audio_title }}</h3>
+            <p>{{ audio.licence }}</p>
+        </div>
+    </div>
+
+    <img src="{{ audio.png }}">
+
     <audio controls>
         <source src="{{ audio.url }}">
     </audio>
-
-
-    {% inline_svg 'play-media.svg' %}
-    <h5>{{ audio.audio_title }}</h5>
-    <p>{{ audio.licence }}</p>
-    <img src="{{ audio.png }}">
 </div>

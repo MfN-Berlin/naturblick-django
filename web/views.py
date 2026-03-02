@@ -8,6 +8,8 @@ from django.template import TemplateDoesNotExist
 from django.template.loader import get_template
 from django.urls import reverse
 from django.utils import translation
+from django.utils.safestring import \
+    mark_safe
 from django.utils.translation import gettext as _
 from functools import partial
 
@@ -150,6 +152,44 @@ def sims(language, similar_species):
     }
 
 
+def endangerstatus(species, language):
+    if not species.red_list_germany:
+        return None
+
+    if language == "en":
+        endangervalue = "Endangerment level Germany: <mark class=\""
+        match species.red_list_germany:
+            case 'gefahrdet':  endangervalue += 'orange\">endangered</mark>'
+            case 'Vorwarnliste':  endangervalue += 'orange\"Warning list</mark>'
+            case 'ausgestorbenOderVerschollen':  endangervalue += 'red\"extinct or missing</mark>'
+            case 'vomAussterbenBedroht':  endangervalue += 'red\"threatened with extinction</mark>'
+            case 'starkGefahrdet':  endangervalue += 'red\"severely endangered</mark>'
+            case 'GefahrdungUnbekanntenAusmasses':  endangervalue += 'gray\"endangerment unknown</mark>'
+            case 'extremSelten':  endangervalue += 'orange\"extremly rare</mark>'
+            case 'DatenUnzureichend':  endangervalue += 'gray\"insufficient data available</mark>'
+            case 'ungefahrdet':  endangervalue += 'green\"not endangered</mark>'
+            case 'nichtBewertet':  endangervalue += 'gray\"not evaluated</mark>'
+            case 'keinNachweis':  endangervalue += 'gray\"no proof</mark>'
+            case _: return None
+        return mark_safe(endangervalue)
+    else:
+        endangervalue = "Gefährdungsstatus Deutschland: <mark class=\""
+        match species.red_list_germany:
+            case 'gefahrdet':  endangervalue += 'orange\">gefährdet</mark>'
+            case 'Vorwarnliste':  endangervalue += 'orange\">Vorwarnliste</mark>'
+            case 'ausgestorbenOderVerschollen':  endangervalue += 'red\">ausgestorben oder verschollen</mark>'
+            case 'vomAussterbenBedroht':  endangervalue += 'red\">vom Aussterben bedroht</mark>'
+            case 'starkGefahrdet':  endangervalue += 'red\">stark gefährdet</mark>'
+            case 'GefahrdungUnbekanntenAusmasses':  endangervalue += 'gray\">Gefährdung unbekannten Ausmasses</mark>'
+            case 'extremSelten':  endangervalue += 'orange\">extrem selten</mark>'
+            case 'DatenUnzureichend':  endangervalue += 'gray\">Daten unzureichend</mark>'
+            case 'ungefahrdet':  endangervalue += 'green\">nicht gefährdet</mark>'
+            case 'nichtBewertet':  endangervalue += 'gray\">nicht bewertet</mark>'
+            case 'keinNachweis':  endangervalue += 'gray\">kein Nachweis</mark>'
+            case _: return None
+        return mark_safe(endangervalue)
+
+
 def portrait(request, id):
     language = extract_language(request, allowed_langs={"de", "en"})
     species = Species.objects.get(id=id)
@@ -185,7 +225,10 @@ def portrait(request, id):
     translate_with_lang = partial(translate_ident, 1 if language == "en" else 0)
     sources = list(map(translate_with_lang, sources))
 
-    goodtoknows = {gtk.type: gtk.fact for gtk in portrait.goodtoknow_set.all().order_by("ordering")}
+    goodtoknows = {}
+    for gtk in portrait.goodtoknow_set.all().order_by("ordering"):
+        goodtoknows.setdefault(gtk.type, []).append(gtk.fact)
+    goodtoknows.setdefault("other", []).append(endangerstatus(species=portrait.species, language=language))
     additional_names = ", ".join(species.speciesname_set.filter(language=language).values_list("name", flat=True))
     similar_species = [sims(language, s) for s in portrait.similarspecies_set.all()]
     unambigousfeature = list(portrait.unambigousfeature_set.all().values_list("description", flat=True))

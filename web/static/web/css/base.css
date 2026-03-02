@@ -268,3 +268,23 @@ h6:not(:first-child),
 .jumbo:not(:first-child) {
   margin-top: var(--line-height-regular);
 }
+
+mark {
+    background: none;
+}
+
+mark.green {
+    color: var(--peace);
+}
+
+mark.orange {
+    color: var(--stress);
+}
+
+mark.red {
+    color: var(--pain);
+}
+
+mark.gray {
+    color: var(--fun);
+}
