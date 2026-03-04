@@ -111,6 +111,7 @@ body {
             }
 
             .audio {
+                color: white;
                 background-color: var(--relax);
                 border-radius: 8px;
                 padding: 16px;
@@ -120,21 +121,42 @@ body {
                     display: none;
                 }
 
-                div {
+                div:first-of-type {
                     display: flex;
                     align-items: flex-start;
+                    gap: 8px;
 
                     div {
                         display: flex;
                         flex-direction: column;
                     }
+
+                    button {
+                        background: none;
+                        border: none;
+                    }
                 }
 
-                img {
-                    overflow: hidden;
-                    height: 100%;
-                    width: auto;
-                    opacity: 1;
+                .audio__spectrogram_container {
+                    position: relative;
+                    margin-top: 8px;
+
+                    img {
+                        opacity: 0.75;
+                        width: 100%;
+                    }
+                    .audio__spectrogram_container__cover {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        overflow: hidden;
+                        height: 100%;
+                        img {
+                            height: 100%;
+                            width: auto;
+                            opacity: 1;
+                        }
+                    }
                 }
 
                 h3, p {
