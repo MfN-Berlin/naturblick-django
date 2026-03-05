@@ -1,0 +1,66 @@
+{% load web_tags %}
+
+<div class="audio">
+    <div>
+        <button id="playBtn">{% inline_svg 'play-media.svg' %}</button>
+        <div>
+            <h3>{{ audio.audio_title }}</h3>
+            <p>{{ audio.licence }}</p>
+        </div>
+    </div>
+
+    <div class="audio__spectrogram_container" id="spectrogram_container">
+        <img src="{{ audio.png }}">
+        <div class="audio__spectrogram_container__cover" id="widther" style="width: 0%;">
+            <img src="{{ audio.png }}">
+        </div>
+    </div>
+
+    <audio id="audio">
+        <source src="{{ audio.url }}">
+    </audio>
+</div>
+
+<script>
+    const audio = document.getElementById('audio');
+    const btn = document.getElementById('playBtn');
+    const widther = document.getElementById('widther');
+    const spec_cont = document.getElementById('spectrogram_container');
+
+    const rect = spec_cont.getBoundingClientRect()
+    const total_width = rect.right - rect.left;
+    running = false;
+
+    audio.onpause = function() {
+        running = false;
+    }
+
+    spec_cont.addEventListener('click', (event) => {
+        const x = event.clientX - rect.left;
+        new_value = Number((x / total_width ) * audio.duration).toFixed(6);
+        console.log(new_value);
+        audio.currentTime = new_value;
+    })
+
+    function updateTime() {
+        newWidth = Number(audio.currentTime / audio.duration * 100).toFixed(2);
+        widther.style = `width: ${newWidth}%`
+        setTimeout( () => {
+            if (!running) {
+                return;
+            }
+            updateTime(audio);
+        }, 50)
+    }
+
+    btn.addEventListener('click', () => {
+      if (audio.paused == true) {
+        audio.play();
+        running = true;
+        updateTime();
+      } else {
+        audio.pause();
+        running = false;
+      }
+    });
+</script>

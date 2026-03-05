@@ -5,9 +5,9 @@
 {% block dels %}{% endblock %}
 
 {% block header_title %}
-<h3>{{ portrait.species.sciname }}</h3>
-<h1>{{ species_name }}
-    <p>{{ additional_name }}</h1>
+<p>{{ portrait.species.sciname }}</p>
+<h1>{{ species_name }}</h1>
+<p>{{ additional_name }}</p>
 {% endblock %}
 
 {% block css %}
@@ -15,12 +15,12 @@
 
 {% block content %}
 <main>
-    {% include "partials/portrait_section.html" with img_meta=portrait.descmeta title="Short Description" descriptions=descriptions only %}
+    {% include "partials/portrait_section.html" with img_meta=portrait.descmeta title="Short Description" descriptions=descriptions class="grid-1-2" only %}
 
     {% include "partials/features_section.html" %}
 
     {% if portrait.inthecitymeta %}
-    {% include "partials/portrait_section.html" with img_meta=portrait.inthecitymeta title="In the city" descriptions=inthecity only %}
+    {% include "partials/portrait_section.html" with img_meta=portrait.inthecitymeta title="In the city" descriptions=inthecity class="grid-1-2" only %}
     {% endif %}
 
     {% if goodtoknows %}

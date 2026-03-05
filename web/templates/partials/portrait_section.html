@@ -1,4 +1,4 @@
-<section>
+<section {% if class %}class="{{ class }}"{% endif %}>
     {% include "partials/portrait_img.html" with url=img_meta.image_file.image.url link_text=img_meta.text licence=img_meta.image_file.license owner=img_meta.image_file.owner only %}
     <div>
         <h2>{{ title }}</h2>

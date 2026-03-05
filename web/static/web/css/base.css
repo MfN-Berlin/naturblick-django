@@ -66,16 +66,14 @@ header {
         display: inline-flex;
         align-items: center;
         padding: 17px 24px;
-
-        h5 {
-            font-size: var(--font-size-big);
-            line-height: var(--font-size-big);
-            margin: 0 0 0 8px;
-        }
+        font-size: var(--font-size-big);
+        line-height: var(--font-size-big);
+        margin: 0 0 0 8px;
+        font-weight: 900;
 
         img {
             height: 19px;
-            margin: 0;
+            margin: 0 8px 0 0;
         }
     }
 
@@ -269,4 +267,24 @@ h5:not(:first-child),
 h6:not(:first-child),
 .jumbo:not(:first-child) {
   margin-top: var(--line-height-regular);
+}
+
+mark {
+    background: none;
+}
+
+mark.green {
+    color: var(--peace);
+}
+
+mark.orange {
+    color: var(--stress);
+}
+
+mark.red {
+    color: var(--pain);
+}
+
+mark.gray {
+    color: var(--fun);
 }
