@@ -122,6 +122,8 @@ body {
                 border-radius: 8px;
                 padding: 16px;
                 box-shadow: var(--shadow);
+                font-weight: 700;
+                margin-bottom: 8px;
 
                 audio {
                     display: none;
@@ -140,6 +142,11 @@ body {
                     button {
                         background: none;
                         border: none;
+                        font-size: var(--font-size-big);
+                        svg {
+                            width: 48px;
+                            height: 48px;
+                        }
                     }
                 }
 
@@ -150,6 +157,7 @@ body {
                     img {
                         opacity: 0.75;
                         width: 100%;
+                        margin-bottom: 0;
                     }
                     .audio__spectrogram_container__cover {
                         position: absolute;
@@ -165,9 +173,26 @@ body {
                     }
                 }
 
+                .audio__time {
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: var(--font-size-small);
+                }
+
                 h3, p {
                     margin: 0;
                     padding: 0;
+                }
+
+                h3 {
+                    font-size: var(--font-size-regular);
+                    line-height: var(--line-height-regular);
+                }
+
+                p {
+                    font-size: var(--font-size-super-small);
+                    line-height: var(--line-height-super-small);
+                    opacity: .5;
                 }
             }
         }
