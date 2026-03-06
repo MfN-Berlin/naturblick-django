@@ -16,6 +16,11 @@
         </div>
     </div>
 
+    <div class="audio__time">
+        <div id="audio_start">00:00</div>
+        <div id="audio_end"></div>
+    </div>
+
     <audio id="audio">
         <source src="{{ audio.url }}">
     </audio>
@@ -26,6 +31,8 @@
     const btn = document.getElementById('playBtn');
     const widther = document.getElementById('widther');
     const spec_cont = document.getElementById('spectrogram_container');
+    const audio_start = document.getElementById('audio_start');
+    const audio_end = document.getElementById('audio_end');
 
     const rect = spec_cont.getBoundingClientRect()
     const total_width = rect.right - rect.left;
@@ -35,12 +42,29 @@
         running = false;
     }
 
+    audio.addEventListener('timeupdate', () => {
+        audio_start.innerHTML = formatTime(audio.currentTime);
+    })
+
+    audio.addEventListener("loadedmetadata", () => {
+        audio_end.innerHTML = formatTime(audio.duration);
+    });
+
     spec_cont.addEventListener('click', (event) => {
         const x = event.clientX - rect.left;
         new_value = Number((x / total_width ) * audio.duration).toFixed(6);
         console.log(new_value);
         audio.currentTime = new_value;
     })
+
+    function formatTime(seconds) {
+        const total = Math.round(seconds);
+        const m = Math.floor(total / 60);
+        const s = total % 60;
+
+        return String(m).padStart(2, "0") + ":" +
+               String(s).padStart(2, "0");
+    }
 
     function updateTime() {
         newWidth = Number(audio.currentTime / audio.duration * 100).toFixed(2);

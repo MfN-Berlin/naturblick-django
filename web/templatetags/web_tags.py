@@ -43,7 +43,7 @@ def group_svg(group):
         case "amphibian": path = "amphibian.svg"
         case "hymenoptera": path = "bee.svg"
         case "herb": path = "herb.svg"
-        case "bird": path = "birasdad.svg"
+        case "bird": path = "bird.svg"
         case "tree": path = "tree.svg"
         case "fishingbaitfish": path = "fishing-bait-fish.svg"
         case "actinopterygii": path = "fishing-bait-fish.svg"
