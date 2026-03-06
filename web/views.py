@@ -2,7 +2,9 @@ from datetime import datetime
 
 import requests
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse
+from django.http import \
+    HttpResponse, \
+    HttpResponseNotFound
 from django.shortcuts import redirect, render
 from django.template import TemplateDoesNotExist
 from django.template.loader import get_template
@@ -192,34 +194,40 @@ def endangerstatus(species, language):
 
 def portrait(request, id):
     language = extract_language(request, allowed_langs={"de", "en"})
-    species = Species.objects.get(id=id)
+    try:
+        species = Species.objects.get(id=id)
+    except Species.DoesNotExist:
+        return  HttpResponseNotFound("This species does not exist")
 
     is_fauna = True if species.group.nature == 'fauna' else False
     objects = Faunaportrait.objects if is_fauna else Floraportrait.objects
     template = 'faunaportrait' if is_fauna else 'floraportrait'
 
-    portrait = (
-        objects
-        .select_related(
-            "descmeta",
-            "inthecitymeta",
-            "funfactmeta",
+    try:
+        portrait = (
+            objects
+            .select_related(
+                "descmeta",
+                "inthecitymeta",
+                "funfactmeta",
+            )
+            .prefetch_related(
+                "goodtoknow_set",
+                "source_set",
+                "unambigousfeature_set",
+                "similarspecies_set__species__avatar_new__imagefile",
+            )
+            .get(species_id=id, language=language)
         )
-        .prefetch_related(
-            "goodtoknow_set",
-            "source_set",
-            "unambigousfeature_set",
-            "similarspecies_set__species__avatar_new__imagefile",
-        )
-        .get(species_id=id, language=language)
-    )
+    except:
+        return  HttpResponseNotFound("This portrait does not exist")
 
     descriptions = [portrait.short_description, portrait.male_description, portrait.female_description, portrait.juvenile_description] if is_fauna else [portrait.short_description, portrait.leaf_description, portrait.stem_axis_description, portrait.flower_description, portrait.fruit_description]
 
     sources = [source_from_image(portrait.descmeta)]
-    if portrait.inthecitymeta:
+    if hasattr(portrait, "inthecitymeta"):
         sources.append(source_from_image(portrait.inthecitymeta))
-    if portrait.funfactmeta:
+    if hasattr(portrait, "funfactmeta"):
         sources.append(source_from_image(portrait.funfactmeta))
     sources += list(portrait.source_set.values_list("text", flat=True))
     translate_with_lang = partial(translate_ident, 1 if language == "en" else 0)
@@ -238,7 +246,7 @@ def portrait(request, id):
         "licence": portrait.faunaportrait_audio_file.license,
         "url": portrait.faunaportrait_audio_file.audio_file.url,
         "png": f"{portrait.faunaportrait_audio_file.audio_file.url.replace("audio_files", "spectrogram_images")}.png"
-    } if is_fauna else None
+    } if is_fauna and portrait.faunaportrait_audio_file else None
 
     return web_render(request, template, context={
         "id": id,
