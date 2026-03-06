@@ -30,10 +30,8 @@ def toggle_dels(request):
 @register.simple_tag
 def inline_svg(path):
     full_path = finders.find(path)
-    if full_path:
-        with open(full_path, 'r', encoding='utf-8') as f:
-            return mark_safe(f.read())
-    return ''
+    with open(full_path, 'r', encoding='utf-8') as f:
+        return mark_safe(f.read())
 
 @register.simple_tag
 def group_svg(group):
@@ -45,7 +43,7 @@ def group_svg(group):
         case "amphibian": path = "amphibian.svg"
         case "hymenoptera": path = "bee.svg"
         case "herb": path = "herb.svg"
-        case "bird": path = "bird.svg"
+        case "bird": path = "birasdad.svg"
         case "tree": path = "tree.svg"
         case "fishingbaitfish": path = "fishing-bait-fish.svg"
         case "actinopterygii": path = "fishing-bait-fish.svg"
@@ -96,10 +94,8 @@ def group_svg(group):
         case _: "logo.svg"
 
     full_path = finders.find(f"groups/{path}")
-    if full_path:
-        with open(full_path, 'r', encoding='utf-8') as f:
-            return mark_safe(f.read())
-    return ''
+    with open(full_path, 'r', encoding='utf-8') as f:
+        return mark_safe(f.read())
 
 
 @register.simple_tag
