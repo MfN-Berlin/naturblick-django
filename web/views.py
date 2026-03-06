@@ -271,6 +271,10 @@ def mobileapp(request):
     return web_render(request, "mobileapp")
 
 
+def map(request):
+    return web_render(request, "map")
+
+
 def faq(request):
     return web_render(request, "faq")
 
