@@ -6,9 +6,11 @@ import tempfile
 from pathlib import Path
 
 from django.core import management
+from django.core.exceptions import BadRequest
 from django.db import connection
 from django.db.models import Prefetch
 from django.db.models import Q
+from django import forms
 from django.http import FileResponse, HttpResponse
 from django.utils import translation
 from rest_framework import generics
@@ -114,6 +116,10 @@ def filter_species_tags(species_qs, tags):
     return species_qs.filter(tag__in=tags)
 
 
+def is_valid_or_raise(form):
+    if not form.is_valid():
+        raise BadRequest(' '.join([ "{}: {}".format(k, ' '.join(v)) for k, v in form.errors.items()]))
+
 # 2.) This is the 'old' Tag endpoint, callable with
 #  - /tags/filter?lang=de&tagsearch=&_limit=-1
 # now just use /species/tags/?lang=en&tagsearch=ant
@@ -122,9 +128,21 @@ class TagsList(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Tag.objects.all()
-        query = self.request.query_params.get('tagsearch')
         lang = translation.get_language()
-        tags = self.request.query_params.getlist('tag')
+
+        class TagSearchForm(forms.Form):
+            tagsearch = forms.CharField(max_length=64, required=False)
+            tag = forms.TypedMultipleChoiceField(
+                coerce=int,
+                empty_value=[],
+                choices=[(id, id) for id in Tag.objects.all().values_list('id', flat=True)],
+                required=False)
+
+        form = TagSearchForm(self.request.query_params)
+        is_valid_or_raise(form)
+
+        query = form.cleaned_data['tagsearch']
+        tags = form.cleaned_data['tag']
 
         if query:
             if lang and lang == 'en':
