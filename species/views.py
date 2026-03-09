@@ -332,7 +332,7 @@ def specgram(request, filename):
 def species(request, id):
     if request.method == 'GET':
         if id:
-            lang = get_lang_queryparam(request)
+            lang = translation.get_language()
 
             species_qs = Species.objects.all().select_related('group', 'avatar_new').prefetch_related(
                 Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
@@ -358,7 +358,7 @@ def species(request, id):
 def species_list(request):
     if request.method == 'GET':
         species_ids = request.query_params.getlist('speciesid_in')
-        lang = get_lang_queryparam(request)
+        lang = translation.get_language()
 
         species_qs = Species.objects.all().select_related('group', 'avatar_new').prefetch_related(
             Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang),
