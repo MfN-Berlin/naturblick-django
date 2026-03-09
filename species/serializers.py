@@ -1,7 +1,7 @@
 import os
 
 from rest_framework import serializers
-
+from django.utils import translation
 from .models import Species, SpeciesName, Tag, SimilarSpecies, GoodToKnow, UnambigousFeature, Source, \
     Faunaportrait, Floraportrait, Group
 from .utils import cropped_image
@@ -17,7 +17,7 @@ class AvatarCropUrlField(serializers.Field):
 class TagLocalnameField(serializers.Field):
     def to_representation(self, obj):
         request = self.context.get('request', None)
-        lang = request.query_params.get('lang') if request else None
+        lang = translation.get_language()
 
         if lang == 'en':
             return obj.english_name
@@ -42,7 +42,7 @@ class SpeciesNameSerializer(serializers.ModelSerializer):
 class SpeciesLocalnameField(serializers.Field):
     def to_representation(self, obj):
         request = self.context.get('request', None)
-        lang = request.query_params.get('lang') if request else None
+        lang = translation.get_language()
 
         if lang == 'en':
             return obj.engname
@@ -107,7 +107,7 @@ class HeightField(serializers.Field):
 class SimilarSpeciesLocalnameField(serializers.Field):
     def to_representation(self, obj):
         request = self.context.get('request', None)
-        lang = (request.query_params.get('lang') if request else None)
+        lang = translation.get_language()
 
         if lang == 'en':
             return obj.species.engname

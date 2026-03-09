@@ -40,7 +40,7 @@ def home(request):
 
 
 def artportrait(request, id):
-    lang = extract_language(request)
+    lang = translation.get_language()
 
     p = Portrait.objects.filter(species_id=id, language=lang).first()
     ogs_list = []
@@ -57,7 +57,7 @@ def artportrait(request, id):
 
 
 def old_artportrait(request, species_id):
-    lang = extract_language(request)
+    lang = translation.get_language()
     int_id = Species.objects.filter(speciesid=species_id).values_list(
         "id", flat=True).first()
 
@@ -74,7 +74,7 @@ def sub_page(request):
 
 
 def map_page(request, obs_id):
-    lang = extract_language(request)
+    lang = translation.get_language()
     ogs_list = []
 
     try:
@@ -193,7 +193,10 @@ def endangerstatus(species, language):
 
 
 def portrait(request, id):
-    language = extract_language(request, allowed_langs={"de", "en"})
+    language = translation.get_language()
+    if language not in ["de", "en"]:
+        language = "de"
+
     try:
         species = Species.objects.get(id=id)
     except Species.DoesNotExist:
@@ -312,13 +315,6 @@ def default_ogs(request: WSGIRequest) -> list[Og]:
             Og("og:site-name", "Naturblick"),
             Og("og:url", og_url(request))
             ]
-
-
-def extract_language(request: WSGIRequest, allowed_langs={"de", "en", "dels"}):
-    lang = request.GET.get("lang", "de")
-    if lang not in allowed_langs:
-        lang = "de"
-    return lang
 
 
 def og_url(request):

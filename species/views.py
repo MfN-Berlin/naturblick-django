@@ -10,6 +10,7 @@ from django.db import connection
 from django.db.models import Prefetch
 from django.db.models import Q
 from django.http import FileResponse, HttpResponse
+from django.utils import translation
 from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import NotFound, MethodNotAllowed
@@ -26,11 +27,6 @@ from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializ
     FunfactMetaSerializer, InthecityMetaSerializer, GroupSerializer
 from .utils import cropped_image
 from .utils import create_sqlite_file
-
-
-def get_lang_queryparam(request):
-    return request.query_params.get('lang') or 'de'
-
 
 def is_data_valid():
     return not Portrait.objects.filter(species__accepted_species__isnull=False, published=True).exists()
@@ -127,7 +123,7 @@ class TagsList(generics.ListAPIView):
     def get_queryset(self):
         queryset = Tag.objects.all()
         query = self.request.query_params.get('tagsearch')
-        lang = get_lang_queryparam(self.request)
+        lang = translation.get_language()
         tags = self.request.query_params.getlist('tag')
 
         if query:
@@ -159,7 +155,7 @@ class SimpleTagsList(generics.ListAPIView):
     def get_queryset(self):
         queryset = Tag.objects.all()
         tags = self.request.query_params.getlist('tag')
-        lang = get_lang_queryparam(self.request)
+        lang = translation.get_language()
 
         if tags:
             queryset = queryset.filter(id__in=tags)
@@ -217,7 +213,7 @@ class PortraitDetail(generics.GenericAPIView):
     def get(self, request):
         id = request.query_params.get('id')  # int-id
         speciesid = request.query_params.get('speciesid')  # old fashioned species_id
-        lang = get_lang_queryparam(self.request)
+        lang = translation.get_language()
 
         if id:
             species_id, is_redirected_from = get_accepted_portrait_species_id(s_id=id, lang=lang)
@@ -386,7 +382,7 @@ class GroupsList(generics.ListAPIView):
 
 class SpeciesList(generics.ListAPIView):
     def get_queryset(self):
-        lang = get_lang_queryparam(self.request)
+        lang = translation.get_language()
         query = self.request.query_params.get('query')
         tags = self.request.query_params.getlist('tag')
         sort_and_order = self.request.query_params.get('sort') or 'localname:ASC'
