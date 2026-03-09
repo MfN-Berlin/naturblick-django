@@ -51,14 +51,15 @@
         </details>
     </div>
 
-    <div class="header-title">
     {% block header_title %}
+    <div class="header-title">
         <h1>{% block page_title %}{% endblock %}</h1>
         {% block subtitle %}{% endblock %}
-    {% endblock %}
     </div>
+    {% endblock %}
 </header>
 {% block content %}{% endblock %}
+{% block footer %}
 <footer>
     <div>
         <a href="{% url 'kontakt' %}{% querystring %}">{% translate "Kontakt" %}</a>
@@ -80,5 +81,6 @@
         {% endif %}
     </div>
 </footer>
+{% endblock %}
 </body>
 </html>
