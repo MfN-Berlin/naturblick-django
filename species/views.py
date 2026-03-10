@@ -1,6 +1,7 @@
 import csv
 import json
 import os
+import re
 import subprocess
 import tempfile
 from pathlib import Path
@@ -17,7 +18,6 @@ from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import NotFound, MethodNotAllowed
 from rest_framework.response import Response
-from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from naturblick import settings
@@ -172,7 +172,17 @@ class SimpleTagsList(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Tag.objects.all()
-        tags = self.request.query_params.getlist('tag')
+        class TagForm(forms.Form):
+            tag = forms.TypedMultipleChoiceField(
+                coerce=int,
+                empty_value=[],
+                choices=[(id, id) for id in Tag.objects.all().values_list('id', flat=True)],
+                required=False)
+
+        form = TagForm(self.request.query_params)
+        is_valid_or_raise(form)
+
+        tags = form.cleaned_data['tag']
         lang = translation.get_language()
 
         if tags:
@@ -223,25 +233,38 @@ def get_accepted_portrait_species_id(lang, s_id=None, speciesid=None):
         return None, None
 
 
+SPECIESID_REGEX='^[a-z]+_[a-f0-9]{8}$'
+
 #
 # called by playback HttpService and platform
 # /species/portrait/
 class PortraitDetail(generics.GenericAPIView):
+    class PortraitForm(forms.Form):
+        id = forms.IntegerField(required=False)
+        speciesid = forms.RegexField(required=False, regex=SPECIESID_REGEX)
+
+        def clean(self):
+            cleaned_data = super().clean()
+            if not cleaned_data.get("id") and not cleaned_data.get("speciesid"):
+                raise forms.ValidationError(
+                    "One of id or speciesid must be specified."
+                )
+            if cleaned_data.get("id") and cleaned_data.get("speciesid"):
+                raise forms.ValidationError(
+                    "Only one of id and species id can be used"
+                )
 
     def get(self, request):
-        id = request.query_params.get('id')  # int-id
-        speciesid = request.query_params.get('speciesid')  # old fashioned species_id
         lang = translation.get_language()
+        form = self.PortraitForm(self.request.query_params)
+        is_valid_or_raise(form)
+        id = form.cleaned_data["id"]
+        speciesid = form.cleaned_data["speciesid"]
 
         if id:
             species_id, is_redirected_from = get_accepted_portrait_species_id(s_id=id, lang=lang)
         elif speciesid:
             species_id, is_redirected_from = get_accepted_portrait_species_id(speciesid=speciesid, lang=lang)
-        else:
-            return Response(
-                {"detail": "Missing required parameters: species_id"},
-                status=HTTP_400_BAD_REQUEST
-            )
 
         if not species_id:
             raise NotFound()
@@ -376,6 +399,12 @@ def species(request, id):
 def species_list(request):
     if request.method == 'GET':
         species_ids = request.query_params.getlist('speciesid_in')
+
+        speciesid_regex = re.compile(SPECIESID_REGEX)
+        for sid in species_ids:
+            if not speciesid_regex.fullmatch(sid):
+                raise BadRequest('speciesid_in must be a valid speciesid')
+
         lang = translation.get_language()
 
         species_qs = Species.objects.all().select_related('group', 'avatar_new').prefetch_related(
@@ -399,11 +428,27 @@ class GroupsList(generics.ListAPIView):
 
 
 class SpeciesList(generics.ListAPIView):
+    class SpeciesSearchForm(forms.Form):
+        query = forms.CharField(max_length=64, required=False)
+        tag = forms.TypedMultipleChoiceField(
+            coerce=int,
+            empty_value=[],
+            choices=[(id, id) for id in Tag.objects.all().values_list('id', flat=True)],
+            required=False)
+        sort = forms.ChoiceField(choices=[
+            ('localname:ASC', 'localname:ASC'),
+            ('localname:DESC', 'localname:DESC'),
+            ('sciname:ASC', 'sciname:ASC'),
+            ('sciname:DESC', 'sciname:DESC')
+        ], required=False)
+
     def get_queryset(self):
         lang = translation.get_language()
-        query = self.request.query_params.get('query')
-        tags = self.request.query_params.getlist('tag')
-        sort_and_order = self.request.query_params.get('sort') or 'localname:ASC'
+        form = self.SpeciesSearchForm(self.request.query_params)
+        is_valid_or_raise(form)
+        query = form.cleaned_data["query"]
+        tags = form.cleaned_data["tag"]
+        sort_and_order = form.cleaned_data['sort'] or 'localname:ASC'
 
         species_qs = (Species.objects.select_related('avatar_new', 'group')
         .prefetch_related(

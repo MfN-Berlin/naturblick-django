@@ -26,7 +26,7 @@ class SpeciesTestCase(TestCase):
 
         Group.objects.create(name="bird", nature="fauna")
         bird = Group.objects.get(name="bird")
-        amsel = Species.objects.create(sciname="Turdus merula", group=bird, gername="Amsel", speciesid="bird_0",
+        amsel = Species.objects.create(sciname="Turdus merula", group=bird, gername="Amsel", speciesid="bird_00000000",
                                        plantnetpowoid="4321-5")
         SpeciesName.objects.create(species=amsel, name="Schwarzdrossel", language="de")
         imagefile = ImageFile.objects.create(species=amsel, owner="Test", source="127.0.0.1", license="CC0",
@@ -62,7 +62,7 @@ class SpeciesTestCase(TestCase):
 
     def test_specieslist_ok(self):
         url = reverse("species-list")
-        response = self.client.get(url, query_params={"speciesid_in": "bird_0"})
+        response = self.client.get(url, query_params={"speciesid_in": "bird_00000000"})
         self.assertEqual(response.status_code, 200)
         content = json.loads(response.content)
         self.assertEqual(len(content), 1)
@@ -70,7 +70,7 @@ class SpeciesTestCase(TestCase):
 
     def test_specieslist_not_found(self):
         url = reverse("species-list")
-        response = self.client.get(url, query_params={"speciesid_in": "bird_foo"})
+        response = self.client.get(url, query_params={"speciesid_in": "bird_ff00ff00"})
         self.assertEqual(response.status_code, 404)
 
     def test_species_ok(self):
