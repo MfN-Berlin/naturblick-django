@@ -245,7 +245,7 @@ class PortraitDetail(generics.GenericAPIView):
 
         def clean(self):
             cleaned_data = super().clean()
-            if not (cleaned_data.get("id") or cleaned_data.get("speciesid")):
+            if not cleaned_data.get("id") and not cleaned_data.get("speciesid"):
                 raise forms.ValidationError(
                     "One of id or speciesid must be specified."
                 )
