@@ -4,6 +4,7 @@ from web import views
 
 urlpatterns = [
     path("dev", views.index, name="index"),
+    path("dev/map_proxy", views.map_proxy),
     re_path(
         r'^dev/species/portrait/(?P<id>[0-9]+)$', views.portrait, name="portrait"),
     path("dev/faq", views.faq, name="faq"),
@@ -12,6 +13,7 @@ urlpatterns = [
     path("dev/kontakt", views.kontakt, name="kontakt"),
     path("dev/privacy", views.privacy, name="privacy"),
     path("dev/imprint", views.imprint, name="imprint"),
+    path("dev/map", views.map, name="map"),
     path("dev/digitalaccessibilitystatement", views.digitalaccessibilitystatement, name="digitalaccessibilitystatement"),
     path('', views.home, name="home"),
     re_path(

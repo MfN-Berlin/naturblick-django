@@ -8,9 +8,9 @@
 {% block title %}Discover nature{% endblock %}
 
 {% block header_title %}
-<h1>Discover nature</h1>
-<hr>
-<p>Identify animals and plants and explore your city.</p>
+<div class="header-title"><h1>Discover nature</h1>
+    <hr>
+    <p>Identify animals and plants and explore your city.</p></div>
 {% endblock %}
 
 {% block img %}
@@ -19,6 +19,11 @@
 
 {% block content %}
 <main>
+    <section>
+        {% img "Karte_Nachtigall_bf227c6efb.png" widths='245w,400w,800w,1200w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, (max-width: 1023px) 1200px, 1200px" %}
+        {% include "partials/card.html" with title="Observations" subtitle="Explore observations of other Naturblick users. On our map you find the observations of headgehogs, walnut trees and the Citizen Science Project Forschungsfall Nachtigall. We will provide feedback on all species identifications step by step and expand the map." link_text="Go to map →" path_name="map" %}
+    </section>
+    <hr>
     <section class="columns-3">
         <div>
             {% img "Naturblick_Screen_klein_32cca05fc4.jpg" widths='245w,400w,800w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, 800px" %}

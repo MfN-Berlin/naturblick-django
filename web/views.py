@@ -4,7 +4,8 @@ import requests
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import \
     HttpResponse, \
-    HttpResponseNotFound
+    HttpResponseNotFound, \
+    JsonResponse
 from django.shortcuts import redirect, render
 from django.template import TemplateDoesNotExist
 from django.template.loader import get_template
@@ -271,6 +272,10 @@ def mobileapp(request):
     return web_render(request, "mobileapp")
 
 
+def map(request):
+    return web_render(request, "map")
+
+
 def faq(request):
     return web_render(request, "faq")
 
@@ -331,3 +336,37 @@ def add_image_ogs(request, ogs_list, image):
     ogs_list.append(Og("og:image", f'{request.get_host()}{image.url}'))
     ogs_list.append(Og("og:twitter:image", f'{request.get_host()}{image.url}'))
     return ogs_list
+
+
+def to_geojson_view(source):
+    features = []
+
+    for row in source["data"]:
+        obj_id, lon, lat, kind = row
+
+        feature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [lon, lat],
+            },
+            "properties": {
+                "id": obj_id,
+                "type": kind
+            }
+        }
+
+        features.append(feature)
+
+    geojson = {
+        "type": "FeatureCollection",
+        "features": features
+    }
+
+    return JsonResponse(geojson)
+
+def map_proxy(request):
+    r = requests.get(
+        "https://naturblick.museumfuernaturkunde.berlin/api/projects/map"
+    )
+    return to_geojson_view(r.json())
