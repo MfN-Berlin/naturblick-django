@@ -4,17 +4,13 @@ import requests
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Prefetch, Q
 from django import forms
-from django.http import \
-    HttpResponse, \
-    HttpResponseNotFound, \
-    JsonResponse
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import redirect, render
 from django.template import TemplateDoesNotExist
 from django.template.loader import get_template
 from django.urls import reverse
 from django.utils import translation
-from django.utils.safestring import \
-    mark_safe
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 from functools import partial
 
@@ -426,7 +422,7 @@ def to_geojson_view(source):
             },
             "properties": {
                 "id": obj_id,
-                "type": kind
+                "group": kind
             }
         }
 
