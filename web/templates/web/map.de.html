@@ -25,7 +25,7 @@ var map = new maplibregl.Map({
 map.on('load', () => {
     map.addSource('observations', {
         type: 'geojson',
-        data: '/index/dev/map_proxy',
+        data: '{% url 'map_proxy' %}',
         cluster: true,
         clusterMaxZoom: 14,
         clusterRadius: 50
