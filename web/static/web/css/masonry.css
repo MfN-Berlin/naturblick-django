@@ -1,0 +1,46 @@
+body {
+    background-image: url("../img/background_grain_opt.png");
+}
+
+main {
+    color: var(--white);
+    max-width:1400px;
+    width: 100%;
+    #species-masonry {
+        column-count: 3;
+
+        a {
+            display:inline-block;
+            > div {
+                display: flex;
+            }
+
+            svg {
+                margin: 24px 10px 0 0;
+            }
+            p {
+                font-style: italic;
+                color: var(--grey);
+                margin: 0;
+            }
+            h5 {
+                margin: 8px 0 0 0;
+            }
+            img {
+                margin: 0;
+            }
+            padding: 16px;
+        }
+
+        a:hover {
+            color: var(--happy);
+            p {
+                color: var(--happy);
+            }
+            svg {
+                fill: var(--happy);
+                stroke: var(--happy);
+            }
+        }
+    }
+}

@@ -1,0 +1,28 @@
+{% extends "web/page_base.html" %}
+
+{% load static web_tags i18n %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'web/css/masonry.css' %}">
+{% endblock %}
+
+{% block title %}{% translate "Artportraits" %}{% endblock %}
+
+{% block header_title %}
+<div class="header-title">
+  {% inline_svg 'all.svg' %}
+  <h1>{% translate "Artportraits" %}</h1>
+  <p>{% translate "Finde Tiere und Pflanzen, indem du einen Artnamen eingibst oder nach Schlagwörtern sortierst." %}</p>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<main>
+  <div id="species-masonry">
+    {% for id, img_url, group, name, sciname in species %}
+    {% include "partials/masonry_tile.html" %}
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}
