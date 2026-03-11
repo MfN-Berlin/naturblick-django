@@ -13,7 +13,7 @@ urlpatterns = [
     path("dev/kontakt", views.kontakt, name="kontakt"),
     path("dev/privacy", views.privacy, name="privacy"),
     path("dev/imprint", views.imprint, name="imprint"),
-    path("dev/map", views.map, name="map"),
+    path("dev/map", views.show_map, name="map"),
     path("dev/digitalaccessibilitystatement", views.digitalaccessibilitystatement, name="digitalaccessibilitystatement"),
     path('', views.home, name="home"),
     re_path(
