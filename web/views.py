@@ -333,6 +333,8 @@ def search_portrait(request):
         (
             s.id,
             s.prefetched_portraits[0].descmeta.image_file.image_small.url,
+            s.prefetched_portraits[0].descmeta.image_file.image_small.width,
+            s.prefetched_portraits[0].descmeta.image_file.image_small.height,
             s.group,
             s.gername,
             s.sciname
