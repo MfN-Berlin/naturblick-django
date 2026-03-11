@@ -5,12 +5,23 @@
 {% block additional_header %}
 <script src='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'></script>
 <link href='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css' rel='stylesheet' />
+<link rel="stylesheet" href="{% static 'web/css/map.css' %}">
 {% endblock %}
 
 {% block header_title %}{% endblock %}
 
 {% block content %}
-<div id='map' style='width: 100%; height: 100%'></div>
+<div id="map" class="map">
+    <div id="map-info" class="map-overlay">
+         Auf unserer Karte findest du die Beobachtungen von folgenden Arten: Igel, Gemeine Walnuss, Feldahorn und Nachtigall. Wir geben nach und nach zu jeder Bestimmung mit Naturblick eine Rückmeldung und zeigen alle plausiblen Beobachtungen auf der Karte.
+    </div>
+    <div id="map-radio" class="map-overlay">
+        <input type="radio" name="group" value="all" checked><label>Alle</label><br>
+        <input type="radio" name="group" value="tree"><label>Bäume</label><br>
+        <input type="radio" name="group" value="mammal"><label>Säugetiere</label><br>
+        <input type="radio" name="group" value="bird"><label>Vögel</label>
+    </div>
+</div>
 <script>
 const mfn = [13.3792, 52.5295]
 
@@ -28,14 +39,20 @@ map.on('load', () => {
         data: '{% url 'map_proxy' %}',
         cluster: true,
         clusterMaxZoom: 14,
-        clusterRadius: 50
+        clusterRadius: 50,
+        clusterProperties: {
+            all_count: ["+", 1],
+            tree_count: ["+", ["case", ["==", ["get","group"], "tree"], 1, 0]],
+            mammal_count: ["+", ["case", ["==", ["get","group"], "mammal"], 1, 0]],
+            bird_count: ["+", ["case", ["==", ["get","group"], "bird"], 1, 0]],
+        }
     });
 
     map.addLayer({
         id: 'cluster-observations',
         type: 'circle',
         source: 'observations',
-        filter: ['has', 'point_count'],
+        filter: ['>', ['get', 'all_count'], 1],
         paint: {
             'circle-color': [
                 'step',
@@ -52,9 +69,9 @@ map.on('load', () => {
         id: 'cluster-count',
         type: 'symbol',
         source: 'observations',
-        filter: ['has', 'point_count'],
+        filter: ['>', ['get', 'all_count'], 1],
         layout: {
-            'text-field': '{point_count_abbreviated}',
+            'text-field': ["get", "all_count"],
             'text-font': ['Noto Sans Regular'],
             'text-size': 12
         },
@@ -78,9 +95,9 @@ map.on('load', () => {
     });
 
     map.on('click', 'unclustered-observations', (e) => {
-        console.log('Foo')
         const coordinates = e.features[0].geometry.coordinates.slice();
         const obs_id = e.features[0].properties.id;
+        const group = e.features[0].properties.group;
 
         // Ensure that if the map is zoomed out such that
         // multiple copies of the feature are visible, the
@@ -92,9 +109,46 @@ map.on('load', () => {
         new maplibregl.Popup()
             .setLngLat(coordinates)
             .setHTML(
-                `<h1>${obs_id}</h1>`
+                `<h3>${obs_id}</h3><p>${group}</p>`
             )
             .addTo(map);
+    });
+});
+
+document.querySelectorAll('input[name="group"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+        const group = e.target.value;
+
+        map.setLayoutProperty(
+            "cluster-count",
+            "text-field",
+            ["get", `${group}_count`]
+        );
+
+        let filter_property;
+        switch (group) {
+            case "all":
+                filter_property = 'all_count'
+                break;
+            case "tree":
+                filter_property = 'tree_count'
+                break;
+            case "mammal":
+                filter_property = 'mammal_count'
+                break;
+            case "bird":
+                filter_property = 'bird_count'
+                break;
+        }
+        let clusterGroupFilter = ['>', ['get', filter_property], 1];
+        let unclusteredGroupFilter = group == "all" ? ['!', ['has', 'point_count']] :
+            ['all',
+            ['!', ['has', 'point_count']],
+            ['==', ['get', 'group'], group]];
+
+        map.setFilter('cluster-observations', clusterGroupFilter);
+        map.setFilter('cluster-count', clusterGroupFilter);
+        map.setFilter('unclustered-observations', unclusteredGroupFilter);
     });
 });
 
