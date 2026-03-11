@@ -272,7 +272,7 @@ def mobileapp(request):
     return web_render(request, "mobileapp")
 
 
-def map(request):
+def show_map(request):
     return web_render(request, "map")
 
 
