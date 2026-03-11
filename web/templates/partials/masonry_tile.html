@@ -1,6 +1,6 @@
 {% load static web_tags %}
 <a id="masonry_tile_{{ id }}" href="{% url 'portrait' id %}">
-  <img src="{{img_url}}" loading="lazy" style="aspect-ratio: {{ width }} / {{ height }}"/>
+  <img src="{{img_url}}" loading="lazy" width="{{ width }}" height="{{ height }}"/>
 
   <div>
     {% group_svg group %}
