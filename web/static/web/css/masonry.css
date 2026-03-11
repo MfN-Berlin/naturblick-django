@@ -16,6 +16,8 @@ main {
             }
 
             svg {
+                width: 24px;
+                height: 24px;
                 margin: 24px 10px 0 0;
             }
             p {
