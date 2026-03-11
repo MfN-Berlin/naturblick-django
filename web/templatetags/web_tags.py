@@ -91,7 +91,7 @@ def group_svg(group):
         case "truebug": path = "insect-ant.svg"
         case "zygentoma": path = "insect-ant.svg"
         case "all": path = "all.svg"
-        case _: "logo.svg"
+        case _: path = "logo.svg"
 
     full_path = finders.find(f"groups/{path}")
     with open(full_path, 'r', encoding='utf-8') as f:

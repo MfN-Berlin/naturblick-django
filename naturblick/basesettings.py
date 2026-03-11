@@ -145,6 +145,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
 }
 
+LANGUAGE_CODE= "de"
+
 LANGUAGES = [
     ("en", "English"),
     ("de", "German"),

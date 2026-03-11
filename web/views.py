@@ -2,6 +2,8 @@ from datetime import datetime
 
 import requests
 from django.core.handlers.wsgi import WSGIRequest
+from django.db.models import Prefetch, Q
+from django import forms
 from django.http import \
     HttpResponse, \
     HttpResponseNotFound, \
@@ -16,7 +18,7 @@ from django.utils.safestring import \
 from django.utils.translation import gettext as _
 from functools import partial
 
-from species.models import Species, Portrait, Floraportrait, Faunaportrait
+from species.models import Species, SpeciesName, Portrait, Floraportrait, Faunaportrait, Tag
 
 
 class Og:
@@ -267,6 +269,76 @@ def portrait(request, id):
         "species_name": species.engname if language == "en" else species.gername
     })
 
+
+def filter_species_by_query(species_qs, query, lang):
+    if not query:
+        return species_qs
+
+    if lang and (lang == 'de' or lang == 'dels'):
+        return species_qs.filter(
+            Q(sciname__icontains=query) | Q(gername__icontains=query) | Q(speciesname__name__icontains=query))
+    elif lang and lang == 'en':
+        return species_qs.filter(
+            Q(sciname__icontains=query) | Q(engname__icontains=query) | Q(speciesname__name__icontains=query))
+    else:
+        return species_qs.filter(
+            Q(sciname__icontains=query) | Q(engname__icontains=query) | Q(gername__icontains=query) | Q(
+                speciesname__name__icontains=query))
+
+
+def filter_species_tags(species_qs, tags):
+    if not tags:
+        return species_qs
+    return species_qs.filter(tag__in=tags)
+
+def is_valid_or_raise(form):
+    if not form.is_valid():
+        raise BadRequest(' '.join([ "{}: {}".format(k, ' '.join(v)) for k, v in form.errors.items()]))
+
+def search_portrait(request):
+    class SpeciesSearchForm(forms.Form):
+        query = forms.CharField(max_length=64, required=False)
+        tag = forms.TypedMultipleChoiceField(
+            coerce=int,
+            empty_value=[],
+            choices=[(id, id) for id in Tag.objects.all().values_list('id', flat=True)],
+            required=False)
+        sort = forms.ChoiceField(choices=[
+            ('localname:ASC', 'localname:ASC'),
+            ('localname:DESC', 'localname:DESC'),
+            ('sciname:ASC', 'sciname:ASC'),
+            ('sciname:DESC', 'sciname:DESC')
+        ], required=False)
+    lang = translation.get_language()
+    form = SpeciesSearchForm(request.GET)
+    is_valid_or_raise(form)
+    query = form.cleaned_data["query"]
+    tags = form.cleaned_data["tag"]
+
+    species_qs = (Species.objects.select_related('avatar_new', 'group')
+        .prefetch_related(
+            Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang).order_by('name'),
+                     to_attr="prefetched_speciesnames"),
+            Prefetch(
+                "portrait_set", to_attr="prefetched_portraits"
+            )
+        ))
+    species_qs = filter_species_by_query(species_qs, query, lang)
+    species_qs = filter_species_tags(species_qs, tags)
+    species_qs = species_qs.filter(
+            Q(avatar_new__isnull=False) & Q(portrait__language=lang) & Q(portrait__published=True) & Q(
+                portrait__descmeta__image_file__isnull=False))
+
+    species = [
+        (
+            s.id,
+            s.prefetched_portraits[0].descmeta.image_file.image_small.url,
+            s.group,
+            s.gername,
+            s.sciname
+        ) for s in species_qs.distinct()
+    ]
+    return render(request, f"web/search_portrait.html", {"species": species})
 
 def mobileapp(request):
     return web_render(request, "mobileapp")

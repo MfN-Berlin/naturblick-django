@@ -1,0 +1,12 @@
+{% load static web_tags %}
+<a id="masonry_tile_{{ id }}" href="{% url 'portrait' id %}" loading="lazy">
+  <img src="{{img_url}}"/>
+
+  <div>
+    {% group_svg group %}
+    <div>
+      <h5>{{ name }}</h5>
+      <p class="scientific">{{ sciname }}</p>
+    </div>
+  </div>
+</a>
