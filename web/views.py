@@ -291,6 +291,9 @@ def is_valid_or_raise(form):
     if not form.is_valid():
         raise BadRequest(' '.join([ "{}: {}".format(k, ' '.join(v)) for k, v in form.errors.items()]))
 
+def sum_height(species):
+    return sum([s[3] for s in species])
+
 def search_portrait(request):
     class SpeciesSearchForm(forms.Form):
         query = forms.CharField(max_length=64, required=False)
@@ -336,7 +339,13 @@ def search_portrait(request):
             s.sciname
         ) for s in species_qs.distinct()
     ]
-    return render(request, f"web/search_portrait.html", {"species": species})
+    number_of_columns = 3
+    columns = [[] for _ in range(number_of_columns)]
+
+
+    for s in species:
+        min(columns,key=sum_height).append(s)
+    return render(request, f"web/search_portrait.html", {"columns": columns})
 
 def mobileapp(request):
     return web_render(request, "mobileapp")
