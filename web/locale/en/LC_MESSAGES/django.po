@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-02 10:38+0100\n"
+"POT-Creation-Date: 2026-03-11 10:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,19 +22,19 @@ msgstr ""
 msgid "Merkmale"
 msgstr "Features"
 
-#: templates/partials/portrait_goodtoknow.html:8
+#: templates/partials/portrait_goodtoknow.html:9
 msgid "Nutzung"
 msgstr "Usage"
 
-#: templates/partials/portrait_goodtoknow.html:9
+#: templates/partials/portrait_goodtoknow.html:10
 msgid "Blütezeit"
 msgstr "Blossom"
 
-#: templates/partials/portrait_goodtoknow.html:10
+#: templates/partials/portrait_goodtoknow.html:11
 msgid "Lebensform"
 msgstr "Lifeform"
 
-#: templates/partials/portrait_goodtoknow.html:11
+#: templates/partials/portrait_goodtoknow.html:12
 msgid "Verbreitung"
 msgstr "Distribution"
 
@@ -54,27 +54,37 @@ msgstr "About us"
 msgid "Häufige Fragen"
 msgstr "FAQ"
 
-#: templates/web/page_base.html:64
+#: templates/web/page_base.html:67
 msgid "Kontakt"
 msgstr "Contact"
 
-#: templates/web/page_base.html:66
+#: templates/web/page_base.html:69
 msgid "Datenschutz"
 msgstr "General Privacy Notice"
 
-#: templates/web/page_base.html:67
+#: templates/web/page_base.html:70
 msgid "Impressum"
 msgstr "Imprint"
 
-#: templates/web/page_base.html:68
+#: templates/web/page_base.html:71
 msgid "Digitale Barrierefreiheit"
 msgstr "Digital accessibility statement"
 
-#: views.py:24
+#: templates/web/search_portrait.html:9 templates/web/search_portrait.html:14
+msgid "Artportraits"
+msgstr "Species portraits"
+
+#: templates/web/search_portrait.html:15
+msgid ""
+"Finde Tiere und Pflanzen, indem du einen Artnamen eingibst oder nach "
+"Schlagwörtern sortierst."
+msgstr "Find animals and plants by entering a species name or sorting them by tags."
+
+#: views.py:31
 msgid "Discover Nature"
 msgstr "Discover Nature"
 
-#: views.py:278
+#: views.py:402
 #, python-brace-format
 msgid "Seen by {user} at {date} in {coords}"
 msgstr "Seen by {user} at {date} in {coords}"
