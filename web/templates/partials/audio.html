@@ -4,15 +4,15 @@
     <div>
         <button id="playBtn">{% inline_svg 'play-media.svg' %}</button>
         <div>
-            <h3>{{ audio.audio_title }}</h3>
-            <p>{{ audio.licence }}</p>
+            <h3>{{ title }}</h3>
+            <p>{{ licence|safe }}</p>
         </div>
     </div>
 
     <div class="audio__spectrogram_container" id="spectrogram_container">
-        <img src="{{ audio.png }}">
+        <img src="{{ png|safe }}">
         <div class="audio__spectrogram_container__cover" id="widther" style="width: 0%;">
-            <img src="{{ audio.png }}">
+            <img src="{{ png|safe }}">
         </div>
     </div>
 
@@ -22,7 +22,7 @@
     </div>
 
     <audio id="audio">
-        <source src="{{ audio.url }}">
+        <source src="{{ url|safe }}">
     </audio>
 </div>
 
@@ -34,8 +34,6 @@
     const audio_start = document.getElementById('audio_start');
     const audio_end = document.getElementById('audio_end');
 
-    const rect = spec_cont.getBoundingClientRect()
-    const total_width = rect.right - rect.left;
     running = false;
 
     audio.onpause = function() {
@@ -51,9 +49,10 @@
     });
 
     spec_cont.addEventListener('click', (event) => {
+        const rect = spec_cont.getBoundingClientRect()
+
         const x = event.clientX - rect.left;
-        new_value = Number((x / total_width ) * audio.duration).toFixed(6);
-        console.log(new_value);
+        new_value = Number((x / rect.width ) * audio.duration).toFixed(6);
         audio.currentTime = new_value;
     })
 
