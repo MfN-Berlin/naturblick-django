@@ -292,7 +292,7 @@ def is_valid_or_raise(form):
         raise BadRequest(' '.join([ "{}: {}".format(k, ' '.join(v)) for k, v in form.errors.items()]))
 
 def sum_height(species):
-    return sum([s[3] for s in species])
+    return sum([image_height for (_, _, _, image_height, _, _, _) in species])
 
 def search_portrait(request):
     class SpeciesSearchForm(forms.Form):
