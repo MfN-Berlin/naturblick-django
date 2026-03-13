@@ -2,6 +2,7 @@ from datetime import datetime
 
 import requests
 from django.core.handlers.wsgi import WSGIRequest
+from django.core.exceptions import BadRequest
 from django.db.models import Prefetch, Q
 from django import forms
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
@@ -291,10 +292,10 @@ def is_valid_or_raise(form):
     if not form.is_valid():
         raise BadRequest(' '.join([ "{}: {}".format(k, ' '.join(v)) for k, v in form.errors.items()]))
 
-def sum_height(species):
-    return sum([image_height for (_, _, _, image_height, _, _, _) in species])
-
 def search_portrait(request):
+    return render(request, "web/search_portrait.html")
+
+def search_portrait_data(request):
     class SpeciesSearchForm(forms.Form):
         query = forms.CharField(max_length=64, required=False)
         tag = forms.TypedMultipleChoiceField(
@@ -302,17 +303,16 @@ def search_portrait(request):
             empty_value=[],
             choices=[(id, id) for id in Tag.objects.all().values_list('id', flat=True)],
             required=False)
-        sort = forms.ChoiceField(choices=[
-            ('localname:ASC', 'localname:ASC'),
-            ('localname:DESC', 'localname:DESC'),
-            ('sciname:ASC', 'sciname:ASC'),
-            ('sciname:DESC', 'sciname:DESC')
-        ], required=False)
+        offset = forms.IntegerField(required=False)
+        limit = forms.IntegerField(required=False)
+
     lang = translation.get_language()
     form = SpeciesSearchForm(request.GET)
     is_valid_or_raise(form)
     query = form.cleaned_data["query"]
     tags = form.cleaned_data["tag"]
+    offset = form.cleaned_data["offset"] or 0
+    limit = form.cleaned_data["limit"] or 16
 
     species_qs = (Species.objects.select_related('avatar_new', 'group')
         .prefetch_related(
@@ -337,15 +337,10 @@ def search_portrait(request):
             s.group,
             s.gername,
             s.sciname
-        ) for s in species_qs.distinct()
+        ) for s in species_qs.distinct()[offset:(offset + limit)]
     ]
-    number_of_columns = 3
-    columns = [[] for _ in range(number_of_columns)]
 
-
-    for s in species:
-        min(columns,key=sum_height).append(s)
-    return render(request, f"web/search_portrait.html", {"columns": columns})
+    return render(request, "web/search_portrait_data.html", {"species": species})
 
 def mobileapp(request):
     return web_render(request, "mobileapp")

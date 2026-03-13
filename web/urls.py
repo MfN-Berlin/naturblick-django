@@ -6,6 +6,7 @@ urlpatterns = [
     path("dev", views.index, name="index"),
     path("dev/map_proxy", views.map_proxy, name="map_proxy"),
     path("dev/species/portrait;view=grid", views.search_portrait, name="search_portrait"),
+    path("dev/species/portrait/data", views.search_portrait_data, name="search_portrait_data"),
     re_path(
         r'^dev/species/portrait/(?P<id>[0-9]+)$', views.portrait, name="portrait"),
     path("dev/faq", views.faq, name="faq"),

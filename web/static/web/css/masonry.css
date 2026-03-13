@@ -16,6 +16,10 @@ main {
         }
         a {
             display:inline-block;
+            > div {
+                display: flex;
+                flex-direction: row;
+            }
             svg {
                 width: 24px;
                 height: 24px;
