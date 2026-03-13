@@ -32,7 +32,6 @@
         const xhr = new XMLHttpRequest();
         xhr.onload = () => {
             for (const species of xhr.responseXML.body.children) {
-                const img = species.getElementsByTagName("img")[0];
                 let smallest = null;
                 let smallest_size = null;
                 for(const column of masonry.children) {
