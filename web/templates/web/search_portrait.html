@@ -20,8 +20,12 @@
 {% block content %}
 <main>
   <div id="species-masonry">
-    {% for id, img_url, width, height, group, name, sciname in species %}
-    {% include "partials/masonry_tile.html" %}
+    {% for column in columns %}
+    <div>
+      {% for id, img_url, width, height, group, name, sciname in column %}
+        {% include "partials/masonry_tile.html" %}
+      {% endfor %}
+    </div>
     {% endfor %}
   </div>
 </main>
