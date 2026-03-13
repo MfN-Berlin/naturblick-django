@@ -1,0 +1,17 @@
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Icons/Functional/right-arrow</title>
+    <defs>
+        <path d="M12.229 1.372a1.25 1.25 0 01.091 1.667l-.091.101-7.852 7.85h18.378a1.25 1.25 0 01.128 2.494l-.128.006H4.377l7.852 7.85a1.25 1.25 0 01.091 1.667l-.091.101a1.25 1.25 0 01-1.666.091l-.102-.091-9.984-9.984-.08-.089a1.248 1.248 0 01-.004-.004l.084.093a1.26 1.26 0 01-.362-.783 1.29 1.29 0 01-.004-.1v-.022c0-.027.002-.053.004-.08l-.004.101a1.262 1.262 0 01.237-.732l.038-.05.007-.008c.026-.033.054-.064.084-.094l9.984-9.984a1.25 1.25 0 011.768 0z" id="right-arrow"/>
+    </defs>
+    <g id="Icons/Functional/right-arrow" stroke="none" stroke-width="1" fill-rule="evenodd" transform="rotate(180, 12, 12)">
+        <mask id="mask-right-arrow">
+            <use xlink:href="#right-arrow"></use>
+        </mask>
+        <use xlink:href="#right-arrow"></use>
+        <g mask="url(#mask-right-arrow)">
+            <g>
+                <rect x="0" y="0" width="47.9728012" height="47.9728012"></rect>
+            </g>
+        </g>
+    </g>
+</svg>
