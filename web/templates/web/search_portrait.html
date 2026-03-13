@@ -20,13 +20,40 @@
 {% block content %}
 <main>
   <div id="species-masonry">
-    {% for column in columns %}
-    <div>
-      {% for id, img_url, width, height, group, name, sciname in column %}
-        {% include "partials/masonry_tile.html" %}
-      {% endfor %}
-    </div>
-    {% endfor %}
   </div>
+  <script>
+    const masonry = document.getElementById("species-masonry");
+    const numnber_of_columns = 3;
+    for(let i = 0; i < numnber_of_columns; i++) {
+        masonry.appendChild(document.createElement("div"));
+    }
+    let offset = 0;
+    function fetchMore(limit) {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+            for (const species of xhr.responseXML.body.children) {
+                let smallest = null;
+                let smallest_size = null;
+                for(const column of masonry.children) {
+                    let size = 0
+                    for(const tile of column.children) {
+                        const tile_img = tile.getElementsByTagName("img")[0];
+                        size += tile_img.height / tile_img.width;
+                    }
+                    if(smallest_size == null || size < smallest_size) {
+                        smallest = column;
+                        smallest_size = size;
+                    }
+                }
+                smallest.appendChild(species.cloneNode(true));
+            }
+            offset+=limit;
+        };
+        xhr.open("GET", `{% url 'search_portrait_data' %}?offset=${offset}&limit=${limit}`);
+        xhr.responseType = "document";
+        xhr.send();
+    }
+    fetchMore(32);
+  </script>
 </main>
 {% endblock %}
