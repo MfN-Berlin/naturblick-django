@@ -28,9 +28,21 @@
         masonry.appendChild(document.createElement("div"));
     }
     let offset = 0;
-    function fetchMore(limit) {
+    let hasMore = true;
+    let fetching = false;
+
+    function needsMore() {
+        const windowHeight = window.innerHeight;
+        const distanceToBottom = document.documentElement.offsetHeight - (window.scrollY + windowHeight);
+        return distanceToBottom < (windowHeight * 2);
+    }
+
+    function fetchMore() {
+        limit = 64;
+        fetching = true;
         const xhr = new XMLHttpRequest();
         xhr.onload = () => {
+            hasMore = xhr.responseXML.body.hasAttribute("data-has-more");
             for (const species of xhr.responseXML.body.children) {
                 let smallest = null;
                 let smallest_size = null;
@@ -48,12 +60,20 @@
                 smallest.appendChild(species.cloneNode(true));
             }
             offset+=limit;
+            fetching = false;
         };
         xhr.open("GET", `{% url 'search_portrait_data' %}?offset=${offset}&limit=${limit}`);
         xhr.responseType = "document";
         xhr.send();
     }
-    fetchMore(32);
+
+    function onScroll(event) {
+        if(hasMore && needsMore() && !fetching) {
+            fetchMore();
+        }
+    }
+    document.addEventListener("scroll",onScroll);
+    fetchMore();
   </script>
 </main>
 {% endblock %}

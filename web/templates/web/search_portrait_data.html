@@ -1,5 +1,5 @@
 <html>
-  <body>
+  <body {% if more %} data-has-more {% endif %}>
     {% for id, img_url, width, height, group, name, sciname in species %}
     {% include "partials/masonry_tile.html" %}
     {% endfor %}
