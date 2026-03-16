@@ -31,6 +31,10 @@
     let hasMore = true;
     let fetching = false;
 
+    function fetchingDone() {
+        fetching = false;
+    }
+
     function needsMore() {
         const windowHeight = window.innerHeight;
         const distanceToBottom = document.documentElement.offsetHeight - (window.scrollY + windowHeight);
@@ -42,26 +46,30 @@
         fetching = true;
         const xhr = new XMLHttpRequest();
         xhr.onload = () => {
-            hasMore = xhr.responseXML.body.hasAttribute("data-has-more");
-            for (const species of xhr.responseXML.body.children) {
-                let smallest = null;
-                let smallest_size = null;
-                for(const column of masonry.children) {
-                    let size = 0
-                    for(const tile of column.children) {
-                        const tile_img = tile.getElementsByTagName("img")[0];
-                        size += tile_img.height / tile_img.width;
+            if(xhr.status == 200) {
+                hasMore = xhr.responseXML.body.hasAttribute("data-has-more");
+                for (const species of xhr.responseXML.body.children) {
+                    let smallest = null;
+                    let smallest_size = null;
+                    for(const column of masonry.children) {
+                        let size = 0
+                        for(const tile of column.children) {
+                            const tile_img = tile.getElementsByTagName("img")[0];
+                            size += tile_img.height / tile_img.width;
+                        }
+                        if(smallest_size == null || size < smallest_size) {
+                            smallest = column;
+                            smallest_size = size;
+                        }
                     }
-                    if(smallest_size == null || size < smallest_size) {
-                        smallest = column;
-                        smallest_size = size;
-                    }
+                    smallest.appendChild(species.cloneNode(true));
                 }
-                smallest.appendChild(species.cloneNode(true));
+                offset+=limit;
             }
-            offset+=limit;
-            fetching = false;
+            fetchingDone();
         };
+        xhr.addEventListener("error", fetchingDone);
+        xhr.addEventListener("abort", fetchingDone);
         xhr.open("GET", `{% url 'search_portrait_data' %}?offset=${offset}&limit=${limit}`);
         xhr.responseType = "document";
         xhr.send();
