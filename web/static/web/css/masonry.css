@@ -49,4 +49,35 @@ main {
             }
         }
     }
+    form {
+        text-align: center;
+        button {
+            background: none;
+            border: none;
+        }
+
+        button:hover {
+            cursor:pointer;
+        }
+
+        input[type="submit"] {
+            display: none;
+        }
+        input[type="search"] {
+            font-size: var(--font-size-big);
+            color: var(--white);
+            background: none;
+            border-top-style: none;
+            border-left-style: none;
+            border-right-style: none;
+            border-bottom-style: solid;
+        }
+        input::placeholder {
+            color: var(--white);
+        }
+        input:focus {
+            outline: none;
+            border-bottom-color: var(--white);
+        }
+    }
 }
