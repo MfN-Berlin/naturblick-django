@@ -22,9 +22,7 @@
   <form id="species-search">
     <label>
       <input id="species-search-submit" type="submit"/>
-      <button>
-        {% inline_svg 'search.svg' %}
-      </button>
+      {% inline_svg 'search.svg' %}
     </label>
     <input id="species-search-field" type="search" autocomplete="off" placeholder="{% translate 'Artname' %}"/>
   </form>
@@ -103,7 +101,6 @@
     document.addEventListener("scroll",onScroll);
 
     function formSubmit(event) {
-        console.log(searchField.value);
         query = searchField.value;
         offset = 0;
         hasMore = true;
@@ -111,15 +108,14 @@
         event.preventDefault();
     }
 
-    function changeSubmit(event) {
-        console.log(searchField.value);
+    function formInput(event) {
         query = searchField.value;
         offset = 0;
         hasMore = true;
         fetchMore();
     }
     search.addEventListener("submit",formSubmit);
-    searchField.addEventListener("input", formSubmit);
+    searchField.addEventListener("input", formInput);
     fetchMore();
   </script>
 </main>
