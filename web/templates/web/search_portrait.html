@@ -19,18 +19,27 @@
 
 {% block content %}
 <main>
+  <form id="species-search">
+    <label>
+      <input id="species-search-submit" type="submit"/>
+      {% inline_svg 'search.svg' %}
+    </label>
+    <input id="species-search-field" type="search" autocomplete="off" placeholder="{% translate 'Artname' %}"/>
+  </form>
   <div id="species-masonry">
   </div>
   <script>
     const masonry = document.getElementById("species-masonry");
-    const numnber_of_columns = 3;
-    for(let i = 0; i < numnber_of_columns; i++) {
+    const search = document.getElementById("species-search");
+    const searchField = document.getElementById("species-search-field");
+    const numnberOfColumns = 3;
+    for(let i = 0; i < numnberOfColumns; i++) {
         masonry.appendChild(document.createElement("div"));
     }
     let offset = 0;
     let hasMore = true;
     let fetching = false;
-
+    let query = "";
     function fetchingDone() {
         fetching = false;
     }
@@ -48,6 +57,11 @@
         xhr.onload = () => {
             if(xhr.status == 200) {
                 hasMore = xhr.responseXML.body.hasAttribute("data-has-more");
+                if(offset == 0) {
+                    for(const column of masonry.children) {
+                        column.replaceChildren();
+                    }
+                }
                 for (const species of xhr.responseXML.body.children) {
                     let smallest = null;
                     let smallest_size = null;
@@ -70,7 +84,11 @@
         };
         xhr.addEventListener("error", fetchingDone);
         xhr.addEventListener("abort", fetchingDone);
-        xhr.open("GET", `{% url 'search_portrait_data' %}?offset=${offset}&limit=${limit}`);
+        let query_str = ""
+        if(query) {
+            query_str = `&query=${query}`
+        }
+        xhr.open("GET", `{% url 'search_portrait_data' %}?lang={{ lang }}&offset=${offset}&limit=${limit}${query_str}`);
         xhr.responseType = "document";
         xhr.send();
     }
@@ -81,6 +99,23 @@
         }
     }
     document.addEventListener("scroll",onScroll);
+
+    function formSubmit(event) {
+        query = searchField.value;
+        offset = 0;
+        hasMore = true;
+        fetchMore();
+        event.preventDefault();
+    }
+
+    function formInput(event) {
+        query = searchField.value;
+        offset = 0;
+        hasMore = true;
+        fetchMore();
+    }
+    search.addEventListener("submit",formSubmit);
+    searchField.addEventListener("input", formInput);
     fetchMore();
   </script>
 </main>

@@ -293,7 +293,7 @@ def is_valid_or_raise(form):
         raise BadRequest(' '.join([ "{}: {}".format(k, ' '.join(v)) for k, v in form.errors.items()]))
 
 def search_portrait(request):
-    return render(request, "web/search_portrait.html")
+    return render(request, "web/search_portrait.html", {"lang": translation.get_language()})
 
 def search_portrait_data(request):
     class SpeciesSearchForm(forms.Form):
@@ -307,6 +307,10 @@ def search_portrait_data(request):
         limit = forms.IntegerField(required=False)
 
     lang = translation.get_language()
+    if lang == "en":
+        order_by = "engname"
+    else:
+        order_by = "gername"
     form = SpeciesSearchForm(request.GET)
     is_valid_or_raise(form)
     query = form.cleaned_data["query"]
@@ -337,9 +341,8 @@ def search_portrait_data(request):
             s.group,
             s.gername,
             s.sciname
-        ) for s in species_qs.distinct()[offset:(offset + limit)]
+        ) for s in species_qs.distinct().order_by(order_by)[offset:(offset + limit)]
     ]
-
     return render(request, "web/search_portrait_data.html", {"species": species, "more": len(species) == limit})
 
 def mobileapp(request):
