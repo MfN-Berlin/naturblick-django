@@ -312,7 +312,7 @@ def search_portrait_data(request):
     query = form.cleaned_data["query"]
     tags = form.cleaned_data["tag"]
     offset = form.cleaned_data["offset"] or 0
-    limit = form.cleaned_data["limit"] or 16
+    limit = form.cleaned_data["limit"] or 64
 
     species_qs = (Species.objects.select_related('avatar_new', 'group')
         .prefetch_related(
