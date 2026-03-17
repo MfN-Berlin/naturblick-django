@@ -36,7 +36,6 @@
     let numberOfColumns = 0;
     let hasMore = true;
     let fetching = false;
-    let query = "{{ query }}";
     function fetchingDone() {
         fetching = false;
     }
@@ -82,8 +81,8 @@
         xhr.addEventListener("error", fetchingDone);
         xhr.addEventListener("abort", fetchingDone);
         let query_str = ""
-        if(query) {
-            query_str = `&query=${query}`
+        if(searchField.value) {
+            query_str = `&query=${searchField.value}`
         }
         xhr.open("GET", `{% url 'search_portrait_data' %}?lang={{ lang }}&offset=${offset}&limit=${limit}${query_str}`);
         xhr.responseType = "document";
@@ -96,11 +95,10 @@
         }
     }
 
-    function updateQuery(value) {
-        query = value;
+    function updateQuery() {
         current = new URL(window.location.href);
-        if(value) {
-            current.searchParams.set("query", value);
+        if(searchField.value) {
+            current.searchParams.set("query", searchField.value);
         } else {
             current.searchParams.delete("query");
         }
@@ -114,7 +112,7 @@
     }
 
     function formSubmit(event) {
-        updateQuery(searchField.value);
+        updateQuery();
         resetMasonry();
         event.preventDefault();
     }
