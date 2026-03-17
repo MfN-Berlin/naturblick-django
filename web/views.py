@@ -350,7 +350,7 @@ def search_portrait_data(request):
             s.sciname
         ) for s in species_qs.distinct().order_by(order_by)[offset:(offset + limit)]
     ]
-    return render(request, "web/search_portrait_data.html", {"species": species, "more": len(species) == limit})
+    return render(request, "web/search_portrait_data.html", {"species": species, "more": len(species) == limit, "lang": lang})
 
 def mobileapp(request):
     return web_render(request, "mobileapp")
