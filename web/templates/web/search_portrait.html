@@ -46,14 +46,18 @@
         return distanceToBottom < (windowHeight * 2);
     }
 
-    function fetchMore() {
+    function fetchMore(reset) {
         limit = 64;
         fetching = true;
         const xhr = new XMLHttpRequest();
+        if(reset) {
+            hasMore = true;
+            offset = 0;
+        }
         xhr.onload = () => {
             if(xhr.status == 200) {
                 hasMore = xhr.responseXML.body.hasAttribute("data-has-more");
-                if(offset == 0) {
+                if(reset) {
                     for(const column of masonry.children) {
                         column.replaceChildren();
                     }
@@ -95,7 +99,7 @@
 
     function onScroll(event) {
         if(hasMore && needsMore() && !fetching) {
-            fetchMore();
+            fetchMore(false);
         }
     }
 
@@ -109,21 +113,15 @@
         history.pushState({}, "", current.toString());
     }
 
-    function resetMasonry() {
-        offset = 0;
-        hasMore = true;
-        fetchMore();
-    }
-
     function formSubmit(event) {
         updateQuery();
-        resetMasonry();
+        fetchMore(true);
         event.preventDefault();
     }
 
     function formInput(event) {
-        updateQuery(searchField.value);
-        resetMasonry();
+        updateQuery();
+        fetchMore(true);
     }
 
     function validateAndUpdateNumberOfColumns(event) {
@@ -142,7 +140,7 @@
                 newColumns.push(document.createElement("div"))
             }
             masonry.replaceChildren(...newColumns);
-            resetMasonry()
+            fetchMore(true);
         }
     }
 
