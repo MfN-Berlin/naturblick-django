@@ -24,7 +24,7 @@
       <input id="species-search-submit" type="submit"/>
       {% inline_svg 'search.svg' %}
     </label>
-    <input id="species-search-field" type="search" autocomplete="off" placeholder="{% translate 'Artname' %}"/>
+    <input id="species-search-field" type="search" autocomplete="off" placeholder="{% translate 'Artname' %}" value="{{ query }}"/>
   </form>
   <div id="species-masonry">
   </div>
@@ -32,14 +32,14 @@
     const masonry = document.getElementById("species-masonry");
     const search = document.getElementById("species-search");
     const searchField = document.getElementById("species-search-field");
-    const numnberOfColumns = 3;
-    for(let i = 0; i < numnberOfColumns; i++) {
+    const numberOfColumns = 3;
+    for(let i = 0; i < numberOfColumns; i++) {
         masonry.appendChild(document.createElement("div"));
     }
     let offset = 0;
     let hasMore = true;
     let fetching = false;
-    let query = "";
+    let query = "{{ query }}";
     function fetchingDone() {
         fetching = false;
     }
@@ -100,8 +100,19 @@
     }
     document.addEventListener("scroll",onScroll);
 
+    function updateQuery(value) {
+        query = value;
+        current = new URL(window.location.href);
+        if(value) {
+            current.searchParams.set("query", value);
+        } else {
+            current.searchParams.delete("query");
+        }
+        history.pushState({}, "", current.toString());
+    }
+
     function formSubmit(event) {
-        query = searchField.value;
+        updateQuery(searchField.value);
         offset = 0;
         hasMore = true;
         fetchMore();
@@ -109,7 +120,7 @@
     }
 
     function formInput(event) {
-        query = searchField.value;
+        updateQuery(searchField.value);
         offset = 0;
         hasMore = true;
         fetchMore();
