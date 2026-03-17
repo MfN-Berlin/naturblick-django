@@ -1,5 +1,5 @@
 {% load static web_tags %}
-<a id="masonry_tile_{{ id }}" href="{% url 'portrait' id %}">
+<a id="masonry_tile_{{ id }}" href="{% url 'portrait' id %}?lang={{ lang }}">
   <img src="{{img_url}}" loading="lazy" width="{{ width }}" height="{{ height }}" style="aspect-ratio: {{ width }} / {{ height }}"/>
 
   <div>
