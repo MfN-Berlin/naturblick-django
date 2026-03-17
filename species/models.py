@@ -265,6 +265,12 @@ class Species(models.Model):
         name_list = [item for item in [self.gername, self.sciname, self.speciesid] if item is not None]
         return ' - '.join(name_list)
 
+    def name(self, lang):
+        if lang == 'en':
+            return self.engname;
+        else:
+            return self.gername;
+
     class Meta:
         db_table = 'species'
         verbose_name_plural = "species"
