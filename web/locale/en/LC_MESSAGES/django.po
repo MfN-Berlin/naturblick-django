@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-11 10:52+0100\n"
+"POT-Creation-Date: 2026-03-17 13:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,15 +76,19 @@ msgstr "Species portraits"
 
 #: templates/web/search_portrait.html:15
 msgid ""
-"Finde Tiere und Pflanzen, indem du einen Artnamen eingibst oder nach "
-"Schlagwörtern sortierst."
-msgstr "Find animals and plants by entering a species name or sorting them by tags."
+"Finde Tiere und Pflanzen, indem du einen Artnamen eingibst."
+msgstr ""
+"Find animals and plants by entering a species name."
 
-#: views.py:31
+#: templates/web/search_portrait.html:27
+msgid "Artname"
+msgstr "Species name"
+
+#: views.py:28
 msgid "Discover Nature"
 msgstr "Discover Nature"
 
-#: views.py:402
+#: views.py:412
 #, python-brace-format
 msgid "Seen by {user} at {date} in {coords}"
 msgstr "Seen by {user} at {date} in {coords}"
