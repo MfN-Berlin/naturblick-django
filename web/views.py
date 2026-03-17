@@ -292,7 +292,6 @@ def is_valid_or_raise(form):
     if not form.is_valid():
         raise BadRequest(' '.join([ "{}: {}".format(k, ' '.join(v)) for k, v in form.errors.items()]))
 
-
 class SpeciesSearchForm(forms.Form):
     query = forms.CharField(max_length=64, required=False)
     tag = forms.TypedMultipleChoiceField(
@@ -302,7 +301,6 @@ class SpeciesSearchForm(forms.Form):
         required=False)
     offset = forms.IntegerField(required=False)
     limit = forms.IntegerField(required=False)
-
 
 def search_portrait(request):
     form = SpeciesSearchForm(request.GET)
@@ -346,7 +344,7 @@ def search_portrait_data(request):
             s.prefetched_portraits[0].descmeta.image_file.image_small.width,
             s.prefetched_portraits[0].descmeta.image_file.image_small.height,
             s.group,
-            s.gername,
+            s.name(lang),
             s.sciname
         ) for s in species_qs.distinct().order_by(order_by)[offset:(offset + limit)]
     ]
