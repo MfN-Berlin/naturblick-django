@@ -80,11 +80,15 @@
         };
         xhr.addEventListener("error", fetchingDone);
         xhr.addEventListener("abort", fetchingDone);
-        let query_str = ""
+        const url = "{% url 'search_portrait_data' %}"
+        const searchParams = new URLSearchParams();
+        searchParams.set("lang", "{{ lang }}");
+        searchParams.set("offset", offset);
+        searchParams.set("limit", limit);
         if(searchField.value) {
-            query_str = `&query=${searchField.value}`
+            searchParams.set("query", searchField.value);
         }
-        xhr.open("GET", `{% url 'search_portrait_data' %}?lang={{ lang }}&offset=${offset}&limit=${limit}${query_str}`);
+        xhr.open("GET", `${url}?${searchParams}`);
         xhr.responseType = "document";
         xhr.send();
     }
