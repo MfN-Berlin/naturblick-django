@@ -20,45 +20,46 @@
     <script src="{% static 'web/js/web.js' %}"></script>
 </head>
 <body>
-<header>
-    {% block img %}{% endblock %}
-    <a class="top-left" href="{% url 'index' %}{% querystring %}">
-        <img src="{% static 'logo.svg' %}">
-        Naturblick
-    </a>
-
-    <div class="top-right">
-        {% block dels %}{% include "partials/dels.html" %}{% endblock %}
-        <a href="#" onclick="font_zoom_toggle(); return false;">
-            <div class="initial-zoomed">A&nbsp;</div>
-            <div class="initial-unzoomed">A</div>
+  <header>
+    <div id="header-container">
+      <div class="top-bar">
+        <a class="top-left" href="{% url 'index' %}{% querystring %}">
+          <img src="{% static 'logo.svg' %}">
+          Naturblick
         </a>
-        <a href="{% toggle_lang request %}">
+        <div class="top-right">
+          <details>
+            <summary>Menu {% inline_svg 'menu_bars.svg' %}</summary>
+            <nav>
+              <ul>
+                {# <a href="#">Artportraits - todo</a>#}
+                {# <a href="#">Beobachtungen mit Naturblick - todo</a>#}
+                <li><a href="{% url 'mobileapp' %}{% querystring %}">{% translate "Über die App" %}</a></li>
+                <li><a href="{% url 'about' %}{% querystring %}">{% translate "Über uns" %}</a></li>
+                <li><a href="{% url 'faq' %}{% querystring %}">{% translate "Häufige Fragen" %}</a></li>
+              </ul>
+            </nav>
+          </details>
+          <a href="{% toggle_lang request %}">
             {% if language == "en" %}{% inline_svg 'lang_en.svg' %}
             {% else %}{% inline_svg 'lang_de.svg' %}
             {% endif %}</a>
-        <details>
-            <summary>Menu {% inline_svg 'menu_bars.svg' %}</summary>
-            <nav>
-                <ul>
-                    {# <a href="#">Artportraits - todo</a>#}
-                    {# <a href="#">Beobachtungen mit Naturblick - todo</a>#}
-                    <li><a href="{% url 'mobileapp' %}{% querystring %}">{% translate "Über die App" %}</a></li>
-                    <li><a href="{% url 'about' %}{% querystring %}">{% translate "Über uns" %}</a></li>
-                    <li><a href="{% url 'faq' %}{% querystring %}">{% translate "Häufige Fragen" %}</a></li>
-                </ul>
-            </nav>
-        </details>
-    </div>
-
-    {% block header_title %}
-    <div class="header-title">
+          <a href="#" onclick="font_zoom_toggle(); return false;">
+            <div class="initial-zoomed">A&nbsp;</div>
+            <div class="initial-unzoomed">A</div>
+          </a>
+          {% block dels %}{% include "partials/dels.html" %}{% endblock %}
+        </div>
+      </div>
+      {% block header_title %}
+      <div class="header-title">
         <h1>{% block page_title %}{% endblock %}</h1>
         {% block subtitle %}{% endblock %}
+      </div>
+      {% endblock %}
+      {% block additional_header %}{% endblock %}
     </div>
-    {% endblock %}
-
-    {% block additional_header %}{% endblock %}
+    {% block img %}{% endblock %}
 </header>
 {% block content %}{% endblock %}
 {% block footer %}

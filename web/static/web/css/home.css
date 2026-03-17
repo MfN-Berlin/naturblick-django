@@ -1,26 +1,18 @@
 header {
     background-image: none;
-    padding: 0;
 
     > img {
         width: 100%;
     }
+}
 
-    .header-title {
-        padding: 0;
-        position: absolute;
-        bottom: 16px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
-        p {
-            font-size: var(--font-size-big);
-        }
-    }
-
-    .top-right a, .top-right > details {
+#header-container {
+   .top-right a, .top-right > details {
         background-color: rgba(0, 0, 0, 0.4);
-    }
+   }
+   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0 , 0, 0));
+   background-size: auto 72px;
+   background-repeat: no-repeat;
 }
 
 body {
