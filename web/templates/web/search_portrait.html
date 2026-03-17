@@ -24,7 +24,7 @@
       <input id="species-search-submit" type="submit"/>
       {% inline_svg 'search.svg' %}
     </label>
-    <input id="species-search-field" type="search" autocomplete="off" placeholder="{% translate 'Artname' %}"/>
+    <input id="species-search-field" type="search" autocomplete="off" placeholder="{% translate 'Artname' %}" value="{{ query }}"/>
   </form>
   <div id="species-masonry">
   </div>
@@ -32,14 +32,10 @@
     const masonry = document.getElementById("species-masonry");
     const search = document.getElementById("species-search");
     const searchField = document.getElementById("species-search-field");
-    const numnberOfColumns = 3;
-    for(let i = 0; i < numnberOfColumns; i++) {
-        masonry.appendChild(document.createElement("div"));
-    }
     let offset = 0;
+    let numberOfColumns = 0;
     let hasMore = true;
     let fetching = false;
-    let query = "";
     function fetchingDone() {
         fetching = false;
     }
@@ -84,11 +80,15 @@
         };
         xhr.addEventListener("error", fetchingDone);
         xhr.addEventListener("abort", fetchingDone);
-        let query_str = ""
-        if(query) {
-            query_str = `&query=${query}`
+        const url = "{% url 'search_portrait_data' %}"
+        const searchParams = new URLSearchParams();
+        searchParams.set("lang", "{{ lang }}");
+        searchParams.set("offset", offset);
+        searchParams.set("limit", limit);
+        if(searchField.value) {
+            searchParams.set("query", searchField.value);
         }
-        xhr.open("GET", `{% url 'search_portrait_data' %}?lang={{ lang }}&offset=${offset}&limit=${limit}${query_str}`);
+        xhr.open("GET", `${url}?${searchParams}`);
         xhr.responseType = "document";
         xhr.send();
     }
@@ -98,25 +98,62 @@
             fetchMore();
         }
     }
-    document.addEventListener("scroll",onScroll);
 
-    function formSubmit(event) {
-        query = searchField.value;
+    function updateQuery() {
+        current = new URL(window.location.href);
+        if(searchField.value) {
+            current.searchParams.set("query", searchField.value);
+        } else {
+            current.searchParams.delete("query");
+        }
+        history.pushState({}, "", current.toString());
+    }
+
+    function resetMasonry() {
         offset = 0;
         hasMore = true;
         fetchMore();
+    }
+
+    function formSubmit(event) {
+        updateQuery();
+        resetMasonry();
         event.preventDefault();
     }
 
     function formInput(event) {
-        query = searchField.value;
-        offset = 0;
-        hasMore = true;
-        fetchMore();
+        updateQuery(searchField.value);
+        resetMasonry();
     }
+
+    function validateAndUpdateNumberOfColumns(event) {
+        const width = window.innerWidth;
+        let columns = 2;
+        if (width > 1023) {
+            columns = 4;
+        } else if (width < 1024 && width > 767) {
+            columns = 3;
+        }
+
+        if(columns != numberOfColumns) {
+            numberOfColumns = columns;
+            const newColumns = [];
+            for(let i = 0; i < numberOfColumns; i++) {
+                newColumns.push(document.createElement("div"))
+            }
+            masonry.replaceChildren(...newColumns);
+            resetMasonry()
+        }
+    }
+
+    // Initialize masonry
+    validateAndUpdateNumberOfColumns({});
+
     search.addEventListener("submit",formSubmit);
     searchField.addEventListener("input", formInput);
-    fetchMore();
+    document.addEventListener("scroll",onScroll);
+    window.addEventListener("resize", validateAndUpdateNumberOfColumns);
+    
   </script>
 </main>
 {% endblock %}

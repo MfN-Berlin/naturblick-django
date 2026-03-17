@@ -292,20 +292,27 @@ def is_valid_or_raise(form):
     if not form.is_valid():
         raise BadRequest(' '.join([ "{}: {}".format(k, ' '.join(v)) for k, v in form.errors.items()]))
 
+
+class SpeciesSearchForm(forms.Form):
+    query = forms.CharField(max_length=64, required=False)
+    tag = forms.TypedMultipleChoiceField(
+        coerce=int,
+        empty_value=[],
+        choices=[(id, id) for id in Tag.objects.all().values_list('id', flat=True)],
+        required=False)
+    offset = forms.IntegerField(required=False)
+    limit = forms.IntegerField(required=False)
+
+
 def search_portrait(request):
-    return render(request, "web/search_portrait.html", {"lang": translation.get_language()})
+    form = SpeciesSearchForm(request.GET)
+    is_valid_or_raise(form)
+    return render(request, "web/search_portrait.html", {
+        "lang": translation.get_language(),
+        "query": form.cleaned_data["query"]
+    })
 
 def search_portrait_data(request):
-    class SpeciesSearchForm(forms.Form):
-        query = forms.CharField(max_length=64, required=False)
-        tag = forms.TypedMultipleChoiceField(
-            coerce=int,
-            empty_value=[],
-            choices=[(id, id) for id in Tag.objects.all().values_list('id', flat=True)],
-            required=False)
-        offset = forms.IntegerField(required=False)
-        limit = forms.IntegerField(required=False)
-
     lang = translation.get_language()
     if lang == "en":
         order_by = "engname"
