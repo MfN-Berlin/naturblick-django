@@ -14,6 +14,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
+ARG DJANGO_ENV=production
+
 RUN python manage.py compilemessages
 
 EXPOSE 8000
