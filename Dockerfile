@@ -6,7 +6,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 RUN mkdir /logs
 
-RUN apk update && apk add --no-cache sox imagemagick ffmpeg && apk add gettext
+RUN apk update && apk add --no-cache sox imagemagick ffmpeg gettext
 
 COPY requirements.txt /app/
 
