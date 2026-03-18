@@ -3,13 +3,14 @@
 {% load static i18n web_tags %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'web/css/home.css' %}">{% endblock %}
+<link rel="stylesheet" href="{% static 'web/css/home.css' %}">
+{% endblock %}
 
 {% block title %}Naturblick{% endblock %}
 
 {% block header_title %}
-<div class="header-title"><h1>Erlebe Natur</h1>
-    <p>Bestimme Tiere und Pflanzen und erkunde deine Stadt.</p></div>
+<h1>Erlebe Natur</h1>
+<p>Bestimme Tiere und Pflanzen und erkunde deine Stadt.</p>
 {% endblock %}
 
 {% block img %}
@@ -17,7 +18,7 @@
 {% endblock %}
 
 {% block content %}
-<main>
+<main class="content-container">
     <section>
         {% img "Karte_Nachtigall_bf227c6efb.png" widths='245w,400w,800w,1200w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, (max-width: 1023px) 1200px, 1200px" %}
         {% include "partials/card.html" with title="Beobachtungen mit Naturblick" subtitle="Schau dir Beobachtungen der anderen Naturblick-Nutzer:innen an." link_text="Finde Beobachtungen in deiner Nähe →" path_name="map" %}

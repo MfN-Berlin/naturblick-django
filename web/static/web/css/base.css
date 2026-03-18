@@ -42,11 +42,11 @@ header {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 32px;
     .top-bar {
         width: 100%;
         max-width: 1400px;
         margin: 0 auto;
+        padding: 32px 32px 0 32px;
         display: flex;
         flex-direction: row;
         align-items: start;
@@ -242,6 +242,11 @@ svg {
 
 .text-container {
     max-width: 768px;
+}
+
+.content-container {
+    max-width: 1400px;
+    background-image: url("../img/background_grain_opt.png");
 }
 
 h1 {
