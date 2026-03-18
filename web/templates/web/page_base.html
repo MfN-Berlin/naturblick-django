@@ -52,12 +52,10 @@
           {% block dels %}{% include "partials/dels.html" %}{% endblock %}
         </div>
       </div>
-      {% block header_title %}
       <div class="header-title">
-        <h1>{% block page_title %}{% endblock %}</h1>
-        {% block subtitle %}{% endblock %}
+        {% block header_title %}
+        {% endblock %}
       </div>
-      {% endblock %}
     </div>
     {% block img %}{% endblock %}
 </header>
