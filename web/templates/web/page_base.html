@@ -12,6 +12,7 @@
     <meta property="{{ og.property }}" content="{{ og.content }}">
     {% endfor %}
     <script src="https://cdn.usefathom.com/script.js" data-spa="auto" data-site="TZBNRXXT" defer></script>
+    {% block js %}{% endblock %}
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'web/css/variables.css' %}">
     <link rel="stylesheet" href="{% static 'web/css/base.css' %}">
@@ -57,7 +58,6 @@
         {% block subtitle %}{% endblock %}
       </div>
       {% endblock %}
-      {% block additional_header %}{% endblock %}
     </div>
     {% block img %}{% endblock %}
 </header>
