@@ -572,23 +572,41 @@ class UnambigousFeatureInline(OrderableAdmin, admin.TabularInline):
     }
     ordering_field_hide_input = True
 
+def limit_image_file_queryset(db_field, request, kwargs):
+    if db_field.name == "image_file":
+        parent_obj = getattr(request, "_obj_", None)
+
+        if parent_obj and parent_obj.species:
+            kwargs["queryset"] = ImageFile.objects.filter(
+                species=parent_obj.species
+            )
+        else:
+            kwargs["queryset"] = ImageFile.objects.none()
+
+    return kwargs
+
 
 class DescMetaInline(admin.StackedInline):
     extra = 0
     model = DescMeta
     fields = ['image_orientation', 'display_ratio', 'grid_ratio', 'focus_point_vertical', 'focus_point_horizontal',
               'text', 'image_file']
-    autocomplete_fields = ['image_file']
     verbose_name = 'Description image'
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        kwargs = limit_image_file_queryset(db_field, request, kwargs)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class FunFactMetaInline(admin.StackedInline):
     model = FunFactMeta
     extra = 0
     fields = ['image_orientation', 'display_ratio', 'grid_ratio', 'focus_point_vertical', 'focus_point_horizontal',
               'text', 'image_file']
-    autocomplete_fields = ['image_file']
     verbose_name = 'Funfact image'
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        kwargs = limit_image_file_queryset(db_field, request, kwargs)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class InTheCityMetaInline(admin.StackedInline):
@@ -596,8 +614,11 @@ class InTheCityMetaInline(admin.StackedInline):
     extra = 0
     fields = ['image_orientation', 'display_ratio', 'grid_ratio', 'focus_point_vertical', 'focus_point_horizontal',
               'text', 'image_file']
-    autocomplete_fields = ['image_file']
     verbose_name = 'In the city image'
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        kwargs = limit_image_file_queryset(db_field, request, kwargs)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 @admin.action(description="Copy selected portrait to english")
@@ -770,6 +791,10 @@ class FloraportraitAdmin(admin.ModelAdmin):
     }
     actions = [move_portrait_to_accepted, copy_portrait_to_eng]
 
+    def get_form(self, request, obj=None, **kwargs):
+        request._obj_ = obj
+        return super().get_form(request, obj, **kwargs)
+
     def get_fields(self, request, obj=None, **kwargs):
         return portrait_fieldorder(super().get_fields(request, obj, **kwargs))
 
@@ -809,6 +834,10 @@ class FaunaportraitAdmin(admin.ModelAdmin):
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 80})}
     }
     actions = [move_portrait_to_accepted, copy_portrait_to_eng]
+
+    def get_form(self, request, obj=None, **kwargs):
+        request._obj_ = obj
+        return super().get_form(request, obj, **kwargs)
 
     def get_fields(self, request, obj=None, **kwargs):
         return portrait_fieldorder(super().get_fields(request, obj, **kwargs))
@@ -1020,7 +1049,6 @@ class ImageFileAdmin(admin.ModelAdmin):
         elif request.method == 'POST' and 'confirmed' in request.POST:
             self.handle_similar_confirmed(request)
         return super().add_view(request, form_url, extra_context)
-
 
 @admin.register(ImageCrop)
 class ImageCropAdmin(ImageCroppingMixin, admin.ModelAdmin):
