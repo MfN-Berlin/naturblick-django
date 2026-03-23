@@ -4,7 +4,12 @@ from web import views
 
 urlpatterns = [
     path("dev", views.index, name="index"),
+    path("dev/map/observation/<int:obs_id>", views.map_obs, name="map_obs"),
     path("dev/map_proxy", views.map_proxy, name="map_proxy"),
+    path("dev/audio_proxy/<int:obs_id>", views.audio_proxy, name="audio_proxy"),
+    path("dev/specgram_proxy/<int:obs_id>", views.specgram_proxy, name="specgram_proxy"),
+    path("dev/image_proxy/<int:obs_id>", views.image_proxy, name="image_proxy"),
+    path("dev/obs/<int:obs_id>", views.obs, name="obs"),
     path("dev/species/portrait;view=grid", views.search_portrait, name="search_portrait"),
     path("dev/species/portrait/data", views.search_portrait_data, name="search_portrait_data"),
     re_path(

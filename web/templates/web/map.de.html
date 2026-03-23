@@ -6,6 +6,7 @@
 <script src='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'></script>
 <link href='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css' rel='stylesheet' />
 <link rel="stylesheet" href="{% static 'web/css/map.css' %}">
+<link rel="stylesheet" href="{% static 'web/css/audio.css' %}">
 {% endblock %}
 
 {% block header_title %}{% endblock %}
@@ -13,7 +14,7 @@
 {% block content %}
 <div id="map" class="map">
     <div id="map-info" class="map-overlay">
-         Auf unserer Karte findest du die Beobachtungen von folgenden Arten: Igel, Gemeine Walnuss, Feldahorn und Nachtigall. Wir geben nach und nach zu jeder Bestimmung mit Naturblick eine Rückmeldung und zeigen alle plausiblen Beobachtungen auf der Karte.
+         Auf unserer Karte findest du die Beobachtungen von folgenden Arten: Igel, Gemeine Walnuss, Feldahorn und Nachtigall. Wir geben nach und nach zu ausgewählten Bestimmungen mit Naturblick eine Rückmeldung und zeigen plausible Beobachtungen auf der Karte.
     </div>
     <div id="map-radio" class="map-overlay">
         <input type="radio" name="group" value="all" checked><label>Alle</label><br>
@@ -22,8 +23,10 @@
         <input type="radio" name="group" value="bird"><label>Vögel</label>
     </div>
 </div>
+
 <script>
 const mfn = [13.3792, 52.5295]
+const obsProxyTemplate = "{% url 'obs' 0 %}";
 
 var map = new maplibregl.Map({
     container: 'map',
@@ -94,10 +97,11 @@ map.on('load', () => {
         }
     });
 
-    map.on('click', 'unclustered-observations', (e) => {
+    map.on('click', 'unclustered-observations', async (e) => {
         const coordinates = e.features[0].geometry.coordinates.slice();
         const obs_id = e.features[0].properties.id;
         const group = e.features[0].properties.group;
+        const url = obsProxyTemplate.replace("0", obs_id);
 
         // Ensure that if the map is zoomed out such that
         // multiple copies of the feature are visible, the
@@ -106,12 +110,14 @@ map.on('load', () => {
            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
 
-        new maplibregl.Popup()
-            .setLngLat(coordinates)
-            .setHTML(
-                `<h3>${obs_id}</h3><p>${group}</p>`
-            )
-            .addTo(map);
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                new maplibregl.Popup({ className: 'map-popup' })
+                    .setLngLat(coordinates)
+                    .setHTML(html)
+                    .addTo(map);
+            });
     });
 });
 

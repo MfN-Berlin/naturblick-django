@@ -5,7 +5,11 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.core.exceptions import BadRequest
 from django.db.models import Prefetch, Q
 from django import forms
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+from django.http import \
+    HttpResponse, \
+    HttpResponseNotFound, \
+    JsonResponse, \
+    Http404
 from django.shortcuts import redirect, render
 from django.template import TemplateDoesNotExist
 from django.template.loader import get_template
@@ -202,9 +206,9 @@ def portrait(request, id):
     except Species.DoesNotExist:
         return  HttpResponseNotFound("This species does not exist")
 
-    is_fauna = True if species.group.nature == 'fauna' else False
-    objects = Faunaportrait.objects if is_fauna else Floraportrait.objects
-    template = 'faunaportrait' if is_fauna else 'floraportrait'
+    fauna = is_fauna(species)
+    objects = Faunaportrait.objects if fauna else Floraportrait.objects
+    template = 'faunaportrait' if fauna else 'floraportrait'
 
     try:
         portrait = (
@@ -265,6 +269,11 @@ def portrait(request, id):
         "audio": audio,
         "species_name": species.engname if language == "en" else species.gername
     })
+
+
+def is_fauna(
+        species: Species) -> bool:
+    return True if species.group.nature == 'fauna' else False
 
 
 def filter_species_by_query(species_qs, query, lang):
@@ -452,3 +461,69 @@ def map_proxy(request):
         "https://naturblick.museumfuernaturkunde.berlin/api/projects/map"
     )
     return to_geojson_view(r.json())
+
+
+def audio_proxy(request, obs_id):
+    url = f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/audio.mp4"
+    r = requests.get(url, stream=True)
+
+    return HttpResponse(
+        r.iter_content(chunk_size=8192),
+        content_type=r.headers.get("Content-Type", "video/mp4")
+    )
+
+def specgram_proxy(request, obs_id):
+    url = f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/audio.mp4.png"
+    r = requests.get(url, stream=True)
+
+    return HttpResponse(
+        r.iter_content(chunk_size=8192),
+        content_type=r.headers.get("Content-Type", "image/png")
+    )
+
+def image_proxy(request, obs_id):
+    url = f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/image.jpg"
+    r = requests.get(url, stream=True)
+
+    return HttpResponse(
+        r.iter_content(chunk_size=8192),
+        content_type=r.headers.get("Content-Type", "image/jpg")
+    )
+
+def obs(request, obs_id):
+    language = translation.get_language()
+    json = requests.get(f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}").json()
+    species_id = json["data"]["species"]
+    s = Species.objects.filter(id=species_id).first()
+    cc_name = json["data"]["ccName"]
+    date_time = datetime.fromisoformat(json["data"]["dateTime"])
+    date = date_time.strftime("%d.%m.%Y")
+    coords = json["data"]["coords"]["coordinates"]
+    additional_names = ", ".join(
+        s.speciesname_set.filter(language=language).values_list("name",flat=True))
+
+    fauna = is_fauna(s)
+    obs_data = {
+        "obs_id": obs_id,
+        "sciname": s.sciname,
+        "name": s.engname if language == 'en' else s.gername,
+        "additional_names": additional_names,
+        "coords": coords,
+        "cc_name": cc_name,
+        "date": date,
+        "species_avatar": s.avatar_new.imagefile.image.url,
+        "is_fauna": fauna
+    }
+
+    if fauna:
+        obs_data["url"] = fauna
+        obs_data["png"] = fauna
+    else:
+        obs_data["url"] = fauna
+
+    return render(request, "partials/obs_popup.html", {
+        "obs_data": obs_data
+    })
+
+def map_obs(request, obs_id):
+    return HttpResponse(f"<h1>{obs_id}</h1>")
