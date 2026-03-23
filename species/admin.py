@@ -307,11 +307,11 @@ class HasBirdnetIdFilter(YesNoFilter):
             )
 
 
-class ImportAvatarFromWikimediaForm(forms.Form):
+class ImportImageFromWikimediaForm(forms.Form):
     wikimedia_url = forms.URLField(label="Wikimedia image URL")
 
 
-class ValidateAvtarForm(forms.Form):
+class ValidateImageForm(forms.Form):
     owner = forms.CharField(label="Owner name", max_length=255)
     owner_link = forms.URLField(label="Owner homepage URL", required=False, max_length=255)
     license = forms.CharField(label="License", max_length=64)
@@ -364,7 +364,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     ordering = ('sciname',)
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar_new', 'female_avatar_new']
-    actions = ['make_autoid_enabled', 'import_avatar_from_wikimedia']
+    actions = ['make_autoid_enabled', 'import_avatar_from_wikimedia', 'import_image_from_wikimedia']
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -386,8 +386,8 @@ class SpeciesAdmin(admin.ModelAdmin):
             messages.SUCCESS,
         )
 
-    def import_avatar_from_wikimedia_validate(self, request, queryset):
-        form = ImportAvatarFromWikimediaForm(request.POST)
+    def import_image_from_wikimedia_validate(self, request, queryset, action):
+        form = ImportImageFromWikimediaForm(request.POST)
         if form.is_valid():
             meta = utils.get_metadata(form.cleaned_data['wikimedia_url'])
             data = {
@@ -395,14 +395,14 @@ class SpeciesAdmin(admin.ModelAdmin):
                 "owner_link": meta.author_url,
                 "license": meta.license
             }
-            return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html',
-                                    {"form": ValidateAvtarForm(initial=data), 'queryset': queryset,
-                                     "image_url": form.cleaned_data['wikimedia_url'], "owner_link": meta.author_url})
+            return TemplateResponse(request, 'admin/image_from_wikimedia_validate.html',
+                                    {"form": ValidateImageForm(initial=data), 'queryset': queryset,
+                                     "image_url": form.cleaned_data['wikimedia_url'], "owner_link": meta.author_url, 'action': action})
         else:
-            return TemplateResponse(request, 'admin/avatar_from_wikimedia.html', {"form": form, 'queryset': queryset})
+            return TemplateResponse(request, 'admin/image_from_wikimedia.html', {"form": form, 'queryset': queryset, 'action': action})
 
     def import_avatar_from_wikimedia_execute(self, request, queryset):
-        form = ValidateAvtarForm(request.POST)
+        form = ValidateImageForm(request.POST)
         image_url = request.POST["image_url"]
         if form.is_valid():
             image = utils.get_wikimedia_image(image_url)
@@ -414,9 +414,26 @@ class SpeciesAdmin(admin.ModelAdmin):
             queryset.update(avatar_new=avatar_crop.id)
             return HttpResponseRedirect(reverse('admin:species_imagecrop_change', args=(avatar_crop.id,)))
         else:
-            return TemplateResponse(request, 'admin/avatar_from_wikimedia_validate.html',
+            return TemplateResponse(request, 'admin/image_from_wikimedia_validate.html',
                                     {"form": form, 'queryset': queryset, "image_url": image_url,
-                                     "owner_link": form.data["owner_link"]})
+                                     "owner_link": form.data["owner_link"], 'action': 'import_avatar_from_wikimedia'})
+
+    def import_image_from_wikimedia_execute(self, request, queryset):
+        form = ValidateImageForm(request.POST)
+        image_url = request.POST["image_url"]
+        if form.is_valid():
+            image = utils.get_wikimedia_image(image_url)
+            image_file = ImageFile.objects.create(owner=form.cleaned_data["owner"],
+                                                         owner_link=form.cleaned_data["owner_link"], source=image_url,
+                                                         license=form.cleaned_data["license"], image=image,
+                                                         species=queryset.first())
+            image_file.save()
+            return HttpResponseRedirect(reverse('admin:species_species_changelist'))
+        else:
+            return TemplateResponse(request, 'admin/image_from_wikimedia_validate.html',
+                                    {"form": form, 'queryset': queryset, "image_url": image_url,
+                                     "owner_link": form.data["owner_link"], 'action': 'import_image_from_wikimedia'})
+
 
     @admin.action(description="Import avatar from Wikimedia")
     @transaction.atomic
@@ -429,12 +446,30 @@ class SpeciesAdmin(admin.ModelAdmin):
             )
             return
         if request.POST.get("validate"):
-            return self.import_avatar_from_wikimedia_validate(request, queryset)
+            return self.import_image_from_wikimedia_validate(request, queryset, 'import_avatar_from_wikimedia')
         elif request.POST.get("post"):
             return self.import_avatar_from_wikimedia_execute(request, queryset)
         else:
-            return TemplateResponse(request, 'admin/avatar_from_wikimedia.html',
-                                    {"form": ImportAvatarFromWikimediaForm(), 'queryset': queryset})
+            return TemplateResponse(request, 'admin/image_from_wikimedia.html',
+                                    {"form": ImportImageFromWikimediaForm(), 'queryset': queryset, 'action': 'import_avatar_from_wikimedia'})
+
+    @admin.action(description="Import image from Wikimedia")
+    @transaction.atomic
+    def import_image_from_wikimedia(self, request, queryset):
+        if queryset.count() != 1:
+            self.message_user(
+                request,
+                "An image can only be imported for a single species.",
+                level=messages.WARNING
+            )
+            return
+        if request.POST.get("validate"):
+            return self.import_image_from_wikimedia_validate(request, queryset, 'import_image_from_wikimedia')
+        elif request.POST.get("post"):
+            return self.import_image_from_wikimedia_execute(request, queryset)
+        else:
+            return TemplateResponse(request, 'admin/image_from_wikimedia.html',
+                                    {"form": ImportImageFromWikimediaForm(), 'queryset': queryset, 'action': 'import_image_from_wikimedia'})
 
     @admin.display(
         description="Avatar"
