@@ -363,7 +363,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     inlines = [
         SpeciesNameInline
     ]
-    readonly_fields = ['speciesid', 'rank', 'status']
+    readonly_fields = ['speciesid', 'rank', 'status', 'parent', 'accepted']
     list_display = ['id', 'speciesid', 'sciname', 'gername', 'avatar_crop', 'accepted', 'portrait', 'gbif', 'col', 'plantnet', 'search']
     list_display_links = ['id', 'speciesid']
     list_filter = ['group__nature', HasPortraitFilter, HasColidFilter, HasGbifusagekeyFilter, HasPrimaryName, 'primary_name_not_found', HasSynonymsFilter,
@@ -390,6 +390,8 @@ class SpeciesAdmin(admin.ModelAdmin):
               'colid',
               'rank',
               'status',
+              'parent',
+              'accepted',
               'accepted_species',
               'plantnetpowoid',
               'birdnetid',

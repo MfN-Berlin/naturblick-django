@@ -197,6 +197,8 @@ class Species(models.Model):
     is_hidden = models.BooleanField(null=False, default=False)
     rank = models.CharField(blank=True, null=True, max_length=255)
     status = models.CharField(blank=True, null=True, max_length=255)
+    parent = models.ForeignKey("self", on_delete=models.PROTECT, blank=True, null=True, related_name="parent_set")
+    accepted = models.ForeignKey("self", on_delete=models.PROTECT, blank=True, null=True, related_name="accepted_set")
     gbif_incompatible = models.BooleanField(default=False, verbose_name="Taxa is incompatible with the GBIF taxonomy")
     avatar_not_found = models.BooleanField(default=False, verbose_name="Avatar was not found")
     primary_name_not_found = models.BooleanField(default=False, verbose_name="Primary name was not found")
@@ -218,6 +220,27 @@ class Species(models.Model):
             if not (self.sciname == sciname or self.sciname == re.sub(MATCH_COL_PAREN, "", sciname) or self.sciname == sciname.replace("subsp. ", "")):
                 raise ValidationError({
                     "sciname": f"The scientific name returned from checklistbank ({sciname}) does not match the sciname set for the species ({self.sciname}), even after removing genus in parentheses or 'subsp.'"})
+
+            if 'parentId' in json:
+                try:
+                    parent = Species.objects.get(colid=json['parentId'])
+                except Species.DoesNotExist:
+                    raise ValidationError(
+                        {"colid": f"The taxonomic parent (colid: {json['parentId']}) does not exist"})
+            else:
+                parent = None
+
+            if 'accepted' in json:
+                try:
+                    accepted = Species.objects.get(colid=json['accepted']['id'])
+                except Species.DoesNotExist:
+                    raise ValidationError(
+                        {"colid": f"The accepted species (colid: {json['accepted']['id']}) does not exist"})
+            else:
+                accepted = None
+
+            self.parent = parent
+            self.accepted = accepted
 
         if self.gbifusagekey:
 
