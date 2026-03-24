@@ -54,6 +54,7 @@
         const x = event.clientX - rect.left;
         new_value = Number((x / rect.width ) * audio.duration).toFixed(6);
         audio.currentTime = new_value;
+        updateTime(true);
     })
 
     function formatTime(seconds) {
@@ -65,15 +66,17 @@
                String(s).padStart(2, "0");
     }
 
-    function updateTime() {
+    function updateTime(once = false) {
         newWidth = Number(audio.currentTime / audio.duration * 100).toFixed(2);
         widther.style = `width: ${newWidth}%`
-        setTimeout( () => {
-            if (!running) {
-                return;
-            }
-            updateTime(audio);
-        }, 50)
+        if (!once) {
+            setTimeout( () => {
+                if (!running) {
+                    return;
+                }
+                updateTime();
+            }, 50)
+        }
     }
 
     btn.addEventListener('click', () => {
