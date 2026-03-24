@@ -191,6 +191,7 @@ class Species(models.Model):
     is_hidden = models.BooleanField(null=False, default=False)
     rank = models.CharField(blank=True, null=True, max_length=255)
     status = models.CharField(blank=True, null=True, max_length=255)
+    gbif_incompatible = models.BooleanField(default=False, verbose_name="Taxa is incompatible with the GBIF taxonomy")
     speciesid.short_description = "Species ID"
 
     def validate_gbif(self):
