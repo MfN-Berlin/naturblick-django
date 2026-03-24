@@ -2,8 +2,10 @@
 
 {% load static web_tags %}
 
-{% block additional_header %}
+{% block js %}
 <script src='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'></script>
+{% endblock %}
+{% block css %}
 <link href='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css' rel='stylesheet' />
 <link rel="stylesheet" href="{% static 'web/css/map.css' %}">
 <link rel="stylesheet" href="{% static 'web/css/audio.css' %}">
