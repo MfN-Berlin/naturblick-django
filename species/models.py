@@ -196,6 +196,11 @@ class Species(models.Model):
 
     def validate_gbif(self):
         if self.gbifusagekey:
+
+            if self.gbif_incompatible:
+                raise ValidationError({
+                    "gbif_incompatible": "Can not be set for a species with a gbifusagekey"})
+
             response = requests.get(f"https://api.gbif.org/v1/species/{self.gbifusagekey}")
 
             if response.status_code != 200:
