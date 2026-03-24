@@ -2,6 +2,10 @@ body {
     height: 100vh;
 }
 
+header {
+    padding-bottom: 16px;
+}
+
 .map {
     position: relative;
     width: 100%;

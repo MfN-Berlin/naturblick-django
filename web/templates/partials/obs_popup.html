@@ -18,7 +18,7 @@
         <div id="obs_popup-fauna-main">
             {% url 'specgram_proxy' obs_data.obs_id as png %}
             {% url 'audio_proxy' obs_data.obs_id as mp4 %}
-            {% with title="Gesehen am "|add:obs_data.date|add:" von "|add:obs_data.cc_name licence='<a href="https://creativecommons.org/licenses/by/4.0/">CC BY-SA 4.0</a> '|add:obs_data.cc_name %}
+            {% with title="Gehört am "|add:obs_data.date|add:" von "|add:obs_data.cc_name licence='<a href="https://creativecommons.org/licenses/by/4.0/">CC BY-SA 4.0</a> '|add:obs_data.cc_name %}
             {% include "partials/audio.html" with title=title licence=licence png=png url=mp4 %}
             {% endwith %}
         </div>
@@ -27,7 +27,7 @@
             <div>
                 <p>Gesehen am {{ obs_data.date }} von {{ obs_data.cc_name }}</p>
                 <p><a href="https://creativecommons.org/licenses/by/4.0/">CC BY-SA 4.0</a> {{ obs_data.cc_name }}</p>
-                <p>{{ obs_data.coords.0 }} {{ obs_data.coords.1 }}</p>
+                <p>{{ obs_data.coords.1 }} {{ obs_data.coords.0 }}</p>
             </div>
             <img id="obs-img" src="{% url 'image_proxy' obs_data.obs_id %}" alt="Observation image">
         </div>

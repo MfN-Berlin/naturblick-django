@@ -29,7 +29,7 @@ class Og:
 
 
 def home(request):
-    description = _("Discover Nature")
+    description = _("Entdecke die Natur")
     ogs_list = [Og("og:title", "Naturblick"),
                 Og("og:description", description),
                 Og("og:twitter:image",
@@ -418,7 +418,7 @@ def og_url(request):
 
 
 def seen_by(user, date, coords):
-    return _("Seen by {user} at {date} in {coords}").format(user=user, date=date, coords=coords)
+    return _("Gesehen von {user} am {date} in {coords}").format(user=user, date=date, coords=coords)
 
 
 def add_image_ogs(request, ogs_list, image):
