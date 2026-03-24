@@ -343,7 +343,6 @@ class SpeciesAdmin(admin.ModelAdmin):
               'engname',
               'wikipedia',
               'autoid',
-              'nbclassid',
               ('red_list_germany',
                'iucncategory'),
               ('activity_start_month',
