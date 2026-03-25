@@ -231,19 +231,30 @@ class Species(models.Model):
                 if not is_accepted:
                     raise ValidationError(
                         {"gbifusagekey": "Accepted species must be set for a GBIF species that is NOT accepted"})
-            if scientific_name != self.sciname and not json['rank'] in ('VARIETY', 'FORM', 'SUBSPECIES', 'SPECIES'):
-                raise ValidationError(
-                    {"sciname": f"The scientific name does not match the canonical name ({scientific_name}) of the provided gbifusagekey"})
-            elif scientific_name != self.sciname.replace('var. ', '') and json['rank'] == 'VARIETY':
-                raise ValidationError(
-                    {"sciname": f"The scientific name does not match the canonical name ({scientific_name}, after removing 'var. ') of the provided gbifusagekey"})
-            elif scientific_name != self.sciname.replace('f. ', '') and json['rank'] == 'FORM':
-                raise ValidationError(
-                    {"sciname": f"The scientific name does not match the canonical name ({scientific_name}, after removing 'f. ') of the provided gbifusagekey"})
-            elif scientific_name != self.sciname.replace('×', '') and json['rank'] in ('VARIETY', 'FORM', 'SUBSPECIES', 'SPECIES'):
-                raise ValidationError(
-                    {"sciname": f"The scientific name does not match the canonical name ({scientific_name}, after removing '×') of the provided gbifusagekey"})
 
+            sciname_is_ok = False
+
+            if scientific_name == self.sciname.replace('×', '') and json['rank'] in ('VARIETY', 'FORM', 'SUBSPECIES', 'SPECIES'):
+                sciname_is_ok = True
+
+            if (scientific_name == self.sciname.replace('var. ', '') and json['rank'] == 'VARIETY'):
+                sciname_is_ok = True
+
+            if (scientific_name == self.sciname.replace('f. ', '') and json['rank'] == 'FORM'):
+                sciname_is_ok = True
+
+            if scientific_name == self.sciname:
+                sciname_is_ok = True
+
+            if not sciname_is_ok:
+                raise ValidationError(
+                    {"sciname": f"The scientific name does not match the canonical name ({scientific_name}) of the provided gbifusagekey."})
+
+            if json['rank'] == 'VARIETY' and 'var.' not in self.sciname:
+                raise ValidationError("A taxon of rank VARIETY must have 'var.' in its scientific name")
+
+            if json['rank'] == 'FORM' and 'f.' not in self.sciname:
+                raise ValidationError("A taxon of rank FORM must have 'f.' in its scientific name")
         else:
 
             # Only species with gbifusagekey has rank and status
