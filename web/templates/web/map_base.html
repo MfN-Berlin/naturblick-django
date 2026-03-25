@@ -6,6 +6,7 @@
 
 {% block js %}
 <script src='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'></script>
+<script src="{% static 'web/js/audio.js' %}"></script>
 {% endblock %}
 {% block css %}
 <link href='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css' rel='stylesheet' />
@@ -122,7 +123,8 @@ map.on('load', () => {
                     .setHTML(html)
                     .addTo(map);
 
-                {% include "partials/audio.js" %}
+                const audio = document.getElementById('audio')
+                init_audio(audio);
             });
     });
 });

@@ -1,4 +1,4 @@
-{% load web_tags %}
+{% load web_tags static %}
 
 <div class="audio">
     <div>
@@ -26,6 +26,8 @@
     </audio>
 </div>
 
+<script src="{% static 'web/js/audio.js' %}"></script>
 <script>
-    {% include "partials/audio.js" %}
+    const audio = document.getElementById('audio')
+    init_audio(audio);
 </script>

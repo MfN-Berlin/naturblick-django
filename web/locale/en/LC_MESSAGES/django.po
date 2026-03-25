@@ -20,11 +20,11 @@ msgstr ""
 
 #: templates/partials/features_section.html:5
 msgid "Merkmale"
-msgstr "Usage"
+msgstr "Features"
 
 #: templates/partials/portrait_goodtoknow.html:9
 msgid "Nutzung"
-msgstr ""
+msgstr "Usage"
 
 #: templates/partials/portrait_goodtoknow.html:10
 msgid "Blütezeit"
