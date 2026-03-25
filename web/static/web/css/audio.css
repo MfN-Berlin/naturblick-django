@@ -32,31 +32,32 @@
         }
     }
 
-    .audio__spectrogram_container {
+    .spectrogram_container {
         position: relative;
         margin-top: 8px;
+        line-height: 0px;
 
         img {
             opacity: 0.75;
             width: 100%;
             margin-bottom: 0;
         }
-        .audio__spectrogram_container__cover {
+        .cover {
             position: absolute;
             left: 0;
             top: 0;
             overflow: hidden;
             height: 100%;
+
             img {
                 height: 100%;
                 width: auto;
-
                 opacity: 1;
             }
         }
     }
 
-    .audio__time {
+    .time {
         display: flex;
         justify-content: space-between;
         font-size: var(--font-size-small);

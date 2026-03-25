@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-17 13:52+0100\n"
+"POT-Creation-Date: 2026-03-25 10:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,31 +42,47 @@ msgstr "Distribution"
 msgid "Quellen"
 msgstr "Sources"
 
-#: templates/web/page_base.html:46
+#: templates/web/map_base.html:22
+msgid "Alle"
+msgstr "All"
+
+#: templates/web/map_base.html:23
+msgid "Bäume"
+msgstr "Trees"
+
+#: templates/web/map_base.html:24
+msgid "Säugetiere"
+msgstr "Mammals"
+
+#: templates/web/map_base.html:25
+msgid "Vögel"
+msgstr "Birds"
+
+#: templates/web/page_base.html:38
 msgid "Über die App"
 msgstr "About Naturblick"
 
-#: templates/web/page_base.html:47
+#: templates/web/page_base.html:39
 msgid "Über uns"
 msgstr "About us"
 
-#: templates/web/page_base.html:48
+#: templates/web/page_base.html:40
 msgid "Häufige Fragen"
 msgstr "FAQ"
 
-#: templates/web/page_base.html:67
+#: templates/web/page_base.html:66
 msgid "Kontakt"
 msgstr "Contact"
 
-#: templates/web/page_base.html:69
+#: templates/web/page_base.html:68
 msgid "Datenschutz"
 msgstr "General Privacy Notice"
 
-#: templates/web/page_base.html:70
+#: templates/web/page_base.html:69
 msgid "Impressum"
 msgstr "Imprint"
 
-#: templates/web/page_base.html:71
+#: templates/web/page_base.html:70
 msgid "Digitale Barrierefreiheit"
 msgstr "Digital accessibility statement"
 
@@ -75,20 +91,18 @@ msgid "Artportraits"
 msgstr "Species portraits"
 
 #: templates/web/search_portrait.html:15
-msgid ""
-"Finde Tiere und Pflanzen, indem du einen Artnamen eingibst."
-msgstr ""
-"Find animals and plants by entering a species name."
+msgid "Finde Tiere und Pflanzen, indem du einen Artnamen eingibst."
+msgstr "Find animals and plants by entering a species name."
 
 #: templates/web/search_portrait.html:27
 msgid "Artname"
 msgstr "Species name"
 
-#: views.py:28
-msgid "Discover Nature"
+#: views.py:32
+msgid "Entdecke die Natur"
 msgstr "Discover Nature"
 
-#: views.py:412
+#: views.py:421
 #, python-brace-format
-msgid "Seen by {user} at {date} in {coords}"
+msgid "Gesehen von {user} am {date} in {coords}"
 msgstr "Seen by {user} at {date} in {coords}"
