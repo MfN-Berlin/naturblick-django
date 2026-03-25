@@ -1,28 +1,28 @@
-function formatTime(seconds) {
-    const total = Math.round(seconds);
-    const m = Math.floor(total / 60);
-    const s = total % 60;
-
-    return String(m).padStart(2, "0") + ":" +
-           String(s).padStart(2, "0");
-}
-
-function updateTime(once = false) {
-    newWidth = Number(audio.currentTime / audio.duration * 100).toFixed(2);
-    widther.style = `width: ${newWidth}%`
-    if (!once) {
-        setTimeout( () => {
-            if (!running) {
-                return;
-            }
-            updateTime();
-        }, 50)
-    }
-}
-
-running = false;
-
 function init_audio(audio) {
+    function formatTime(seconds) {
+        const total = Math.round(seconds);
+        const m = Math.floor(total / 60);
+        const s = total % 60;
+
+        return String(m).padStart(2, "0") + ":" +
+               String(s).padStart(2, "0");
+    }
+
+    function updateTime(once = false) {
+        newWidth = Number(audio.currentTime / audio.duration * 100).toFixed(2);
+        widther.style = `width: ${newWidth}%`
+        if (!once) {
+            setTimeout( () => {
+                if (!running) {
+                    return;
+                }
+                updateTime();
+            }, 50)
+        }
+    }
+
+    let running = false;
+
     const btn = document.getElementById('playBtn');
     const widther = document.getElementById('widther');
     const spec_cont = document.getElementById('spectrogram_container');
