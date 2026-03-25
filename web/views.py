@@ -526,4 +526,6 @@ def obs(request, obs_id):
     })
 
 def map_obs(request, obs_id):
-    return HttpResponse(f"<h1>{obs_id}</h1>")
+    return web_render(request, "obs_detail", {
+        "obs_id": obs_id
+    })

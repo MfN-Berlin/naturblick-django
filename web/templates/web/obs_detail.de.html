@@ -1,0 +1,22 @@
+{% extends "web/page_base.html" %}
+
+{% load static i18n web_tags %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'web/css/obs.css' %}">
+{% endblock %}
+
+{% block title %}Naturblick{% endblock %}
+
+{% block header_title %}
+<h1>Observation</h1>
+<p>CC BY-SA 4.0 MfN Naturblick TODO</p>
+{% endblock %}
+
+
+{% block content %}
+<main>
+    {{ obs_id }}
+</main>
+
+{% endblock %}

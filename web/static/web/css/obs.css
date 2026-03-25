@@ -1,0 +1,31 @@
+body {
+    background-image: url("../img/background_grain_opt.png");
+    color: white;
+
+    main  {
+        max-width: 1400px;
+        border-radius: 8px;
+        padding: 32px;
+        background-color: white;
+        width: 100%;
+        margin-bottom: 32px;
+
+        a {
+            border-bottom: 2px solid rgba(255, 255, 255, .5);
+        }
+    }
+
+    footer {
+        background-color: rgba(0, 0, 0, 0.1);
+        .footer-right {
+            color: rgba(255, 255, 255, 0.45);
+        }
+        p a {
+            color: rgba(255, 255, 255, 0.45);
+        }
+    }
+
+    hr {
+        background-color: var(--happy);
+    }
+}
