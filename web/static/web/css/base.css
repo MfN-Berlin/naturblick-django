@@ -175,7 +175,6 @@ main {
         height: auto;
         border-radius: 8px;
         box-shadow: var(--shadow);
-        margin-bottom: 32px;
     }
 }
 
@@ -265,6 +264,11 @@ h3 {
     line-height: var(--line-height-h3);
 }
 
+h4 {
+    font-size: var(--font-size-h4);
+    line-height: var(--line-height-h4);
+}
+
 h5 {
     font-size: var(--font-size-h5);
     line-height: var(--line-height-h5);
@@ -309,4 +313,26 @@ mark.red {
 
 mark.gray {
     color: var(--fun);
+}
+
+.matched-species {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    .bold {
+        font-weight: var(--font-weight-bold);
+    }
+    .blue {
+        color: var(--chill);
+    }
+    .italic {
+        font-style: italic;
+    }
+    > :last-child {
+        margin-left: auto
+    }
+    div {
+        display: flex;
+        flex-direction: column;
+    }
 }

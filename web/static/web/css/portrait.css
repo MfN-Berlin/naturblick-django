@@ -41,7 +41,7 @@ body {
         padding: 0;
 
         > section {
-            padding: 75px 75px 0;
+            padding: 75px 75px 32px;
             h2:first-of-type {
               margin-top: 0;
             }

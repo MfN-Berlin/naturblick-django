@@ -1,0 +1,7 @@
+#mini-map {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}

@@ -1,0 +1,26 @@
+{% load web_tags static %}
+
+<div class="audio audio_small">
+    <button id="playBtn">{% inline_svg 'play-media.svg' %}</button>
+    <div class="spectrogram_container" id="spectrogram_container">
+        <img src="{{ png|safe }}">
+        <div class="cover" id="widther" style="width: 0%;">
+            <img src="{{ png|safe }}">
+        </div>
+    </div>
+
+    <div class="time">
+        <div id="audio_start">00:00</div>
+        <div id="audio_end"></div>
+    </div>
+
+    <audio id="audio">
+        <source src="{{ audio_url|safe }}">
+    </audio>
+</div>
+
+<script src="{% static 'web/js/audio.js' %}"></script>
+<script>
+    const audio = document.getElementById('audio')
+    init_audio(audio);
+</script>
