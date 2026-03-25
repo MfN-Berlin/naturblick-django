@@ -246,6 +246,10 @@ class Species(models.Model):
 
         else:
 
+            # Only species with gbifusagekey has rank and status
+            self.rank = None
+            self.status = None
+
             if not self.id:
                 raise ValidationError({"gbifusagekey": "All new species must have gbifusagekey set"})
 
