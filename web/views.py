@@ -535,6 +535,8 @@ def map_obs(request, obs_id):
         species = Species.objects.filter(id=species_id).first()
         cc_name = json["data"]["ccName"]
         language = translation.get_language()
+        date_time = datetime.fromisoformat(json["data"]["dateTime"])
+        date = date_time.strftime("%d.%m.%Y")
 
         fauna = is_fauna(species)
         objects = Faunaportrait.objects if fauna else Floraportrait.objects
@@ -556,16 +558,16 @@ def map_obs(request, obs_id):
         )
 
         return web_render(request, "obs_detail", {
-            "id": obs_id,
+            "obs_id": obs_id,
             "group": species.group,
             "cc_name": cc_name,
+            "date": date,
             "name": species.engname if language == 'en' else species.gername,
             "sciname": species.sciname,
             "species_avatar": species.avatar_new.imagefile.image.url,
             "species_id": species.id,
-            "audio_url": portrait.faunaportrait_audio_file.audio_file.url if fauna else None
+            "portrait_audio_url": portrait.faunaportrait_audio_file.audio_file.url if fauna else None,
+            "is_fauna": fauna
         })
     except:
         pass
-
-

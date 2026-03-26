@@ -71,10 +71,6 @@ body {
 
         #obs-info {
             background-color: var(--mild);
-            padding: 0;
-        }
-
-        .foo {
             display: grid;
             grid-template-columns: 48px 1fr;
             grid-column-gap: 32px;
@@ -89,7 +85,11 @@ body {
             }
         }
 
-        .bar {
+        .foo {
+
+        }
+
+        .two-boxes {
             margin-right: 32px;
             grid-template-columns: repeat(2, 1fr);
             display: grid;
@@ -99,7 +99,7 @@ body {
             grid-column-start: 2;
         }
 
-        .bobba {
+        .plausible {
             background-color: var(--white);
             border-radius: 8px;
             box-shadow: var(--shadow);

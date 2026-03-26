@@ -4,6 +4,7 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'web/css/obs.css' %}">
+<link rel="stylesheet" href="{% static 'web/css/audio.css' %}">
 {% endblock %}
 
 {% block title %}Naturblick{% endblock %}
@@ -34,24 +35,22 @@
         </div>
     </section>
     <section id="obs-info">
-        <div class="foo">
-            {% inline_svg 'observation.svg' %}
-            <h3>Gesehen vor 100 Jahren von deiner Oma.</h3>
-            <div class="bar">
-                <div class="bobba">
-                    <h4>Diese Beobachtung ist plausibel.</h4>
-                    <p>Geprüft durch Susan Karlebowski, Museum für Naturkunde Berlin</p>
-                </div>
-                <div class="bobba">
-                    <h4>Dieser Artzuordnung wurde zugestimmt.</h4>
-                    <p>Geprüft durch Team Forschungsfall Nachtigall, Museum für Naturkunde Berlin</p>
-                </div>
+        {% inline_svg 'observation.svg' %}
+        <h3>Gesehen vor 100 Jahren von deiner Oma.</h3>
+        <div class="two-boxes">
+            <div class="plausible">
+                <h4>Diese Beobachtung ist plausibel.</h4>
+                <p>Geprüft durch Susan Karlebowski, Museum für Naturkunde Berlin</p>
             </div>
-            {% inline_svg 'publikationen.svg' %}
-            <h4>Diese Observation wird auch wissenschaftlich genutzt.</h4>
-            <p>Diese Beobachtung ist Teil des Citizen Science Projektes <a href="{% url 'nightingaleproject' %}">Forschungsfall
-                Nachtigall.</a></p>
+            <div class="plausible">
+                <h4>Dieser Artzuordnung wurde zugestimmt.</h4>
+                <p>Geprüft durch Team Forschungsfall Nachtigall, Museum für Naturkunde Berlin</p>
+            </div>
         </div>
+        {% inline_svg 'publikationen.svg' %}
+        <h4>Diese Observation wird auch wissenschaftlich genutzt.</h4>
+        <p>Diese Beobachtung ist Teil des Citizen Science Projektes <a href="{% url 'nightingaleproject' %}">Forschungsfall
+            Nachtigall.</a></p>
     </section>
     <section id="faq">
         <h3>FAQ</h3>
