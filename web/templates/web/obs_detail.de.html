@@ -9,14 +9,108 @@
 {% block title %}Naturblick{% endblock %}
 
 {% block header_title %}
-<h1>Observation</h1>
-<p>CC BY-SA 4.0 MfN Naturblick TODO</p>
+{% group_svg group %}
+<h1>Beobachtung</h1>
+<p>CC BY-SA 4.0 {{ cc_name }}</p>
 {% endblock %}
-
 
 {% block content %}
 <main>
-    {{ obs_id }}
+    <section id="detail-header">
+        <img src="{{ species_avatar }}">
+        <div>
+            <p>{{ sciname }}</p>
+            <h2>{{ name }}</h2>
+
+            <div>
+                {% if audio_url %}
+                <audio controls>
+                    <source src="{{ audio_url|safe }}">
+                </audio>
+                {% endif %}
+
+                <a href="{% url 'portrait' species_id  %}">Artportrait</a>
+            </div>
+        </div>
+    </section>
+    <section id="obs-info">
+        <div class="foo">
+            {% inline_svg 'observation.svg' %}
+            <h3>Gesehen vor 100 Jahren von deiner Oma.</h3>
+            <div class="bar">
+                <div class="bobba">
+                    <h4>Diese Beobachtung ist plausibel.</h4>
+                    <p>Geprüft durch Susan Karlebowski, Museum für Naturkunde Berlin</p>
+                </div>
+                <div class="bobba">
+                    <h4>Dieser Artzuordnung wurde zugestimmt.</h4>
+                    <p>Geprüft durch Team Forschungsfall Nachtigall, Museum für Naturkunde Berlin</p>
+                </div>
+            </div>
+            {% inline_svg 'publikationen.svg' %}
+            <h4>Diese Observation wird auch wissenschaftlich genutzt.</h4>
+            <p>Diese Beobachtung ist Teil des Citizen Science Projektes <a href="{% url 'nightingaleproject' %}">Forschungsfall Nachtigall.</a></p>
+        </div>
+    </section>
+    <section id="faq">
+        <h3>FAQ</h3>
+        <div>
+            <details>
+                <summary>Warum werden die Beobachtungen überprüft?</summary>
+                    <p>Jede:r kann Naturblick nutzen und Naturbeobachtungen festhalten wie er oder sie es möchte. Wir möchten dir und anderen Nutzer:innen unserer Plattform dennoch die Möglichkeit geben, einschätzen zu können, ob die Beobachtungen plausibel sind. Wenn du möchtest, kannst du so auch lernen wie du deine eigenen Beobachtungen noch sicherer bestimmst und außerdem entdecken, welche spannenden Beobachtungen andere Nutzer: innen in deiner Umgebung gemacht haben.</p>
+            </details>
+            <details>
+                <summary>Warum sind nicht alle Beobachtungen einer Art auf der Karte?</summary>
+                <p>Auf der Karte findest du nur Beobachtungen, deren Artbestimmung zumindest teilweise bestätigt wurde. Es kann sein, dass der:die Expert:in bei einem Teil der Beobachtungen eine andere Art bestimmt hat. Den Artnamen kann aber nur die Person ändern, die das Tier oder die Pflanze gesehen hat und das dadurch am besten entscheiden kann. Zukünftig schicken wir in diesen Fällen einen privaten Hinweis, damit der:die Ersteller:in entscheiden kann was mit der Beobachtung passieren soll. Wir ändern oder löschen diese Beobachtungen nicht.
+Wir bekommen täglich sehr viele Beobachtungen, daher kann es etwas dauern bis wir ein Feedback geben und die Beobachtungen auf der Karte erscheinen können.</p>
+            </details>
+            <details>
+                <summary>Ist eine Bestimmung falsch, wenn sie nicht plausibel ist oder nicht bestätigt werden kann?</summary>
+                <p>Nein, nur der:die Beobachter:in kann wirklich sagen, welche Art er oder sie gesehen hat. Wir können nur Hinweise geben, ggf. noch mal genauer hinzusehen und auf bestimmte Merkmale zu achten. Wir benötigen für die Bestätigung einer Bestimmung ein Foto oder eine Tonaufnahme, auf der die wichtigsten Bestimmungsmerkmale zu sehen bzw. zu hören sind. Nur dann kann unsere Mustererkennung oder eine Person eine Einschätzung zum Bestimmungsergebnis geben. Es bleibt jedoch immer schwierig, auch für Expert:innen, Arten anhand von Fotos oder Tonaufnahmen nachträglich zu bestimmen. Bei manchen Arten es das sogar nicht möglich.</p>
+            </details>
+            <details>
+                <summary>Ist eine Bestimmung falsch, wenn sie noch nicht bestätigt wurde?</summary>
+                <p>Nein, wir bekommen sehr viele Beobachtungen und können sie nur nach und nach gemeinsam mit Freiwilligen bearbeiten. Es kann daher sein, dass noch niemand eine Beobachtungen angeschaut hat und es noch etwas dauert bis wir ein Feedback geben können. </p>
+            </details>
+            <details>
+                <summary>Kann der Artname geändert werden?</summary>
+                <p>Ja, der:die Ersteller:in einer Beobachtung kann den Artnamen ändern, wenn er falsch ist. Das hilft uns und anderen Nutzer:innen der Plattform sogar. Noch können Änderungen nur in der App vorgenommen werden.</p>
+            </details>
+            <details>
+                <summary>Können die Angaben zu einer Beobachtung, wie Ort und Zeit, angepasst werden? </summary>
+                <p>Ja, wenn der Ort von der App ungenau aufgenommen wurden, kann der:die Nutzer:in ihn später in der App korrigieren. Die Zeit kann momentan hinterher nicht mehr angepasst werden, da wir davon ausgehen, dass die Naturblick App zum Zeitpunkt der Beobachtung direkt benutzt wurde. Ort und Zeit einer Beobachtung können aber in den Kommentaren genauer beschrieben werden.</p>
+            </details>
+            <details>
+                <summary>Soll eine Beobachtung gelöscht werden, wenn sie nicht plausibel oder nicht bestätigt ist? </summary>
+                <p>Nein, wir freuen uns über jede Beobachtung. Unser Feedback soll dir und anderen Naturblick Nutzer:innen nur helfen, falls ihr eure Beobachtungen zukünftig noch sicherer bestimmen möchtet. Wenn ein:e Nutzer:in Beobachtungen löschen will, ist das natürlich möglich. Sie ist dann auf der Karte und im persönlichen Feldbuch nicht mehr sichtbar. Wenn sie allerdings bereits in einer Publikation oder einem Forschungsprojekt verwendet wurde, bleibt sie dort erhalten.</p>
+            </details>
+            <details>
+                <summary>Was hilft dabei eine Artbestimmung bestätigen zu können?</summary>
+                <p>Beobachtungen mit einem Foto oder eine Tonaufnahmen können leichter überprüft werden. Dabei sollten die wichtigsten Bestimmungsmerkmale aufgenommen werden. Hinweise für jede Art finden sich in den Artportraits. Je länger eine Tonaufnahme ist desto besser. Dabei sollte darauf geachtet werden, das Mikrofon in die Richtung des Vogels zu halten. Bei Fotos von Pflanzen ist es hilfreich ein typisches Merkmal wie zum Beispiel ein Blatt oder die Blüte als Ganzes aus nicht zu weiter Entfernung zu fotografieren.</p>
+            </details>
+            <details>
+                <summary>Wie können Beobachtungen besser nutzbar für Wissenschaft und Naturschutz gemacht werden?</summary>
+                <p>Es geht uns vor allem um den Spaß und die Faszination für Natur. Wie und ob eine Beobachtung nutzbar ist, hängt immer von der Fragestellung ab. Daher können wir keine eindeutige Antwort geben. Es gibt aber ein paar generelle Punkte, um die Nutzbarkeit zu verbessern:</p>
+                <ul>
+                    <li>Beobachtungen mit Fotos oder Tonaufnahmen ermöglichen eine Bestätigung der Artbestimmung.</li>
+                    <li>Kommentare geben weitere Details zu den Beobachtungen.</li>
+                    <li>Bei der Teilnahme an einem Citizen Science Projekt, sollten die Angaben des Projektes wie eine Beobachtung durchgeführt werden soll, z.B. zu besonderen Tageszeiten, beachtet werden.</li>
+                </ul>
+            </details>
+            <details>
+                <summary>Welche Arten können von der Mustererkennung bestimmt werden?</summary>
+                <p>Unsere Algorithmen werden kontinuierlich verbessert und die Zahl der Arten, die erkannt werden können, kontinuierlich vergrößert. <a href="https://naturblick.museumfuernaturkunde.berlin/speciesaudiorecognition">Hier</a> findest du die Artenliste für die Lauterkennung und <a href="https://naturblick.museumfuernaturkunde.berlin/speciesimagerecognition">hier</a> für die Bilderkennung.</p>
+            </details>
+            <details>
+                <summary>Wie bestätigt der/die Expert:in eine Bestimmung?</summary>
+                <p>Die Expert:innen legen Merkmale fest, die zur Bestimmung einer Art zu hören oder zu sehen sein müssen. Anschließend überprüfen sie die Tonaufnahmen oder Fotos der Beobachtungen, die als eine bestimmte Art gemeldet wurden, auf diese Merkmale und bestätigen richtige Bestimmungen. Bei Beobachtungen, deren Foto oder Lautaufnahme diese typischen Merkmale nicht enthält, ist eine sichere Bestätigung nicht möglich, daher können die Expert:innen höchstens eine Tendenz geben. In einigen Fällen, wenn beispielsweise auf einer Tonaufnahme laute Hintergrundgeräusche sind oder ein besonders ungewöhnliches Exemplar einer Art fotografiert wurde, kann selbst eine:e Expertin anhand einer Tonaufnahme oder eines Bildes keine Einschätzung geben und wird dies auch so festhalten.</p>
+            </details>
+            <details>
+                <summary>Ich möchte diese und andere Beobachtungen für meine Forschung verwenden. Wie kann ich sie nutzen?</summary>
+                <p>Alle Medien haben die Lizenz CC BY-SA 4.0. Das bedeutet sie dürfen weiterverwendet werden. Wir möchten, aber für die Naturblick Nutzer:innen transparent machen wo und von wem die Daten verwendet wurden. Daher bitten wir dich mit uns Kontakt aufzunehmen. Dann können wir dir auch alle Informationen geben, in welchem Kontext die Beobachtungen gemacht wurden und mit welchen Methoden wir sie überprüfen. </p>
+            </details>
+        </div>
+    </section>
 </main>
 
 {% endblock %}

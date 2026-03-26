@@ -1,0 +1,165 @@
+{% extends "web/page_base.html" %}
+
+{% load static i18n web_tags %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'web/css/obs.css' %}">
+{% endblock %}
+
+{% block title %}Naturblick{% endblock %}
+
+{% block header_title %}
+{% group_svg group %}
+<h1>Observation</h1>
+<p>CC BY-SA 4.0 {{ cc_name }}</p>
+{% endblock %}
+
+{% block content %}
+<main>
+    <section id="detail-header">
+        <img src="{{ species_avatar }}">
+        <div>
+            <p>{{ sciname }}</p>
+            <h2>{{ name }}</h2>
+
+            <div>
+                {% if audio_url %}
+                <audio controls>
+                    <source src="{{ audio_url|safe }}">
+                </audio>
+                {% endif %}
+
+                <a href="{% url 'portrait' species_id  %}">Artportrait</a>
+            </div>
+        </div>
+    </section>
+    <section id="obs-info">
+        <div class="foo">
+            {% inline_svg 'observation.svg' %}
+            <h3>Gesehen vor 100 Jahren von deiner Oma.</h3>
+            <div class="bar">
+                <div class="bobba">
+                    <h4>Diese Beobachtung ist plausibel.</h4>
+                    <p>Geprüft durch Susan Karlebowski, Museum für Naturkunde Berlin</p>
+                </div>
+                <div class="bobba">
+                    <h4>Dieser Artzuordnung wurde zugestimmt.</h4>
+                    <p>Geprüft durch Team Forschungsfall Nachtigall, Museum für Naturkunde Berlin</p>
+                </div>
+            </div>
+            {% inline_svg 'publikationen.svg' %}
+            <h4>Diese Observation wird auch wissenschaftlich genutzt.</h4>
+            <p>Diese Beobachtung ist Teil des Citizen Science Projektes <a href="{% url 'nightingaleproject' %}">Forschungsfall
+                Nachtigall.</a></p>
+        </div>
+    </section>
+    <section id="faq">
+        <h3>FAQ</h3>
+        <div>
+            <details>
+                <summary>Why are the observations reviewed?</summary>
+                <p>Everyone can use Naturblick and record nature observations as he or she wishes. However, we would
+                    like to give you and other users of our platform the opportunity to assess whether the observations
+                    are plausible or not. If you wish, you can also learn how to determine your own observations more
+                    confidently and discover what exciting observations other users have made in your area.</p>
+            </details>
+            <details>
+                <summary>Why are not all observations of a species on the map?</summary>
+                <p>On the map you will find only observations whose species identification was at least partially
+                    confirmed. It is possible that the expert has identified a different species for some of the
+                    observations. However, the species name can be changed only by the person who has seen the animal or
+                    plant and can therefore best decide that. In the future, we will send a private note in these cases
+                    so that the creator can decide what to do with the observation. We do not change or delete these
+                    observations.
+                    We get a lot of observations every day, so it may take some time to give feedback and for the
+                    observations to appear on the map.</p>
+            </details>
+            <details>
+                <summary>Is an identification wrong if it is not plausible or cannot be confirmed?</summary>
+                <p>No, only the observer can really say which species he or she has seen. We can only give advice to
+                    take a closer look if necessary and to pay attention to certain characteristics. For the
+                    confirmation of an identification we need a photo or a sound recording on which the most important
+                    identification features can be seen or heard. Only then our pattern recognition or a person can give
+                    an opinion on the identification result. However, it is always difficult, even for experts, to
+                    identify species on the basis of photos or sound.</p>
+            </details>
+            <details>
+                <summary>Is an identification wrong if it has not yet been confirmed?</summary>
+                <p>No, we receive a lot of observations and can only gradually work on them together with volunteers.
+                    Therefore, it is possible that no one has looked at an observation yet and it still takes some time
+                    until we can give feedback. </p>
+            </details>
+            <details>
+                <summary>Can the species name be changed?</summary>
+                <p>Yes, the creator of an observation can change the species name if it is wrong. This actually helps us
+                    and other users of the platform. At the moment, changes can only be made in the app.</p>
+            </details>
+            <details>
+                <summary>Can the details of an observation, such as location and time, be adjusted?</summary>
+                <p>Yes, if the location was recorded inaccurately by the app, the user can correct it later in the app.
+                    At the moment, the time cannot be adjusted afterwards, as we assume that the Naturblick app was used
+                    directly at the time of the observation. However, the place and time of an observation can be
+                    described in more detail in the comments.</p>
+            </details>
+            <details>
+                <summary>Should an observation be deleted if it is not plausible or not confirmed?</summary>
+                <p>No, we are happy about every observation. Our feedback is only meant to help you and other Naturblick
+                    users if you would like to identify your observations more confidently in the future. If a user
+                    wants to delete an observation, this is of course possible. It will then no longer be visible on the
+                    map and in the personal field book. However, if it has already been used in a publication or
+                    research project, it will remain there.</p>
+            </details>
+            <details>
+                <summary>What helps to be able to confirm a species identification?</summary>
+                <p>Observations with a photo or an audio recording can be validated more easily. The most important
+                    identification traits should be recorded. Information for each species can be found in the species
+                    portraits. The longer the sound recording the better. Care should be taken to hold the microphone in
+                    the direction of the bird. For photos of plants, it is helpful to photograph a typical feature such
+                    as a leaf or the flower as a whole from not too far away.</p>
+            </details>
+            <details>
+                <summary>How can observations be made more useful for science and conservation?</summary>
+                <p>For us, it's all about the fun and fascination for nature.
+                    How and if an observation is usable always depends on the question. Therefore, we cannot give a
+                    definite answer. But there are a few general points to improve the usability:</p>
+
+                <ul>
+                    <li>Observations with photos or sound recordings allow confirmation of species identification.</li>
+                    <li>Comments provide more details about the observations.</li>
+                    <li>When participating in a Citizen Science project, the project's instructions on how to conduct an
+                        observation, e.g. at special times of the day, should be followed.
+                    </li>
+                </ul>
+            </details>
+            <details>
+                <summary>What species can be determined by pattern recognition?</summary>
+                <p>Our algorithms are continuously improved and the number of species that can be recognized is
+                    continuously increased. <a
+                            href="https://naturblick.museumfuernaturkunde.berlin/speciesaudiorecognition?lang=en">Here</a>
+                    you can find the species list for sound recognition and <a
+                            href="https://naturblick.museumfuernaturkunde.berlin/speciesimagerecognition?lang=en">here</a>
+                    for image recognition.</p>
+            </details>
+            <details>
+                <summary>How does the expert confirm an identification?</summary>
+                <p>The experts define traits that must be heard or seen in any case to identify a certain species. They
+                    then check the sound recordings or photographs of the observations reported as a particular species
+                    against these traits and confirm correct identifications. For observations with photos or sound
+                    recordings that do not contain these typical traits, confirmation with certainty is not possible, so
+                    the most the expert can do is give a tendency. In some cases, for example, if there is loud
+                    background noise on a sound recording or a particularly unusual specimen of a species has been
+                    photographed, even an expert cannot make an assessment based on a sound recording or a picture and
+                    will note it as such.</p>
+            </details>
+            <details>
+                <summary>I would like to use these and other observations for my research. How can I use them?</summary>
+                <p>All media have the license CC BY-SA 4.0, which means they may be reused. We would like to make it
+                    transparent for Naturblick users where and by whom the data was used. Therefore we ask you to
+                    contact us. Then we can give you all the information, in which context the observations were made
+                    and with which methods we validate them. </p>
+            </details>
+        </div>
+    </section>
+</main>
+
+{% endblock %}

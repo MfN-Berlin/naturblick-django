@@ -525,7 +525,47 @@ def obs(request, obs_id):
         "obs_data": obs_data
     })
 
+def nightingaleproject(request):
+    return web_render(request, "nightingaleproject")
+
 def map_obs(request, obs_id):
-    return web_render(request, "obs_detail", {
-        "obs_id": obs_id
-    })
+    try:
+        json = requests.get(f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}").json()
+        species_id = json["data"]["species"]
+        species = Species.objects.filter(id=species_id).first()
+        cc_name = json["data"]["ccName"]
+        language = translation.get_language()
+
+        fauna = is_fauna(species)
+        objects = Faunaportrait.objects if fauna else Floraportrait.objects
+
+        portrait = (
+            objects
+            .select_related(
+                "descmeta",
+                "inthecitymeta",
+                "funfactmeta",
+            )
+            .prefetch_related(
+                "goodtoknow_set",
+                "source_set",
+                "unambigousfeature_set",
+                "similarspecies_set__species__avatar_new__imagefile",
+            )
+            .get(species_id=species.id, language=language)
+        )
+
+        return web_render(request, "obs_detail", {
+            "id": obs_id,
+            "group": species.group,
+            "cc_name": cc_name,
+            "name": species.engname if language == 'en' else species.gername,
+            "sciname": species.sciname,
+            "species_avatar": species.avatar_new.imagefile.image.url,
+            "species_id": species.id,
+            "audio_url": portrait.faunaportrait_audio_file.audio_file.url if fauna else None
+        })
+    except:
+        pass
+
+
