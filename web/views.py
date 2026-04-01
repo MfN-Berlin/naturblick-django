@@ -528,6 +528,16 @@ def obs(request, obs_id):
 def nightingaleproject(request):
     return web_render(request, "nightingaleproject")
 
+
+def plausibility(within_timeframe, within_range):
+    if within_timeframe and within_range:
+        return _("Diese Beobachtung ist plausibel.")
+    elif within_timeframe or within_range:
+        return _("Diese Beobachtung ist teilweise plausibel.")
+    else:
+        return _("Diese Beobachtung ist nicht plausibel.")
+
+
 def map_obs(request, obs_id):
     try:
         json = requests.get(f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}").json()
@@ -537,9 +547,17 @@ def map_obs(request, obs_id):
         language = translation.get_language()
         date_time = datetime.fromisoformat(json["data"]["dateTime"])
         date = date_time.strftime("%d.%m.%Y")
+        coords = json["data"]["coords"]["coordinates"]
 
         fauna = is_fauna(species)
         objects = Faunaportrait.objects if fauna else Floraportrait.objects
+        additional_names = ", ".join(
+            species.speciesname_set.filter(language=language).values_list("name", flat=True))
+
+        within_range = json["data"]["withinRange"]
+        within_timeframe = json["data"]["withinTimeframe"]
+        plausibility_author = json["data"]["plausibilityAuthor"] # todo
+        assessment_author = json["data"]["assessmentAuthor"] # todo
 
         portrait = (
             objects
@@ -557,6 +575,28 @@ def map_obs(request, obs_id):
             .get(species_id=species.id, language=language)
         )
 
+        # "individuals": 1,
+        #     "withinTimeframe": true,
+        #     "withinRange": true,
+        #     "assessment": "uncertain_true",
+        #     "plausibilityAuthor": 1,
+        #     "assessmentAuthor": 1,
+        #     "patternMatchingScore": 100,
+        #     "patternMatchingExecuted": true,
+        #     "projects": [],
+        #     "publications": [],
+        #     "suggestedSpecies": [
+        #       [
+        #         "tree_5191125a",
+        #         100],
+        #       [
+        #         "tree_84b34851",
+        #         0],
+        #       [
+        #         "tree_d4d9dc14",
+        #         0]
+        #     ]
+
         return web_render(request, "obs_detail", {
             "obs_id": obs_id,
             "group": species.group,
@@ -567,7 +607,12 @@ def map_obs(request, obs_id):
             "species_avatar": species.avatar_new.imagefile.image.url,
             "species_id": species.id,
             "portrait_audio_url": portrait.faunaportrait_audio_file.audio_file.url if fauna else None,
-            "is_fauna": fauna
+            "is_fauna": fauna,
+            "additional_names": additional_names,
+            "seen_by": seen_by(cc_name, date, coords),
+            "within_range": _("Sie liegt im Verbreitungsgebiet.") if within_range else _("Sie liegt nicht im Verbreitungsgebiet."),
+            "plausibility": plausibility(within_timeframe, within_range),
+            "within_timeframe": _("Sie wurde im Aktivitätszeitraum gemacht.") if within_timeframe else _("Sie wurde nicht im Aktivitätszeitraum gemacht."),
         })
     except:
         pass

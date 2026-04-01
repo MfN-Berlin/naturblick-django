@@ -22,6 +22,9 @@
         <div>
             <p>{{ sciname }}</p>
             <h2>{{ name }}</h2>
+            {% if additional_names %}
+                <p>{{ additional_names }}</p>
+            {% endif %}
 
             <div>
                 {% if portrait_audio_url %}
@@ -33,24 +36,23 @@
             </div>
         </div>
     </section>
+
     <section id="obs-info">
         {% inline_svg 'observation.svg' %}
-        <h3>Gesehen vor 100 Jahren von deiner Oma.</h3>
+        <h3>{{ seen_by }}</h3>
         <div class="two-boxes">
             <div class="plausible">
-                <h4>Diese Beobachtung ist plausibel.</h4>
+                <h4>Diese Beobachtung ist plausibel. <a href="{% url 'map_obs' obs_id %}#faq">Was bedeutet das?</a></h4>
                 <p>Geprüft durch Susan Karlebowski, Museum für Naturkunde Berlin</p>
             </div>
             <div class="plausible">
-                <h4>Dieser Artzuordnung wurde zugestimmt.</h4>
+                <h4>Dieser Artzuordnung wurde zugestimmt. <a href="{% url 'map_obs' obs_id %}#faq">Was bedeutet das?</a></h4>
                 <p>Geprüft durch Team Forschungsfall Nachtigall, Museum für Naturkunde Berlin</p>
 
                 {% if is_fauna %}
                     {% url 'specgram_proxy' obs_id as png %}
                     {% url 'audio_proxy' obs_id as mp4 %}
-                    {% with title="Gehört am "|add:date|add:" von "|add:cc_name licence='<a href="https://creativecommons.org/licenses/by/4.0/">CC BY-SA 4.0</a> '|add:cc_name %}
-                        {% include "partials/audio.html" with title=title licence=licence png=png url=mp4 %}
-                    {% endwith %}
+                    {% include "partials/audio_small.html" with png=png url=mp4 %}
                 {% endif %}
 
             </div>

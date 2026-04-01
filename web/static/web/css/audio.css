@@ -79,3 +79,8 @@
         opacity: .5;
     }
 }
+
+.audio_small {
+    display: flex;
+    flex-direction: row;
+}

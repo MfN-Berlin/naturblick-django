@@ -35,9 +35,12 @@ body {
             gap: 16px;
             div {
                 p {
-                    color: var(--fun);
+                    color: var(--grey);
                     font-style: italic;
                     margin: 0;
+                }
+                p:first-of-type {
+                    color: var(--fun);
                 }
 
                 h2 {
@@ -70,6 +73,10 @@ body {
          }
 
         #obs-info {
+            h3 {
+                font-size: var(--font-size-h4);
+                line-height: var(--line-height-h4);
+            }
             background-color: var(--mild);
             display: grid;
             grid-template-columns: 48px 1fr;
@@ -104,6 +111,12 @@ body {
             border-radius: 8px;
             box-shadow: var(--shadow);
             padding: 32px;
+
+            h4 a {
+                font-size: var(--font-size-small);
+                color: var(--chill);
+                font-weight: 400;
+            }
         }
 
         #faq {
