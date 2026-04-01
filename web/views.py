@@ -17,6 +17,8 @@ from django.urls import reverse
 from django.utils import translation
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
+from django.conf import settings
+
 from functools import partial
 
 from species.models import Species, SpeciesName, Portrait, Floraportrait, Faunaportrait, Tag
@@ -458,41 +460,13 @@ def to_geojson_view(source):
 
 def map_proxy(request):
     r = requests.get(
-        "https://naturblick.museumfuernaturkunde.berlin/api/projects/map"
+        f"{settings.PLAYBACK_URL}projects/map"
     )
     return to_geojson_view(r.json())
 
-
-def audio_proxy(request, obs_id):
-    url = f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/audio.mp4"
-    r = requests.get(url, stream=True)
-
-    return HttpResponse(
-        r.iter_content(chunk_size=8192),
-        content_type=r.headers.get("Content-Type", "video/mp4")
-    )
-
-def specgram_proxy(request, obs_id):
-    url = f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/audio.mp4.png"
-    r = requests.get(url, stream=True)
-
-    return HttpResponse(
-        r.iter_content(chunk_size=8192),
-        content_type=r.headers.get("Content-Type", "image/png")
-    )
-
-def image_proxy(request, obs_id):
-    url = f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/image.jpg"
-    r = requests.get(url, stream=True)
-
-    return HttpResponse(
-        r.iter_content(chunk_size=8192),
-        content_type=r.headers.get("Content-Type", "image/jpg")
-    )
-
 def obs(request, obs_id):
     language = translation.get_language()
-    json = requests.get(f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}").json()
+    json = requests.get(f"{settings.PLAYBACK_URL}projects/observations/{obs_id}").json()
     species_id = json["data"]["species"]
     s = Species.objects.filter(id=species_id).first()
     cc_name = json["data"]["ccName"]
