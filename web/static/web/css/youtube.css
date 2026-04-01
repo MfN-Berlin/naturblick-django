@@ -1,0 +1,23 @@
+.youtube {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    > img {
+        cursor: pointer;
+    }
+    > img.icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%) translateY(-50%);
+        width: 10%;
+    }
+    > iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}

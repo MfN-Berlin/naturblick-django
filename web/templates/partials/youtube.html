@@ -1,0 +1,10 @@
+{% load web_tags static %}
+
+<div id="youtube-{{ video_id }}" class="youtube">
+  <img alt="" src="https://i.ytimg.com/vi/{{ video_id }}/hq720.jpg">
+  <img class="icon" src="{% static 'web/img/yt_icon_mono_light.png' %}" alt="">
+</div>
+
+<script>
+  init_youtube('youtube-{{ video_id }}', 'https://www.youtube-nocookie.com/embed/{{ video_id }}');
+</script>
