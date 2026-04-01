@@ -5,6 +5,14 @@
 {% block dels %}{% endblock %}
 {% block title %}About Naturblick{% endblock %}
 
+{% block js %}
+<script src="{% static 'web/js/youtube.js' %}"></script>
+{% endblock%}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'web/css/youtube.css' %}">
+{% endblock %}
+
 {% block header_title %}
 <h1>About Naturblick</h1>
 <hr>
@@ -13,9 +21,7 @@
 
 {% block content %}
 <main class="text-container">
-    ==== TODO YOUTUBE ====
-    {#    <div class="youtube-container youtube-container--no-consent"><img alt="" src="https://i.ytimg.com/vi/VBVjIRcdsRU/hq720.jpg"><img src="/assets/imgs/yt_icon_mono_light.png" alt="" class="yt-icon"></div>#}
-
+  {% include "partials/youtube.html" with video_id="VBVjIRcdsRU" %}
     <p>In total, you can identify over 2500 species with Naturblick. The app offers you three different identification
         tools:</p>
 
