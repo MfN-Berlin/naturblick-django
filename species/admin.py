@@ -699,7 +699,6 @@ def copy_portrait_to_eng(modeladmin, request, queryset):
                 male_description=p.male_description,
                 female_description=p.female_description,
                 juvenile_description=p.juvenile_description,
-                tracks=p.tracks,
                 audio_title=p.audio_title,
                 faunaportrait_audio_file=p.faunaportrait_audio_file)
         else:
