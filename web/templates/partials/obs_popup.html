@@ -16,7 +16,7 @@
 
         {% if obs_data.is_fauna %}
         <div id="obs_popup-fauna-main">
-            {% with png="/api/projects/observations/"|add:obs_data.obs_id|add:"/audio.mp4.png" as png %}
+            {% with png="/api/projects/observations/"|add:obs_data.obs_id|add:"/audio.mp4.png" %}
             {% with mp4="/api/projects/observations/"|add:obs_data.obs_id|add:"/audio.mp4" %}
             {% with title="Gehört am "|add:obs_data.date|add:" von "|add:obs_data.cc_name licence='<a href="https://creativecommons.org/licenses/by/4.0/">CC BY-SA 4.0</a> '|add:obs_data.cc_name %}
             {% include "partials/audio.html" with title=title licence=licence png=png url=mp4 %}
