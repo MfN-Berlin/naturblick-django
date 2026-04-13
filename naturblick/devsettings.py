@@ -8,6 +8,9 @@ SECRET_KEY = 'django-insecure-x#f7$+n+n^n!ynhb9lrym_k#$kc@b1v0kr9_rwvf0@%$4pz3r8
 
 ALLOWED_HOSTS = []
 
+INSTALLED_APPS.append('apiproxy')
+
+
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -56,3 +59,5 @@ LOGGING = {
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
 ]
+
+PLAYBACK_URL="https://staging.naturblick.museumfuernaturkunde.berlin/api/"
