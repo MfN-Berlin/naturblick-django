@@ -711,3 +711,11 @@ class LeichtGoodToKnow(OrderableModel):
 
     class Meta(OrderableModel.Meta):
         db_table = 'leichtgtk'
+
+
+class EvaluationAuthor(models.Model):
+    name = models.TextField()
+    institution = models.TextField()
+
+    class Meta:
+        db_table = 'evaluation_author'

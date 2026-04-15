@@ -6,12 +6,12 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from django import forms
 from django.core import management
 from django.core.exceptions import BadRequest
 from django.db import connection
 from django.db.models import Prefetch
 from django.db.models import Q
-from django import forms
 from django.http import FileResponse, HttpResponse
 from django.utils import translation
 from rest_framework import generics
@@ -23,12 +23,13 @@ from rest_framework.views import APIView
 from naturblick import settings
 from .leicht_db import create_leicht_db, leicht_portrait
 from .models import Species, Tag, SpeciesName, Floraportrait, Faunaportrait, GoodToKnow, Source, SimilarSpecies, \
-    UnambigousFeature, FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, Group
+    UnambigousFeature, FaunaportraitAudioFile, Portrait, Group
 from .serializers import SpeciesSerializer, TagSerializer, FaunaPortraitSerializer, \
     FloraportraitSerializer, SpeciesImageListSerializer, DescMetaSerializer, \
     FunfactMetaSerializer, InthecityMetaSerializer, GroupSerializer
-from .utils import cropped_image
 from .utils import create_sqlite_file
+from .utils import cropped_image
+
 
 def is_data_valid():
     return not Portrait.objects.filter(species__accepted_species__isnull=False, published=True).exists()
@@ -118,7 +119,8 @@ def filter_species_tags(species_qs, tags):
 
 def is_valid_or_raise(form):
     if not form.is_valid():
-        raise BadRequest(' '.join([ "{}: {}".format(k, ' '.join(v)) for k, v in form.errors.items()]))
+        raise BadRequest(' '.join(["{}: {}".format(k, ' '.join(v)) for k, v in form.errors.items()]))
+
 
 # 2.) This is the 'old' Tag endpoint, callable with
 #  - /tags/filter?lang=de&tagsearch=&_limit=-1
@@ -172,6 +174,7 @@ class SimpleTagsList(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Tag.objects.all()
+
         class TagForm(forms.Form):
             tag = forms.TypedMultipleChoiceField(
                 coerce=int,
@@ -233,7 +236,8 @@ def get_accepted_portrait_species_id(lang, s_id=None, speciesid=None):
         return None, None
 
 
-SPECIESID_REGEX='^[a-z]+_[a-f0-9]{8}$'
+SPECIESID_REGEX = '^[a-z]+_[a-f0-9]{8}$'
+
 
 #
 # called by playback HttpService and platform
