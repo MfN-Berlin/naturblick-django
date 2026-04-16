@@ -30,7 +30,7 @@ from species import utils
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Group, Floraportrait, Tag, SourcesImprint, SourcesTranslation, \
     FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, LeichtPortrait, LeichtRecognize, LeichtGoodToKnow, \
-    AudioFile, ImageCrop, ImageFile, BirdnetIdMapping
+    AudioFile, ImageCrop, ImageFile, BirdnetIdMapping, EvaluationAuthor
 from .utils import cropped_image, find_similar_imagefile
 
 admin.site.unregister(User)
@@ -334,7 +334,8 @@ class SpeciesAdmin(admin.ModelAdmin):
     list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, HasSynonymsFilter,
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
                    HasBirdnetIdFilter,
-                   'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, 'rank', 'status', 'gbif_incompatible', 'group']
+                   'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, 'rank', 'status',
+                   'gbif_incompatible', 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
               'group',
@@ -399,9 +400,11 @@ class SpeciesAdmin(admin.ModelAdmin):
             }
             return TemplateResponse(request, 'admin/image_from_wikimedia_validate.html',
                                     {"form": ValidateImageForm(initial=data), 'queryset': queryset,
-                                     "image_url": form.cleaned_data['wikimedia_url'], "owner_link": meta.author_url, 'action': action})
+                                     "image_url": form.cleaned_data['wikimedia_url'], "owner_link": meta.author_url,
+                                     'action': action})
         else:
-            return TemplateResponse(request, 'admin/image_from_wikimedia.html', {"form": form, 'queryset': queryset, 'action': action})
+            return TemplateResponse(request, 'admin/image_from_wikimedia.html',
+                                    {"form": form, 'queryset': queryset, 'action': action})
 
     def import_avatar_from_wikimedia_execute(self, request, queryset):
         form = ValidateImageForm(request.POST)
@@ -426,16 +429,15 @@ class SpeciesAdmin(admin.ModelAdmin):
         if form.is_valid():
             image = utils.get_wikimedia_image(image_url)
             image_file = ImageFile.objects.create(owner=form.cleaned_data["owner"],
-                                                         owner_link=form.cleaned_data["owner_link"], source=image_url,
-                                                         license=form.cleaned_data["license"], image=image,
-                                                         species=queryset.first())
+                                                  owner_link=form.cleaned_data["owner_link"], source=image_url,
+                                                  license=form.cleaned_data["license"], image=image,
+                                                  species=queryset.first())
             image_file.save()
             return HttpResponseRedirect(reverse('admin:species_species_changelist'))
         else:
             return TemplateResponse(request, 'admin/image_from_wikimedia_validate.html',
                                     {"form": form, 'queryset': queryset, "image_url": image_url,
                                      "owner_link": form.data["owner_link"], 'action': 'import_image_from_wikimedia'})
-
 
     @admin.action(description="Import avatar from Wikimedia")
     @transaction.atomic
@@ -453,7 +455,8 @@ class SpeciesAdmin(admin.ModelAdmin):
             return self.import_avatar_from_wikimedia_execute(request, queryset)
         else:
             return TemplateResponse(request, 'admin/image_from_wikimedia.html',
-                                    {"form": ImportImageFromWikimediaForm(), 'queryset': queryset, 'action': 'import_avatar_from_wikimedia'})
+                                    {"form": ImportImageFromWikimediaForm(), 'queryset': queryset,
+                                     'action': 'import_avatar_from_wikimedia'})
 
     @admin.action(description="Import image from Wikimedia")
     @transaction.atomic
@@ -471,7 +474,8 @@ class SpeciesAdmin(admin.ModelAdmin):
             return self.import_image_from_wikimedia_execute(request, queryset)
         else:
             return TemplateResponse(request, 'admin/image_from_wikimedia.html',
-                                    {"form": ImportImageFromWikimediaForm(), 'queryset': queryset, 'action': 'import_image_from_wikimedia'})
+                                    {"form": ImportImageFromWikimediaForm(), 'queryset': queryset,
+                                     'action': 'import_image_from_wikimedia'})
 
     @admin.display(
         description="Avatar"
@@ -609,6 +613,7 @@ class UnambigousFeatureInline(OrderableAdmin, admin.TabularInline):
     }
     ordering_field_hide_input = True
 
+
 def limit_image_file_queryset(db_field, request, kwargs):
     if db_field.name == "image_file":
         parent_obj = getattr(request, "_obj_", None)
@@ -633,6 +638,7 @@ class DescMetaInline(admin.StackedInline):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         kwargs = limit_image_file_queryset(db_field, request, kwargs)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
 
 class FunFactMetaInline(admin.StackedInline):
     model = FunFactMeta
@@ -795,7 +801,8 @@ def move_portrait_to_accepted(modeladmin, request, queryset):
                 move_portrait_image_file(getattr(portrait, 'inthecitymeta', None), accepted_species)
 
                 # Update audiofiles
-                FaunaportraitAudioFile.objects.filter(species_id=synonym_species.id).update(species_id=accepted_species.id)
+                FaunaportraitAudioFile.objects.filter(species_id=synonym_species.id).update(
+                    species_id=accepted_species.id)
 
 
 def portrait_fieldorder(fields):
@@ -1087,6 +1094,7 @@ class ImageFileAdmin(admin.ModelAdmin):
             self.handle_similar_confirmed(request)
         return super().add_view(request, form_url, extra_context)
 
+
 @admin.register(ImageCrop)
 class ImageCropAdmin(ImageCroppingMixin, admin.ModelAdmin):
     list_display = ['cropped_image']
@@ -1142,3 +1150,8 @@ class LeichtPortraitAdmin(admin.ModelAdmin):
     def goodtoknow_thumb(self, obj):
         image_url = cropped_image(obj.goodtoknow_image.image, cropping=None, size=(100, 100))
         return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
+
+
+@admin.register(EvaluationAuthor)
+class EvaluationAuthorAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'institution']
