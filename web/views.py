@@ -479,6 +479,7 @@ def obs(request, obs_id):
     fauna = is_fauna(s)
     obs_data = {
         "obs_id": obs_id,
+        "obs_id_str": f"{obs_id}",
         "sciname": s.sciname,
         "name": s.engname if language == 'en' else s.gername,
         "additional_names": additional_names,
