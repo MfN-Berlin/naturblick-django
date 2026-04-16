@@ -60,4 +60,4 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
 ]
 
-PLAYBACK_URL="https://staging.naturblick.museumfuernaturkunde.berlin/api/"
+PLAYBACK_URL="https://naturblick.museumfuernaturkunde.berlin/api/"
