@@ -479,7 +479,6 @@ def obs(request, obs_id):
     fauna = is_fauna(s)
     obs_data = {
         "obs_id": obs_id,
-        "obs_id_str": f"{obs_id}",
         "sciname": s.sciname,
         "name": s.engname if language == 'en' else s.gername,
         "additional_names": additional_names,
@@ -491,10 +490,10 @@ def obs(request, obs_id):
     }
 
     if fauna:
-        obs_data["url"] = fauna
-        obs_data["png"] = fauna
+        obs_data["png_url"] = f"/api/projects/observations/{obs_id}/audio.mp4.png"
+        obs_data["mp4_url"] = f"/api/projects/observations/{obs_id}/audio.mp4"
     else:
-        obs_data["url"] = fauna
+        obs_data["jpg_url"] = f"/api/projects/observations/{obs_id}/image.jpg"
 
     return render(request, "partials/obs_popup.html", {
         "obs_data": obs_data
