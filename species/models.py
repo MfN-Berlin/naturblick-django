@@ -486,7 +486,6 @@ class Faunaportrait(Portrait):
     male_description = models.TextField(blank=True, null=True)
     female_description = models.TextField(blank=True, null=True)
     juvenile_description = models.TextField(blank=True, null=True)
-    tracks = models.TextField(blank=True, null=True)  # seems unused
     audio_title = models.CharField(max_length=255, blank=True, null=True)
     faunaportrait_audio_file = models.ForeignKey(FaunaportraitAudioFile, on_delete=models.SET_NULL, null=True,
                                                  blank=True)
@@ -494,7 +493,6 @@ class Faunaportrait(Portrait):
     male_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Männchen."
     female_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Weibchen."
     juvenile_description.help_text = "Kurze Ergänzungen zu abweichenden Merkmalen der Jugendstadien."
-    tracks.help_text = "Kurze Beschreibung zur Bestimmung anhand der Trittsiegel."
 
     def clean(self):
         super().clean()
