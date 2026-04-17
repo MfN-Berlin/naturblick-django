@@ -138,6 +138,28 @@ body {
                     display: inline-block;
                 }
             }
+
+            .matched-species {
+                display: flex;
+                flex-wrap: nowrap;
+                gap: 8px;
+                .bold {
+                    font-weight: var(--font-weight-bold);
+                }
+                .blue {
+                    color: var(--chill);
+                }
+                .italic {
+                    font-style: italic;
+                }
+                > :last-child {
+                    margin-left: auto
+                }
+                div {
+                    display: flex;
+                    flex-direction: column;
+                }
+            }
         }
 
         #faq {
@@ -164,19 +186,5 @@ body {
                 color: var(--chill);
             }
         }
-    }
-
-    footer {
-        background-color: rgba(0, 0, 0, 0.1);
-        .footer-right {
-            color: rgba(255, 255, 255, 0.45);
-        }
-        p a {
-            color: rgba(255, 255, 255, 0.45);
-        }
-    }
-
-    hr {
-        background-color: var(--happy);
     }
 }

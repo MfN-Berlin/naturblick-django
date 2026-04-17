@@ -314,25 +314,3 @@ mark.red {
 mark.gray {
     color: var(--fun);
 }
-
-.matched-species {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 8px;
-    .bold {
-        font-weight: var(--font-weight-bold);
-    }
-    .blue {
-        color: var(--chill);
-    }
-    .italic {
-        font-style: italic;
-    }
-    > :last-child {
-        margin-left: auto
-    }
-    div {
-        display: flex;
-        flex-direction: column;
-    }
-}
