@@ -1,5 +1,7 @@
 import requests
 from django.conf import settings
+from django.http import HttpResponse
+
 
 def audio_proxy(request, obs_id):
     url = f"{settings.PLAYBACK_URL}projects/observations/{obs_id}/audio.mp4"
