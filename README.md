@@ -3,8 +3,11 @@
 This is the CMS for naturblick. We use WSGI/Gunicorn.
 
 ## Shortcut for existing environment:
+To use the postgres DB that can be started via `resources/docker-compose.yaml`, set `DJANGODEV_USE_POSTGRES="true"`
+
 ```
 export DJANGO_ENV="development"
+export DJANGODEV_USE_POSTGRES="false"
 export DJANGO_POSTGRES="species"
 export DJANGO_POSTGRES_USER="naturblick"
 export DJANGO_POSTGRES_PASSWORD="CxxOKzBllAQPnt1qgldN"
