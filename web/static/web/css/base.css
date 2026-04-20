@@ -10,6 +10,7 @@ html {
     "Segoe UI Emoji",
     "Segoe UI Symbol";
     box-sizing: border-box;
+    background-color: var(--footer-white);
 }
 
 *, *:before, *:after {
@@ -24,7 +25,6 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
-    background-color: var(--footer-white);
     font-size: var(--font-size-regular);
     line-height: var(--line-height-regular);
     .main-container {

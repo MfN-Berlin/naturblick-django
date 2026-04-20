@@ -348,7 +348,8 @@ def search_portrait(request):
     is_valid_or_raise(form)
     return render(request, "web/search_portrait.html", {
         "lang": translation.get_language(),
-        "query": form.cleaned_data["query"]
+        "query": form.cleaned_data["query"],
+        "dark": True
     })
 
 

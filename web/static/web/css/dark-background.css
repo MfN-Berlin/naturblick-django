@@ -1,8 +1,7 @@
 
 html {
-    background-image: url("../img/background_grain_opt.png");
+    background-image: url("../img/background_grain_opt_dark.png");
     body {
-        background-color: rgba(0, 0, 0, 0.1);
         .main-container {
             background-image: url("../img/background_grain_opt.png");
         }
