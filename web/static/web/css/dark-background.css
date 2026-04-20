@@ -1,0 +1,19 @@
+
+html {
+    background-image: url("../img/background_grain_opt.png");
+    body {
+        background-color: rgba(0, 0, 0, 0.1);
+        .main-container {
+            background-image: url("../img/background_grain_opt.png");
+        }
+    }
+    footer {
+        color: var(--white);
+        .footer-right {
+            color: rgba(255, 255, 255, 0.45);
+        }
+        p a {
+            color: rgba(255, 255, 255, 0.45);
+        }
+    }
+}

@@ -113,7 +113,7 @@ def map_page(request, obs_id):
 
 def index(request):
     return web_render(request, "index", context={
-        "header_class": "home"
+        "dark": True
     })
 
 
@@ -286,7 +286,7 @@ def portrait(request, id):
 
     return web_render(request, template, context={
         "id": id,
-        "header_class": "portrait",
+        "dark": True,
         "portrait": portrait,
         "descriptions": [x for x in descriptions if x is not None],
         "inthecity": [x for x in [portrait.city_habitat, portrait.human_interaction] if x is not None],
@@ -698,7 +698,8 @@ def map_obs(request, obs_id):
             "is_forschungsfall_nachtigall": is_forschungsfall_nachtigall,
             "confirmation_text": confirmation_text,
             "individuals": data.get("individuals"),
-            "MAP_BOX_KEY": os.getenv('MAP_BOX_KEY')
+            "MAP_BOX_KEY": os.getenv('MAP_BOX_KEY'),
+            "dark": True
         }
 
         if fauna:
