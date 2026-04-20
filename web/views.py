@@ -1,15 +1,16 @@
 from datetime import datetime
+from functools import partial
 
 import requests
-from django.core.handlers.wsgi import WSGIRequest
-from django.core.exceptions import BadRequest
-from django.db.models import Prefetch, Q
 from django import forms
+from django.conf import settings
+from django.core.exceptions import BadRequest
+from django.core.handlers.wsgi import WSGIRequest
+from django.db.models import Prefetch, Q
 from django.http import \
     HttpResponse, \
     HttpResponseNotFound, \
-    JsonResponse, \
-    Http404
+    JsonResponse
 from django.shortcuts import redirect, render
 from django.template import TemplateDoesNotExist
 from django.template.loader import get_template
@@ -17,11 +18,8 @@ from django.urls import reverse
 from django.utils import translation
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
-from django.conf import settings
 
-from functools import partial
-
-from species.models import Species, SpeciesName, Portrait, Floraportrait, Faunaportrait, Tag
+from species.models import Species, SpeciesName, Portrait, Floraportrait, Faunaportrait, Tag, EvaluationAuthor
 
 
 class Og:
@@ -105,7 +103,7 @@ def map_page(request, obs_id):
                                f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/audio.mp4"))
 
         ogs_list.append(Og("og:description",
-                           seen_by(cc_name, date, coords)))
+                           seen_by(cc_name, date, coords[1], coords[0])))
     except:
         pass
 
@@ -149,7 +147,6 @@ def source_from_image(meta):
     return (f'{meta.text}, {meta.image_file.owner}, {meta.image_file.license}, {meta.image_file.source}')
 
 
-
 def sims(language, similar_species):
     return {
         "name": similar_species.species.engname if language == "en" else similar_species.species.gername,
@@ -167,34 +164,58 @@ def endangerstatus(species, language):
     if language == "en":
         endangervalue = "Endangerment level Germany: <mark class=\""
         match species.red_list_germany:
-            case 'gefahrdet':  endangervalue += 'orange\">endangered</mark>'
-            case 'Vorwarnliste':  endangervalue += 'orange\"Warning list</mark>'
-            case 'ausgestorbenOderVerschollen':  endangervalue += 'red\"extinct or missing</mark>'
-            case 'vomAussterbenBedroht':  endangervalue += 'red\"threatened with extinction</mark>'
-            case 'starkGefahrdet':  endangervalue += 'red\"severely endangered</mark>'
-            case 'GefahrdungUnbekanntenAusmasses':  endangervalue += 'gray\"endangerment unknown</mark>'
-            case 'extremSelten':  endangervalue += 'orange\"extremly rare</mark>'
-            case 'DatenUnzureichend':  endangervalue += 'gray\"insufficient data available</mark>'
-            case 'ungefahrdet':  endangervalue += 'green\"not endangered</mark>'
-            case 'nichtBewertet':  endangervalue += 'gray\"not evaluated</mark>'
-            case 'keinNachweis':  endangervalue += 'gray\"no proof</mark>'
-            case _: return None
+            case 'gefahrdet':
+                endangervalue += 'orange\">endangered</mark>'
+            case 'Vorwarnliste':
+                endangervalue += 'orange\"Warning list</mark>'
+            case 'ausgestorbenOderVerschollen':
+                endangervalue += 'red\"extinct or missing</mark>'
+            case 'vomAussterbenBedroht':
+                endangervalue += 'red\"threatened with extinction</mark>'
+            case 'starkGefahrdet':
+                endangervalue += 'red\"severely endangered</mark>'
+            case 'GefahrdungUnbekanntenAusmasses':
+                endangervalue += 'gray\"endangerment unknown</mark>'
+            case 'extremSelten':
+                endangervalue += 'orange\"extremly rare</mark>'
+            case 'DatenUnzureichend':
+                endangervalue += 'gray\"insufficient data available</mark>'
+            case 'ungefahrdet':
+                endangervalue += 'green\"not endangered</mark>'
+            case 'nichtBewertet':
+                endangervalue += 'gray\"not evaluated</mark>'
+            case 'keinNachweis':
+                endangervalue += 'gray\"no proof</mark>'
+            case _:
+                return None
         return mark_safe(endangervalue)
     else:
         endangervalue = "Gefährdungsstatus Deutschland: <mark class=\""
         match species.red_list_germany:
-            case 'gefahrdet':  endangervalue += 'orange\">gefährdet</mark>'
-            case 'Vorwarnliste':  endangervalue += 'orange\">Vorwarnliste</mark>'
-            case 'ausgestorbenOderVerschollen':  endangervalue += 'red\">ausgestorben oder verschollen</mark>'
-            case 'vomAussterbenBedroht':  endangervalue += 'red\">vom Aussterben bedroht</mark>'
-            case 'starkGefahrdet':  endangervalue += 'red\">stark gefährdet</mark>'
-            case 'GefahrdungUnbekanntenAusmasses':  endangervalue += 'gray\">Gefährdung unbekannten Ausmasses</mark>'
-            case 'extremSelten':  endangervalue += 'orange\">extrem selten</mark>'
-            case 'DatenUnzureichend':  endangervalue += 'gray\">Daten unzureichend</mark>'
-            case 'ungefahrdet':  endangervalue += 'green\">nicht gefährdet</mark>'
-            case 'nichtBewertet':  endangervalue += 'gray\">nicht bewertet</mark>'
-            case 'keinNachweis':  endangervalue += 'gray\">kein Nachweis</mark>'
-            case _: return None
+            case 'gefahrdet':
+                endangervalue += 'orange\">gefährdet</mark>'
+            case 'Vorwarnliste':
+                endangervalue += 'orange\">Vorwarnliste</mark>'
+            case 'ausgestorbenOderVerschollen':
+                endangervalue += 'red\">ausgestorben oder verschollen</mark>'
+            case 'vomAussterbenBedroht':
+                endangervalue += 'red\">vom Aussterben bedroht</mark>'
+            case 'starkGefahrdet':
+                endangervalue += 'red\">stark gefährdet</mark>'
+            case 'GefahrdungUnbekanntenAusmasses':
+                endangervalue += 'gray\">Gefährdung unbekannten Ausmasses</mark>'
+            case 'extremSelten':
+                endangervalue += 'orange\">extrem selten</mark>'
+            case 'DatenUnzureichend':
+                endangervalue += 'gray\">Daten unzureichend</mark>'
+            case 'ungefahrdet':
+                endangervalue += 'green\">nicht gefährdet</mark>'
+            case 'nichtBewertet':
+                endangervalue += 'gray\">nicht bewertet</mark>'
+            case 'keinNachweis':
+                endangervalue += 'gray\">kein Nachweis</mark>'
+            case _:
+                return None
         return mark_safe(endangervalue)
 
 
@@ -206,7 +227,7 @@ def portrait(request, id):
     try:
         species = Species.objects.get(id=id)
     except Species.DoesNotExist:
-        return  HttpResponseNotFound("This species does not exist")
+        return HttpResponseNotFound("This species does not exist")
 
     fauna = is_fauna(species)
     objects = Faunaportrait.objects if fauna else Floraportrait.objects
@@ -229,9 +250,14 @@ def portrait(request, id):
             .get(species_id=id, language=language)
         )
     except:
-        return  HttpResponseNotFound("This portrait does not exist")
+        return HttpResponseNotFound("This portrait does not exist")
 
-    descriptions = [portrait.short_description, portrait.male_description, portrait.female_description, portrait.juvenile_description] if is_fauna else [portrait.short_description, portrait.leaf_description, portrait.stem_axis_description, portrait.flower_description, portrait.fruit_description]
+    descriptions = [portrait.short_description, portrait.male_description, portrait.female_description,
+                    portrait.juvenile_description] if is_fauna else [portrait.short_description,
+                                                                     portrait.leaf_description,
+                                                                     portrait.stem_axis_description,
+                                                                     portrait.flower_description,
+                                                                     portrait.fruit_description]
 
     sources = [source_from_image(portrait.descmeta)]
     if hasattr(portrait, "inthecitymeta"):
@@ -261,7 +287,7 @@ def portrait(request, id):
         "id": id,
         "header_class": "portrait",
         "portrait": portrait,
-        "descriptions": [ x for x in descriptions if x is not None],
+        "descriptions": [x for x in descriptions if x is not None],
         "inthecity": [x for x in [portrait.city_habitat, portrait.human_interaction] if x is not None],
         "goodtoknows": goodtoknows,
         "sources": sources,
@@ -299,9 +325,11 @@ def filter_species_tags(species_qs, tags):
         return species_qs
     return species_qs.filter(tag__in=tags)
 
+
 def is_valid_or_raise(form):
     if not form.is_valid():
-        raise BadRequest(' '.join([ "{}: {}".format(k, ' '.join(v)) for k, v in form.errors.items()]))
+        raise BadRequest(' '.join(["{}: {}".format(k, ' '.join(v)) for k, v in form.errors.items()]))
+
 
 class SpeciesSearchForm(forms.Form):
     query = forms.CharField(max_length=64, required=False)
@@ -313,6 +341,7 @@ class SpeciesSearchForm(forms.Form):
     offset = forms.IntegerField(required=False)
     limit = forms.IntegerField(required=False)
 
+
 def search_portrait(request):
     form = SpeciesSearchForm(request.GET)
     is_valid_or_raise(form)
@@ -320,6 +349,7 @@ def search_portrait(request):
         "lang": translation.get_language(),
         "query": form.cleaned_data["query"]
     })
+
 
 def search_portrait_data(request):
     lang = translation.get_language()
@@ -335,18 +365,18 @@ def search_portrait_data(request):
     limit = form.cleaned_data["limit"] or 64
 
     species_qs = (Species.objects.select_related('avatar_new', 'group')
-        .prefetch_related(
-            Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang).order_by('name'),
-                     to_attr="prefetched_speciesnames"),
-            Prefetch(
-                "portrait_set", to_attr="prefetched_portraits"
-            )
-        ))
+    .prefetch_related(
+        Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang).order_by('name'),
+                 to_attr="prefetched_speciesnames"),
+        Prefetch(
+            "portrait_set", to_attr="prefetched_portraits"
+        )
+    ))
     species_qs = filter_species_by_query(species_qs, query, lang)
     species_qs = filter_species_tags(species_qs, tags)
     species_qs = species_qs.filter(
-            Q(avatar_new__isnull=False) & Q(portrait__language=lang) & Q(portrait__published=True) & Q(
-                portrait__descmeta__image_file__isnull=False))
+        Q(avatar_new__isnull=False) & Q(portrait__language=lang) & Q(portrait__published=True) & Q(
+            portrait__descmeta__image_file__isnull=False))
 
     species = [
         (
@@ -359,7 +389,9 @@ def search_portrait_data(request):
             s.sciname
         ) for s in species_qs.distinct().order_by(order_by)[offset:(offset + limit)]
     ]
-    return render(request, "web/search_portrait_data.html", {"species": species, "more": len(species) == limit, "lang": lang})
+    return render(request, "web/search_portrait_data.html",
+                  {"species": species, "more": len(species) == limit, "lang": lang})
+
 
 def mobileapp(request):
     return web_render(request, "mobileapp")
@@ -419,8 +451,8 @@ def og_url(request):
     return f'{request.get_host()}{request.get_full_path().replace("/index", "")}'
 
 
-def seen_by(user, date, coords):
-    return _("Gesehen von {user} am {date} in {coords}").format(user=user, date=date, coords=coords)
+def seen_by(user, date, lat, lon):
+    return _("Gesehen von {user} am {date} in [{lat} {lon}]").format(user=user, date=date, lat=lat, lon=lon)
 
 
 def add_image_ogs(request, ogs_list, image):
@@ -458,11 +490,13 @@ def to_geojson_view(source):
 
     return JsonResponse(geojson)
 
+
 def map_proxy(request):
     r = requests.get(
         f"{settings.PLAYBACK_URL}projects/map"
     )
     return to_geojson_view(r.json())
+
 
 def obs(request, obs_id):
     language = translation.get_language()
@@ -474,7 +508,7 @@ def obs(request, obs_id):
     date = date_time.strftime("%d.%m.%Y")
     coords = json["data"]["coords"]["coordinates"]
     additional_names = ", ".join(
-        s.speciesname_set.filter(language=language).values_list("name",flat=True))
+        s.speciesname_set.filter(language=language).values_list("name", flat=True))
 
     fauna = is_fauna(s)
     obs_data = {
@@ -499,5 +533,194 @@ def obs(request, obs_id):
         "obs_data": obs_data
     })
 
+
+def nightingaleproject(request):
+    return web_render(request, "nightingaleproject")
+
+
+def plausibility(within_timeframe, within_range):
+    if within_timeframe and within_range:
+        return _("Diese Beobachtung ist plausibel.")
+    elif within_timeframe or within_range:
+        return _("Diese Beobachtung ist teilweise plausibel.")
+    else:
+        return _("Diese Beobachtung ist nicht plausibel.")
+
+
+def assessment_text(assessment):
+    if assessment is None:
+        return _("Es hat noch kein:e Expert:in die Beobachtung angesehen.")
+    elif assessment == "true":
+        return _("Ein:e Expert:in konnte die Bestimmung bestätigen.")
+    elif assessment == "uncertain_true":
+        return _(
+            "Ein:e Expert:in konnte die Artbestimmung nicht sicher bestätigen, hält sie aber für wahrscheinlich richtig.")
+    elif assessment == "uncertain_false":
+        return _(
+            "Ein:e Expert:in konnte die Artbestimmung nicht sicher ausschließen, hält sie aber für wahrscheinlich falsch.")
+    elif assessment == "impossible":
+        return _("Ein:e Expert:in ist sich nach Sichtung des Mediums nicht sicher.")
+    else:
+        raise ValueError(f"Unexpected assessment value: {assessment}")
+
+
+def species_matching_score(species, score):
+    return {
+        "name": species.engname if translation.get_language() == "en" else species.gername,
+        "sciname": species.sciname,
+        "score": score
+    }
+
+
+def confirmation(assessment, pattern_matching_executed, pattern_matching_confirmed, pattern_matching_medium) -> str:
+    if assessment is None:
+        if pattern_matching_confirmed:
+            return _("Dieser Artzuordnung wurde teilweise zugestimmt.")
+        elif not pattern_matching_executed:
+            return _("Diese Artzuordnung wurde noch nicht angesehen.")
+        else:
+            return _("Diese Artzuordnung kann nicht sicher eingeschätzt werden.")
+
+    elif assessment == "true":
+        if (
+                pattern_matching_confirmed
+                or pattern_matching_medium
+        ):
+            return _("Dieser Artzuordnung wurde zugestimmt.")
+        else:
+            return _("Dieser Artzuordnung wurde teilweise zugestimmt.")
+
+    elif assessment in ("uncertain_true", "uncertain_false", "impossible"):
+        if pattern_matching_confirmed:
+            return _("Dieser Artzuordnung wurde teilweise zugestimmt.")
+        else:
+            return _("Diese Artzuordnung kann nicht sicher eingeschätzt werden.")
+    return _("Dieser Artzuordnung wurde zugestimmt.")
+
+
 def map_obs(request, obs_id):
-    return HttpResponse(f"<h1>{obs_id}</h1>")
+    try:
+        data = requests.get(
+            f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}").json().get("data")
+        species_id = data.get("species")
+        species = Species.objects.filter(id=species_id).first()
+        cc_name = data.get("ccName")
+        language = translation.get_language()
+        date_time = datetime.fromisoformat(data.get("dateTime"))
+        date = date_time.strftime("%d.%m.%Y")
+        coords = data.get("coords").get("coordinates")
+
+        fauna = is_fauna(species)
+        objects = Faunaportrait.objects if fauna else Floraportrait.objects
+        additional_names = ", ".join(
+            species.speciesname_set.filter(language=language).values_list("name", flat=True))
+
+        within_range = data.get("withinRange")
+        within_timeframe = data.get("withinTimeframe")
+        plausibility_author_id = data.get("plausibilityAuthor")
+        pattern_matching_executed = data.get("patternMatchingExecuted")
+
+        is_forschungsfall_nachtigall = True if len(data.get("projects")) > 0 and data.get("projects")[0] == 1 else False
+
+        assessment_author_id = data.get("assessmentAuthor")
+        assessment = data.get("assessment")
+        suggested_species = data.get("suggestedSpecies")  # [['bird_...', 99], [...], [...] ]
+
+        pattern_matching_confirmed = suggested_species[0][0] == species.speciesid if suggested_species and len(
+            suggested_species) > 0 else False
+        pattern_matching_medium = suggested_species[1][0] == species.speciesid if suggested_species and len(
+            suggested_species) > 1 else False
+
+        matched_species = []
+        if suggested_species:
+            matched_species = [species_matching_score(Species.objects.filter(speciesid=s[0]).first(), round(s[1]))
+                               for s in suggested_species
+                               ]
+
+        portrait = (
+            objects
+            .select_related(
+                "descmeta",
+                "inthecitymeta",
+                "funfactmeta",
+            )
+            .prefetch_related(
+                "goodtoknow_set",
+                "source_set",
+                "unambigousfeature_set",
+                "similarspecies_set__species__avatar_new__imagefile",
+            )
+            .get(species_id=species.id, language=language)
+        )
+
+        p_author = EvaluationAuthor.objects.get(id=plausibility_author_id)
+        plausibility_author_text = f"{p_author.name}, {p_author.institution}"
+
+        pattern_matching_text = pattern_matching(pattern_matching_confirmed, pattern_matching_executed,
+                                                 pattern_matching_medium, species)
+
+        a_author = EvaluationAuthor.objects.get(id=assessment_author_id) if assessment_author_id else None
+        assessment_author_text = f"{a_author.name}, {a_author.institution}" if a_author else None
+        confirmation_text = confirmation(assessment, pattern_matching_executed, pattern_matching_confirmed,
+                                             pattern_matching_medium) if assessment else None
+
+        obs_detail_data = {
+            "obs_id": obs_id,
+            "group": species.group,
+            "cc_name": cc_name,
+            "date": date,
+            "date_time": date_time,
+            "name": species.engname if language == 'en' else species.gername,
+            "sciname": species.sciname,
+            "species_avatar": species.avatar_new.imagefile.image.url,
+            "species_id": species.id,
+            "portrait_audio_url": portrait.faunaportrait_audio_file.audio_file.url if fauna else None,
+            "is_fauna": fauna,
+            "additional_names": additional_names,
+            "seen_by": seen_by(cc_name, date, coords[1], coords[0]),
+            "within_range": _("Sie liegt im Verbreitungsgebiet.") if within_range else _(
+                "Sie liegt nicht im Verbreitungsgebiet."),
+            "plausibility": plausibility(within_timeframe, within_range),
+            "within_timeframe": _("Sie wurde im Aktivitätszeitraum gemacht.") if within_timeframe else _(
+                "Sie wurde nicht im Aktivitätszeitraum gemacht."),
+            "plausibility_author_text": plausibility_author_text,
+            "assessment_author_text": assessment_author_text,
+            "coords": coords,
+            "assessment_text": assessment_text(assessment),
+            "assessment": assessment,
+            "matched_species": matched_species,
+            "pattern_matching_confirmed": pattern_matching_confirmed,
+            "pattern_matching_medium": pattern_matching_medium,
+            "pattern_matching_text": pattern_matching_text,
+            "pattern_matching_executed": pattern_matching_executed,
+            "is_forschungsfall_nachtigall": is_forschungsfall_nachtigall,
+            "confirmation_text": confirmation_text,
+            "individuals": data.get("individuals")
+        }
+
+        if fauna:
+            obs_detail_data["png_url"] = f"/api/projects/observations/{obs_id}/audio.mp4.png"
+            obs_detail_data["mp4_url"] = f"/api/projects/observations/{obs_id}/audio.mp4"
+        else:
+            obs_detail_data["jpg_url"] = f"/api/projects/observations/{obs_id}/image.jpg"
+
+        return web_render(request, "obs_detail", obs_detail_data)
+    except:
+        pass
+
+
+def pattern_matching(pattern_matching_confirmed, pattern_matching_executed,
+                     pattern_matching_medium, species) -> str:
+    if not pattern_matching_executed:
+        pattern_matching_text = _("Es wurde keine Mustererkennung durchgeführt.")
+    else:
+        if pattern_matching_confirmed:
+            pattern_matching_text = species.engname if translation.get_language() == "en" else species.gername + _(
+                " hatte die größte Übereinstimmung mit dem trainierten Vergleichsmaterial der Mustererkennung.")
+        elif pattern_matching_medium:
+            pattern_matching_text = _(
+                "Die Art war unter den drei Arten mit der größten Übereinstimmung mit dem trainierten Vergleichsmaterial der Mustererkennung.")
+        else:
+            pattern_matching_text = _(
+                "Die Art war nicht unter den drei Arten mit der größten Übereinstimmung mit dem trainierten Vergleichsmaterial der Mustererkennung.")
+    return pattern_matching_text

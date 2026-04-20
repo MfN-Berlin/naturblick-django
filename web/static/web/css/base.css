@@ -175,7 +175,6 @@ main {
         height: auto;
         border-radius: 8px;
         box-shadow: var(--shadow);
-        margin-bottom: 32px;
     }
 }
 
@@ -263,6 +262,11 @@ h2 {
 h3 {
     font-size: var(--font-size-h3);
     line-height: var(--line-height-h3);
+}
+
+h4 {
+    font-size: var(--font-size-h4);
+    line-height: var(--line-height-h4);
 }
 
 h5 {

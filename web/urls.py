@@ -4,6 +4,7 @@ from web import views
 
 urlpatterns = [
     path("dev", views.index, name="index"),
+    path("dev/communities/nightingaleproject", views.nightingaleproject, name="nightingaleproject"),
     path("dev/map/observation/<int:obs_id>", views.map_obs, name="map_obs"),
     path("dev/map_proxy", views.map_proxy, name="map_proxy"),
     path("dev/obs/<int:obs_id>", views.obs, name="obs"),

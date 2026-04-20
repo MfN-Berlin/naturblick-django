@@ -4,7 +4,7 @@
     border-radius: 8px;
     padding: 16px;
     box-shadow: var(--shadow);
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     margin-bottom: 8px;
 
     audio {
@@ -78,4 +78,9 @@
         line-height: var(--line-height-super-small);
         opacity: .5;
     }
+}
+
+.audio_small {
+    display: flex;
+    flex-direction: row;
 }
