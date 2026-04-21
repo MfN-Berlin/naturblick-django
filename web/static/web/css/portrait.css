@@ -1,6 +1,4 @@
 header {
-    background-image: url("../img/background_grain_opt.png");
-
     p:first-of-type {
         color: var(--happy);
         font-weight: 900;
@@ -17,18 +15,7 @@ header {
 }
 
 body {
-    background-image: url("../img/background_grain_opt.png");
     color: white;
-
-    footer {
-        background-color: rgba(0, 0, 0, 0.1);
-        .footer-right {
-            color: rgba(255, 255, 255, 0.45);
-        }
-        p a {
-            color: rgba(255, 255, 255, 0.45);
-        }
-    }
 
     main {
         max-width: 1400px;
