@@ -253,7 +253,7 @@ def portrait(request, id):
         return HttpResponseNotFound("This portrait does not exist")
 
     descriptions = [portrait.short_description, portrait.male_description, portrait.female_description,
-                    portrait.juvenile_description] if is_fauna else [portrait.short_description,
+                    portrait.juvenile_description] if fauna else [portrait.short_description,
                                                                      portrait.leaf_description,
                                                                      portrait.stem_axis_description,
                                                                      portrait.flower_description,
@@ -281,7 +281,7 @@ def portrait(request, id):
         "licence": portrait.faunaportrait_audio_file.license,
         "url": portrait.faunaportrait_audio_file.audio_file.url,
         "png": f"{portrait.faunaportrait_audio_file.audio_file.url.replace("audio_files", "spectrogram_images")}.png"
-    } if is_fauna and portrait.faunaportrait_audio_file else None
+    } if fauna and portrait.faunaportrait_audio_file else None
 
     return render(request, "web/portrait.html", context={
         "id": id,
