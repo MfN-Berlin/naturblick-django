@@ -13,12 +13,15 @@ header {
    .top-right a, .top-right > details {
         background-color: rgba(0, 0, 0, 0.6);
    }
-}
 
-.header-title {
-    p {
-        display: var(--home-display-header-title-p)
-    }
+   .header-title {
+       padding-top: 0px;
+       padding-bottom: 0px;
+       p {
+           display: var(--home-display-header-title-p)
+       }
+   }
+
 }
 
 body {

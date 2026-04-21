@@ -14,7 +14,8 @@
   --max-columns: 4;
 
   --menu-height: 40px;
-
+  --header-title-top-padding: 96px;
+  --header-title-bottom-padding: 64px;
 
   /* TODO: Fixed or device dependent? */
   --font-size-regular-no-zoom: 16px;
@@ -109,6 +110,9 @@
 
         --max-columns: 2;
         --menu-height: 40px;
+
+        --header-title-top-padding: 48px;
+        --header-title-bottom-padding: 32px;
     }
 }
 
@@ -129,5 +133,8 @@
 
         --max-columns: 1;
         --menu-height: 34px;
+
+        --header-title-top-padding: 32px;
+        --header-title-bottom-padding: 24px;
     }
 }
