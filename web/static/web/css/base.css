@@ -10,6 +10,7 @@ html {
     "Segoe UI Emoji",
     "Segoe UI Symbol";
     box-sizing: border-box;
+    background-color: var(--footer-white);
 }
 
 *, *:before, *:after {
@@ -24,9 +25,13 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
-
     font-size: var(--font-size-regular);
     line-height: var(--line-height-regular);
+    .main-container {
+        background-color: var(--white);
+        padding-bottom: 32px;
+        padding-top: 32px;
+    }
 }
 
 
@@ -139,8 +144,7 @@ header {
     
     .header-title {
         width: 100%;
-        max-width: 768px;
-        margin: 0 auto;
+        margin: 32px auto 0 auto;
         h1 p {
             font-size: var(--font-size-small);
             line-height: var(--line-height-small);
@@ -180,7 +184,9 @@ main {
 
 footer {
     padding: 32px;
-    background-color: var(--footer-white);
+    width: 100%;
+    max-width: 1400px;
+    margin: 32px auto 0 auto;
 
     display: flex;
 

@@ -1,7 +1,3 @@
-body {
-    background-image: url("../img/background_grain_opt.png");
-}
-
 main {
     color: var(--white);
     padding-top: 0px;

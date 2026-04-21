@@ -16,6 +16,9 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'web/css/variables.css' %}">
     <link rel="stylesheet" href="{% static 'web/css/base.css' %}">
+    {% if dark %}
+    <link rel="stylesheet" href="{% static 'web/css/dark-background.css' %}">
+    {% endif %}
     {% block css %}{% endblock %}
 
     <script src="{% static 'web/js/web.js' %}"></script>
@@ -58,8 +61,10 @@
       </div>
     </div>
     {% block img %}{% endblock %}
-</header>
-{% block content %}{% endblock %}
+  </header>
+  <div class="main-container">
+    {% block content %}{% endblock %}
+  </div>
 {% block footer %}
 <footer>
     <div>
@@ -75,7 +80,7 @@
             Naturblick 2020<br>
             Museum für Naturkunde Berlin
         </div>
-        {% if header_class %}
+        {% if dark %}
         <img src="{% static 'footer_mfnlogo_inverted.svg' %}">
         {% else %}
         <img src="{% static 'footer_mfnlogo.svg' %}">

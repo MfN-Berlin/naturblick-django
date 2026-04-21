@@ -1,9 +1,9 @@
 body {
     height: 100vh;
-}
-
-header {
-    padding-bottom: 16px;
+    .main-container {
+        height: 100vh;
+        padding: 0;
+    }
 }
 
 .map {
