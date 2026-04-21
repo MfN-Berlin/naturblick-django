@@ -1,23 +1,27 @@
 :root {
+  /* Device dependent (desktop defaults) */
   --font-size-jumbo: 60px; /* 40/ 45 on not tablet/ desktop */
   --line-height-jumbo: 60px;
 
-  --default-font-zoom: 1;
-  --zoomed-font-zoom: 1.5;
+  --home-button-vertical-pad: 17px;
+  --home-button-horizontal-pad: 24px;
+  --home-button-text-display: block;
+  --home-button-text-margin: 8px;
+  --home-display-header-title-p: block;
 
-  --font-zoom: var(--default-font-zoom);
+  --default-pad: 32px;
+  --gutterwidth: 32px;
+  --max-columns: 4;
 
+  --menu-height: 40px;
+
+
+  /* TODO: Fixed or device dependent? */
   --font-size-regular-no-zoom: 16px;
   --line-height-regular-no-zoom: 24px;
 
-  --font-size-regular: calc(var(--font-size-regular-no-zoom) * var(--font-zoom));
-  --line-height-regular: calc(var(--line-height-regular-no-zoom) * var(--font-zoom));
-
   --font-size-big-no-zoom: 19px;
   --line-height-big-no-zoom: 27px;
-
-  --font-size-big: calc(var(--font-size-big-no-zoom) * var(--font-zoom));
-  --line-height-big: calc(var(--line-height-big-no-zoom) * var(--font-zoom));
 
   --font-size-small-no-zoom: 14px;
   --line-height-small-no-zoom: 20px;
@@ -25,13 +29,6 @@
   --font-size-super-small: 12px;
   --line-height-super-small: 16px;
 
-  --font-size-small: calc(var(--font-size-small-no-zoom) * var(--font-zoom));
-  --line-height-small: calc(var(--line-height-small-no-zoom) * var(--font-zoom));
-
-  --zoomed-color: inherit;
-  --unzoomed-color: #ccc;
-
-  --gutterwidth: 32px;
 
   --font-size-h1: 36px;
   --line-height-h1: 40px;
@@ -48,33 +45,89 @@
   --font-size-h5: 19px;
   --line-height-h5: 27px;
 
+  /* Derived */
+  --default-font-zoom: 1;
+  --zoomed-font-zoom: 1.5;
+  --font-zoom: var(--default-font-zoom);
+
+  --font-size-regular: calc(var(--font-size-regular-no-zoom) * var(--font-zoom));
+  --line-height-regular: calc(var(--line-height-regular-no-zoom) * var(--font-zoom));
+
+  --font-size-big: calc(var(--font-size-big-no-zoom) * var(--font-zoom));
+  --line-height-big: calc(var(--line-height-big-no-zoom) * var(--font-zoom));
+
+  --font-size-small: calc(var(--font-size-small-no-zoom) * var(--font-zoom));
+  --line-height-small: calc(var(--line-height-small-no-zoom) * var(--font-zoom));
+
+  /* Fixed */
+  --zoomed-color: inherit;
+  --unzoomed-color: #ccc;
   --white: #fff;
   --footer-white: #fbfbfb;
-  /* --light: #e9eaeb; */
   --light-grey: #d1d1d1;
   --grey: #a9a9a9;
- /* --dark: #414d54; */
   --black: #27313c;
 
  --peace: #98bc00;
   --happy: #ffcf4a;
  --fun: #ffb546;
- /* --dark-fun: #dc9a35; */
  --stress: #ff7600;
  --pain: #cb4f4f;
 
   --mild: #edf4f8;
   --chill: #3bb4e7;
   --relax: #2f99c6;
- /* --sleep: #12466a; */
 
-    --shadow: 0 10px 15px -3px rgba(0,0,0,.1),
-          0 4px 6px -2px rgba(0,0,0,.05),
-          0 -2px 8px 0 rgba(79,79,79,.05);
+  --shadow: 0 10px 15px -3px rgba(0,0,0,.1),
+            0 4px 6px -2px rgba(0,0,0,.05),
+            0 -2px 8px 0 rgba(79,79,79,.05);
 
-    --shadow-hover: 0 12px 18px -3px rgba(0,0,0,.25),
-                0 4px 6px -2px rgba(0,0,0,.07),
-                0 -2px 10px 0 rgba(81,81,81,.1);
+  --shadow-hover: 0 12px 18px -3px rgba(0,0,0,.25),
+                  0 4px 6px -2px rgba(0,0,0,.07),
+                  0 -2px 10px 0 rgba(81,81,81,.1);
 
-    --font-weight-bold: 700;
+  --font-weight-bold: 700;
+  --tablet-min: 768px;
+
+}
+
+
+/* Tablet */
+@media (max-width: 1024px) {
+    :root {
+        --font-size-jumbo: 40px;
+        --line-height-jumbo: 45px;
+
+        --home-button-vertical-pad: 12px;
+        --home-button-horizontal-pad: 18px;
+        --home-button-text-display: block;
+        --home-button-text-margin: 8px;
+        --home-display-header-title-p: block;
+
+        --default-pad: 24px;
+        --gutterwidth: 24px;
+
+        --max-columns: 2;
+        --menu-height: 40px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    :root {
+        --font-size-jumbo: 20px;
+        --line-height-jumbo: 25px;
+
+        --home-button-vertical-pad: 9px;
+        --home-button-horizontal-pad: 12px;
+        --home-button-text-display: none;
+        --home-button-text-margin: 0;
+        --home-display-header-title-p: none;
+
+        --default-pad: 16px;
+        --gutterwidth: 16px;
+
+        --max-columns: 1;
+        --menu-height: 34px;
+    }
 }

@@ -29,8 +29,8 @@ body {
     line-height: var(--line-height-regular);
     .main-container {
         background-color: var(--white);
-        padding-bottom: 32px;
-        padding-top: 32px;
+        padding-bottom: var(--default-pad);
+        padding-top: var(--default-pad);
     }
 }
 
@@ -51,7 +51,7 @@ header {
         width: 100%;
         max-width: 1400px;
         margin: 0 auto;
-        padding: 32px 32px 0 32px;
+        padding: var(--default-pad) var(--default-pad) 0 var(--default-pad);
         display: flex;
         flex-direction: row;
         align-items: start;
@@ -112,11 +112,12 @@ header {
 
         }        
         .top-right {
+            margin-left: var(--default-pad);
             display: flex;
             flex-flow: row-reverse wrap;
-            gap: 10px;
+            gap: calc(var(--menu-height) / 4);
             > a, > details {
-                height: 40px;
+                height: var(--menu-height);
             }
             .initial-zoomed {
                 color: var(--zoomed-color);
@@ -130,13 +131,17 @@ header {
         }
         
         .top-left {
-            padding: 17px 24px;
-            font-size: var(--font-size-big);
-            line-height: var(--font-size-big);
-            font-weight: 900;        
+            padding: var(--home-button-vertical-pad) var(--home-button-horizontal-pad);
+            p {
+                font-size: var(--font-size-big);
+                line-height: var(--font-size-big);
+                margin: 0;
+                font-weight: 900;
+                display: var(--home-button-text-display);
+            }
             img {
                 height: 19px;
-                margin: 0 8px 0 0;
+                margin: 0 var( --home-button-text-margin) 0 0;
             }
         }
 
@@ -144,7 +149,6 @@ header {
     
     .header-title {
         width: 100%;
-        margin: 32px auto 0 auto;
         h1 p {
             font-size: var(--font-size-small);
             line-height: var(--line-height-small);
@@ -170,7 +174,7 @@ header {
 
 main {
     flex: 1;
-    padding: 32px;
+    padding: var(--default-pad);
     margin: 0 auto;
 
     img {
@@ -183,10 +187,10 @@ main {
 }
 
 footer {
-    padding: 32px;
+    padding: var(--default-pad);
     width: 100%;
     max-width: 1400px;
-    margin: 32px auto 0 auto;
+    margin: var(--default-pad) auto 0 auto;
 
     display: flex;
 
@@ -221,7 +225,7 @@ hr {
     border: none;
     margin: 64px auto;
     margin-top: 48px;
-    margin-bottom: 32px;
+    margin-bottom: var(--default-pad);
     background-color: var(--relax);
 }
 
@@ -235,14 +239,14 @@ svg {
     display: grid;
     column-gap: var(--gutterwidth);
     row-gap: var(--gutterwidth);
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(min(var(--max-columns),3), 1fr);
 }
 
 .columns-2 {
     display: grid;
     column-gap: var(--gutterwidth);
     row-gap: var(--gutterwidth);
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(min(var(--max-columns),2), 1fr);
 }
 
 .text-container {

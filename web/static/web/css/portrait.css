@@ -27,7 +27,7 @@ body {
         padding: 0;
 
         > section {
-            padding: 75px 75px 32px;
+            padding: 75px 75px var(--default-pad);
             h2:first-of-type {
               margin-top: 0;
             }
@@ -36,14 +36,14 @@ body {
         > section.grid-1-2 {
             display: grid;
             column-gap: 64px;
-            row-gap: 32px;
+            row-gap: var(--default-pad);
             grid-template-columns: 1fr 2fr;
         }
 
         > section.grid-2-1 {
             display: grid;
             column-gap: 64px;
-            row-gap: 32px;
+            row-gap: var(--default-pad);
             grid-template-columns: 2fr 1fr;
         }
 

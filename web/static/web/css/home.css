@@ -11,11 +11,14 @@ header {
     top: 0;
 
    .top-right a, .top-right > details {
-        background-color: rgba(0, 0, 0, 0.4);
+        background-color: rgba(0, 0, 0, 0.6);
    }
-   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0 , 0, 0));
-   background-size: auto 72px;
-   background-repeat: no-repeat;
+}
+
+.header-title {
+    p {
+        display: var(--home-display-header-title-p)
+    }
 }
 
 body {

@@ -49,7 +49,7 @@ main {
         display: flex;
         align-items: flex-end;
         justify-content: center;
-        padding-bottom: 32px;
+        padding-bottom: var(--default-pad);
         label {
             display: flex;
             margin-right: 16px;

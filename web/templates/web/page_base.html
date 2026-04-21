@@ -5,6 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{% block title %}{% endblock %}</title>
     <base href="/">
     <link rel="icon" href="{% static 'favicon.ico' %}">
@@ -29,7 +30,7 @@
       <div class="top-bar">
         <a class="top-left" href="{% url 'index' %}{% querystring %}">
           <img src="{% static 'logo.svg' %}">
-          Naturblick
+          <p>Naturblick</p>
         </a>
         <div class="top-right">
           <details>
