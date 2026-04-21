@@ -14,22 +14,22 @@
         </div>
     </div>
 
-        {% if obs_data.is_fauna %}
-        <div id="obs_popup-fauna-main">
-            {% with title="Gehört am "|add:obs_data.date|add:" von "|add:obs_data.cc_name licence='<a href="https://creativecommons.org/licenses/by/4.0/">CC BY-SA 4.0</a> '|add:obs_data.cc_name %}
-            {% include "partials/audio.html" with title=title licence=licence png=obs_data.png_url url=obs_data.mp4_url %}
-            {% endwith %}
+    {% if obs_data.is_fauna %}
+    <div id="obs_popup-fauna-main">
+        {% with title="Gehört am "|add:obs_data.date|add:" von "|add:obs_data.cc_name|add:" in __PLACE__" licence='<a href="https://creativecommons.org/licenses/by/4.0/">CC BY-SA 4.0</a> '|add:obs_data.cc_name %}
+        {% include "partials/audio.html" with title=title licence=licence png=obs_data.png_url url=obs_data.mp4_url %}
+        {% endwith %}
+    </div>
+    {% else %}
+    <div id="obs_popup-flora-main">
+        <div>
+            <p>Gesehen am {{ obs_data.date }} von {{ obs_data.cc_name }} in __PLACE__</p>
+            <p><a href="https://creativecommons.org/licenses/by/4.0/">CC BY-SA 4.0</a> {{ obs_data.cc_name }}</p>
+            <p>{{ obs_data.coords.1 }} {{ obs_data.coords.0 }}</p>
         </div>
-        {% else %}
-        <div id="obs_popup-flora-main">
-            <div>
-                <p>Gesehen am {{ obs_data.date }} von {{ obs_data.cc_name }}</p>
-                <p><a href="https://creativecommons.org/licenses/by/4.0/">CC BY-SA 4.0</a> {{ obs_data.cc_name }}</p>
-                <p>{{ obs_data.coords.1 }} {{ obs_data.coords.0 }}</p>
-            </div>
-            <img id="obs-img" src="{{ obs_data.jpg_url }}" alt="Observation image">
-        </div>
-        {% endif %}
+        <img id="obs-img" src="{{ obs_data.jpg_url }}" alt="Observation image">
+    </div>
+    {% endif %}
 
     <div id="obs_popup-footer">
         <a href="{% url 'map_obs' obs_data.obs_id %}">Erfahre mehr {% inline_svg 'right-arrow.svg' %}</a>

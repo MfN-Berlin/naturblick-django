@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from functools import partial
 
@@ -398,7 +399,8 @@ def mobileapp(request):
 
 
 def show_map(request):
-    return web_render(request, "map")
+    return web_render(request, "map", context={
+        "MAP_BOX_KEY": os.getenv('MAP_BOX_KEY')})
 
 
 def faq(request):
@@ -451,8 +453,8 @@ def og_url(request):
     return f'{request.get_host()}{request.get_full_path().replace("/index", "")}'
 
 
-def seen_by(user, date, lat, lon):
-    return _("Gesehen von {user} am {date} in [{lat} {lon}]").format(user=user, date=date, lat=lat, lon=lon)
+def seen_by(user, date):
+    return _("Gesehen von {user} am {date} in __PLACE__").format(user=user, date=date)
 
 
 def add_image_ogs(request, ogs_list, image):
@@ -662,7 +664,7 @@ def map_obs(request, obs_id):
         a_author = EvaluationAuthor.objects.get(id=assessment_author_id) if assessment_author_id else None
         assessment_author_text = f"{a_author.name}, {a_author.institution}" if a_author else None
         confirmation_text = confirmation(assessment, pattern_matching_executed, pattern_matching_confirmed,
-                                             pattern_matching_medium) if assessment else None
+                                         pattern_matching_medium) if assessment else None
 
         obs_detail_data = {
             "obs_id": obs_id,
@@ -677,7 +679,7 @@ def map_obs(request, obs_id):
             "portrait_audio_url": portrait.faunaportrait_audio_file.audio_file.url if fauna else None,
             "is_fauna": fauna,
             "additional_names": additional_names,
-            "seen_by": seen_by(cc_name, date, coords[1], coords[0]),
+            "seen_by": seen_by(cc_name, date),
             "within_range": _("Sie liegt im Verbreitungsgebiet.") if within_range else _(
                 "Sie liegt nicht im Verbreitungsgebiet."),
             "plausibility": plausibility(within_timeframe, within_range),
@@ -695,7 +697,8 @@ def map_obs(request, obs_id):
             "pattern_matching_executed": pattern_matching_executed,
             "is_forschungsfall_nachtigall": is_forschungsfall_nachtigall,
             "confirmation_text": confirmation_text,
-            "individuals": data.get("individuals")
+            "individuals": data.get("individuals"),
+            "MAP_BOX_KEY": os.getenv('MAP_BOX_KEY')
         }
 
         if fauna:

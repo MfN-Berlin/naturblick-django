@@ -7,7 +7,9 @@
 {% block js %}
 <script src='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'></script>
 <script src="{% static 'web/js/audio.js' %}"></script>
+<script src="{% static 'web/js/geocode.js' %}"></script>
 {% endblock %}
+
 {% block css %}
 <link href='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css' rel='stylesheet' />
 <link rel="stylesheet" href="{% static 'web/css/map.css' %}">
@@ -118,13 +120,19 @@ map.on('load', () => {
         fetch(url)
             .then(response => response.text())
             .then(html => {
-                new maplibregl.Popup({ className: 'map-popup' })
-                    .setLngLat(coordinates)
-                    .setHTML(html)
-                    .addTo(map);
+                (async function () {
+                    window.MAP_BOX_KEY = "{{ MAP_BOX_KEY }}";
+                    const location = await getLocation(coordinates[1], coordinates[0]);
+                    html = html.replace('__PLACE__', location);
 
-                const audio = document.getElementById('audio')
-                init_audio(audio);
+                    new maplibregl.Popup({ className: 'map-popup' })
+                        .setLngLat(coordinates)
+                        .setHTML(html)
+                        .addTo(map);
+
+                    const audio = document.getElementById('audio')
+                    init_audio(audio);
+                })();
             });
     });
 });
