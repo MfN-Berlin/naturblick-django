@@ -8,6 +8,7 @@
     window.MAP_BOX_KEY = "{{ MAP_BOX_KEY }}";
 </script>
 <script src="{% static 'web/js/geocode.js' %}"></script>
+<script src="{% static 'web/js/moment-with-locales.min.js' %}"></script>
 {% endblock %}
 
 {% block css %}
@@ -307,6 +308,13 @@
   {% endlocalize %}
   el.textContent = el.textContent.replace('__PLACE__', location);
 })();
+</script>
+
+<script defer>
+    const el = document.getElementById('seen-by');
+    moment.locale("{{ locale }}");
+    const when = moment("{{ js_date_time }}").fromNow();
+    el.textContent = el.textContent.replace('__WHEN__', when);
 </script>
 
 {% endblock %}

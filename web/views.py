@@ -454,7 +454,7 @@ def og_url(request):
 
 
 def seen_by(user, date):
-    return _("Gesehen von {user} am {date} in __PLACE__").format(user=user, date=date)
+    return _("Gesehen von {user} __WHEN__ in __PLACE__").format(user=user, date=date)
 
 
 def add_image_ogs(request, ogs_list, image):
@@ -610,6 +610,7 @@ def map_obs(request, obs_id):
         language = translation.get_language()
         date_time = datetime.fromisoformat(data.get("dateTime"))
         date = date_time.strftime("%d.%m.%Y")
+        js_date_time = data.get("dateTime")
         coords = data.get("coords").get("coordinates")
 
         fauna = is_fauna(species)
@@ -670,8 +671,9 @@ def map_obs(request, obs_id):
             "obs_id": obs_id,
             "group": species.group,
             "cc_name": cc_name,
-            "date": date,
+            "locale": translation.get_language(),
             "date_time": date_time,
+            "js_date_time": js_date_time,
             "name": species.engname if language == 'en' else species.gername,
             "sciname": species.sciname,
             "species_avatar": species.avatar_new.imagefile.image.url,
