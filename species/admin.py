@@ -351,6 +351,7 @@ class SpeciesAdmin(admin.ModelAdmin):
               ('activity_start_hour',
                'activity_end_hour'),
               'avatar_new',
+              'avatar_not_found',
               'female_avatar_new',
               'gbifusagekey',
               'rank',
@@ -360,7 +361,6 @@ class SpeciesAdmin(admin.ModelAdmin):
               'birdnetid',
               'is_hidden',
               'gbif_incompatible',
-              'avatar_not_found',
               'tag',
               ]
 
