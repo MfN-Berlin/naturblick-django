@@ -334,8 +334,8 @@ class SpeciesAdmin(admin.ModelAdmin):
     list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, HasSynonymsFilter,
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
                    HasBirdnetIdFilter,
-                   'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, 'rank', 'status',
-                   'gbif_incompatible', 'avatar_not_found', 'group']
+                   'autoid', HasAvatarFilter, HasFemaleAvatarFilter, 'avatar_not_found', HasAdditionalNames, 'rank', 'status',
+                   'gbif_incompatible', 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
               'group',
