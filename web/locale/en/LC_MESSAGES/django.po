@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 14:40+0200\n"
+"POT-Creation-Date: 2026-04-22 14:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -222,3 +222,13 @@ msgid ""
 msgstr ""
 "The species was not among the three species with the closest match to the "
 "trained reference material of the pattern recognition."
+
+#, fuzzy
+#~| msgid "Diese Beobachtung ist nicht plausibel."
+#~ msgid "Diese Beobachtung wird auch wissenschaftlich genutzt."
+#~ msgstr "This observation is also used scientifically."
+
+#, fuzzy
+#~| msgid "Diese Beobachtung ist teilweise plausibel."
+#~ msgid "Diese Beobachtung ist Teil des Citizen Science Projektes"
+#~ msgstr "This observation is part of the citizen science project"

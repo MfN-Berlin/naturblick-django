@@ -64,10 +64,7 @@
             </div>
 
             {% if is_forschungsfall_nachtigall %}
-            {% inline_svg 'publikationen.svg' %}
-            <h4>Diese Beobachtung wird auch wissenschaftlich genutzt.</h4>
-            <p>Diese Beobachtung ist Teil des Citizen Science Projektes <a href="{% url 'nightingaleproject' %}">Forschungsfall
-                Nachtigall.</a></p>
+            {% include "partials/obs_detail_nightingale."|add:language|add:".html" %}
             {% endif %}
     </section>
     <section id="faq">
