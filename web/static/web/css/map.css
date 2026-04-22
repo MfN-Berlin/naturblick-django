@@ -27,7 +27,7 @@ body {
 }
 
 #map-radio {
-    bottom: 32px;
+    bottom: var(--default-pad);
     width: 120px;
 }
 
@@ -54,7 +54,7 @@ body {
 
     #obs_popup-header {
         display: flex;
-        padding: 32px;
+        padding: var(--default-pad);
         gap: 16px;
         div {
             display: flex;
@@ -84,7 +84,7 @@ body {
 
     #obs_popup-flora-main {
         background: var(--mild);
-        padding: 32px;
+        padding: var(--default-pad);
         display: flex;
         gap: 8px;
         justify-content: space-between;

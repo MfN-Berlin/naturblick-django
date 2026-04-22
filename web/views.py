@@ -232,7 +232,6 @@ def portrait(request, id):
 
     fauna = is_fauna(species)
     objects = Faunaportrait.objects if fauna else Floraportrait.objects
-    template = 'faunaportrait' if fauna else 'floraportrait'
 
     try:
         portrait = (
@@ -254,7 +253,7 @@ def portrait(request, id):
         return HttpResponseNotFound("This portrait does not exist")
 
     descriptions = [portrait.short_description, portrait.male_description, portrait.female_description,
-                    portrait.juvenile_description] if is_fauna else [portrait.short_description,
+                    portrait.juvenile_description] if fauna else [portrait.short_description,
                                                                      portrait.leaf_description,
                                                                      portrait.stem_axis_description,
                                                                      portrait.flower_description,
@@ -282,9 +281,9 @@ def portrait(request, id):
         "licence": portrait.faunaportrait_audio_file.license,
         "url": portrait.faunaportrait_audio_file.audio_file.url,
         "png": f"{portrait.faunaportrait_audio_file.audio_file.url.replace("audio_files", "spectrogram_images")}.png"
-    } if is_fauna and portrait.faunaportrait_audio_file else None
+    } if fauna and portrait.faunaportrait_audio_file else None
 
-    return web_render(request, template, context={
+    return render(request, "web/portrait.html", context={
         "id": id,
         "dark": True,
         "portrait": portrait,
@@ -296,7 +295,10 @@ def portrait(request, id):
         "similar_species": similar_species,
         "unambigousfeatures": unambigousfeature,
         "audio": audio,
-        "species_name": species.engname if language == "en" else species.gername
+        "species_name": species.engname if language == "en" else species.gername,
+        "species_description": _("Beschreibung"),
+        "species_inthecity": _("In der Stadt"),
+        "species_goodtoknows": _("Wissenswertes")
     })
 
 

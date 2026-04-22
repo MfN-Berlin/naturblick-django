@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-25 10:58+0100\n"
+"POT-Creation-Date: 2026-04-21 15:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,47 +42,47 @@ msgstr "Distribution"
 msgid "Quellen"
 msgstr "Sources"
 
-#: templates/web/map_base.html:22
+#: templates/web/map_base.html:27
 msgid "Alle"
 msgstr "All"
 
-#: templates/web/map_base.html:23
+#: templates/web/map_base.html:28
 msgid "Bäume"
 msgstr "Trees"
 
-#: templates/web/map_base.html:24
+#: templates/web/map_base.html:29
 msgid "Säugetiere"
 msgstr "Mammals"
 
-#: templates/web/map_base.html:25
+#: templates/web/map_base.html:30
 msgid "Vögel"
 msgstr "Birds"
 
-#: templates/web/page_base.html:38
+#: templates/web/page_base.html:42
 msgid "Über die App"
 msgstr "About Naturblick"
 
-#: templates/web/page_base.html:39
+#: templates/web/page_base.html:43
 msgid "Über uns"
 msgstr "About us"
 
-#: templates/web/page_base.html:40
+#: templates/web/page_base.html:44
 msgid "Häufige Fragen"
 msgstr "FAQ"
 
-#: templates/web/page_base.html:66
+#: templates/web/page_base.html:72
 msgid "Kontakt"
 msgstr "Contact"
 
-#: templates/web/page_base.html:68
+#: templates/web/page_base.html:74
 msgid "Datenschutz"
 msgstr "General Privacy Notice"
 
-#: templates/web/page_base.html:69
+#: templates/web/page_base.html:75
 msgid "Impressum"
 msgstr "Imprint"
 
-#: templates/web/page_base.html:70
+#: templates/web/page_base.html:76
 msgid "Digitale Barrierefreiheit"
 msgstr "Digital accessibility statement"
 
@@ -98,11 +98,18 @@ msgstr "Find animals and plants by entering a species name."
 msgid "Artname"
 msgstr "Species name"
 
-#: views.py:32
+#: views.py:33
 msgid "Entdecke die Natur"
 msgstr "Discover Nature"
 
-#: views.py:421
-#, python-brace-format
-msgid "Gesehen von {user} am {date} in {coords}"
-msgstr "Seen by {user} at {date} in {coords}"
+#: views.py:299
+msgid "Beschreibung"
+msgstr "Short Description"
+
+#: views.py:300
+msgid "In der Stadt"
+msgstr "In the city"
+
+#: views.py:301
+msgid "Wissenswertes"
+msgstr "Fun Facts"
