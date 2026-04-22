@@ -16,6 +16,10 @@
   --menu-height: 40px;
   --header-title-top-padding: 96px;
   --header-title-bottom-padding: 64px;
+  --footer-flex-direction: row;
+  --footer-flex-align: center;
+  --footer-logo-order: 4;
+  --footer-flex-gap: var(--half-pad);
 
   /* TODO: Fixed or device dependent? */
   --font-size-regular-no-zoom: 16px;
@@ -60,11 +64,14 @@
   --font-size-small: calc(var(--font-size-small-no-zoom) * var(--font-zoom));
   --line-height-small: calc(var(--line-height-small-no-zoom) * var(--font-zoom));
 
+  --half-pad: calc(var(--default-pad) / 2);
+
   /* Fixed */
   --zoomed-color: inherit;
   --unzoomed-color: #ccc;
   --white: #fff;
   --footer-white: #fbfbfb;
+  --dark-footer-transparent-white: #ffffff73;
   --light-grey: #d1d1d1;
   --grey: #a9a9a9;
   --black: #27313c;
@@ -113,6 +120,10 @@
 
         --header-title-top-padding: 48px;
         --header-title-bottom-padding: 32px;
+        --footer-flex-direction: row;
+        --footer-flex-align: center;
+        --footer-logo-order: 4;
+        --footer-flex-gap: var(--half-pad);
     }
 }
 
@@ -136,5 +147,9 @@
 
         --header-title-top-padding: 32px;
         --header-title-bottom-padding: 24px;
+        --footer-flex-direction: column;
+        --footer-flex-align: start;
+        --footer-logo-order: 2;
+        --footer-flex-gap: 0;
     }
 }

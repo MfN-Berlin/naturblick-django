@@ -70,25 +70,25 @@
   </div>
 {% block footer %}
 <footer>
-    <div>
-        <a href="{% url 'kontakt' %}{% querystring %}">{% translate "Kontakt" %}</a>
-        <p>
-            <a href="{% url 'privacy' %}{% querystring %}">{% translate "Datenschutz" %}</a>
-            <a href="{% url 'imprint' %}{% querystring %}">{% translate "Impressum" %}</a>
-            <a href="{% url 'digitalaccessibilitystatement' %}{% querystring %}">{% translate "Digitale Barrierefreiheit" %}</a>
-        </p>
-    </div>
-    <div class="footer-right">
-        <div>
-            Naturblick 2020<br>
-            Museum für Naturkunde Berlin
-        </div>
-        {% if dark %}
-        <img src="{% static 'footer_mfnlogo_inverted.svg' %}">
-        {% else %}
-        <img src="{% static 'footer_mfnlogo.svg' %}">
-        {% endif %}
-    </div>
+  <nav>
+    <ul>
+      <li><a href="{% url 'kontakt' %}{% querystring %}">{% translate "Kontakt" %}</a></li>
+    </ul>
+    <ul>
+      <li><a href="{% url 'privacy' %}{% querystring %}">{% translate "Datenschutz" %}</a></li>
+      <li><a href="{% url 'imprint' %}{% querystring %}">{% translate "Impressum" %}</a></li>
+      <li><a href="{% url 'digitalaccessibilitystatement' %}{% querystring %}">{% translate "Digitale Barrierefreiheit" %}</a></li>
+    </ul>
+  </nav>
+  <div>
+    Naturblick 2020<br>
+    Museum für Naturkunde Berlin
+  </div>
+  {% if dark %}
+  <img src="{% static 'footer_mfnlogo_inverted.svg' %}">
+  {% else %}
+  <img src="{% static 'footer_mfnlogo.svg' %}">
+  {% endif %}
 </footer>
 {% endblock %}
 </body>
