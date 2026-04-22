@@ -1,0 +1,131 @@
+{% extends "web/page_base.html" %}
+
+{% load static i18n web_tags l10n %}
+
+{% block js %}
+<script src='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'></script>
+<script>
+    window.MAP_BOX_KEY = "{{ MAP_BOX_KEY }}";
+</script>
+<script src="{% static 'web/js/geocode.js' %}"></script>
+<script src="{% static 'web/js/moment-with-locales.min.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'web/css/obs.css' %}">
+<link rel="stylesheet" href="{% static 'web/css/audio.css' %}">
+<link rel="stylesheet" href="{% static 'web/css/mini-map.css' %}">
+{% endblock %}
+
+{% block title %}Naturblick{% endblock %}
+
+{% block header_title %}
+{% group_svg group %}
+<h1>{% translate "Beobachtung" %}</h1>
+<p>CC BY-SA 4.0 {{ cc_name }}</p>
+{% endblock %}
+
+{% block content %}
+<main>
+    <section id="detail-header">
+        <img src="{{ species_avatar }}">
+        <div>
+            <p>{{ sciname }}</p>
+            <h2>{{ name }}</h2>
+            {% if additional_names %}
+            <p>{{ additional_names }}</p>
+            {% endif %}
+
+            <div>
+                {% if portrait_audio_url %}
+                <audio controls>
+                    <source src="{{ portrait_audio_url|safe }}">
+                </audio>
+                {% endif %}
+                <a href="{% url 'portrait' species_id  %}">Artportrait</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="obs-info">
+        {% inline_svg 'observation.svg' %}
+        <h3 id="seen-by">{{ seen_by }}</h3>
+        {% if assessment %}
+        <div class="boxes two-boxes">
+            {% else %}
+            <div class="boxes one-box">
+                {% endif %}
+
+                {% include "partials/obs_detail_plausible."|add:language|add:".html" %}
+
+                {% if assessment %}
+                    {% include "partials/obs_detail_assessment."|add:language|add:".html" %}
+                {% endif %}
+            </div>
+
+            {% if is_forschungsfall_nachtigall %}
+            {% inline_svg 'publikationen.svg' %}
+            <h4>Diese Beobachtung wird auch wissenschaftlich genutzt.</h4>
+            <p>Diese Beobachtung ist Teil des Citizen Science Projektes <a href="{% url 'nightingaleproject' %}">Forschungsfall
+                Nachtigall.</a></p>
+            {% endif %}
+    </section>
+    <section id="faq">
+        {% include "partials/obs_detail_faq."|add:language|add:".html" %}
+    </section>
+</main>
+
+<script>
+    const map = new maplibregl.Map({
+        container: 'mini-map',
+        style: 'https://tiles.openfreemap.org/styles/bright',
+        center: {{ coords }},
+        zoom: 13,
+        interactive: false,
+        attributionControl: false
+    });
+
+    map.on('load', () => {
+        map.addSource('point', {
+            type: 'geojson',
+            data: {
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: {{ coords }}
+                }
+            }
+        });
+
+        map.addLayer({
+            id: 'point-circle',
+            type: 'circle',
+            source: 'point',
+            paint: {
+                'circle-color': '#3bb4e7',
+                'circle-radius': 15,
+                'circle-stroke-width': 1,
+                'circle-stroke-color': '#fff'
+            }
+        });
+    });
+</script>
+
+<script>
+(async function () {
+  const el = document.getElementById('seen-by');
+  {% localize off %}
+  const location = await getLocation({{ coords.1 }}, {{ coords.0 }});
+  {% endlocalize %}
+  el.textContent = el.textContent.replace('__PLACE__', location);
+})();
+</script>
+
+<script defer>
+    const el = document.getElementById('seen-by');
+    moment.locale("{{ locale }}");
+    const when = moment("{{ js_date_time }}").fromNow();
+    el.textContent = el.textContent.replace('__WHEN__', when);
+</script>
+
+{% endblock %}

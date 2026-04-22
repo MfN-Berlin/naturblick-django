@@ -1,0 +1,37 @@
+{% load i18n web_tags %}
+
+<div class="plausible">
+<h4>{{ plausibility }} <a href="{% url 'map_obs' obs_id %}#faq">Was bedeutet das?</a></h4>
+<p>Geprüft durch {{plausibility_author_text }}</p>
+
+<div id="mini-map"></div>
+
+<h5>{{ within_range }}</h5>
+<p class="extra-info">{% inline_svg 'pinwithstar.svg' %} B {{ coords.1 }} L {{ coords.0 }}</p>
+
+<p>Viele Arten kommen nur in bestimmten Gegenden, Regionen oder Ländern der Erde vor. Diese
+    Verbreitungsgebiete ändern sich und können daher nur einen Hinweis, aber keine verlässliche
+    Bestätigung geben. Das gilt insbesondere für Pflanzen, die von Menschen angepflanzt werden.</p>
+
+<h5>{{ within_timeframe }}</h5>
+
+<p class="extra-info">{% inline_svg 'time.svg' %} {{ date_time }} Uhr</p>
+
+<p>Viele Arten sind in einem bestimmten Zeitraum, zum Beispiel in der Nacht, besonders aktiv. Diese
+    Angabe ist jedoch nicht verlässlich und nachtaktive Tiere können auch mal am Tag beobachtet
+    werden. Der Aktivitätszeitraum kann daher nur einen Hinweis, aber keine verlässliche Bestätigung
+    geben. Wir beziehen uns bei dem Aktivitätszeitraum auf Deutschland. Viele Pflanzen können zu
+    jeder Tageszeit und das ganz Jahr über gefunden werden.</p>
+
+{% if individuals %}
+<h5>Sie wurde durch weitere Detailangaben genauer beschrieben.</h5>
+
+<p class="extra-info">{% inline_svg 'activity.svg' %} {{ individuals }} Exemplare</p>
+
+<p>
+    Eine genauere Beschreibung der Beobachtung macht eine richtige Bestimmung der Art
+    wahrscheinlicher. Kommentare veröffentlichen wir hier dennoch nicht automatisch, da sie
+    persönliche Informationen enthalten können.
+</p>
+{% endif %}
+</div>

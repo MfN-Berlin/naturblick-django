@@ -1,0 +1,45 @@
+{% load i18n web_tags %}
+
+<div class="plausible">
+<h4>{{ confirmation_text }}<a href="{% url 'map_obs' obs_id %}#faq">Was bedeutet das?</a></h4>
+<p>Geprüft durch {{ assessment_author_text }}</p>
+
+{% if is_fauna %}
+{% include "partials/audio_small.html" with png=png_url url=mp4_url %}
+{% else %}
+<img src="{{jpg_url}}">
+{% endif %}
+
+<h5>{{ assessment_text }}</h5>
+
+{% if assessment %}
+<p class="extra-info">{% inline_svg 'thumbsup.svg' %} Auf Grundlage des Mediums</p>
+{% endif %}
+<p>Um eine Beobachtung bestätigen zu können, muss das Foto oder die Tonaufnahme die für die
+    Bestimmung nötigen Merkmale zeigen. Nur dann kann eine andere Person eine sichere Einschätzung
+    zum Bestimmungsergebnis geben. Es bleibt jedoch selbst dann noch schwierig, auch für
+    Expert:innen, Arten anhand von Fotos oder Tonaufnahmen nachträglich zu bestimmen. Bei manchen
+    Arten ist das sogar nicht möglich.</p>
+
+<h5>{{ pattern_matching_text }}</h5>
+
+{% for species in matched_species %}
+<div class="matched-species">
+    <div class="bold">{{ forloop.counter }}</div>
+    <div>
+        <div class="bold">{{ species.name }}</div>
+        <div class="italic">{{ species.sciname }}</div>
+    </div>
+    <div class="bold blue">{{ species.score }}%</div>
+</div>
+{% endfor %}
+
+<p>
+    Die Mustererkennung zeigt immer die drei Arten mit der größten Übereinstimmung mit dem
+    trainierten Vergleichsmaterial an. Je näher der Score an 100% liegt, desto ähnlicher ist das
+    Foto oder die Tonaufnahme dem Vergleichsmaterial einer Art, mit dem die Mustererkennung
+    trainiert wurde. Mehr Informationen zu der Mustererkennung und welche Arten trainiert wurden,
+    findest du weiter unten in den FAQs.
+</p>
+
+</div>
