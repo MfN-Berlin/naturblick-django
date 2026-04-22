@@ -525,7 +525,8 @@ def obs(request, obs_id):
         "cc_name": cc_name,
         "date": date,
         "species_avatar": s.avatar_new.imagefile.image.url,
-        "is_fauna": fauna
+        "is_fauna": fauna,
+        "js_date_time": json["data"]["dateTime"]
     }
 
     if fauna:

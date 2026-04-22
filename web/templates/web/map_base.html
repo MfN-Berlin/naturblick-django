@@ -8,6 +8,7 @@
 <script src='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'></script>
 <script src="{% static 'web/js/audio.js' %}"></script>
 <script src="{% static 'web/js/geocode.js' %}"></script>
+<script src="{% static 'web/js/moment-with-locales.min.js' %}"></script>
 {% endblock %}
 
 {% block css %}
@@ -124,6 +125,17 @@ map.on('load', () => {
                     window.MAP_BOX_KEY = "{{ MAP_BOX_KEY }}";
                     const location = await getLocation(coordinates[1], coordinates[0]);
                     html = html.replace('__PLACE__', location);
+
+                    {% get_current_language as LANGUAGE_CODE %}
+                    moment.locale("{{ LANGUAGE_CODE }}");
+
+                    const temp = document.createElement('div');
+                    temp.innerHTML = html;
+                    const el = temp.querySelector('#obs_popup');
+                    const obs_date = el.getAttribute("obs-date");
+
+                    const when = moment(obs_date).fromNow();
+                    html = html.replace('__WHEN__', when);
 
                     new maplibregl.Popup({ className: 'map-popup' })
                         .setLngLat(coordinates)
