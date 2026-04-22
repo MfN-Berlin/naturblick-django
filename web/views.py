@@ -671,7 +671,7 @@ def map_obs(request, obs_id):
         confirmation_text = confirmation(assessment, pattern_matching_executed, pattern_matching_confirmed,
                                          pattern_matching_medium) if assessment else None
 
-        obs_detail_data = {
+        context = {
             "obs_id": obs_id,
             "group": species.group,
             "cc_name": cc_name,
@@ -709,12 +709,14 @@ def map_obs(request, obs_id):
         }
 
         if fauna:
-            obs_detail_data["png_url"] = f"/api/projects/observations/{obs_id}/audio.mp4.png"
-            obs_detail_data["mp4_url"] = f"/api/projects/observations/{obs_id}/audio.mp4"
+            context["png_url"] = f"/api/projects/observations/{obs_id}/audio.mp4.png"
+            context["mp4_url"] = f"/api/projects/observations/{obs_id}/audio.mp4"
         else:
-            obs_detail_data["jpg_url"] = f"/api/projects/observations/{obs_id}/image.jpg"
+            context["jpg_url"] = f"/api/projects/observations/{obs_id}/image.jpg"
 
-        return web_render(request, "obs_detail", obs_detail_data)
+        language = translation.get_language()
+        context["language"] = language
+        return render(request, f"web/obs_detail.html", context)
     except:
         pass
 

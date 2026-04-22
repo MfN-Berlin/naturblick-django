@@ -1,0 +1,37 @@
+{% load i18n web_tags %}
+
+<div class="plausible">
+<h4>{{ confirmation_text }}<a href="{% url 'map_obs' obs_id %}#faq">What does it mean?</a></h4>
+<p>Reviewed by {{ assessment_author_text }}</p>
+
+{% if is_fauna %}
+{% include "partials/audio_small.html" with png=png_url url=mp4_url %}
+{% else %}
+<img src="{{jpg_url}}">
+{% endif %}
+
+<h5>{{ assessment_text }}</h5>
+
+{% if assessment %}
+<p class="extra-info">{% inline_svg 'thumbsup.svg' %} Based on the medium</p>
+{% endif %}
+<p>In order to confirm an observation, the photo or sound recording must show the traits necessary for the identification. Only in this case another person can give a reliable assessment of the identification result. However, it is always difficult, even for experts, to identify species from photos or sound recordings. For some species this is not even possible.</p>
+
+<h5>{{ pattern_matching_text }}</h5>
+
+{% for species in matched_species %}
+<div class="matched-species">
+    <div class="bold">{{ forloop.counter }}</div>
+    <div>
+        <div class="bold">{{ species.name }}</div>
+        <div class="italic">{{ species.sciname }}</div>
+    </div>
+    <div class="bold blue">{{ species.score }}%</div>
+</div>
+{% endfor %}
+
+<p>
+    Pattern recognition always displays the three species with the closest match to the trained comparison material. The closer the score is to 100%, the more similar the photo or sound recording is to the comparison material of a species with which the pattern recognition was trained. More information about pattern recognition and which species were trained can be found below in the FAQs.
+</p>
+
+</div>

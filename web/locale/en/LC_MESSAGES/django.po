@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-21 15:13+0200\n"
+"POT-Creation-Date: 2026-04-22 14:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,21 +42,25 @@ msgstr "Distribution"
 msgid "Quellen"
 msgstr "Sources"
 
-#: templates/web/map_base.html:27
+#: templates/web/map_base.html:28
 msgid "Alle"
 msgstr "All"
 
-#: templates/web/map_base.html:28
+#: templates/web/map_base.html:29
 msgid "Bäume"
 msgstr "Trees"
 
-#: templates/web/map_base.html:29
+#: templates/web/map_base.html:30
 msgid "Säugetiere"
 msgstr "Mammals"
 
-#: templates/web/map_base.html:30
+#: templates/web/map_base.html:31
 msgid "Vögel"
 msgstr "Birds"
+
+#: templates/web/obs_detail.html:24
+msgid "Beobachtung"
+msgstr "Observation"
 
 #: templates/web/page_base.html:42
 msgid "Über die App"
@@ -70,31 +74,31 @@ msgstr "About us"
 msgid "Häufige Fragen"
 msgstr "FAQ"
 
-#: templates/web/page_base.html:72
+#: templates/web/page_base.html:75
 msgid "Kontakt"
 msgstr "Contact"
 
-#: templates/web/page_base.html:74
+#: templates/web/page_base.html:78
 msgid "Datenschutz"
 msgstr "General Privacy Notice"
 
-#: templates/web/page_base.html:75
+#: templates/web/page_base.html:79
 msgid "Impressum"
 msgstr "Imprint"
 
-#: templates/web/page_base.html:76
+#: templates/web/page_base.html:80
 msgid "Digitale Barrierefreiheit"
 msgstr "Digital accessibility statement"
 
-#: templates/web/search_portrait.html:9 templates/web/search_portrait.html:14
+#: templates/web/search_portrait.html:9 templates/web/search_portrait.html:13
 msgid "Artportraits"
 msgstr "Species portraits"
 
-#: templates/web/search_portrait.html:15
+#: templates/web/search_portrait.html:14
 msgid "Finde Tiere und Pflanzen, indem du einen Artnamen eingibst."
 msgstr "Find animals and plants by entering a species name."
 
-#: templates/web/search_portrait.html:27
+#: templates/web/search_portrait.html:24
 msgid "Artname"
 msgstr "Species name"
 
@@ -113,3 +117,118 @@ msgstr "In the city"
 #: views.py:301
 msgid "Wissenswertes"
 msgstr "Fun Facts"
+
+#: views.py:460
+#, python-brace-format
+msgid "Gesehen von {user} __WHEN__ in __PLACE__"
+msgstr "Seen by {user} __WHEN__ in __PLACE__"
+
+#: views.py:549
+msgid "Diese Beobachtung ist plausibel."
+msgstr "This observation is plausible."
+
+#: views.py:551
+msgid "Diese Beobachtung ist teilweise plausibel."
+msgstr "This observation is partly plausible."
+
+#: views.py:553
+msgid "Diese Beobachtung ist nicht plausibel."
+msgstr "This observation is not plausible."
+
+#: views.py:558
+msgid "Es hat noch kein:e Expert:in die Beobachtung angesehen."
+msgstr "No expert has looked at the observation yet."
+
+#: views.py:560
+msgid "Ein:e Expert:in konnte die Bestimmung bestätigen."
+msgstr "An expert was able to confirm the identification."
+
+#: views.py:563
+msgid ""
+"Ein:e Expert:in konnte die Artbestimmung nicht sicher bestätigen, hält sie "
+"aber für wahrscheinlich richtig."
+msgstr ""
+"An expert could not confirm the identification with certainty, but considers "
+"it likely to be correct."
+
+#: views.py:566
+msgid ""
+"Ein:e Expert:in konnte die Artbestimmung nicht sicher ausschließen, hält sie "
+"aber für wahrscheinlich falsch."
+msgstr ""
+"An expert could not confirm the identification with certainty, but considers "
+"it likely to be wrong."
+
+#: views.py:568
+msgid "Ein:e Expert:in ist sich nach Sichtung des Mediums nicht sicher."
+msgstr "An expert is not sure after viewing the medium."
+
+#: views.py:584 views.py:597 views.py:601
+msgid "Dieser Artzuordnung wurde teilweise zugestimmt."
+msgstr "This species identification was partially agreed to."
+
+#: views.py:586
+msgid "Diese Artzuordnung wurde noch nicht angesehen."
+msgstr "This species identification was not assessed yet."
+
+#: views.py:588 views.py:603
+msgid "Diese Artzuordnung kann nicht sicher eingeschätzt werden."
+msgstr "This species identification cannot be assessed with certainty."
+
+#: views.py:595 views.py:604
+msgid "Dieser Artzuordnung wurde zugestimmt."
+msgstr "This species identification was agreed to."
+
+#: views.py:689
+msgid "Sie liegt im Verbreitungsgebiet."
+msgstr "It lies within the geographic range."
+
+#: views.py:690
+msgid "Sie liegt nicht im Verbreitungsgebiet."
+msgstr "It lies outside the geographic range."
+
+#: views.py:692
+msgid "Sie wurde im Aktivitätszeitraum gemacht."
+msgstr "It was made during the activity period."
+
+#: views.py:693
+msgid "Sie wurde nicht im Aktivitätszeitraum gemacht."
+msgstr "It was not made during the activity period."
+
+#: views.py:727
+msgid "Es wurde keine Mustererkennung durchgeführt."
+msgstr "Pattern recognition was not used to identify this observation."
+
+#: views.py:731
+msgid ""
+" hatte die größte Übereinstimmung mit dem trainierten Vergleichsmaterial der "
+"Mustererkennung."
+msgstr ""
+"had the closest match to the trained reference material of the pattern "
+"recognition."
+
+#: views.py:734
+msgid ""
+"Die Art war unter den drei Arten mit der größten Übereinstimmung mit dem "
+"trainierten Vergleichsmaterial der Mustererkennung."
+msgstr ""
+"The species was among the three species with the closest match to the "
+"trained reference material of the pattern recognition."
+
+#: views.py:737
+msgid ""
+"Die Art war nicht unter den drei Arten mit der größten Übereinstimmung mit "
+"dem trainierten Vergleichsmaterial der Mustererkennung."
+msgstr ""
+"The species was not among the three species with the closest match to the "
+"trained reference material of the pattern recognition."
+
+#, fuzzy
+#~| msgid "Diese Beobachtung ist nicht plausibel."
+#~ msgid "Diese Beobachtung wird auch wissenschaftlich genutzt."
+#~ msgstr "This observation is also used scientifically."
+
+#, fuzzy
+#~| msgid "Diese Beobachtung ist teilweise plausibel."
+#~ msgid "Diese Beobachtung ist Teil des Citizen Science Projektes"
+#~ msgstr "This observation is part of the citizen science project"

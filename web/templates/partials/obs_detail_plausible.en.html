@@ -1,0 +1,30 @@
+{% load i18n web_tags %}
+
+<div class="plausible">
+    <h4>{{ plausibility }} <a href="{% url 'map_obs' obs_id %}#faq">What does it mean?</a></h4>
+    <p>Reviewed by {{plausibility_author_text }}</p>
+
+    <div id="mini-map"></div>
+
+    <h5>{{ within_range }}</h5>
+    <p class="extra-info">{% inline_svg 'pinwithstar.svg' %} B {{ coords.1 }} L {{ coords.0 }}</p>
+
+    <p>Many species only occur in certain areas, regions or countries of the world. These distribution areas change and can therefore only give an indication, but not a reliable confirmation. This is especially true for plants that are planted by humans.</p>
+
+    <h5>{{ within_timeframe }}</h5>
+
+    <p class="extra-info">{% inline_svg 'time.svg' %} {{ date_time }} Uhr</p>
+
+    <p>Many species are particularly active during a certain period, for example at night. However, this information is not reliable and nocturnal animals can also sometimes be observed during the day. The activity period can therefore only give an indication, but not a reliable confirmation. We refer to Germany for the activity period. Many plants can be found at any time of day and throughout the entire year.</p>
+
+    {% if individuals %}
+    <h5>It was described in more detail by providing further information.</h5>
+
+    <p class="extra-info">{% inline_svg 'activity.svg' %} {{ individuals }} individuals</p>
+
+    <p>
+        A more detailed description of the observation makes a correct identification of the species more likely.
+        However, we do not automatically publish comments here as they may contain personal information.
+    </p>
+    {% endif %}
+</div>
