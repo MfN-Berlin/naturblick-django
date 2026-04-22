@@ -335,7 +335,7 @@ class SpeciesAdmin(admin.ModelAdmin):
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
                    HasBirdnetIdFilter,
                    'autoid', HasAvatarFilter, HasFemaleAvatarFilter, HasAdditionalNames, 'rank', 'status',
-                   'gbif_incompatible', 'group']
+                   'gbif_incompatible', 'avatar_not_found', 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
               'group',
@@ -360,6 +360,7 @@ class SpeciesAdmin(admin.ModelAdmin):
               'birdnetid',
               'is_hidden',
               'gbif_incompatible',
+              'avatar_not_found',
               'tag',
               ]
 
@@ -367,7 +368,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     ordering = ('sciname',)
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar_new', 'female_avatar_new']
-    actions = ['make_autoid_enabled', 'import_avatar_from_wikimedia', 'import_image_from_wikimedia']
+    actions = ['make_autoid_enabled', 'import_avatar_from_wikimedia', 'import_image_from_wikimedia', 'make_avatar_not_found']
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -375,6 +376,21 @@ class SpeciesAdmin(admin.ModelAdmin):
             return qs.select_related('avatar_new', 'group').prefetch_related('portrait_set')
         return qs
 
+    @admin.action(description="Mark selected species with avatar not found")
+    def make_avatar_not_found(self, request, queryset):
+        updated = queryset.update(avatar_not_found=True)
+        self.message_user(
+            request,
+            ngettext(
+                "%d species was successfully marked with avatar not found.",
+                "%d species were successfully marked with avatar not found.",
+                updated,
+            )
+            % updated,
+            messages.SUCCESS,
+        )
+
+    
     @admin.action(description="Mark selected species as available for autoid")
     def make_autoid_enabled(self, request, queryset):
         updated = queryset.update(autoid=True)
