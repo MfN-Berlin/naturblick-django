@@ -17,41 +17,41 @@
 body {
     color: white;
 
+    .main-container {
+        padding: var(--default-pad);
+    }
+
     main {
-        max-width: 1400px;
+        max-width: 1000px;
         margin: 0px auto;
         background-color: white;
         border-radius: 8px;
-        width: 1000px;
         color: var(--black);
-        padding: 0;
+        padding: var(--default-pad) 0 0 0;
 
         > section {
-            padding: 75px 75px var(--default-pad);
-            h2:first-of-type {
+            padding: var(--default-pad) var(--double-pad) var(--default-pad) var(--double-pad);
+            h2:first-of-type, h3:first-of-type, h4:first-of-type {
               margin-top: 0;
             }
         }
 
         > section.grid-1-2 {
             display: grid;
-            column-gap: 64px;
-            row-gap: var(--default-pad);
-            grid-template-columns: 1fr 2fr;
+            gap: var(--default-pad);
+            grid-template-columns: var(--grid-1-2-columns);
         }
 
         > section.grid-2-1 {
             display: grid;
-            column-gap: 64px;
-            row-gap: var(--default-pad);
-            grid-template-columns: 2fr 1fr;
+            gap: var(--default-pad);
+            grid-template-columns: var(--grid-2-1-columns);
         }
 
         > section.grid-2-3 {
             display: grid;
-            column-gap: 64px;
-            row-gap: 0;
-            grid-template-columns: 2fr 3fr;
+            gap: var(--default-pad);
+            grid-template-columns: var(--grid-2-3-columns);
         }
 
         > section.gtk {
@@ -69,13 +69,61 @@ body {
         > section.features {
             background: var(--mild);
 
-            > div {
-                flex: 1;
-                ul {
-                    list-style: none;
-                    padding: 0;
-                }
+            img {
+                width: 80px;
+                height: auto;
+                border-radius: 4px;
+            }
 
+            h4 {
+                margin: 0;
+                line-height: var(--line-height-regular);
+                font-size: var(--font-size-regular);
+            }
+            h5 {
+                margin: 0;
+                color: var(--grey);
+                font-style: italic;
+                font-weight: 400;
+                font-size: var(--font-size-regular);
+                line-height: var(--line-height-regular);
+            }
+
+            .characters {
+                h3 {
+                    margin: 0;
+                    color: var(--chill);
+                    font-style: italic;
+                    font-weight: 500;
+                    font-size: var(--font-size-big);
+                    line-height: var(--line-height-big);
+                }
+                > div {
+                    display: flex;
+                    > div {
+                        margin-left: var(--half-pad);
+                    }
+                }
+                ul {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: start;
+                    gap: var(--half-pad);
+                    list-style: none;
+                    padding: var(--half-pad) 0 0 0;
+                    margin: 0;
+                }
+                li {
+                    background-color: var(--character);
+                    border-radius: var(--small-radius);
+                    padding: 6px 12px;
+                }
+            }
+
+            .similar {
+                h3 {
+                    margin: 0 0 var(--half-pad) 0;
+                }
                 a {
                     display: block;
                     box-shadow: var(--shadow);
@@ -83,27 +131,29 @@ body {
                     padding: 20px;
                     background-color: white;
                     margin-bottom: 20px;
+
+                    > div {
+                        display: flex;
+                        > div {
+                            margin-left: var(--half-pad);
+                        }
+                        margin: 0 0 var(--half-pad) 0;
+                    }
                 }
 
                 a:hover {
                     box-shadow: var(--shadow-hover);
                 }
 
-                img {
-                    width: 80px;
-                    height: auto;
-                    border-radius: 4px;
-                }
             }
         }
 
         > section.sources {
-            padding: 25px 75px 75px;
             display: block;
             background: var(--mild);
             border-radius: 0 0 8px 8px;
             > div {
-                columns: 3;
+                columns: var(--sources-columns);
                 column-fill: balance;
                 p {
                     -webkit-column-break-inside: avoid;
