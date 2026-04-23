@@ -143,7 +143,9 @@ map.on('load', () => {
                         .addTo(map);
 
                     const audio = document.getElementById('audio')
-                    init_audio(audio);
+                    if (audio !== null) {
+                        init_audio(audio);
+                    }
                 })();
             });
     });
