@@ -5,7 +5,7 @@
 <p>Reviewed by {{ assessment_author_text }}</p>
 
 {% if is_fauna %}
-{% include "partials/audio_small.html" with png=png_url url=mp4_url %}
+{% include "partials/audio.html" with png=png_url url=mp4_url %}
 {% else %}
 <img src="{{jpg_url}}">
 {% endif %}
