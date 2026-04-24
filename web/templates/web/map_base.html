@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block css %}
-<link href='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css' rel='stylesheet' />
+<link href='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css' rel='stylesheet'/>
 <link rel="stylesheet" href="{% static 'web/css/map.css' %}">
 <link rel="stylesheet" href="{% static 'web/css/audio.css' %}">
 {% endblock %}
@@ -22,7 +22,7 @@
 {% block content %}
 <div id="map" class="map">
     <div id="map-info" class="map-overlay">
-         {% block map_info %}{% endblock %}
+        {% block map_info %}{% endblock %}
     </div>
     <div id="map-radio" class="map-overlay">
         <input type="radio" name="group" value="all" checked><label>{% translate "Alle" %}</label><br>
@@ -33,161 +33,209 @@
 </div>
 
 <script>
-const mfn = [13.3792, 52.5295]
-const obsProxyTemplate = "{% url 'obs' 0 %}";
+    const mfn = [13.3792, 52.5295]
+    const obsProxyTemplate = "{% url 'obs' 0 %}";
 
-var map = new maplibregl.Map({
-    container: 'map',
-    style: 'https://tiles.openfreemap.org/styles/bright',
-    center: mfn,
-    zoom: 9,
-    cluster: true,
-});
-
-map.on('load', () => {
-    map.addSource('observations', {
-        type: 'geojson',
-        data: '{% url 'map_proxy' %}',
+    var map = new maplibregl.Map({
+        container: 'map',
+        style: 'https://tiles.openfreemap.org/styles/bright',
+        center: mfn,
+        zoom: 9,
         cluster: true,
-        clusterMaxZoom: 14,
-        clusterRadius: 50,
-        clusterProperties: {
-            all_count: ["+", 1],
-            tree_count: ["+", ["case", ["==", ["get","group"], "tree"], 1, 0]],
-            mammal_count: ["+", ["case", ["==", ["get","group"], "mammal"], 1, 0]],
-            bird_count: ["+", ["case", ["==", ["get","group"], "bird"], 1, 0]],
-        }
     });
 
-    map.addLayer({
-        id: 'cluster-observations',
-        type: 'circle',
-        source: 'observations',
-        filter: ['>', ['get', 'all_count'], 1],
-        paint: {
-            'circle-color': [
-                'step',
-                ['get', 'point_count'],
-                '#3bb4e7',
-                50, '#12466a',
-                750, '#000000'
-            ],
-            'circle-radius': 20
-        }
-    });
+    async function addImage(ident) {
+        const url = `{% static '' %}${ident}.svg`;
+        const image = new Image();
 
-    map.addLayer({
-        id: 'cluster-count',
-        type: 'symbol',
-        source: 'observations',
-        filter: ['>', ['get', 'all_count'], 1],
-        layout: {
-            'text-field': ["get", "all_count"],
-            'text-font': ['Noto Sans Regular'],
-            'text-size': 12
-        },
-        paint: {
-            'text-color': '#ffffff'
-        }
-    });
+        const response = await fetch(url);
+        svgText = await response.text();
 
+        const svg = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgText);
 
-    map.addLayer({
-        id: 'unclustered-observations',
-        type: 'circle',
-        source: 'observations',
-        filter: ['!', ['has', 'point_count']],
-        paint: {
-            'circle-color': '#3bb4e7',
-            'circle-radius': 20,
-            'circle-stroke-width': 1,
-            'circle-stroke-color': '#fff'
-        }
-    });
+        const promise = new Promise((resolve) => {
+            image.onload = resolve;
+        });
+        image.src = svg;
+        await promise;
+        map.addImage(ident, image);
+    }
 
-    map.on('click', 'unclustered-observations', async (e) => {
-        const coordinates = e.features[0].geometry.coordinates.slice();
-        const obs_id = e.features[0].properties.id;
-        const group = e.features[0].properties.group;
-        const url = obsProxyTemplate.replace("0", obs_id);
+    async function loadImages() {
+        await Promise.all([
+            "observation_map",
+            "groups/bird_map",
+            "groups/tree_map",
+            "groups/mammal_map"
+        ].map(addImage));
+    }
 
-        // Ensure that if the map is zoomed out such that
-        // multiple copies of the feature are visible, the
-        // popup appears over the copy being pointed to.
-        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-        }
+    loadImages();
 
-        fetch(`${url}?lang={{ language }}`)
-            .then(response => response.text())
-            .then(html => {
-                (async function () {
-                    window.MAP_BOX_KEY = "{{ MAP_BOX_KEY }}";
-                    const location = await getLocation(coordinates[1], coordinates[0]);
-                    html = html.replace('__PLACE__', location);
-debugger
-                    {% get_current_language as LANGUAGE_CODE %}
-                    moment.locale("{{ LANGUAGE_CODE }}");
+    map.on('load', () => {
 
-                    const temp = document.createElement('div');
-                    temp.innerHTML = html;
-                    const el = temp.querySelector('#obs_popup');
-                    const obs_date = el.getAttribute("obs-date");
+        map.addSource('observations', {
+            type: 'geojson',
+            data: '{% url 'map_proxy' %}',
+            cluster: true,
+            clusterMaxZoom: 22,
+            clusterRadius: 50,
+            clusterProperties: {
+                all_count: ["+", 1],
+                tree_count: ["+", ["case", ["==", ["get","group"], "tree"], 1, 0]],
+                mammal_count: ["+", ["case", ["==", ["get","group"], "mammal"], 1, 0]],
+                bird_count: ["+", ["case", ["==", ["get","group"], "bird"], 1, 0]],
+            }
+        });
 
-                    const when = moment(obs_date).fromNow();
-                    html = html.replace('__WHEN__', when);
+        map.addLayer({
+            id: 'cluster-observations',
+            type: 'circle',
+            source: 'observations',
+            filter: ['>', ['get', 'all_count'], 1],
+            paint: {
+                'circle-color': [
+                    'step',
+                    ['get', 'point_count'],
+                    '#3bb4e7',
+                    50, '#12466a',
+                    750, '#000000'
+                ],
+                'circle-radius': 20
+            }
+        });
 
-                    new maplibregl.Popup({ className: 'map-popup' })
-                        .setLngLat(coordinates)
-                        .setHTML(html)
-                        .addTo(map);
+        map.addLayer({
+            id: 'cluster-count',
+            type: 'symbol',
+            source: 'observations',
+            filter: ['>', ['get', 'all_count'], 1],
+            layout: {
+                'text-field': ["get", "all_count"],
+                'text-font': ['Noto Sans Regular'],
+                'text-size': 12
+            },
+            paint: {
+                'text-color': '#ffffff'
+            }
+        });
 
-                    const audio = document.getElementById('audio')
-                    if (audio !== null) {
+        map.addLayer({
+            id: 'unclustered-observation-icons',
+            type: 'symbol',
+            source: 'observations',
+            filter: ['!', ['has', 'point_count']],
+            layout: {
+                'icon-image': [
+                    'match',
+                    ['get', 'group'],
+                    'bird', 'groups/bird_map',
+                    'mammal', 'groups/mammal_map',
+                    'tree', 'groups/tree_map',
+                    'observation_map'
+                ],
+                'icon-size': 0.8,
+            }
+        });
+
+        map.on('click', 'unclustered-observation-icons', async (e) => {
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const obs_id = e.features[0].properties.id;
+            const group = e.features[0].properties.group;
+            const url = obsProxyTemplate.replace("0", obs_id);
+
+            // Ensure that if the map is zoomed out such that
+            // multiple copies of the feature are visible, the
+            // popup appears over the copy being pointed to.
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+               coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    (async function () {
+                        window.MAP_BOX_KEY = "{{ MAP_BOX_KEY }}";
+                        const location = await getLocation(coordinates[1], coordinates[0]);
+                        html = html.replace('__PLACE__', location);
+
+                        {% get_current_language as LANGUAGE_CODE %}
+                        moment.locale("{{ LANGUAGE_CODE }}");
+
+                        const temp = document.createElement('div');
+                        temp.innerHTML = html;
+                        const el = temp.querySelector('#obs_popup');
+                        const obs_date = el.getAttribute("obs-date");
+
+                        const when = moment(obs_date).fromNow();
+                        html = html.replace('__WHEN__', when);
+
+                        new maplibregl.Popup({ className: 'map-popup' })
+                            .setLngLat(coordinates)
+                            .setHTML(html)
+                            .addTo(map);
+
+                        const audio = document.getElementById('audio')
                         init_audio(audio);
-                    }
-                })();
-            });
+                    })();
+                });
+        });
+
+        map.on("click", "cluster-observations", async (e) => {
+          const feature = e.features[0];
+          var clusterId = feature.properties.cluster_id;
+          if (!clusterId) return;
+          const zoom = await map.getSource("observations").getClusterExpansionZoom(clusterId);
+          map.easeTo({
+            center: feature.geometry.coordinates,
+            zoom: zoom + 0.5,
+          });
+        });
+
+        map.on("mouseenter", ["unclustered-observation-icons", "cluster-observations"], () => {
+          map.getCanvas().style.cursor = "pointer";
+        });
+        map.on("mouseleave", ["unclustered-observation-icons", "cluster-observations"], () => {
+          map.getCanvas().style.cursor = "";
+        });
     });
-});
 
-document.querySelectorAll('input[name="group"]').forEach(radio => {
-    radio.addEventListener('change', (e) => {
-        const group = e.target.value;
+    document.querySelectorAll('input[name="group"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const group = e.target.value;
 
-        map.setLayoutProperty(
-            "cluster-count",
-            "text-field",
-            ["get", `${group}_count`]
-        );
+            map.setLayoutProperty(
+                "cluster-count",
+                "text-field",
+                ["get", `${group}_count`]
+            );
 
-        let filter_property;
-        switch (group) {
-            case "all":
-                filter_property = 'all_count'
-                break;
-            case "tree":
-                filter_property = 'tree_count'
-                break;
-            case "mammal":
-                filter_property = 'mammal_count'
-                break;
-            case "bird":
-                filter_property = 'bird_count'
-                break;
-        }
-        let clusterGroupFilter = ['>', ['get', filter_property], 1];
-        let unclusteredGroupFilter = group == "all" ? ['!', ['has', 'point_count']] :
-            ['all',
-            ['!', ['has', 'point_count']],
-            ['==', ['get', 'group'], group]];
+            let filter_property;
+            switch (group) {
+                case "all":
+                    filter_property = 'all_count'
+                    break;
+                case "tree":
+                    filter_property = 'tree_count'
+                    break;
+                case "mammal":
+                    filter_property = 'mammal_count'
+                    break;
+                case "bird":
+                    filter_property = 'bird_count'
+                    break;
+            }
+            let clusterGroupFilter = ['>', ['get', filter_property], 1];
+            let unclusteredGroupFilter = group == "all" ? ['!', ['has', 'point_count']] :
+                ['all',
+                ['!', ['has', 'point_count']],
+                ['==', ['get', 'group'], group]];
 
-        map.setFilter('cluster-observations', clusterGroupFilter);
-        map.setFilter('cluster-count', clusterGroupFilter);
-        map.setFilter('unclustered-observations', unclusteredGroupFilter);
+            map.setFilter('cluster-observations', clusterGroupFilter);
+            map.setFilter('cluster-count', clusterGroupFilter);
+            map.setFilter('unclustered-observations', unclusteredGroupFilter);
+        });
     });
-});
-
 </script>
 {% endblock %}
 
