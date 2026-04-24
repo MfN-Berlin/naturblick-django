@@ -526,7 +526,8 @@ def obs(request, obs_id):
         "date": date,
         "species_avatar": s.avatar_new.imagefile.image.url,
         "is_fauna": fauna,
-        "js_date_time": json["data"]["dateTime"]
+        "js_date_time": json["data"]["dateTime"],
+        "language": language
     }
 
     if fauna:
@@ -714,7 +715,6 @@ def map_obs(request, obs_id):
         else:
             context["jpg_url"] = f"/api/projects/observations/{obs_id}/image.jpg"
 
-        language = translation.get_language()
         context["language"] = language
         return render(request, f"web/obs_detail.html", context)
     except:

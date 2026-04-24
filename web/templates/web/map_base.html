@@ -118,14 +118,14 @@ map.on('load', () => {
            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
 
-        fetch(url)
+        fetch(`${url}?lang={{ language }}`)
             .then(response => response.text())
             .then(html => {
                 (async function () {
                     window.MAP_BOX_KEY = "{{ MAP_BOX_KEY }}";
                     const location = await getLocation(coordinates[1], coordinates[0]);
                     html = html.replace('__PLACE__', location);
-
+debugger
                     {% get_current_language as LANGUAGE_CODE %}
                     moment.locale("{{ LANGUAGE_CODE }}");
 

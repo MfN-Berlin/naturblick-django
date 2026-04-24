@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 14:57+0200\n"
+"POT-Creation-Date: 2026-04-22 16:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,6 +21,20 @@ msgstr ""
 #: templates/partials/features_section.html:5
 msgid "Merkmale"
 msgstr "Features"
+
+#: templates/partials/obs_popup.html:19
+msgid "Gehört __WHEN__ von "
+msgstr "Seen __WHEN__ by "
+
+#: templates/partials/obs_popup.html:27
+#, fuzzy
+#| msgid "Gesehen von {user} __WHEN__ in __PLACE__"
+msgid "Gesehen __WHEN__ von"
+msgstr "Seen by {user} __WHEN__ in __PLACE__"
+
+#: templates/partials/obs_popup.html:36
+msgid "Erfahre mehr"
+msgstr "Learn more"
 
 #: templates/partials/portrait_goodtoknow.html:9
 msgid "Nutzung"
@@ -195,11 +209,11 @@ msgstr "It was made during the activity period."
 msgid "Sie wurde nicht im Aktivitätszeitraum gemacht."
 msgstr "It was not made during the activity period."
 
-#: views.py:727
+#: views.py:726
 msgid "Es wurde keine Mustererkennung durchgeführt."
 msgstr "Pattern recognition was not used to identify this observation."
 
-#: views.py:731
+#: views.py:730
 msgid ""
 " hatte die größte Übereinstimmung mit dem trainierten Vergleichsmaterial der "
 "Mustererkennung."
@@ -207,7 +221,7 @@ msgstr ""
 "had the closest match to the trained reference material of the pattern "
 "recognition."
 
-#: views.py:734
+#: views.py:733
 msgid ""
 "Die Art war unter den drei Arten mit der größten Übereinstimmung mit dem "
 "trainierten Vergleichsmaterial der Mustererkennung."
@@ -215,20 +229,10 @@ msgstr ""
 "The species was among the three species with the closest match to the "
 "trained reference material of the pattern recognition."
 
-#: views.py:737
+#: views.py:736
 msgid ""
 "Die Art war nicht unter den drei Arten mit der größten Übereinstimmung mit "
 "dem trainierten Vergleichsmaterial der Mustererkennung."
 msgstr ""
 "The species was not among the three species with the closest match to the "
 "trained reference material of the pattern recognition."
-
-#, fuzzy
-#~| msgid "Diese Beobachtung ist nicht plausibel."
-#~ msgid "Diese Beobachtung wird auch wissenschaftlich genutzt."
-#~ msgstr "This observation is also used scientifically."
-
-#, fuzzy
-#~| msgid "Diese Beobachtung ist teilweise plausibel."
-#~ msgid "Diese Beobachtung ist Teil des Citizen Science Projektes"
-#~ msgstr "This observation is part of the citizen science project"
