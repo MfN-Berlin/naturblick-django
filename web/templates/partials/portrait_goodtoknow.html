@@ -1,9 +1,9 @@
 {% load i18n %}
 
-<section class="gtk grid-2-1">
-    <div>
-        <h2>{{ title }}</h2>
-        <ul>
+<section class="gtk">
+  <h2>{{ title }}</h2>
+  <div class="{% if img_meta %}with-image{% endif %}">
+    <ul>
         {% for type, facts in goodtoknows.items %}
             {% for fact in facts %}
                 {% if type == 'usage' %}<li><strong>{% translate "Nutzung" %}</strong>: {{ fact }}</li>
@@ -14,7 +14,9 @@
                 {% endif %}
             {% endfor %}
         {% endfor %}
-        </ul>
-    </div>
-    {% include "partials/portrait_img.html" with url=img_meta.image_file.image.url link_text=img_meta.text licence=img_meta.image_file.license owner=img_meta.image_file.owner only %}
+    </ul>
+    {% if img_meta %}
+    {% include "partials/portrait_img.html" with meta=img_meta file=img_meta.image_file only %}
+    {% endif %}
+  </div>
 </section>

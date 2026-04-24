@@ -5,7 +5,6 @@
     padding: 16px;
     box-shadow: var(--shadow);
     font-weight: var(--font-weight-bold);
-    margin-bottom: 8px;
 
     audio {
         display: none;

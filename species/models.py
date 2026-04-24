@@ -338,6 +338,10 @@ class PortraitImageMeta(models.Model):
     def __str__(self):
         return f"{self.text}"
 
+    @property
+    def aspect_ratio(self):
+        return self.display_ratio.replace('-', '/')
+
     class Meta:
         abstract = True
 

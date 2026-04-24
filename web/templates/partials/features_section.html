@@ -1,6 +1,9 @@
 {% load i18n %}
 
-<section class="features grid-2-3">
+<section class="features {% if similar_species or audio %}grid-2-3{% endif %}">
+  {% if similar_species %}
+  <div class="characters-and-audio">
+  {% endif %}
   <div class="characters">
     <div>
       <img src="{{ portrait.species.avatar_new.imagefile.image.url }}">
@@ -16,26 +19,29 @@
       {% endfor %}
     </ul>
   </div>
-
-    {% if audio %}
-    {% include "partials/audio.html" with title=audio.audio_title licence=audio.licence png=audio.png url=audio.url only %}
-    {% endif %}
-
-    {% if similar_species %}
-    <div class="similar">
-      <h3>{% translate "Verwechslungsarten" %}</h3>
-      {% for sim in similar_species %}
-        <a href="{{ sim.url }}">
-            <div>
-              <img src="{{ sim.img }}">
-              <div>
-                <h4>{{ sim.name }}</h4>
-                <h5>{{ sim.sciname }}</h5>
-              </div>
-            </div>
-            {{ sim.differences }}
-        </a>
-        {% endfor %}
+  {% if audio %}
+  {% include "partials/audio.html" with title=audio.audio_title licence=audio.licence png=audio.png url=audio.url only %}
+  {% endif %}
+  {% if similar_species %}
+  </div>
+  {% endif %}
+  {% if similar_species %}
+  <div class="similar">
+    <h3>{% translate "Verwechslungsarten" %}</h3>
+    <div>
+    {% for sim in similar_species %}
+    <a href="{{ sim.url }}">
+      <div>
+        <img src="{{ sim.img }}">
+        <div>
+          <h4>{{ sim.name }}</h4>
+          <h5>{{ sim.sciname }}</h5>
+        </div>
+      </div>
+      {{ sim.differences }}
+    </a>
+    {% endfor %}
     </div>
-    {% endif %}
+  </div>
+  {% endif %}
 </section>
