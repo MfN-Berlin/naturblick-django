@@ -83,7 +83,7 @@ def map_page(request, obs_id):
     ogs_list = []
 
     try:
-        json = requests.get(f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}").json()
+        json = requests.get(f"{settings.PLAYBACK_URL}projects/observations/{obs_id}").json()
         species_id = json["data"]["species"]
         s = Species.objects.filter(id=species_id).first()
         cc_name = json["data"]["ccName"]
@@ -608,7 +608,7 @@ def confirmation(assessment, pattern_matching_executed, pattern_matching_confirm
 def map_obs(request, obs_id):
     try:
         data = requests.get(
-            f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}").json().get("data")
+            f"{settings.PLAYBACK_URL}projects/observations/{obs_id}").json().get("data")
         species_id = data.get("species")
         species = Species.objects.filter(id=species_id).first()
         cc_name = data.get("ccName")
