@@ -4,6 +4,7 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'web/css/home.css' %}">
+<link rel="stylesheet" href="{% static 'web/css/masonry.css' %}">
 {% endblock %}
 
 {% block title %}Naturblick{% endblock %}
@@ -18,7 +19,16 @@
 {% endblock %}
 
 {% block content %}
-<main class="content-container">
+<main>
+    <section class="species-section">
+        <div id="species-masonry">
+        {% for id, img_url, width, height, group, name, sciname in species %}
+        {% include "partials/masonry_tile.html" %}
+        {% endfor %}
+        </div>
+        <a href="{% url 'search_portrait'%}{% querystring %}">Entdecke mehr Arten {% inline_svg 'right-arrow.svg' %}</a>
+    </section>
+    <hr>
     <section>
         {% img "Karte_Nachtigall_bf227c6efb.png" widths='245w,400w,800w,1200w' sizes="(max-width: 400px) 400px, (max-width: 767px) 800px, (max-width: 1023px) 1200px, 1200px" %}
         {% include "partials/card.html" with title="Beobachtungen mit Naturblick" subtitle="Schau dir Beobachtungen der anderen Naturblick-Nutzer:innen an." link_text="Finde Beobachtungen in deiner Nähe →" path_name="map" %}

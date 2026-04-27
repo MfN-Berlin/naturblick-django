@@ -112,8 +112,31 @@ def map_page(request, obs_id):
 
 
 def index(request):
+    lang = translation.get_language()
+    species_qs = (Species.objects.select_related('avatar_new', 'group').prefetch_related(
+        Prefetch(
+            "portrait_set", to_attr="prefetched_portraits"
+        )
+    ))
+    ids=[370, 12, 160, 701, 73, 639, 661, 713]
+    species_qs = species_qs.filter(id__in=ids)
+    species_dict = {
+        s.id: (
+            s.id,
+            s.prefetched_portraits[0].descmeta.image_file.image_small.url,
+            s.prefetched_portraits[0].descmeta.image_file.image_small.width,
+            s.prefetched_portraits[0].descmeta.image_file.image_small.height,
+            s.group,
+            s.name(lang),
+            s.sciname
+        ) for s in species_qs
+
+    }
+    species = [species_dict[id] for id in ids]
     return web_render(request, "index", context={
-        "dark": True
+        "lang": lang,
+        "dark": True,
+        "species": species
     })
 
 
@@ -370,8 +393,6 @@ def search_portrait_data(request):
 
     species_qs = (Species.objects.select_related('avatar_new', 'group')
     .prefetch_related(
-        Prefetch("speciesname_set", queryset=SpeciesName.objects.filter(language=lang).order_by('name'),
-                 to_attr="prefetched_speciesnames"),
         Prefetch(
             "portrait_set", to_attr="prefetched_portraits"
         )

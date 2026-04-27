@@ -29,8 +29,6 @@ body {
     line-height: var(--line-height-regular);
     .main-container {
         background-color: var(--white);
-        padding-bottom: var(--default-pad);
-        padding-top: var(--default-pad);
     }
 }
 
@@ -265,11 +263,6 @@ svg {
 
 .text-container {
     max-width: 768px;
-}
-
-.content-container {
-    max-width: 1400px;
-    background-image: url("../img/background_grain_opt.png");
 }
 
 
