@@ -119,6 +119,8 @@ def index(request):
         )
     ))
     ids=[370, 12, 160, 701, 73, 639, 661, 713]
+    if lang == "dels":
+        ids.remove(12)
     species_qs = species_qs.filter(id__in=ids)
     species_dict = {
         s.id: (
