@@ -87,7 +87,9 @@ body {
                 }
             }
             .no-image {
-                columns: min(var(--max-columns), 2);
+                ul {
+                    columns: min(var(--max-columns), 2);
+                }
             }
         }
 

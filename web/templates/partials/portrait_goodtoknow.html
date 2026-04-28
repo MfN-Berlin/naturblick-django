@@ -1,9 +1,10 @@
 {% load i18n %}
 
 <section class="gtk">
-  <h2>{{ title }}</h2>
   <div class="{% if img_meta %}grid-{{ img_meta.grid_ratio }}{% else %}no-image{% endif %}">
-    <ul>
+    <div>
+      <h2>{{ title }}</h2>
+      <ul>
         {% for type, facts in goodtoknows.items %}
             {% for fact in facts %}
                 {% if type == 'usage' %}<li><strong>{% translate "Nutzung" %}</strong>: {{ fact }}</li>
@@ -14,7 +15,8 @@
                 {% endif %}
             {% endfor %}
         {% endfor %}
-    </ul>
+      </ul>
+    </div>
     {% if img_meta %}
     {% include "partials/portrait_img.html" with meta=img_meta file=img_meta.image_file only %}
     {% endif %}
