@@ -3,6 +3,11 @@
 <section class="sources">
     <h4>{% translate "Quellen" %}</h4>
     <div>
+        {% for source, id in image_sources %}
+        <p id="{{ id }}">
+            {{ source|urlize }}
+        </p>
+        {% endfor %}
         {% for source in sources %}
         <p>
             {{ source|urlize }}

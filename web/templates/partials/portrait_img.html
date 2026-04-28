@@ -2,5 +2,5 @@
 
 <figure class="portrait-img">
   <img style="object-position: {{ meta.focus_point_horizontal|unlocalize }}% {{ meta.focus_point_vertical|unlocalize }}%; aspect-ratio: {{ meta.aspect_ratio }}; object-fit: cover;" src="{{ file.image.url }}">
-  <figcaption><a href="#"><span>{{ meta.text }}</span> ({{ file.license }}) {{ file.owner }}</a></figcaption>
+  <figcaption><a href="#{{ img_id }}"><span>{{ meta.text }}</span> ({{ file.license }}) {{ file.owner }}</a></figcaption>
 </figure>

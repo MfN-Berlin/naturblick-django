@@ -18,18 +18,18 @@
 
 {% block content %}
 <main>
-    {% include "partials/portrait_section.html" with img_meta=portrait.descmeta title=species_description descriptions=descriptions only %}
+    {% include "partials/portrait_section.html" with img_meta=portrait.descmeta title=species_description descriptions=descriptions img_id='img-description-ref' only %}
 
     {% include "partials/features_section.html" %}
 
     {% if portrait.inthecitymeta %}
-    {% include "partials/portrait_section.html" with img_meta=portrait.inthecitymeta title=species_inthecity descriptions=inthecity only %}
+    {% include "partials/portrait_section.html" with img_meta=portrait.inthecitymeta title=species_inthecity descriptions=inthecity img_id='img-inTheCity-ref' only %}
     {% endif %}
 
     {% if goodtoknows %}
     {% include "partials/portrait_goodtoknow.html" with img_meta=portrait.funfactmeta title=species_goodtoknows goodtoknows=goodtoknows only %}
     {% endif %}
 
-    {% include "partials/portrait_sources.html" with sources=sources only %}
+    {% include "partials/portrait_sources.html" with sources=sources image_sources=image_sources only %}
 </main>
 {% endblock %}

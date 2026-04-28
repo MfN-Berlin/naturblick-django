@@ -170,7 +170,7 @@ def translate_ident(lang_index, source):
 
 
 def source_from_image(meta):
-    return (f'{meta.text}, {meta.image_file.owner}, {meta.image_file.license}, {meta.image_file.source}')
+    return f'{meta.text}, {meta.image_file.owner}, {meta.image_file.license}, {meta.image_file.source}'
 
 
 def sims(language, similar_species):
@@ -284,12 +284,12 @@ def portrait(request, id):
                                                                      portrait.flower_description,
                                                                      portrait.fruit_description]
 
-    sources = [source_from_image(portrait.descmeta)]
+    image_sources = [(source_from_image(portrait.descmeta), "img-description-ref")]
     if hasattr(portrait, "inthecitymeta"):
-        sources.append(source_from_image(portrait.inthecitymeta))
+        image_sources.append((source_from_image(portrait.inthecitymeta), "img-inTheCity-ref"))
     if hasattr(portrait, "funfactmeta"):
-        sources.append(source_from_image(portrait.funfactmeta))
-    sources += list(portrait.source_set.values_list("text", flat=True))
+        image_sources.append((source_from_image(portrait.funfactmeta), "img-funFacts-ref"))
+    sources = list(portrait.source_set.values_list("text", flat=True))
     translate_with_lang = partial(translate_ident, 1 if language == "en" else 0)
     sources = list(map(translate_with_lang, sources))
 
@@ -315,6 +315,7 @@ def portrait(request, id):
         "descriptions": [x for x in descriptions if x is not None],
         "inthecity": [x for x in [portrait.city_habitat, portrait.human_interaction] if x is not None],
         "goodtoknows": goodtoknows,
+        "image_sources": image_sources,
         "sources": sources,
         "additional_name": additional_names,
         "similar_species": similar_species,

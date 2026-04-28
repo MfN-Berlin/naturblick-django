@@ -198,6 +198,10 @@ body {
                         color: var(--relax);
                         text-decoration: underline;
                     }
+                }
+                p:target {
+                    background: var(--white);
+                }
             }
         }
     }
