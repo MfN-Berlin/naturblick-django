@@ -1,6 +1,6 @@
 {% extends "web/page_base.html" %}
 
-{% load static web_tags i18n %}
+{% load static web_tags i18n l10n %}
 
 {% block dels %}{% endblock %}
 
@@ -33,14 +33,14 @@
 </div>
 
 <script>
-    const mfn = [13.3792, 52.5295]
+    const mfn = [{{ longitude|unlocalize }}, {{ latitude|unlocalize }}];
     const obsProxyTemplate = "{% url 'obs' 0 %}";
 
     var map = new maplibregl.Map({
         container: 'map',
         style: 'https://tiles.openfreemap.org/styles/bright',
         center: mfn,
-        zoom: 9,
+        zoom: {{ zoom }},
         cluster: true,
     });
 
@@ -197,6 +197,15 @@
         });
         map.on("mouseleave", ["unclustered-observation-icons", "cluster-observations"], () => {
           map.getCanvas().style.cursor = "";
+        });
+
+        map.on("moveend", () => {
+            const center = map.getCenter();
+            const current = new URL(window.location.href);
+            current.searchParams.set("lat", center.lat);
+            current.searchParams.set("lng", center.lng);
+            current.searchParams.set("zoomLevel", map.getZoom());
+            history.pushState({}, "", current.toString());
         });
     });
 

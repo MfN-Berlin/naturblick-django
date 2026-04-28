@@ -425,8 +425,15 @@ def mobileapp(request):
 
 
 def show_map(request):
+    longitude = request.GET.get("lng", 13.3792)
+    latitude = request.GET.get("lat", 52.5295)
+    zoom = request.GET.get("zoomLevel", 9)
     return web_render(request, "map", context={
-        "MAP_BOX_KEY": os.getenv('MAP_BOX_KEY')})
+        "MAP_BOX_KEY": os.getenv('MAP_BOX_KEY'),
+        "longitude": longitude,
+        "latitude": latitude,
+        "zoom": zoom
+    })
 
 
 def faq(request):
