@@ -24,6 +24,10 @@
   --grid-2-3-columns: 2fr 3fr;
   --grid-2-1-columns: 2fr 1fr;
   --grid-1-2-columns: 1fr 2fr;
+  --grid-1-1-columns: 1fr 1fr;
+  --grid-5-7-columns: 5fr 7fr;
+  --grid-7-5-columns: 7fr 5fr;
+
   --sources-columns: 3;
   /* TODO: Fixed or device dependent? */
   --font-size-regular-no-zoom: 16px;
@@ -132,6 +136,9 @@
         --grid-2-3-columns: 2fr 3fr;
         --grid-2-1-columns: 2fr 1fr;
         --grid-1-2-columns: 1fr 2fr;
+        --grid-1-1-columns: 1fr 1fr;
+        --grid-5-7-columns: 5fr 7fr;
+        --grid-7-5-columns: 7fr 5fr;
         --sources-columns: 2;
     }
 }
@@ -163,6 +170,9 @@
         --grid-2-3-columns: 1fr;
         --grid-2-1-columns: 1fr;
         --grid-1-2-columns: 1fr;
+        --grid-1-1-columns: 1fr;
+        --grid-5-7-columns: 1fr;
+        --grid-7-5-columns: 1fr;
         --sources-columns: 1;
     }
 }

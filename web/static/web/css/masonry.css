@@ -21,7 +21,7 @@
             display: inline;
             margin: 0;
         }
-        padding: 16px;
+        padding: var(--half-pad);
     }
     
     a:hover {

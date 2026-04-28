@@ -1,4 +1,4 @@
-<section {% if class %}class="{{ class }}"{% endif %}>
+<section class="{% if img_meta %}grid-{{ img_meta.grid_ratio }}{% endif %}">
     {% include "partials/portrait_img.html" with meta=img_meta file=img_meta.image_file only %}
     <div>
         <h2>{{ title }}</h2>
