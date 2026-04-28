@@ -1,4 +1,5 @@
 main {
+    max-width: 1400px;
     color: var(--white);
     padding-top: 0px;
     #species-masonry {
