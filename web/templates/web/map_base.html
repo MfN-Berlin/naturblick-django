@@ -36,6 +36,8 @@
     const mfn = [{{ longitude|unlocalize }}, {{ latitude|unlocalize }}];
     const obsProxyTemplate = "{% url 'obs' 0 %}";
 
+    const unclusteredIconSize = 0.7;
+
     var map = new maplibregl.Map({
         container: 'map',
         style: 'https://tiles.openfreemap.org/styles/bright',
@@ -180,7 +182,7 @@
                     'tree', 'groups/tree_map',
                     'observation_map'
                 ],
-                'icon-size': 0.8,
+                'icon-size': unclusteredIconSize,
             }
         });
 
@@ -206,7 +208,7 @@
                     'tree', 'groups/tree_map',
                     'observation_map'
                 ],
-                'icon-size': 0.7,
+                'icon-size': unclusteredIconSize,
             }
         });
 
