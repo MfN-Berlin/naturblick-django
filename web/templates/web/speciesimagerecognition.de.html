@@ -1,0 +1,2210 @@
+{% extends "web/page_base.html" %}
+
+{% load static web_tags %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'web/css/recognition.css' %}">
+{% endblock %}
+{% block title %}Bilderkennung Pflanzen{% endblock %}
+
+{% block header_title %}
+<h1>Bilderkennung Pflanzen</h1>
+{% endblock %}
+
+{% block content %}
+<main class="text-container">
+  <p>
+    Naturblick unterstützt deine Naturerfahrung in der Stadt. Die Vorschläge der automatisierten Artbestimmung entstehen durch den Vergleich mit Fotos von Pflanzen, mit denen der Algorithmus trainiert wurde. 
+  </p>
+  <p>Das bedeutet:</p>
+  <ol>
+    <li>es können nur Arten erkannt werden, die auch trainiert wurden</li>
+    <li>die Erkennung funktioniert am besten, wenn eine große Ähnlichkeit zu der Aufnahmesituation und -qualität besteht (z.B. Pflanzen in der freien Natur).</li>
+  </ol>
+  <p>
+    Der Naturblick Algorithmus wurde mit dem Fokus auf Wildpflanzen in der Stradt trainiert. Das Bildmaterial stammt von naturgucker, den LIFECLEF Challenges und iNaturalist. Folgende Arten können bestimmt werden (Stand September 2021):
+  </p>
+  <ol class="specieslist">
+    <li>Abendländischer Lebensbaum (<em>Thuja occidentalis</em>)</li>
+    <li>Acanthusblättrige Eberwurz (<em>Carlina acanthifolia</em>)</li>
+    <li>Ackerbohne (<em>Vicia faba</em>)</li>
+    <li>Acker-Ehrenpreis (<em>Veronica agrestis</em>)</li>
+    <li>Acker-Filzkraut (<em>Filago arvensis</em>)</li>
+    <li>Acker-Flügelknöterich (<em>Fallopia convolvulus</em>)</li>
+    <li>Acker-Fuchsschwanzgras (<em>Alopecurus myosuroides</em>)</li>
+    <li>Acker-Gänsedistel (<em>Sonchus arvensis</em>)</li>
+    <li>Acker-Gauchheil (<em>Anagallis arvensis</em>)</li>
+    <li>Acker-Gipskraut (<em>Gypsophila muralis</em>)</li>
+    <li>Acker-Glockenblume (<em>Campanula rapunculoides</em>)</li>
+    <li>Acker-Goldstern (<em>Gagea villosa</em>)</li>
+    <li>Acker-Haftdolde (<em>Caucalis platycarpos</em>)</li>
+    <li>Acker-Hahnenfuß (<em>Ranunculus arvensis</em>)</li>
+    <li>Acker-Hellerkraut (<em>Thlaspi arvense</em>)</li>
+    <li>Acker-Hornkraut (<em>Cerastium arvense</em>)</li>
+    <li>Acker-Hundskamille (<em>Anthemis arvensis</em>)</li>
+    <li>Acker-Kratzdistel (<em>Cirsium arvense</em>)</li>
+    <li>Acker-Krummhals (<em>Anchusa arvensis</em>)</li>
+    <li>Acker-Löwenmaul (<em>Misopates orontium</em>)</li>
+    <li>Acker-Minze (<em>Mentha arvensis</em>)</li>
+    <li>Acker-Morikandie (<em>Moricandia arvensis</em>)</li>
+    <li>Acker-Rettich (<em>Raphanus raphanistrum</em>)</li>
+    <li>Acker-Ringelblume (<em>Calendula arvensis</em>)</li>
+    <li>Acker-Rose (<em>Rosa agrestis</em>)</li>
+    <li>Ackerröte (<em>Sherardia arvensis</em>)</li>
+    <li>Acker-Schmalwand (<em>Arabidopsis thaliana</em>)</li>
+    <li>Acker-Schöterich (<em>Erysimum cheiranthoides</em>)</li>
+    <li>Acker-Schwarzkümmel (<em>Nigella arvensis</em>)</li>
+    <li>Acker-Senf (<em>Sinapis arvensis</em>)</li>
+    <li>Acker-Spark (<em>Spergula arvensis</em>)</li>
+    <li>Acker-Steinsame (<em>Buglossoides arvensis</em>)</li>
+    <li>Acker-Stiefmütterchen (<em>Viola arvensis</em>)</li>
+    <li>Acker-Vergißmeinnicht (<em>Myosotis arvensis</em>)</li>
+    <li>Acker-Wachtelweizen (<em>Melampyrum arvense</em>)</li>
+    <li>Acker-Winde (<em>Convolvulus arvensis</em>)</li>
+    <li>Acker-Zahntrost (<em>Odontites vernus</em>)</li>
+    <li>Acker-Ziest (<em>Stachys arvensis</em>)</li>
+    <li>Adlerfarn (<em>Pteridium aquilinum</em>)</li>
+    <li>Adonisblättrige Mutterwurz (<em>Ligusticum mutellina</em>)</li>
+    <li>Affenblume (<em>Mimulus ringens</em>)</li>
+    <li>Affen-Knabenkraut (<em>Orchis simia</em>)</li>
+    <li>Ahornblättrige Platane (<em>Platanus acerifolia</em>)</li>
+    <li>Ähren-Hainsimse (<em>Luzula spicata</em>)</li>
+    <li>Ähren-Schuppenried (<em>Kobresia myosuroides</em>)</li>
+    <li>Ährige Johannisbeere (<em>Ribes spicatum</em>)</li>
+    <li>Ährige Teufelskralle (<em>Phyteuma spicatum</em>)</li>
+    <li>Ähriger Ehrenpreis  (<em>Veronica spicata</em>)</li>
+    <li>Ähriges Tausendblatt (<em>Myriophyllum spicatum</em>)</li>
+    <li>Akelei-Wiesenraute (<em>Thalictrum aquilegiifolium</em>)</li>
+    <li>Allegheny-Brombeere (<em>Rubus allegheniensis</em>)</li>
+    <li>Allermannsharnisch (<em>Allium victorialis</em>)</li>
+    <li>Alpen-Ampfer (<em>Rumex alpinus</em>)</li>
+    <li>Alpen-Aster (<em>Aster alpinus</em>)</li>
+    <li>Alpen-Aurikel (<em>Primula auricula</em>)</li>
+    <li>Alpenbalsam (<em>Erinus alpinus</em>)</li>
+    <li>Alpen-Bartschie (<em>Bartsia alpina</em>)</li>
+    <li>Alpen-Berufkraut (<em>Erigeron alpinus</em>)</li>
+    <li>Alpen-Distel (<em>Carduus defloratus</em>)</li>
+    <li>Alpen-Ehrenpreis (<em>Veronica alpina</em>)</li>
+    <li>Alpen-Fetthenne (<em>Sedum alpestre</em>)</li>
+    <li>Alpen-Haarsimse (<em>Trichophorum alpinum</em>)</li>
+    <li>Alpen-Heckenkirsche (<em>Lonicera alpigena</em>)</li>
+    <li>Alpen-Hornklee (<em>Lotus alpinus</em>)</li>
+    <li>Alpen-Johannisbeere (<em>Ribes alpinum</em>)</li>
+    <li>Alpen-Kratzdistel (<em>Cirsium spinosissimum</em>)</li>
+    <li>Alpen-Kreuzblümchen (<em>Polygala alpestris</em>)</li>
+    <li>Alpen-Leinkraut (<em>Linaria alpina</em>)</li>
+    <li>Alpen-Lieschgras (<em>Phleum alpinum</em>)</li>
+    <li>Alpen-Mohn (<em>Papaver alpinum</em>)</li>
+    <li>Alpenrachen (<em>Tozzia alpina</em>)</li>
+    <li>Alpen-Rauhgras (<em>Stipa calamagrostis</em>)</li>
+    <li>Alpen-Rispengras (<em>Poa alpina</em>)</li>
+    <li>Alpen-Rose (<em>Rosa pendulina</em>)</li>
+    <li>Alpen-Säuerling (<em>Oxyria digyna</em>)</li>
+    <li>Alpen-Sockenblume (<em>Epimedium alpinum</em>)</li>
+    <li>Alpen-Soldanelle (<em>Soldanella alpina</em>)</li>
+    <li>Alpen-Steintäschel (<em>Aethionema saxatile</em>)</li>
+    <li>Alpen-Vergissmeinnicht (<em>Myosotis alpestris</em>)</li>
+    <li>Alpen-Wachsblume (<em>Cerinthe glabra</em>)</li>
+    <li>Alpen-Waldrebe (<em>Clematis alpina</em>)</li>
+    <li>Alpen-Wimperfarn (<em>Woodsia alpina</em>)</li>
+    <li>Amberbaum (<em>Liquidambar styraciflua</em>)</li>
+    <li>Amerikanische Herzblume (<em>Dicentra formosa</em>)</li>
+    <li>Amerikanische Kermesbeere (<em>Phytolacca americana</em>)</li>
+    <li>Amerikanische Platane (<em>Platanus occidentalis</em>)</li>
+    <li>Amerikanische Teichsimse (<em>Schoenoplectus pungens</em>)</li>
+    <li>Amerikanische Winterbeere (<em>Ilex verticillata</em>)</li>
+    <li>Amerikanischer Zürgelbaum (<em>Celtis occidentalis</em>)</li>
+    <li>Amerikanisches Mädesüß (<em>Filipendula rubra</em>)</li>
+    <li>Amerikanisches Scheingreiskraut (<em>Erechtites hieraciifolius</em>)</li>
+    <li>Amethyst-Sommerwurz (<em>Orobanche amethystea</em>)</li>
+    <li>Amur-Korkbaum (<em>Phellodendron amurense</em>)</li>
+    <li>Angenehme Brombeere (<em>Rubus gratus</em>)</li>
+    <li>Anis-Labkraut (<em>Galium verrucosum</em>)</li>
+    <li>Apenninen-Sonnenröschen (<em>Helianthemum apenninum</em>)</li>
+    <li>Apennin-Windröschen (<em>Anemone apennina</em>)</li>
+    <li>Aprikose (<em>Prunus armeniaca</em>)</li>
+    <li>Arabischer Schneckenklee (<em>Medicago arabica</em>)</li>
+    <li>Argentinische Verbene (<em>Verbena bonariensis</em>)</li>
+    <li>Argentinischer Nachtschatten (<em>Solanum physalifolium</em>)</li>
+    <li>Armblütiger Klee (<em>Trifolium micranthum</em>)</li>
+    <li>Armenische Traubenhyazinthe (<em>Muscari armeniacum</em>)</li>
+    <li>Arznei-Engelwurz (<em>Angelica archangelica</em>)</li>
+    <li>Asphaltklee (<em>Bituminaria bituminosa</em>)</li>
+    <li>Ästiger Igelkolben (<em>Sparganium erectum</em>)</li>
+    <li>Ästiger Schachtelhalm (<em>Equisetum ramosissimum</em>)</li>
+    <li>Astlose Graslilie (<em>Anthericum liliago</em>)</li>
+    <li>Atlantisches Hasenglöckchen (<em>Hyacinthoides non-scripta</em>)</li>
+    <li>Atlas-Mohn (<em>Papaver atlanticum</em>)</li>
+    <li>Atlas-Zeder (<em>Cedrus atlantica</em>)</li>
+    <li>Aufrechte Studentenblume (<em>Tagetes erecta</em>)</li>
+    <li>Aufrechte Trespe (<em>Bromus erectus</em>)</li>
+    <li>Aufrechte Waldrebe (<em>Clematis recta</em>)</li>
+    <li>Aufrechter Sauerklee (<em>Oxalis stricta</em>)</li>
+    <li>Aufrechter Ziest (<em>Stachys recta</em>)</li>
+    <li>Aufrechtes Fingerkraut (<em>Potentilla recta</em>)</li>
+    <li>Aufrechtes Glaskraut (<em>Parietaria officinalis</em>)</li>
+    <li>Ausdauernder Knäuel (<em>Scleranthus perennis</em>)</li>
+    <li>Ausdauerndes Silberblatt (<em>Lunaria rediviva</em>)</li>
+    <li>Ausgebreitetes Glaskraut (<em>Parietaria judaica</em>)</li>
+    <li>Ausläufer-Fetthenne (<em>Sedum sarmentosum</em>)</li>
+    <li>Auwald-Sternmiere (<em>Stellaria neglecta</em>)</li>
+    <li>Bach-Ehrenpreis (<em>Veronica beccabunga</em>)</li>
+    <li>Bach-Kratzdistel (<em>Cirsium rivulare</em>)</li>
+    <li>Bach-Nelkenwurz (<em>Geum rivale</em>)</li>
+    <li>Bach-Quellkraut (<em>Montia fontana</em>)</li>
+    <li>Badener Rispengras (<em>Poa badensis</em>)</li>
+    <li>Baldo-Windröschen (<em>Anemone baldensis</em>)</li>
+    <li>Balsam-Springkraut (<em>Impatiens balsamina</em>)</li>
+    <li>Banater Kugeldistel (<em>Echinops bannaticus</em>)</li>
+    <li>Bärenschote (<em>Astragalus glycyphyllos</em>)</li>
+    <li>Bärlauch (<em>Allium ursinum</em>)</li>
+    <li>Bart-Hafer (<em>Avena barbata</em>)</li>
+    <li>Bärtige Glockenblume  (<em>Campanula barbata</em>)</li>
+    <li>Bart-Nelke (<em>Dianthus barbatus</em>)</li>
+    <li>Bartpippau (<em>Tolpis barbata</em>)</li>
+    <li>Bärwurz (<em>Meum athamanticum</em>)</li>
+    <li>Bastard-Luzerne (<em>Medicago x varia</em>)</li>
+    <li>Bastard-Mohn (<em>Papaver hybridum</em>)</li>
+    <li>Bastard-Platane (<em>Platanus x hispanica</em>)</li>
+    <li>Bastard-Vogelbeeren (<em>Sorbus hybrida</em>)</li>
+    <li>Bastard-Wicke (<em>Vicia hybrida</em>)</li>
+    <li>Bauernsenf (<em>Teesdalia nudicaulis</em>)</li>
+    <li>Bauern-Tabak (<em>Nicotiana rustica</em>)</li>
+    <li>Baumhasel (<em>Corylus colurna</em>)</li>
+    <li>Begrannter Klappertopf (<em>Rhinanthus glacialis</em>)</li>
+    <li>Behaarte Fetthenne (<em>Sedum villosum</em>)</li>
+    <li>Behaarte Karde (<em>Dipsacus pilosus</em>)</li>
+    <li>Behaarte Platterbse (<em>Lathyrus hirsutus</em>)</li>
+    <li>Behaarte Primel (<em>Primula hirsuta</em>)</li>
+    <li>Behaarte Segge (<em>Carex hirta</em>)</li>
+    <li>Behaarter Backenklee (<em>Dorycnium hirsutum</em>)</li>
+    <li>Behaarter Ginster (<em>Genista pilosa</em>)</li>
+    <li>Behaarter Zweizahn (<em>Bidens pilosa</em>)</li>
+    <li>Behaartes Bruchkraut (<em>Herniaria hirsuta</em>)</li>
+    <li>Behaartes Hartheu (<em>Hypericum hirsutum</em>)</li>
+    <li>Beifuß-Ambrosie (<em>Ambrosia artemisiifolia</em>)</li>
+    <li>Bergahorn (<em>Acer pseudoplatanus</em>)</li>
+    <li>Berg-Alpenglöckchen (<em>Soldanella montana</em>)</li>
+    <li>Berg-Aster (<em>Aster amellus</em>)</li>
+    <li>Berg-Baldrian (<em>Valeriana montana</em>)</li>
+    <li>Berg-Blasenfarn (<em>Cystopteris montana</em>)</li>
+    <li>Berg-Distel (<em>Carduus personata</em>)</li>
+    <li>Berg-Ehrenpreis (<em>Veronica montana</em>)</li>
+    <li>Berg-Esparsette (<em>Onobrychis montana</em>)</li>
+    <li>Berg-Fahnenwicke (<em>Oxytropis jacquinii</em>)</li>
+    <li>Berg-Gamander (<em>Teucrium montanum</em>)</li>
+    <li>Berg-Gliedkraut (<em>Sideritis montana</em>)</li>
+    <li>Berg-Haarstrang (<em>Peucedanum oreoselinum</em>)</li>
+    <li>Berg-Hartheu (<em>Hypericum montanum</em>)</li>
+    <li>Berg-Hauswurz (<em>Sempervivum montanum</em>)</li>
+    <li>Berg-Klee (<em>Trifolium montanum</em>)</li>
+    <li>Berg-Lauch (<em>Allium lusitanicum</em>)</li>
+    <li>Berg-Nelkenwurz (<em>Geum montanum</em>)</li>
+    <li>Berg-Pippau (<em>Crepis pontana</em>)</li>
+    <li>Bergplame (<em>Chamaedorea elegans</em>)</li>
+    <li>Berg-Platterbse (<em>Lathyrus linifolius</em>)</li>
+    <li>Berg-Rispengras (<em>Poa chaixii</em>)</li>
+    <li>Berg-Sandglöckchen (<em>Jasione montana</em>)</li>
+    <li>Berg-Segge (<em>Carex montana</em>)</li>
+    <li>Bergulme (<em>Ulmus glabra</em>)</li>
+    <li>Berg-Waldrebe (<em>Clematis montana</em>)</li>
+    <li>Berg-Weidenröschen (<em>Epilobium montanum</em>)</li>
+    <li>Bergwiesen-Frauenmantel (<em>Alchemilla monticola</em>)</li>
+    <li>Berg-Wundklee (<em>Anthyllis montana</em>)</li>
+    <li>Berlandiers Gänsefuß (<em>Chenopodium berlandieri</em>)</li>
+    <li>Besenginster (<em>Cytisus scoparius</em>)</li>
+    <li>Besenheide (<em>Calluna vulgaris</em>)</li>
+    <li>Bewimperte Alpenrose (<em>Rhododendron hirsutum</em>)</li>
+    <li>Bewimperter Federschwingel (<em>Vulpia ciliata</em>)</li>
+    <li>Bienen-Ragwurz (<em>Ophrys apifera</em>)</li>
+    <li>Binsen-Quecke (<em>Elymus farctus</em>)</li>
+    <li>Birkenfeige (<em>Ficus benjamina</em>)</li>
+    <li>Bittere Schafgarbe (<em>Achillea clavennae</em>)</li>
+    <li>Bittere Schleifenblume (<em>Iberis amara</em>)</li>
+    <li>Bitteres Kreuzblümchen (<em>Polygala amara</em>)</li>
+    <li>Bitteres Schaumkraut (<em>Cardamine amara</em>)</li>
+    <li>Bittersüßer Nachtschatten (<em>Solanum dulcamara</em>)</li>
+    <li>Blasenbinse (<em>Scheuchzeria palustris</em>)</li>
+    <li>Blasenesche (<em>Koelreuteria paniculata</em>)</li>
+    <li>Blasenfrüchtiger Klee (<em>Trifolium vesiculosum</em>)</li>
+    <li>Blasen-Pippau (<em>Crepis vesicaria</em>)</li>
+    <li>Blasen-Tragant (<em>Astragalus penduliflorus</em>)</li>
+    <li>Blasses Knabenkraut (<em>Orchis pallens</em>)</li>
+    <li>Blassgelber Klee (<em>Trifolium ochroleucon</em>)</li>
+    <li>Blattloser Widerbart (<em>Epipogium aphyllum</em>)</li>
+    <li>Blaue Lupine (<em>Lupinus angustifolius</em>)</li>
+    <li>Blaue Rasselblume (<em>Catananche caerulea</em>)</li>
+    <li>Blauer Eisenhut (<em>Aconitum napellus</em>)</li>
+    <li>Blauer Lattich (<em>Lactuca perennis</em>)</li>
+    <li>Blauer Wasser-Ehrenpreis (<em>Veronica anagallis-aquatica</em>)</li>
+    <li>Blaues Pfeifengras (<em>Molinia caerulea</em>)</li>
+    <li>Blauglockenbaum (<em>Paulownia tomentosa</em>)</li>
+    <li>Blaugraues Habichtskraut (<em>Hieracium caesium</em>)</li>
+    <li>Blaugrüne Binse (<em>Juncus inflexus</em>)</li>
+    <li>Blaugrüne Segge (<em>Carex flacca</em>)</li>
+    <li>Blaugrüner Faserschirm (<em>Trinia glauca</em>)</li>
+    <li>Blaugrüner Steinbrech (<em>Saxifraga caesia</em>)</li>
+    <li>Blaugrünes Schillergras (<em>Koeleria glauca</em>)</li>
+    <li>Bleiche Vogel-Sternmiere (<em>Stellaria pallida</em>)</li>
+    <li>Bleicher Schwingel (<em>Festuca pallens</em>)</li>
+    <li>Bleiches Waldvöglein (<em>Cephalanthera damasonium</em>)</li>
+    <li>Bleich-Segge (<em>Carex pallescens</em>)</li>
+    <li>Blühfreudige Sonnenblume (<em>Helianthus pauciflorus</em>)</li>
+    <li>Blutauge (<em>Comarum palustre</em>)</li>
+    <li>Blut-Johanniskraut (<em>Hypericum androsaemum</em>)</li>
+    <li>Blutrote Sommerwurz (<em>Orobanche gracilis</em>)</li>
+    <li>Blutroter Hartriegel (<em>Cornus sanguinea</em>)</li>
+    <li>Blut-Storchschnabel (<em>Geranium sanguineum</em>)</li>
+    <li>Blutwurz (<em>Potentilla erecta</em>)</li>
+    <li>Bockshorn-Klee (<em>Trigonella foenum-graecum</em>)</li>
+    <li>Bocks-Riemenzunge (<em>Himantoglossum hircinum</em>)</li>
+    <li>Bodden-Binse (<em>Juncus gerardii</em>)</li>
+    <li>Bodenfrüchtiger Klee (<em>Trifolium subterraneum</em>)</li>
+    <li>Bogenhanf (<em>Sansevieria trifasciata</em>)</li>
+    <li>Bologneser Glockenblume (<em>Campanula bononiensis</em>)</li>
+    <li>Borretsch (<em>Borago officinalis</em>)</li>
+    <li>Borstblatt-Schmiele (<em>Deschampsia setacea</em>)</li>
+    <li>Borsten-Pippau (<em>Crepis setosa</em>)</li>
+    <li>Borstgras (<em>Nardus stricta</em>)</li>
+    <li>Borstige Glockenblume (<em>Campanula cervicaria</em>)</li>
+    <li>Brasilianisches Tausendblatt (<em>Myriophyllum aquaticum</em>)</li>
+    <li>Brauner Senf (<em>Brassica juncea</em>)</li>
+    <li>Brauner Storchschnabel (<em>Geranium phaeum</em>)</li>
+    <li>Braunes Mönchskraut (<em>Nonea pulla</em>)</li>
+    <li>Braunes Zypergras (<em>Cyperus fuscus</em>)</li>
+    <li>Braun-Klee (<em>Trifolium badium</em>)</li>
+    <li>Bräunliche Segge (<em>Carex brunnescens</em>)</li>
+    <li>Braunrote Schlauchpflanze (<em>Sarracenia purpurea</em>)</li>
+    <li>Braunrote Stendelwurz (<em>Epipactis atrorubens</em>)</li>
+    <li>Braunstieliger Streifenfarn (<em>Asplenium trichomanes</em>)</li>
+    <li>Breitblättrige Glockenblume (<em>Campanula latifolia</em>)</li>
+    <li>Breitblättrige Kresse (<em>Lepidium latifolium</em>)</li>
+    <li>Breitblättrige Platterbse (<em>Lathyrus latifolius</em>)</li>
+    <li>Breitblättriger Dornfarn (<em>Dryopteris dilatata</em>)</li>
+    <li>Breitblättriger Hohlzahn (<em>Galeopsis ladanum</em>)</li>
+    <li>Breitblättriger Klebalant (<em>Dittrichia viscosa</em>)</li>
+    <li>Breitblättriger Merk (<em>Sium latifolium</em>)</li>
+    <li>Breitblättriger Rohrkolben (<em>Typha latifolia</em>)</li>
+    <li>Breitblättriger Stendelwurz (<em>Epipactis helleborine</em>)</li>
+    <li>Breitblättriges Knabenkraut (<em>Dactylorhiza majalis</em>)</li>
+    <li>Breitblättriges Laserkraut (<em>Laserpitium latifolium</em>)</li>
+    <li>Breitblättriges Pfaffenhütchen (<em>Euonymus latifolius</em>)</li>
+    <li>Breitblättriges Pfeilkraut (<em>Sagittaria latifolia</em>)</li>
+    <li>Breitblättriges Teerkraut (<em>Parentucellia latifolia</em>)</li>
+    <li>Breitblättriges Wollgras (<em>Eriophorum latifolium</em>)</li>
+    <li>Breit-Wegerich (<em>Plantago major</em>)</li>
+    <li>Brennender Hahnenfuß (<em>Ranunculus flammula</em>)</li>
+    <li>Bronze-Felberich (<em>Lysimachia ciliata</em>)</li>
+    <li>Bruch-Weide (<em>Salix fragilis</em>)</li>
+    <li>Bubikopf (<em>Soleirolia soleirolii</em>)</li>
+    <li>Buchsbaum (<em>Buxus sempervirens</em>)</li>
+    <li>Bucklige Wasserlinse (<em>Lemna gibba</em>)</li>
+    <li>Bunte Kronwicke (<em>Securigera varia</em>)</li>
+    <li>Bunte Schwertlilie (<em>Iris variegata</em>)</li>
+    <li>Bunter Eisenhut (<em>Aconitum variegatum</em>)</li>
+    <li>Bunter Hohlzahn (<em>Galeopsis speciosa</em>)</li>
+    <li>Buntes Läusekraut (<em>Pedicularis oederi</em>)</li>
+    <li>Buntes Reitgras (<em>Calamagrostis varia</em>)</li>
+    <li>Buntes Vergißmeinnicht (<em>Myosotis discolor</em>)</li>
+    <li>Büschel-Federschwingel (<em>Vulpia fasciculata</em>)</li>
+    <li>Büschel-Rose (<em>Rosa multiflora</em>)</li>
+    <li>Büschelschön (<em>Phacelia congesta</em>)</li>
+    <li>Busch-Nelke (<em>Dianthus seguieri</em>)</li>
+    <li>Busch-Windröschen (<em>Anemone nemorosa</em>)</li>
+    <li>Buxbaums Segge (<em>Carex buxbaumii</em>)</li>
+    <li>Carolina-Rose (<em>Rosa carolina</em>)</li>
+    <li>Chinaschilf (<em>Miscanthus sinensis</em>)</li>
+    <li>Chinesische Pfingstrose (<em>Paeonia lactiflora</em>)</li>
+    <li>Chinesische Samtpappel (<em>Abutilon theophrasti</em>)</li>
+    <li>Chinesische Wisteria (<em>Wisteria sinensis</em>)</li>
+    <li>Chinesische Zierquitte (<em>Chaenomeles speciosa</em>)</li>
+    <li>Chinesischer Sommerflieder (<em>Buddleja davidii</em>)</li>
+    <li>Chinesischer Wacholder (<em>Juniperus chinensis</em>)</li>
+    <li>Christophskraut (<em>Actaea spicata</em>)</li>
+    <li>Clusius-Gämswurz (<em>Doronicum clusii</em>)</li>
+    <li>Clusius-Schneeglöckchen (<em>Galanthus plicatus</em>)</li>
+    <li>Cycloloma atriplicifolium (<em>Cycloloma atriplicifolium</em>)</li>
+    <li>Dach-Hauswurz (<em>Sempervivum tectorum</em>)</li>
+    <li>Dach-Pippau (<em>Crepis tectorum</em>)</li>
+    <li>Dachzieglige Siegwurz (<em>Gladiolus imbricatus</em>)</li>
+    <li>Dallisgrass (<em>Paspalum dilatatum</em>)</li>
+    <li>Dalmatiner Glockenblume (<em>Campanula portenschlagiana</em>)</li>
+    <li>Damaszener Schwarzkümmel (<em>Nigella damascena</em>)</li>
+    <li>Dänischer Tragant (<em>Astragalus danicus</em>)</li>
+    <li>Dänisches Löffelkraut (<em>Cochlearia danica</em>)</li>
+    <li>Davall-Segge (<em>Carex davalliana</em>)</li>
+    <li>Deich-Gerste (<em>Hordeum marinum</em>)</li>
+    <li>Deutscher Alant (<em>Inula germanica</em>)</li>
+    <li>Deutscher Ginster (<em>Genista germanica</em>)</li>
+    <li>Deutscher Ziest (<em>Stachys germanica</em>)</li>
+    <li>Dichtährige Segge (<em>Carex spicata</em>)</li>
+    <li>Dichtblättrige Wasserpest (<em>Egeria densa</em>)</li>
+    <li>Dichtblütige Kresse (<em>Lepidium densiflorum</em>)</li>
+    <li>Dichtes Fischkraut (<em>Groenlandia densa</em>)</li>
+    <li>Dickblatt-Bergenie (<em>Bergenia crassifolia</em>)</li>
+    <li>Dickblättrige Fetthenne (<em>Sedum dasyphyllum</em>)</li>
+    <li>Dickblättrige Sternmiere (<em>Stellaria crassifolia</em>)</li>
+    <li>Dieffenbachie (<em>Dieffenbachia seguine</em>)</li>
+    <li>Dillenius Sauerklee (<em>Oxalis dillenii</em>)</li>
+    <li>Distel-Sommerwurz (<em>Orobanche reticulata</em>)</li>
+    <li>Dolden-Gänsekresse (<em>Arabis ciliata</em>)</li>
+    <li>Dolden-Milchstern (<em>Ornithogalum umbellatum</em>)</li>
+    <li>Dolden-Spurre (<em>Holosteum umbellatum</em>)</li>
+    <li>Doldiges Habichtskraut (<em>Hieracium umbellatum</em>)</li>
+    <li>Dornige Hauhechel (<em>Ononis spinosa</em>)</li>
+    <li>Dorniger Fuchschwanz (<em>Amaranthus spinosus</em>)</li>
+    <li>Drachenbaum (<em>Dracaena reflexa</em>)</li>
+    <li>Draht-Segge (<em>Carex diandra</em>)</li>
+    <li>Dreiblatt-Binse (<em>Juncus trifidus</em>)</li>
+    <li>Dreiblütige Binse (<em>Juncus triglumis</em>)</li>
+    <li>Dreifarbige Winde (<em>Convolvulus tricolor</em>)</li>
+    <li>Dreifarbiger Fuchsschwanz (<em>Amaranthus tricolor</em>)</li>
+    <li>Dreifurchige Wasserlinse (<em>Lemna trisulca</em>)</li>
+    <li>Dreigriffliges Hornkraut (<em>Cerastium cerastoides</em>)</li>
+    <li>Dreihörniges Labkraut (<em>Galium tricornutum</em>)</li>
+    <li>Dreinervige Nabelmiere (<em>Moehringia trinervia</em>)</li>
+    <li>Dreinervige Segge (<em>Carex trinervis</em>)</li>
+    <li>Dreispaltige Ambrosie (<em>Ambrosia trifida</em>)</li>
+    <li>Dreispitzige Jungfernrebe (<em>Parthenocissus tricuspidata</em>)</li>
+    <li>Dreiteiliger Ehrenpreis (<em>Veronica triphyllos</em>)</li>
+    <li>Dreiteiliger Zweizahn (<em>Bidens tripartita</em>)</li>
+    <li>Dreizahn (<em>Danthonia decumbens</em>)</li>
+    <li>Drüsenlose Kugeldistel (<em>Echinops exaltatus</em>)</li>
+    <li>Drüsige Braunwurz (<em>Scrophularia scopolii</em>)</li>
+    <li>Drüsige Kugeldistel (<em>Echinops sphaerocephalus</em>)</li>
+    <li>Drüsiger Gilbweiderich (<em>Lysimachia punctata</em>)</li>
+    <li>Drüsiges Springkraut (<em>Impatiens glandulifera</em>)</li>
+    <li>Drüsiges Weidenröschen (<em>Epilobium ciliatum</em>)</li>
+    <li>Dudleys Binse (<em>Juncus dudleyi</em>)</li>
+    <li>Duftende Platterbse (<em>Lathyrus odoratus</em>)</li>
+    <li>Duft-Händelwurz (<em>Gymnadenia odoratissima</em>)</li>
+    <li>Duft-Schneeball (<em>Viburnum farreri</em>)</li>
+    <li>Dunkles Lungenkraut (<em>Pulmonaria obscura</em>)</li>
+    <li>Dunkles Zwerg-Hornkraut (<em>Cerastium pumilum</em>)</li>
+    <li>Dünnährige Segge (<em>Carex strigosa</em>)</li>
+    <li>Durchblätterter Erdbeerspinat (<em>Chenopodium foliosum</em>)</li>
+    <li>Durchwachsenblättrige Kresse (<em>Lepidium perfoliatum</em>)</li>
+    <li>Durchwachsenblättriger Bitterling (<em>Blackstonia perfoliata</em>)</li>
+    <li>Durchwachsenblättriges Kleintäschelkraut (<em>Microthlaspi perfoliatum</em>)</li>
+    <li>Durchwachsene Silphie (<em>Silphium perfoliatum</em>)</li>
+    <li>Durchwachsenes Laichkraut (<em>Potamogeton perfoliatus</em>)</li>
+    <li>Dürrwurz-Alant (<em>Inula conyzae</em>)</li>
+    <li>Ebensträußiges Gipskraut (<em>Gypsophila fastigiata</em>)</li>
+    <li>Eberraute (<em>Artemisia abrotanum</em>)</li>
+    <li>Echte Alpenmargerite (<em>Leucanthemopsis alpina</em>)</li>
+    <li>Echte Alpenscharte (<em>Saussurea alpina</em>)</li>
+    <li>Echte Arnika (<em>Arnica montana</em>)</li>
+    <li>Echte Betonie (<em>Betonica officinalis</em>)</li>
+    <li>Echte Dattelpalm (<em>Phoenix dactylifera</em>)</li>
+    <li>Echte Edelraute (<em>Artemisia umbelliformis</em>)</li>
+    <li>Echte Feige (<em>Ficus carica</em>)</li>
+    <li>Echte Geißraute (<em>Galega officinalis</em>)</li>
+    <li>Echte Goldnessel (<em>Lamium galeobdolon</em>)</li>
+    <li>Echte Hirse (<em>Panicum miliaceum</em>)</li>
+    <li>Echte Hundszunge (<em>Cynoglossum officinale</em>)</li>
+    <li>Echte Kamille (<em>Matricaria chamomilla</em>)</li>
+    <li>Echte Katzenminze (<em>Nepeta cataria</em>)</li>
+    <li>Echte Mehlbeere (<em>Sorbus aria</em>)</li>
+    <li>Echte Mispel (<em>Mespilus germanica</em>)</li>
+    <li>Echte Mondraute (<em>Botrychium lunaria</em>)</li>
+    <li>Echte Nelkenwurz (<em>Geum urbanum</em>)</li>
+    <li>Echte Quitte (<em>Cydonia oblonga</em>)</li>
+    <li>Echte Römische Kamille (<em>Chamaemelum nobile</em>)</li>
+    <li>Echte Schlupfsame (<em>Crupina crupinastrum</em>)</li>
+    <li>Echte Sumpfzypresse (<em>Taxodium distichum</em>)</li>
+    <li>Echte Trauerweide (<em>Salix babylonica</em>)</li>
+    <li>Echte Winterkresse (<em>Barbarea vulgaris</em>)</li>
+    <li>Echte Zackenschote (<em>Bunias erucago</em>)</li>
+    <li>Echter Alant (<em>Inula helenium</em>)</li>
+    <li>Echter Baldrian (<em>Valeriana officinalis</em>)</li>
+    <li>Echter Beinwell (<em>Symphytum officinale</em>)</li>
+    <li>Echter Buchweizen (<em>Fagopyrum esculentum</em>)</li>
+    <li>Echter Ehrenpreis (<em>Veronica officinalis</em>)</li>
+    <li>Echter Eibisch (<em>Althaea officinalis</em>)</li>
+    <li>Echter Faulbaum (<em>Frangula alnus</em>)</li>
+    <li>Echter Frauenspiegel (<em>Legousia speculum-veneris</em>)</li>
+    <li>Echter Hopfen (<em>Humulus lupulus</em>)</li>
+    <li>Echter Koriander (<em>Coriandrum sativum</em>)</li>
+    <li>Echter Lavendel (<em>Lavandula angustifolia</em>)</li>
+    <li>Echter Lorbeer (<em>Laurus nobilis</em>)</li>
+    <li>Echter Meerkohl (<em>Crambe maritima</em>)</li>
+    <li>Echter Salbei (<em>Salvia officinalis</em>)</li>
+    <li>Echter Sellerie (<em>Apium graveolens</em>)</li>
+    <li>Echter Steinklee (<em>Melilotus officinalis</em>)</li>
+    <li>Echter Steinsame (<em>Lithospermum officinale</em>)</li>
+    <li>Echter Wein (<em>Vitis vinifera</em>)</li>
+    <li>Echter Wiesenhafer (<em>Helictotrichon pratense</em>)</li>
+    <li>Echtes Büschelgras (<em>Rostraria cristata</em>)</li>
+    <li>Echtes Eisenkraut (<em>Verbena officinalis</em>)</li>
+    <li>Echtes Geißblatt (<em>Lonicera caprifolium</em>)</li>
+    <li>Echtes Herzgespann (<em>Leonurus cardiaca</em>)</li>
+    <li>Echtes Johanniskraut (<em>Hypericum perforatum</em>)</li>
+    <li>Echtes Labkraut (<em>Galium verum</em>)</li>
+    <li>Echtes Löffelkraut  (<em>Cochlearia officinalis</em>)</li>
+    <li>Echtes Mädesüß (<em>Filipendula ulmaria</em>)</li>
+    <li>Echtes Salomonssiegel (<em>Polygonatum odoratum</em>)</li>
+    <li>Echtes Seegras (<em>Zostera marina</em>)</li>
+    <li>Echtes Seifenkraut (<em>Saponaria officinalis</em>)</li>
+    <li>Echtes Süßholz (<em>Glycyrrhiza glabra</em>)</li>
+    <li>Echtes Tausendgüldenkraut (<em>Centaurium erythraea</em>)</li>
+    <li>Edel-Gamander (<em>Teucrium chamaedrys</em>)</li>
+    <li>Edeltanne (<em>Abies procera</em>)</li>
+    <li>Efeu-Ehrenpreis (<em>Veronica hederifolia</em>)</li>
+    <li>Efeu-Giftsumach (<em>Toxicodendron radicans</em>)</li>
+    <li>Efeu-Moorglöckchen (<em>Wahlenbergia hederacea</em>)</li>
+    <li>Efeu-Sommerwurz (<em>Orobanche hederae</em>)</li>
+    <li>Efeutute (<em>Epipremnum aureum</em>)</li>
+    <li>Efeu-Wasser-Hahnenfuß (<em>Ranunculus hederaceus</em>)</li>
+    <li>Eiblättriges Tännelkraut (<em>Kickxia spuria</em>)</li>
+    <li>Einblatt (<em>Spathiphyllum wallisii</em>)</li>
+    <li>Einblütiges Hornkraut (<em>Cerastium uniflorum</em>)</li>
+    <li>Einblütiges Perlgras (<em>Melica uniflora</em>)</li>
+    <li>Einfache Wiesenraute (<em>Thalictrum simplex</em>)</li>
+    <li>Einfacher Rautenfarn (<em>Botrychium simplex</em>)</li>
+    <li>Eingriffeliger Weißdorn (<em>Crataegus monogyna</em>)</li>
+    <li>Einjährige Fetthenne (<em>Sedum annuum</em>)</li>
+    <li>Einjährige Phlox (<em>Phlox drummondii</em>)</li>
+    <li>Einjähriger Beifuß (<em>Artemisia annua</em>)</li>
+    <li>Einjähriger Knäuel (<em>Scleranthus annuus</em>)</li>
+    <li>Einjähriger Ziest (<em>Stachys annua</em>)</li>
+    <li>Einjähriges Bingelkraut (<em>Mercurialis annua</em>)</li>
+    <li>Einjähriges Rispengras (<em>Poa annua</em>)</li>
+    <li>Einjähriges Silberblatt (<em>Lunaria annua</em>)</li>
+    <li>Einknollige Honigorchis (<em>Herminium monorchis</em>)</li>
+    <li>Einköpfiges Berufkraut (<em>Erigeron uniflorus</em>)</li>
+    <li>Einreihige Brunnenkresse (<em>Nasturtium microphyllum</em>)</li>
+    <li>Einspelzige Sumpfbinse (<em>Eleocharis uniglumis</em>)</li>
+    <li>Eisenhut-Hahnenfuß (<em>Ranunculus aconitifolius</em>)</li>
+    <li>Eisenkraut-Salbei (<em>Salvia verbenaca</em>)</li>
+    <li>Eiskraut (<em>Mesembryanthemum crystallinum</em>)</li>
+    <li>Elbe-Spitzklette (<em>Xanthium albinum</em>)</li>
+    <li>Elefantenfuß (<em>Beaucarnea recurvata</em>)</li>
+    <li>Elsbeere (<em>Sorbus torminalis</em>)</li>
+    <li>Englische Kratzdistel (<em>Cirsium dissectum</em>)</li>
+    <li>Englischer Ginster (<em>Genista anglica</em>)</li>
+    <li>Englischer Hautfarn (<em>Hymenophyllum tunbrigense</em>)</li>
+    <li>Entferntährige Segge (<em>Carex distans</em>)</li>
+    <li>Entferntähriges Rispengras (<em>Poa remota</em>)</li>
+    <li>Erbse (<em>Pisum sativum</em>)</li>
+    <li>Erdbeer-Fingerkraut (<em>Potentilla sterilis</em>)</li>
+    <li>Erdbeer-Klee (<em>Trifolium fragiferum</em>)</li>
+    <li>Erdbirne (<em>Apios americana</em>)</li>
+    <li>Erd-Burzeldorn (<em>Tribulus terrestris</em>)</li>
+    <li>Erd-Segge (<em>Carex humilis</em>)</li>
+    <li>Eschenahorn (<em>Acer negundo</em>)</li>
+    <li>Esparsetten-Tragant (<em>Astragalus onobrychis</em>)</li>
+    <li>Essbare Prärielilie (<em>Camassia quamash</em>)</li>
+    <li>Essig-Rose (<em>Rosa gallica</em>)</li>
+    <li>Esskastanie (<em>Castanea sativa</em>)</li>
+    <li>Estragon (<em>Artemisia dracunculus</em>)</li>
+    <li>Europäische Eibe (<em>Taxus baccata</em>)</li>
+    <li>Europäische Lärche (<em>Larix decidua</em>)</li>
+    <li>Europäische Riemenblume (<em>Loranthus europaeus</em>)</li>
+    <li>Europäische Seide (<em>Cuscuta europaea</em>)</li>
+    <li>Europäische Sonnenwende (<em>Heliotropium europaeum</em>)</li>
+    <li>Europäische Stechpalme (<em>Ilex aquifolium</em>)</li>
+    <li>Europäischer Meersenf (<em>Cakile maritima</em>)</li>
+    <li>Europäischer Pfeifenstrauch (<em>Philadelphus coronarius</em>)</li>
+    <li>Europäischer Strandling (<em>Littorella uniflora</em>)</li>
+    <li>Europäisches Pfaffenhütchen (<em>Euonymus europaeus</em>)</li>
+    <li>Fächerahorn (<em>Acer palmatum</em>)</li>
+    <li>Fächer-Zwergmispel (<em>Cotoneaster horizontalis</em>)</li>
+    <li>Faden-Binse (<em>Juncus filiformis</em>)</li>
+    <li>Faden-Ehrenpreis (<em>Veronica filiformis</em>)</li>
+    <li>Faden-Fingerhirse (<em>Digitaria ischaemum</em>)</li>
+    <li>Faden-Segge (<em>Carex lasiocarpa</em>)</li>
+    <li>Fadenstängel-Frauenmantel (<em>Alchemilla filicaulis</em>)</li>
+    <li>Fadenwurzlige Segge (<em>Carex chordorrhiza</em>)</li>
+    <li>Färber-Ginster (<em>Genista tinctoria</em>)</li>
+    <li>Färberkrapp (<em>Rubia tinctorum</em>)</li>
+    <li>Färber-Meier (<em>Asperula tinctoria</em>)</li>
+    <li>Färber-Resede (<em>Reseda luteola</em>)</li>
+    <li>Färber-Saflor (<em>Carthamus tinctorius</em>)</li>
+    <li>Färber-Scharte (<em>Serratula tinctoria</em>)</li>
+    <li>Färber-Waid (<em>Isatis tinctoria</em>)</li>
+    <li>Feder-Fingergras (<em>Chloris virgata</em>)</li>
+    <li>Feder-Nelke (<em>Dianthus plumarius</em>)</li>
+    <li>Feinstrahl (<em>Erigeron annuus</em>)</li>
+    <li>Feldahorn (<em>Acer campestre</em>)</li>
+    <li>Feld-Beifuß (<em>Artemisia campestris</em>)</li>
+    <li>Feld-Ehrenpreis (<em>Veronica arvensis</em>)</li>
+    <li>Feld-Hainsimse (<em>Luzula campestris</em>)</li>
+    <li>Feld-Klee (<em>Trifolium campestre</em>)</li>
+    <li>Feld-Klettenkerbel (<em>Torilis arvensis</em>)</li>
+    <li>Feld-Kranzenzian (<em>Gentianella campestris</em>)</li>
+    <li>Feld-Mannstreu (<em>Eryngium campestre</em>)</li>
+    <li>Feld-Rittersporn (<em>Consolida regalis</em>)</li>
+    <li>Feld-Thymian (<em>Thymus pulegioides</em>)</li>
+    <li>Feldulme (<em>Ulmus minor</em>)</li>
+    <li>Felsen-Ehrenpreis (<em>Veronica fruticans</em>)</li>
+    <li>Felsen-Fetthenne (<em>Sedum rupestre</em>)</li>
+    <li>Felsen-Goldstern (<em>Gagea bohemica</em>)</li>
+    <li>Felsen-Greiskraut (<em>Senecio squalidus</em>)</li>
+    <li>Felsen-Johannisbeere (<em>Ribes petraeum</em>)</li>
+    <li>Felsen-Kreuzdorn (<em>Rhamnus saxatilis</em>)</li>
+    <li>Felsen-Leimkraut (<em>Silene rupestris</em>)</li>
+    <li>Felsennelke (<em>Petrorhagia saxifraga</em>)</li>
+    <li>Felsen-Segge (<em>Carex rupestris</em>)</li>
+    <li>Felsen-Steinkraut (<em>Aurinia saxatilis</em>)</li>
+    <li>Fenchel (<em>Foeniculum vulgare</em>)</li>
+    <li>Fetthennen-Steinbrech (<em>Saxifraga aizoides</em>)</li>
+    <li>Fettwiesen-Margerite (<em>Leucanthemum ircutianum</em>)</li>
+    <li>Feuerbohne (<em>Phaseolus coccineus</em>)</li>
+    <li>Feuer-Lilie (<em>Lilium bulbiferum</em>)</li>
+    <li>Fichtenspargel (<em>Monotropa hypopitys</em>)</li>
+    <li>Fieder-Schaumkraut (<em>Cardamine heptaphylla</em>)</li>
+    <li>Filz-Felsenblümchen (<em>Draba tomentosa</em>)</li>
+    <li>Filzige Pestwurz (<em>Petasites spurius</em>)</li>
+    <li>Filziger Spierstrauch (<em>Spiraea tomentosa</em>)</li>
+    <li>Filziges Hornkraut (<em>Cerastium tomentosum</em>)</li>
+    <li>Filz-Klette (<em>Arctium tomentosum</em>)</li>
+    <li>Filz-Rose (<em>Rosa tomentosa</em>)</li>
+    <li>Fingerhirse (<em>Eleusine coracana</em>)</li>
+    <li>Finger-Schaumkraut (<em>Cardamine pentaphyllos</em>)</li>
+    <li>Finger-Segge (<em>Carex digitata</em>)</li>
+    <li>Finger-Steinbrech (<em>Saxifraga tridactylites</em>)</li>
+    <li>Finkensame (<em>Neslia paniculata</em>)</li>
+    <li>Flachblatt-Mannstreu (<em>Eryngium planum</em>)</li>
+    <li>Flachstängeliges Laichkraut (<em>Potamogeton compressus</em>)</li>
+    <li>Flaschenkürbis (<em>Lagenaria siceraria</em>)</li>
+    <li>Flatter-Binse (<em>Juncus effusus</em>)</li>
+    <li>Flatterulme (<em>Ulmus laevis</em>)</li>
+    <li>Flaum-Eiche (<em>Quercus pubescens</em>)</li>
+    <li>Flaum-Rose (<em>Rosa balsamica</em>)</li>
+    <li>Fleischer-Weidenröschen (<em>Epilobium fleischeri</em>)</li>
+    <li>Fleischfarbenes Knabenkraut (<em>Dactylorhiza incarnata</em>)</li>
+    <li>Fliegen-Ragwurz (<em>Ophrys insectifera</em>)</li>
+    <li>Flockige Königskerze (<em>Verbascum pulverulentum</em>)</li>
+    <li>Floh-Knöterich (<em>Persicaria maculosa</em>)</li>
+    <li>Floh-Segge (<em>Carex pulicaris</em>)</li>
+    <li>Flügel-Braunwurz (<em>Scrophularia umbrosa</em>)</li>
+    <li>Flügel-Ginster (<em>Genista sagittalis</em>)</li>
+    <li>Flügel-Platterbse (<em>Lathyrus ochrus</em>)</li>
+    <li>Flügel-Spindelstrauch (<em>Euonymus alatus</em>)</li>
+    <li>Fluss-Ampfer (<em>Rumex hydrolapathum</em>)</li>
+    <li>Fluss-Pferdesaat (<em>Oenanthe fluviatilis</em>)</li>
+    <li>Forbes-Blaustern (<em>Scilla forbesii</em>)</li>
+    <li>Französische Tamariske (<em>Tamarix gallica</em>)</li>
+    <li>Französischer Ahorn (<em>Acer monspessulanum</em>)</li>
+    <li>Französischer Tragant (<em>Astragalus monspessulanus</em>)</li>
+    <li>Französisches Filzkraut (<em>Filago gallica</em>)</li>
+    <li>Französisches Leimkraut (<em>Silene gallica</em>)</li>
+    <li>Frauenschuh (<em>Cypripedium calceolus</em>)</li>
+    <li>Fremde Wicke (<em>Vicia peregrina</em>)</li>
+    <li>Fremder Ehrenpreis (<em>Veronica peregrina</em>)</li>
+    <li>Frühe Haferschmiele (<em>Aira praecox</em>)</li>
+    <li>Frühe Winterkresse (<em>Barbarea verna</em>)</li>
+    <li>Früher Ehrenpreis (<em>Veronica praecox</em>)</li>
+    <li>Frühes Hungerblümchen (<em>Erophila verna subsp. praecox</em>)</li>
+    <li>Frühlings-Braunwurz (<em>Scrophularia vernalis</em>)</li>
+    <li>Frühlings-Ehrenpreis (<em>Veronica verna</em>)</li>
+    <li>Frühlings-Enzian (<em>Gentiana verna</em>)</li>
+    <li>Frühlings-Fingerkraut (<em>Potentilla tabernaemontani</em>)</li>
+    <li>Frühlings-Gedenkemein (<em>Omphalodes verna</em>)</li>
+    <li>Frühlings-Greiskraut (<em>Senecio vernalis</em>)</li>
+    <li>Frühlings-Hungerblümchen (<em>Draba verna</em>)</li>
+    <li>Frühlings-Krokus (<em>Crocus vernus</em>)</li>
+    <li>Frühlings-Platterbse (<em>Lathyrus vernus</em>)</li>
+    <li>Frühlings-Spark (<em>Spergula morisonii</em>)</li>
+    <li>Fuchsartige Segge (<em>Carex vulpinoidea</em>)</li>
+    <li>Fuchs-Greiskraut (<em>Senecio ovatus</em>)</li>
+    <li>Fuchssche Fingerwurz (<em>Dactylorhiza fuchsii</em>)</li>
+    <li>Fuchsschwanz-Klee (<em>Trifolium rubens</em>)</li>
+    <li>Fuchs-Segge (<em>Carex vulpina</em>)</li>
+    <li>Furchen-Steinbrech (<em>Saxifraga exarata</em>)</li>
+    <li>Gabelästige Hirse (<em>Panicum dichotomiflorum</em>)</li>
+    <li>Gabel-Leimkraut (<em>Silene dichotoma</em>)</li>
+    <li>Gamander-Ehrenpreis (<em>Veronica chamaedrys</em>)</li>
+    <li>Gamander-Spierstrauch (<em>Spiraea chamaedryfolia</em>)</li>
+    <li>Gämswurz-Greiskraut (<em>Senecio doronicum</em>)</li>
+    <li>Gänseblümchen (<em>Bellis perennis</em>)</li>
+    <li>Gänseblümchen-Lochschlund (<em>Anarrhinum bellidifolium</em>)</li>
+    <li>Gänsefingerkraut (<em>Potentilla anserina</em>)</li>
+    <li>Garten-Ampfer (<em>Rumex patientia</em>)</li>
+    <li>Gartenhortensie (<em>Hydrangea macrophylla</em>)</li>
+    <li>Gartenhyazinthe (<em>Hyacinthus orientalis</em>)</li>
+    <li>Garten-Kerbel (<em>Anthriscus cerefolium</em>)</li>
+    <li>Garten-Kresse (<em>Lepidium sativum</em>)</li>
+    <li>Gartenkürbis (<em>Cucurbita pepo</em>)</li>
+    <li>Garten-Löwenmaul (<em>Antirrhinum majus</em>)</li>
+    <li>Garten-Melde (<em>Atriplex hortensis</em>)</li>
+    <li>Garten-Petersilie (<em>Petroselinum crispum</em>)</li>
+    <li>Garten-Petunie (<em>Petunia x hybrida</em>)</li>
+    <li>Garten-Ringelblume (<em>Calendula officinalis</em>)</li>
+    <li>Garten-Rittersporn (<em>Consolida ajacis</em>)</li>
+    <li>Gartensalat (<em>Lactuca sativa</em>)</li>
+    <li>Garten-Sonnenauge (<em>Heliopsis helianthoides</em>)</li>
+    <li>Garten-Tulpe (<em>Tulipa gesneriana</em>)</li>
+    <li>Garten-Wolfsmilch (<em>Euphorbia peplus</em>)</li>
+    <li>Gauchheil-Weidenröschen (<em>Epilobium anagallidifolium</em>)</li>
+    <li>Gebräuchliche Ochsenzunge (<em>Anchusa officinalis</em>)</li>
+    <li>Gebuchtete Königskerze (<em>Verbascum sinuatum</em>)</li>
+    <li>Gedrängte Hainsimse (<em>Luzula congesta</em>)</li>
+    <li>Gefalteter Schwaden (<em>Glyceria notata</em>)</li>
+    <li>Gefärbtes Laichkraut (<em>Potamogeton coloratus</em>)</li>
+    <li>Gefiederte Sockenblume (<em>Epimedium pinnatum</em>)</li>
+    <li>Gefingerter Lerchensporn (<em>Corydalis solida</em>)</li>
+    <li>Gefleckte Taubnessel (<em>Lamium maculatum</em>)</li>
+    <li>Gefleckter Aronstab (<em>Arum maculatum</em>)</li>
+    <li>Gefleckter Schierling (<em>Conium maculatum</em>)</li>
+    <li>Geflecktes Ferkelkraut (<em>Hypochaeris maculata</em>)</li>
+    <li>Geflecktes Knabenkraut (<em>Dactylorhiza maculata</em>)</li>
+    <li>Geflecktes Sandröschen (<em>Tuberaria guttata</em>)</li>
+    <li>Geflügelter Strandflieder (<em>Limonium sinuatum</em>)</li>
+    <li>Geflügeltes Johanniskraut (<em>Hypericum tetrapterum</em>)</li>
+    <li>Gefurchter Feldsalat (<em>Valerianella rimosa</em>)</li>
+    <li>Gefurchter Steinklee (<em>Melilotus sulcatus</em>)</li>
+    <li>Gegenblättriges Milzkraut (<em>Chrysosplenium oppositifolium</em>)</li>
+    <li>Gehörnter Sauerklee (<em>Oxalis corniculata</em>)</li>
+    <li>Gekielter Lauch (<em>Allium carinatum</em>)</li>
+    <li>Gelapptblättrige Melde (<em>Atriplex laciniata</em>)</li>
+    <li>Gelbe Affodill (<em>Asphodeline lutea</em>)</li>
+    <li>Gelbe Einhornpflanze (<em>Ibicella lutea</em>)</li>
+    <li>Gelbe Hauhechel (<em>Ononis natrix</em>)</li>
+    <li>Gelbe Kosmee (<em>Cosmos sulphureus</em>)</li>
+    <li>Gelbe Lupine (<em>Lupinus luteus</em>)</li>
+    <li>Gelbe Narzisse (<em>Narcissus pseudonarcissus</em>)</li>
+    <li>Gelbe Resede (<em>Reseda lutea</em>)</li>
+    <li>Gelbe Skabiose (<em>Scabiosa ochroleuca</em>)</li>
+    <li>Gelbe Sommerwurz (<em>Orobanche lutea</em>)</li>
+    <li>Gelbe Spargelerbse (<em>Lotus maritimus</em>)</li>
+    <li>Gelbe Taglilie (<em>Hemerocallis lilioasphodelus</em>)</li>
+    <li>Gelbe Wiesenraute (<em>Thalictrum flavum</em>)</li>
+    <li>Gelber Blasenstrauch (<em>Colutea arborescens</em>)</li>
+    <li>Gelber Eisenhut (<em>Aconitum lycoctonum</em>)</li>
+    <li>Gelber Enzian (<em>Gentiana lutea</em>)</li>
+    <li>Gelber Fingerhut  (<em>Digitalis lutea</em>)</li>
+    <li>Gelber Gamander (<em>Teucrium flavum</em>)</li>
+    <li>Gelber Günsel (<em>Ajuga chamaepitys</em>)</li>
+    <li>Gelber Hornmohn (<em>Glaucium flavum</em>)</li>
+    <li>Gelber Lauch (<em>Allium flavum</em>)</li>
+    <li>Gelber Lein  (<em>Linum flavum</em>)</li>
+    <li>Gelber Lerchensporn (<em>Pseudofumaria lutea</em>)</li>
+    <li>Gelber Vogelfuß (<em>Ornithopus compressus</em>)</li>
+    <li>Gelber Zahntrost (<em>Odontites luteus</em>)</li>
+    <li>Gelbes Mönchskraut (<em>Nonea lutea</em>)</li>
+    <li>Gelbes Sonnenröschen (<em>Helianthemum nummularium</em>)</li>
+    <li>Gelbes Windröschen (<em>Anemone ranunculoides</em>)</li>
+    <li>Gelbling (<em>Sibbaldia procumbens</em>)</li>
+    <li>Gelbrote Taglilie (<em>Hemerocallis fulva</em>)</li>
+    <li>Gelb-Segge (<em>Carex flava</em>)</li>
+    <li>Gelbwurz (<em>Xanthorhiza simplicissima</em>)</li>
+    <li>Geldbaum (<em>Crassula ovata</em>)</li>
+    <li>Gemeine Berberitze (<em>Berberis vulgaris</em>)</li>
+    <li>Gemeine Esche (<em>Fraxinus excelsior</em>)</li>
+    <li>Gemeine Eselsdistel (<em>Onopordum acanthium</em>)</li>
+    <li>Gemeine Felsenbirne (<em>Amelanchier ovalis</em>)</li>
+    <li>Gemeine Fichte (<em>Picea abies</em>)</li>
+    <li>Gemeine Goldrute (<em>Solidago virgaurea</em>)</li>
+    <li>Gemeine Hainbuche (<em>Carpinus betulus</em>)</li>
+    <li>Gemeine Hasel (<em>Corylus avellana</em>)</li>
+    <li>Gemeine Nachtviole (<em>Hesperis matronalis</em>)</li>
+    <li>Gemeine Pimpernuss (<em>Staphylea pinnata</em>)</li>
+    <li>Gemeine Robinie (<em>Robinia pseudoacacia</em>)</li>
+    <li>Gemeine Rosskastanie (<em>Aesculus hippocastanum</em>)</li>
+    <li>Gemeine Teichbinse (<em>Schoenoplectus lacustris</em>)</li>
+    <li>Gemeine Waldrebe (<em>Clematis vitalba</em>)</li>
+    <li>Gemeine Walnuss (<em>Juglans regia</em>)</li>
+    <li>Gemeine Wegwarte (<em>Cichorium intybus</em>)</li>
+    <li>Gemeine Zwergmispel (<em>Cotoneaster integerrimus</em>)</li>
+    <li>Gemeiner Ackerfrauenmantel (<em>Aphanes arvensis</em>)</li>
+    <li>Gemeiner Andorn (<em>Marrubium vulgare</em>)</li>
+    <li>Gemeiner Beifuß (<em>Artemisia vulgaris</em>)</li>
+    <li>Gemeiner Bocksdorn (<em>Lycium barbarum</em>)</li>
+    <li>Gemeiner Dost (<em>Origanum vulgare</em>)</li>
+    <li>Gemeiner Efeu (<em>Hedera helix</em>)</li>
+    <li>Gemeiner Erdrauch (<em>Fumaria officinalis</em>)</li>
+    <li>Gemeiner Flieder (<em>Syringa vulgaris</em>)</li>
+    <li>Gemeiner Goldregen (<em>Laburnum anagyroides</em>)</li>
+    <li>Gemeiner Klettenkerbel (<em>Torilis japonica</em>)</li>
+    <li>Gemeiner Liguster (<em>Ligustrum vulgare</em>)</li>
+    <li>Gemeiner Odermennig (<em>Agrimonia eupatoria</em>)</li>
+    <li>Gemeiner Rhabarber (<em>Rheum rhabarbarum</em>)</li>
+    <li>Gemeiner Schlupfsame (<em>Crupina vulgaris</em>)</li>
+    <li>Gemeiner Schneeball (<em>Viburnum opulus</em>)</li>
+    <li>Gemeiner Schwimmfarn (<em>Salvinia natans</em>)</li>
+    <li>Gemeiner Seidelbast (<em>Daphne mezereum</em>)</li>
+    <li>Gemeiner Stechapfel (<em>Datura stramonium</em>)</li>
+    <li>Gemeiner Steinquendel (<em>Acinos arvensis</em>)</li>
+    <li>Gemeiner Strandhafer (<em>Ammophila arenaria</em>)</li>
+    <li>Gemeiner Tüpfelfarn (<em>Polypodium vulgare</em>)</li>
+    <li>Gemeiner Wacholder (<em>Juniperus communis</em>)</li>
+    <li>Gemeiner Wassernabel (<em>Hydrocotyle vulgaris</em>)</li>
+    <li>Gemeiner Wasserschlauch (<em>Utricularia vulgaris</em>)</li>
+    <li>Gemeiner Wirbeldost (<em>Clinopodium vulgare</em>)</li>
+    <li>Gemeiner Wundklee (<em>Anthyllis vulneraria</em>)</li>
+    <li>Gemeiner Wurmfarn (<em>Dryopteris filix-mas</em>)</li>
+    <li>Gemeines Ferkelkraut (<em>Hypochaeris radicata</em>)</li>
+    <li>Gemeines Greiskraut (<em>Senecio vulgaris</em>)</li>
+    <li>Gemeines Hirtentäschel (<em>Capsella bursa-pastoris</em>)</li>
+    <li>Gemeines Katzenpfötchen (<em>Antennaria dioica</em>)</li>
+    <li>Gemeines Knäuelgras (<em>Dactylis glomerata</em>)</li>
+    <li>Gemeines Kreuzblümchen (<em>Polygala vulgaris</em>)</li>
+    <li>Gemeines Rispengras (<em>Poa trivialis</em>)</li>
+    <li>Gemeines Ruchgras (<em>Anthoxanthum odoratum</em>)</li>
+    <li>Gemeines Zittergras (<em>Briza media</em>)</li>
+    <li>Gemüse-Ampfer (<em>Rumex longifolius</em>)</li>
+    <li>Gemüse-Gänsedistel (<em>Sonchus oleraceus</em>)</li>
+    <li>Gemüse-Kohl (<em>Brassica oleracea</em>)</li>
+    <li>Gemüse-Spargel (<em>Asparagus officinalis</em>)</li>
+    <li>Gerber-Sumach (<em>Rhus coriaria</em>)</li>
+    <li>Geruchlose Kamille (<em>Tripleurospermum inodorum</em>)</li>
+    <li>Gesägter Tüpfelfarn (<em>Polypodium interjectum</em>)</li>
+    <li>Geschwärzte Segge (<em>Carex atrata</em>)</li>
+    <li>Gestrecktes Laichkraut (<em>Potamogeton praelongus</em>)</li>
+    <li>Gestreifter Ginster (<em>Cytisus striatus</em>)</li>
+    <li>Gestreifter Schwaden (<em>Glyceria striata</em>)</li>
+    <li>Gestutzter Schneckenklee (<em>Medicago truncatula</em>)</li>
+    <li>Gewimpertes Kreuzlabkraut (<em>Cruciata laevipes</em>)</li>
+    <li>Gewöhnliche Akelei (<em>Aquilegia vulgaris</em>)</li>
+    <li>Gewöhnliche Bärenklau (<em>Heracleum sphondylium</em>)</li>
+    <li>Gewöhnliche Besenrauke (<em>Descurainia sophia</em>)</li>
+    <li>Gewöhnliche Brunnenkresse (<em>Nasturtium officinale</em>)</li>
+    <li>Gewöhnliche Kratzdistel (<em>Cirsium vulgare</em>)</li>
+    <li>Gewöhnliche Kugelblume (<em>Globularia bisnagarica</em>)</li>
+    <li>Gewöhnliche Osterluzei (<em>Aristolochia clematitis</em>)</li>
+    <li>Gewöhnliche Pfeilkresse (<em>Lepidium draba</em>)</li>
+    <li>Gewöhnliche Schafgarbe (<em>Achillea millefolium</em>)</li>
+    <li>Gewöhnliche Schmerwurz (<em>Dioscorea communis</em>)</li>
+    <li>Gewöhnliche Schuppenwurz (<em>Lathraea squamaria</em>)</li>
+    <li>Gewöhnliche Schwarznessel (<em>Ballota nigra</em>)</li>
+    <li>Gewöhnliche Simsenlilie (<em>Tofieldia calyculata</em>)</li>
+    <li>Gewöhnliche Sommerwurz (<em>Orobanche caryophyllacea</em>)</li>
+    <li>Gewöhnliche Sonnenbraut (<em>Helenium autumnale</em>)</li>
+    <li>Gewöhnliche Spitzklette (<em>Xanthium pungens</em>)</li>
+    <li>Gewöhnliche Strandsimse (<em>Bolboschoenus maritimus</em>)</li>
+    <li>Gewöhnliche Sumpfkresse (<em>Rorippa palustris</em>)</li>
+    <li>Gewöhnliche Traubenkirsche (<em>Prunus padus</em>)</li>
+    <li>Gewöhnliche Vogelmiere (<em>Stellaria media</em>)</li>
+    <li>Gewöhnliche Weißzunge (<em>Pseudorchis albida</em>)</li>
+    <li>Gewöhnliche Zaunwinde (<em>Calystegia sepium</em>)</li>
+    <li>Gewöhnlicher Alpenlattich (<em>Homogyne alpina</em>)</li>
+    <li>Gewöhnlicher Bastardindigo (<em>Amorpha fruticosa</em>)</li>
+    <li>Gewöhnlicher Blutweiderich (<em>Lythrum salicaria</em>)</li>
+    <li>Gewöhnlicher Feldsalat (<em>Valerianella locusta</em>)</li>
+    <li>Gewöhnlicher Fransenenzian (<em>Gentianopsis ciliata</em>)</li>
+    <li>Gewöhnlicher Froschlöffel (<em>Alisma plantago-aquatica</em>)</li>
+    <li>Gewöhnlicher Giersch (<em>Aegopodium podagraria</em>)</li>
+    <li>Gewöhnlicher Gilbweiderich (<em>Lysimachia vulgaris</em>)</li>
+    <li>Gewöhnlicher Hanf (<em>Cannabis sativa</em>)</li>
+    <li>Gewöhnlicher Hornklee (<em>Lotus corniculatus</em>)</li>
+    <li>Gewöhnlicher Judasbaum (<em>Cercis siliquastrum</em>)</li>
+    <li>Gewöhnlicher Krähenfuß (<em>Lepidium coronopus</em>)</li>
+    <li>Gewöhnlicher Löwenzahn (<em>Taraxacum officinale</em>)</li>
+    <li>Gewöhnlicher Mauerlattich (<em>Mycelis muralis</em>)</li>
+    <li>Gewöhnlicher Natternkopf (<em>Echium vulgare</em>)</li>
+    <li>Gewöhnlicher Perückenstrauch (<em>Cotinus coggygria</em>)</li>
+    <li>Gewöhnlicher Queller (<em>Salicornia europaea</em>)</li>
+    <li>Gewöhnlicher Reiherschnabel (<em>Erodium cicutarium</em>)</li>
+    <li>Gewöhnlicher Sonnenhut (<em>Rudbeckia fulgida</em>)</li>
+    <li>Gewöhnlicher Strandflieder (<em>Limonium vulgare</em>)</li>
+    <li>Gewöhnlicher Teufelsabbiss (<em>Succisa pratensis</em>)</li>
+    <li>Gewöhnlicher Trompetenbaum (<em>Catalpa bignonioides</em>)</li>
+    <li>Gewöhnlicher Wasserdost (<em>Eupatorium cannabinum</em>)</li>
+    <li>Gewöhnliches Bartgras (<em>Bothriochloa ischaemum</em>)</li>
+    <li>Gewöhnliches Bitterkraut (<em>Picris hieracioides</em>)</li>
+    <li>Gewöhnliches Büchsenkraut (<em>Lindernia procumbens</em>)</li>
+    <li>Gewöhnliches Doppelährengras (<em>Beckmannia syzigachne</em>)</li>
+    <li>Gewöhnliches Habichtskraut (<em>Hieracium lachenalii</em>)</li>
+    <li>Gewöhnliches Hornkraut (<em>Cerastium fontanum</em>)</li>
+    <li>Gewöhnliches Leinkraut (<em>Linaria vulgaris</em>)</li>
+    <li>Gewöhnliches Pfeilkraut (<em>Sagittaria sagittifolia</em>)</li>
+    <li>Gewöhnliches Salzkraut (<em>Salsola kali</em>)</li>
+    <li>Gewöhnliches Scharbockskraut (<em>Ficaria verna</em>)</li>
+    <li>Gewöhnliches Tellerkraut (<em>Claytonia perfoliata</em>)</li>
+    <li>Gewürz-Kälberkropf (<em>Chaerophyllum aromaticum</em>)</li>
+    <li>Gewürz-Thymian (<em>Thymus vulgaris</em>)</li>
+    <li>Gezähnter Feldsalat (<em>Valerianella dentata</em>)</li>
+    <li>Giftbeere (<em>Nicandra physalodes</em>)</li>
+    <li>Gift-Hahnenfuß (<em>Ranunculus sceleratus</em>)</li>
+    <li>Gift-Lattich (<em>Lactuca virosa</em>)</li>
+    <li>Gilia achilleifolia (<em>Gilia achilleifolia</em>)</li>
+    <li>Ginkgo (<em>Ginkgo biloba</em>)</li>
+    <li>Ginster-Sommerwurz  (<em>Orobanche rapum-genistae</em>)</li>
+    <li>Glanz-Ehrenpreis (<em>Veronica polita</em>)</li>
+    <li>Glänzender Storchschnabel (<em>Geranium lucidum</em>)</li>
+    <li>Glänzendes Rauhgras (<em>Stipa splendens</em>)</li>
+    <li>Glänzendes Wiesen-Labkraut (<em>Galium lucidum</em>)</li>
+    <li>Glanz-Rauke (<em>Sisymbrium irio</em>)</li>
+    <li>Glanz-Skabiose  (<em>Scabiosa lucida</em>)</li>
+    <li>Glatte Segge (<em>Carex laevigata</em>)</li>
+    <li>Glattes Brillenschötchen (<em>Biscutella laevigata</em>)</li>
+    <li>Glattes Habichtskraut (<em>Hieracium laevigatum</em>)</li>
+    <li>Glieder-Binse (<em>Juncus articulatus</em>)</li>
+    <li>Gliederschote (<em>Chorispora tenella</em>)</li>
+    <li>Glöckchen-Lauch (<em>Allium triquetrum</em>)</li>
+    <li>Glocken-Heide (<em>Erica tetralix</em>)</li>
+    <li>Glocken-Lein (<em>Linum campanulatum</em>)</li>
+    <li>Glocken-Phazelie (<em>Phacelia campanularia</em>)</li>
+    <li>Glücksfeder (<em>Zamioculcas zamiifolia</em>)</li>
+    <li>Golddistel (<em>Carlina vulgaris</em>)</li>
+    <li>Gold-Fingerkraut (<em>Potentilla aurea</em>)</li>
+    <li>Goldgarbe (<em>Achillea filipendulina</em>)</li>
+    <li>Gold-Kälberkropf (<em>Chaerophyllum aureum</em>)</li>
+    <li>Gold-Klee (<em>Trifolium aureum</em>)</li>
+    <li>Gold-Krokus (<em>Crocus flavus</em>)</li>
+    <li>Goldlack (<em>Erysimum cheiri</em>)</li>
+    <li>Goldschopf-Hahnenfuß (<em>Ranunculus auricomus</em>)</li>
+    <li>Gold-Steppenaster (<em>Galatella linosyris</em>)</li>
+    <li>Gold-Waldrebe (<em>Clematis tangutica</em>)</li>
+    <li>Götterbaum (<em>Ailanthus altissima</em>)</li>
+    <li>Gottes-Gnadenkraut (<em>Gratiola officinalis</em>)</li>
+    <li>Grannen-Ruchgras (<em>Anthoxanthum aristatum</em>)</li>
+    <li>Grannen-Schildfarn (<em>Polystichum setiferum</em>)</li>
+    <li>Grannen-Segge (<em>Carex atherodes</em>)</li>
+    <li>Grasblättrige Kresse (<em>Lepidium graminifolium</em>)</li>
+    <li>Grasblättriger Froschlöffel (<em>Alisma gramineum</em>)</li>
+    <li>Gras-Laichkraut (<em>Potamogeton gramineus</em>)</li>
+    <li>Gras-Platterbse (<em>Lathyrus nissolia</em>)</li>
+    <li>Gras-Sternmiere (<em>Stellaria graminea</em>)</li>
+    <li>Grauer Alpendost (<em>Adenostyles alliariae</em>)</li>
+    <li>Graues Felsenblümchen (<em>Draba incana</em>)</li>
+    <li>Graues Fingerkraut (<em>Potentilla inclinata</em>)</li>
+    <li>Graues Heiligenkraut (<em>Santolina chamaecyparissus</em>)</li>
+    <li>Graugrüne Quecke  (<em>Elymus hispidus</em>)</li>
+    <li>Grau-Heide (<em>Erica cinerea</em>)</li>
+    <li>Graukresse (<em>Berteroa incana</em>)</li>
+    <li>Grau-Segge (<em>Carex canescens</em>)</li>
+    <li>Grau-Weide (<em>Salix cinerea</em>)</li>
+    <li>Griechischer Ampfer (<em>Rumex cristatus</em>)</li>
+    <li>Griechisches Blaukissen (<em>Aubrieta deltoidea</em>)</li>
+    <li>Großblättrige Aster (<em>Eurybia macrophylla</em>)</li>
+    <li>Großblättrige Schafgarbe (<em>Achillea macrophylla</em>)</li>
+    <li>Großblumiges Mädchenauge (<em>Coreopsis grandiflora</em>)</li>
+    <li>Großblütige Braunelle (<em>Prunella grandiflora</em>)</li>
+    <li>Großblütige Fransenblume (<em>Tellima grandiflora</em>)</li>
+    <li>Großblütige Gämswurz (<em>Doronicum grandiflorum</em>)</li>
+    <li>Großblütige Königskerze (<em>Verbascum densiflorum</em>)</li>
+    <li>Großblütige Leimsaat (<em>Collomia grandiflora</em>)</li>
+    <li>Großblütige Wicke (<em>Vicia grandiflora</em>)</li>
+    <li>Großblütiger Fingerhut (<em>Digitalis grandiflora</em>)</li>
+    <li>Großblütiges Fettkraut (<em>Pinguicula grandiflora</em>)</li>
+    <li>Großblütiges Perlkörbchen (<em>Anaphalis margaritacea</em>)</li>
+    <li>Grossblütiges Schneeglöckchen (<em>Galanthus elwesii</em>)</li>
+    <li>Große Bibernelle (<em>Pimpinella major</em>)</li>
+    <li>Große Brennnessel (<em>Urtica dioica</em>)</li>
+    <li>Große Eberwurz (<em>Carlina acaulis</em>)</li>
+    <li>Große Fetthenne (<em>Sedum maximum</em>)</li>
+    <li>Große Händelwurz (<em>Gymnadenia conopsea</em>)</li>
+    <li>Große Kapuzinerkresse (<em>Tropaeolum majus</em>)</li>
+    <li>Große Klette (<em>Arctium lappa</em>)</li>
+    <li>Große Knorpelmöhre (<em>Ammi majus</em>)</li>
+    <li>Große Sommerwurz (<em>Orobanche elatior</em>)</li>
+    <li>Große Sterndolde (<em>Astrantia major</em>)</li>
+    <li>Große Sternmiere (<em>Stellaria holostea</em>)</li>
+    <li>Große Telekie (<em>Telekia speciosa</em>)</li>
+    <li>Große Wachsblume (<em>Cerinthe major</em>)</li>
+    <li>Große Zirmet (<em>Tordylium maximum</em>)</li>
+    <li>Grosser Alant (<em>Inula magnifica</em>)</li>
+    <li>Großer Bocksbart (<em>Tragopogon dubius</em>)</li>
+    <li>Großer Knorpellattich (<em>Chondrilla juncea</em>)</li>
+    <li>Großer Odermennig (<em>Agrimonia procera</em>)</li>
+    <li>Großer Sauerampfer (<em>Rumex acetosa</em>)</li>
+    <li>Großer Vogelfuß (<em>Ornithopus sativus</em>)</li>
+    <li>Großer Wasserfenchel (<em>Oenanthe aquatica</em>)</li>
+    <li>Großer Wiesenknopf (<em>Sanguisorba officinalis</em>)</li>
+    <li>Großes Büchsenkraut (<em>Lindernia dubia</em>)</li>
+    <li>Großes Flohkraut (<em>Pulicaria dysenterica</em>)</li>
+    <li>Großes Hexenkraut (<em>Circaea lutetiana</em>)</li>
+    <li>Großes Immergrün (<em>Vinca major</em>)</li>
+    <li>Großes Liebesgras (<em>Eragrostis cilianensis</em>)</li>
+    <li>Großes Schöllkraut (<em>Chelidonium majus</em>)</li>
+    <li>Großes Windröschen (<em>Anemone sylvestris</em>)</li>
+    <li>Großes Zittergras (<em>Briza maxima</em>)</li>
+    <li>Großfiedrige Dahlie (<em>Dahlia pinnata</em>)</li>
+    <li>Großfrüchtige Moosbeere (<em>Vaccinium macrocarpon</em>)</li>
+    <li>Groß-Kreuzblume (<em>Polygala major</em>)</li>
+    <li>Groß-Reiherschnabel (<em>Erodium ciconium</em>)</li>
+    <li>Grünblütiges Wintergrün (<em>Pyrola chlorantha</em>)</li>
+    <li>Grüne Forsythie (<em>Forsythia viridissima</em>)</li>
+    <li>Grüne Minze (<em>Mentha spicata</em>)</li>
+    <li>Grüne Nieswurz (<em>Helleborus viridis</em>)</li>
+    <li>Grün-Erle (<em>Alnus alnobetula</em>)</li>
+    <li>Grünliche Waldhyazinthe (<em>Platanthera chlorantha</em>)</li>
+    <li>Grünlilie (<em>Chlorophytum comosum</em>)</li>
+    <li>Grünstieliger Streifenfarn (<em>Asplenium viride</em>)</li>
+    <li>Gummibaum (<em>Ficus elastica</em>)</li>
+    <li>Gundermann (<em>Glechoma hederacea</em>)</li>
+    <li>Gurke (<em>Cucumis sativus</em>)</li>
+    <li>Gurken-Magnolie (<em>Magnolia acuminata</em>)</li>
+    <li>Guter Heinrich (<em>Blitum bonus-henricus</em>)</li>
+    <li>Haarästige Rispenhirse (<em>Panicum capillare</em>)</li>
+    <li>Haarblättriger Wasserhahnenfuß (<em>Ranunculus trichophyllus</em>)</li>
+    <li>Haarfrüchtige Balsam-Pappel (<em>Populus trichocarpa</em>)</li>
+    <li>Haargurke (<em>Sicyos angulatus</em>)</li>
+    <li>Haar-Hainsimse (<em>Luzula pilosa</em>)</li>
+    <li>Haferwurz (<em>Tragopogon porrifolius</em>)</li>
+    <li>Hahnenfuß-Hasenohr (<em>Bupleurum ranunculoides</em>)</li>
+    <li>Hain-Ampfer (<em>Rumex sanguineus</em>)</li>
+    <li>Hain-Augentrost (<em>Euphrasia nemorosa</em>)</li>
+    <li>Hain-Gilbweiderich (<em>Lysimachia nemorum</em>)</li>
+    <li>Hain-Greiskraut (<em>Senecio nemorensis</em>)</li>
+    <li>Hain-Klette (<em>Arctium nemorosum</em>)</li>
+    <li>Hain-Segge (<em>Carex otrubae</em>)</li>
+    <li>Hain-Sternmiere (<em>Stellaria nemorum</em>)</li>
+    <li>Hain-Veilchen (<em>Viola riviniana</em>)</li>
+    <li>Haken-Tragant (<em>Astragalus hamosus</em>)</li>
+    <li>Halbkuglige Teufelskralle (<em>Phyteuma hemisphaericum</em>)</li>
+    <li>Hanfblättriger Eibisch (<em>Althaea cannabina</em>)</li>
+    <li>Hängendes Nabelkraut (<em>Umbilicus rupestris</em>)</li>
+    <li>Hängepolster-Glockenblume (<em>Campanula poscharskyana</em>)</li>
+    <li>Hänge-Segge (<em>Carex pendula</em>)</li>
+    <li>Hänge-Sommerflieder (<em>Buddleja alternifolia</em>)</li>
+    <li>Hartmans Segge (<em>Carex hartmanii</em>)</li>
+    <li>Harzer Labkraut (<em>Galium saxatile</em>)</li>
+    <li>Hasenfuß-Wegerich (<em>Plantago lagopus</em>)</li>
+    <li>Hasen-Klee (<em>Trifolium arvense</em>)</li>
+    <li>Hasenlattich (<em>Prenanthes purpurea</em>)</li>
+    <li>Hecken-Ehrenpreis (<em>Veronica sublobata</em>)</li>
+    <li>Hecken-Kälberkropf (<em>Chaerophyllum temulum</em>)</li>
+    <li>Hecken-Wicke (<em>Vicia dumetorum</em>)</li>
+    <li>Hecken-Windenknöterich (<em>Fallopia dumetorum</em>)</li>
+    <li>Heide-Günsel (<em>Ajuga genevensis</em>)</li>
+    <li>Heide-Labkraut (<em>Galium pumilum</em>)</li>
+    <li>Heidelbeere (<em>Vaccinium myrtillus</em>)</li>
+    <li>Heide-Nelke (<em>Dianthus deltoides</em>)</li>
+    <li>Heidetamariske (<em>Tamarix ramosissima</em>)</li>
+    <li>Heide-Wicke (<em>Vicia orobus</em>)</li>
+    <li>Heide-Zindelkraut (<em>Cicendia filiformis</em>)</li>
+    <li>Helm-Knabenkraut (<em>Orchis militaris</em>)</li>
+    <li>Herabgebogener Fuchsschwanz (<em>Amaranthus deflexus</em>)</li>
+    <li>Herbst-Adonisröschen (<em>Adonis annua</em>)</li>
+    <li>Herbst-Alpenveilchen (<em>Cyclamen hederifolium</em>)</li>
+    <li>Herbst-Drehwurz (<em>Spiranthes spiralis</em>)</li>
+    <li>Herbst-Löwenzahn (<em>Scorzoneroides autumnalis</em>)</li>
+    <li>Herbst-Wasserstern (<em>Callitriche hermaphroditica</em>)</li>
+    <li>Herbstzeitlose (<em>Colchicum autumnale</em>)</li>
+    <li>Herzblatt-Reiherschnabel (<em>Erodium malacoides</em>)</li>
+    <li>Herzblättrige Erle (<em>Alnus cordata</em>)</li>
+    <li>Herzblättrige Gemswurz (<em>Doronicum columnae</em>)</li>
+    <li>Herzblättrige Kugelblume (<em>Globularia cordifolia</em>)</li>
+    <li>Herzblättrige Weide (<em>Salix eriocephala</em>)</li>
+    <li>Herzblättriger Hahnenfuß (<em>Ranunculus parnassifolius</em>)</li>
+    <li>Himalaya-Zwergmispel (<em>Cotoneaster simonsii</em>)</li>
+    <li>Himbeere (<em>Rubus idaeus</em>)</li>
+    <li>Himmelblaue Prunkwinde (<em>Ipomoea tricolor</em>)</li>
+    <li>Hiobsträne (<em>Coix lacryma-jobi</em>)</li>
+    <li>Hirschzungenfarn (<em>Asplenium scolopendrium</em>)</li>
+    <li>Hirse-Segge (<em>Carex panicea</em>)</li>
+    <li>Hohe Krötenlilie (<em>Tricyrtis macropoda</em>)</li>
+    <li>Hohe Schlüsselblume (<em>Primula elatior</em>)</li>
+    <li>Hoher Rittersporn (<em>Delphinium elatum</em>)</li>
+    <li>Hoher Steinklee (<em>Melilotus altissimus</em>)</li>
+    <li>Hohes Helmkraut (<em>Scutellaria altissima</em>)</li>
+    <li>Hohldotter (<em>Myagrum perfoliatum</em>)</li>
+    <li>Hohler Lerchensporn (<em>Corydalis cava</em>)</li>
+    <li>Holunder-Fingerwurz (<em>Dactylorhiza sambucina</em>)</li>
+    <li>Hopfenklee (<em>Medicago lupulina</em>)</li>
+    <li>Horn-Veilchen (<em>Viola cornuta</em>)</li>
+    <li>Horst-Segge (<em>Carex sempervirens</em>)</li>
+    <li>Hufeisenklee (<em>Hippocrepis comosa</em>)</li>
+    <li>Huflattich (<em>Tussilago farfara</em>)</li>
+    <li>Hügel-Klee (<em>Trifolium alpestre</em>)</li>
+    <li>Hügel-Meier (<em>Asperula cynanchica</em>)</li>
+    <li>Hügel-Vergissmeinnicht (<em>Myosotis ramosissima</em>)</li>
+    <li>Hühnerbiss (<em>Silene baccifera</em>)</li>
+    <li>Hunds-Braunwurz (<em>Scrophularia canina</em>)</li>
+    <li>Hunds-Kerbel (<em>Anthriscus caucalis</em>)</li>
+    <li>Hundspetersilie (<em>Aethusa cynapium</em>)</li>
+    <li>Hunds-Quecke (<em>Elymus caninus</em>)</li>
+    <li>Hunds-Rose (<em>Rosa canina</em>)</li>
+    <li>Husarenknopf (<em>Sanvitalia procumbens</em>)</li>
+    <li>Hybrid-Goldregen (<em>Laburnum watereri</em>)</li>
+    <li>Hydrophyllum virginianum (<em>Hydrophyllum virginianum</em>)</li>
+    <li>Igel-Kammgras (<em>Cynosurus echinatus</em>)</li>
+    <li>Igelschlauch (<em>Baldellia ranunculoides</em>)</li>
+    <li>Igel-Segge (<em>Carex echinata</em>)</li>
+    <li>Illyrische Siegwurz (<em>Gladiolus illyricus</em>)</li>
+    <li>Illyrischer Hahnenfuß (<em>Ranunculus illyricus</em>)</li>
+    <li>Immenblatt (<em>Melittis melissophyllum</em>)</li>
+    <li>Immergrüne Schleifenblume (<em>Iberis sempervirens</em>)</li>
+    <li>Immergrüner Kissen-Schneeball (<em>Viburnum davidii</em>)</li>
+    <li>Immergrünes Felsenblümchen (<em>Draba aizoides</em>)</li>
+    <li>Indische Eleusine (<em>Eleusine indica</em>)</li>
+    <li>Indische Scheinerdbeere (<em>Duchesnea indica</em>)</li>
+    <li>Indisches Blumenrohr (<em>Canna indica</em>)</li>
+    <li>Inkarnat-Klee (<em>Trifolium incarnatum</em>)</li>
+    <li>Italienische Ochsenzunge (<em>Anchusa azurea</em>)</li>
+    <li>Italienische Waldrebe (<em>Clematis viticella</em>)</li>
+    <li>Italienischer Aronstab (<em>Arum italicum</em>)</li>
+    <li>Italienischer Natternkopf (<em>Echium italicum</em>)</li>
+    <li>Italienisches Leimkraut (<em>Silene italica</em>)</li>
+    <li>Jacquin-Binse (<em>Juncus jacquinii</em>)</li>
+    <li>Jakobsleiter (<em>Polemonium caeruleum</em>)</li>
+    <li>Japanische Aralie (<em>Aralia elata</em>)</li>
+    <li>Japanische Blütenkirsche (<em>Prunus serrulata</em>)</li>
+    <li>Japanische Lavendelheide (<em>Pieris japonica</em>)</li>
+    <li>Japanische Platterbse (<em>Lathyrus japonicus</em>)</li>
+    <li>Japanische Strauchspiere (<em>Spiraea nipponica</em>)</li>
+    <li>Japanische Weinbeere (<em>Rubus phoenicolasius</em>)</li>
+    <li>Japanische Zelkove (<em>Zelkova serrata</em>)</li>
+    <li>Japanische Zierquitte (<em>Chaenomeles japonica</em>)</li>
+    <li>Japanischer Flügelknöterich (<em>Fallopia japonica</em>)</li>
+    <li>Japanischer Schneeball (<em>Viburnum plicatum</em>)</li>
+    <li>Japanischer Schnurbaum (<em>Styphnolobium japonicum</em>)</li>
+    <li>Japanisches Goldröschen (<em>Kerria japonica</em>)</li>
+    <li>Japanisches Liebesgras (<em>Eragrostis multicaulis</em>)</li>
+    <li>Kahle Melde (<em>Atriplex glabriuscula</em>)</li>
+    <li>Kahle Weide (<em>Salix glabra</em>)</li>
+    <li>Kahler Frauenmantel (<em>Alchemilla glabra</em>)</li>
+    <li>Kahles Bruchkraut (<em>Herniaria glabra</em>)</li>
+    <li>Kahles Ferkelkraut (<em>Hypochaeris glabra</em>)</li>
+    <li>Kaiserkrone (<em>Fritillaria imperialis</em>)</li>
+    <li>Kalifornischer Mohn (<em>Eschscholzia californica</em>)</li>
+    <li>Kalkalpen-Frauenmantel (<em>Alchemilla alpigena</em>)</li>
+    <li>Kalk-Blaugras (<em>Sesleria caerulea</em>)</li>
+    <li>Kalmus (<em>Acorus calamus</em>)</li>
+    <li>Kammfarn (<em>Dryopteris cristata</em>)</li>
+    <li>Kammquecke (<em>Agropyron cristatum</em>)</li>
+    <li>Kanadische Brombeere (<em>Rubus canadensis</em>)</li>
+    <li>Kanadische Goldrute (<em>Solidago canadensis</em>)</li>
+    <li>Kanadische Wasserpest (<em>Elodea canadensis</em>)</li>
+    <li>Kanadisches Berufkraut (<em>Erigeron canadensis</em>)</li>
+    <li>Kanariengras (<em>Phalaris canariensis</em>)</li>
+    <li>Karpaten-Glockenblume (<em>Campanula carpatica</em>)</li>
+    <li>Karpaten-Kranzenzian (<em>Gentianella lutescens</em>)</li>
+    <li>Karpaten-Spierstrauch (<em>Spiraea media</em>)</li>
+    <li>Kartäuser-Nelke (<em>Dianthus carthusianorum</em>)</li>
+    <li>Kartoffel-Rose (<em>Rosa rugosa</em>)</li>
+    <li>Kassuben-Wicke (<em>Vicia cassubica</em>)</li>
+    <li>Kaukasische Flügelnuss (<em>Pterocarya fraxinifolia</em>)</li>
+    <li>Kaukasus-Asienfetthenne (<em>Phedimus spurius</em>)</li>
+    <li>Kaukasus-Gämswurz (<em>Doronicum orientale</em>)</li>
+    <li>Kegel-Leimkraut (<em>Silene conica</em>)</li>
+    <li>Keilblatt-Steinbrech (<em>Saxifraga cuneifolia</em>)</li>
+    <li>Kelch-Steinkraut (<em>Alyssum alyssoides</em>)</li>
+    <li>Kentiapalme (<em>Howea forsteriana</em>)</li>
+    <li>Kerbiger Sommerwurz (<em>Orobanche crenata</em>)</li>
+    <li>Keulen-Bärlapp (<em>Lycopodium clavatum</em>)</li>
+    <li>Keulen-Bertram (<em>Anacyclus clavatus</em>)</li>
+    <li>Kichererbse (<em>Cicer arietinum</em>)</li>
+    <li>Kicher-Tragant (<em>Astragalus cicer</em>)</li>
+    <li>Kiesel-Glocken-Enzian (<em>Gentiana acaulis</em>)</li>
+    <li>Kirschpflaume (<em>Prunus cerasifera</em>)</li>
+    <li>Klatsch-Mohn (<em>Papaver rhoeas</em>)</li>
+    <li>Klebalant (<em>Dittrichia graveolens</em>)</li>
+    <li>Kleb-Kratzdistel (<em>Cirsium erisithales</em>)</li>
+    <li>Klebrige Phazelie (<em>Phacelia viscida</em>)</li>
+    <li>Klebriger Drüsengänsefuß (<em>Dysphania botrys</em>)</li>
+    <li>Klebriger Lein (<em>Linum viscosum</em>)</li>
+    <li>Klebriges Greiskraut (<em>Senecio viscosus</em>)</li>
+    <li>Klebriges Leimkraut (<em>Silene viscosa</em>)</li>
+    <li>Kleeblatt-Schaumkraut (<em>Cardamine trifolia</em>)</li>
+    <li>Klee-Ulme (<em>Ptelea trifoliata</em>)</li>
+    <li>Kleinblättrige Zwergmispel (<em>Cotoneaster microphyllus</em>)</li>
+    <li>Kleinblütige Königskerze (<em>Verbascum thapsus</em>)</li>
+    <li>Kleinblütige Malve (<em>Malva parviflora</em>)</li>
+    <li>Kleinblütige Tamariske (<em>Tamarix parviflora</em>)</li>
+    <li>Kleinblütiger Frauenmantel (<em>Alchemilla xanthochlora</em>)</li>
+    <li>Kleinblütiger Frauenspiegel (<em>Legousia hybrida</em>)</li>
+    <li>Kleinblütiges Einblatt (<em>Malaxis monophyllos</em>)</li>
+    <li>Kleinblütiges Fingerkraut (<em>Potentilla micrantha</em>)</li>
+    <li>Kleinblütiges Franzosenkraut (<em>Galinsoga parviflora</em>)</li>
+    <li>Kleinblütiges Schaumkraut (<em>Cardamine parviflora</em>)</li>
+    <li>Kleinblütiges Springkraut (<em>Impatiens parviflora</em>)</li>
+    <li>Kleinblütiges Weidenröschen (<em>Epilobium parviflorum</em>)</li>
+    <li>Kleine Braunelle (<em>Prunella vulgaris</em>)</li>
+    <li>Kleine Brennnessel (<em>Urtica urens</em>)</li>
+    <li>Kleine Klette (<em>Arctium minus</em>)</li>
+    <li>Kleine Malve (<em>Malva pusilla</em>)</li>
+    <li>Kleine Pimpinelle (<em>Pimpinella saxifraga</em>)</li>
+    <li>Kleine Sommerwurz (<em>Orobanche minor</em>)</li>
+    <li>Kleine Traubenhyazinthe (<em>Muscari botryoides</em>)</li>
+    <li>Kleine Wachsblume (<em>Cerinthe minor</em>)</li>
+    <li>Kleine Wasserlinse (<em>Lemna minor</em>)</li>
+    <li>Kleine Wiesenraute (<em>Thalictrum minus</em>)</li>
+    <li>Kleiner Klappertopf (<em>Rhinanthus minor</em>)</li>
+    <li>Kleiner Klee (<em>Trifolium dubium</em>)</li>
+    <li>Kleiner Knöterich (<em>Persicaria minor</em>)</li>
+    <li>Kleiner Krokus (<em>Crocus chrysanthus</em>)</li>
+    <li>Kleiner Sauerampfer (<em>Rumex acetosella</em>)</li>
+    <li>Kleiner Storchschnabel (<em>Geranium pusillum</em>)</li>
+    <li>Kleiner Vogelfuß (<em>Ornithopus perpusillus</em>)</li>
+    <li>Kleiner Wasserschlauch (<em>Utricularia minor</em>)</li>
+    <li>Kleines Flohkraut (<em>Pulicaria vulgaris</em>)</li>
+    <li>Kleines Glanzgras (<em>Phalaris minor</em>)</li>
+    <li>Kleines Habichtskraut (<em>Hieracium pilosella</em>)</li>
+    <li>Kleines Immergrün (<em>Vinca minor</em>)</li>
+    <li>Kleines Leinkraut (<em>Chaenorhinum minus</em>)</li>
+    <li>Kleines Liebesgras (<em>Eragrostis minor</em>)</li>
+    <li>Kleines Mädesüß (<em>Filipendula vulgaris</em>)</li>
+    <li>Kleines Nixkraut (<em>Najas minor</em>)</li>
+    <li>Kleines Schneeglöckchen (<em>Galanthus nivalis</em>)</li>
+    <li>Kleines Seifenkraut (<em>Saponaria ocymoides</em>)</li>
+    <li>Kleines Zittergras (<em>Briza minor</em>)</li>
+    <li>Kleinfrüchtiger Leindotter (<em>Camelina microcarpa</em>)</li>
+    <li>Kleingrannige Segge (<em>Carex microglochin</em>)</li>
+    <li>Kleinköpfiger Pippau (<em>Crepis capillaris</em>)</li>
+    <li>Klein-Resede (<em>Reseda phyteuma</em>)</li>
+    <li>Kleinstes Alpenglöckchen (<em>Soldanella minima</em>)</li>
+    <li>Kletten-Igelsame (<em>Lappula squarrosa</em>)</li>
+    <li>Kletten-Labkraut (<em>Galium aparine</em>)</li>
+    <li>Kletter-Spindelstrauch (<em>Euonymus fortunei</em>)</li>
+    <li>Knäuel-Ampfer (<em>Rumex conglomeratus</em>)</li>
+    <li>Knäuel-Binse (<em>Juncus conglomeratus</em>)</li>
+    <li>Knäuel-Glockenblume (<em>Campanula glomerata</em>)</li>
+    <li>Knäuel-Hornkraut (<em>Cerastium glomeratum</em>)</li>
+    <li>Knäuel-Klee (<em>Trifolium glomeratum</em>)</li>
+    <li>Knoblauch-Schnittlauch (<em>Allium tuberosum</em>)</li>
+    <li>Knoblauchsrauke (<em>Alliaria petiolata</em>)</li>
+    <li>Knöllchen-Steinbrech (<em>Saxifraga granulata</em>)</li>
+    <li>Knollen-Kratzdistel (<em>Cirsium tuberosum</em>)</li>
+    <li>Knollen-Platterbse (<em>Lathyrus tuberosus</em>)</li>
+    <li>Knolliger Hahnenfuß (<em>Ranunculus bulbosus</em>)</li>
+    <li>Knolliges Lungenkraut (<em>Pulmonaria montana</em>)</li>
+    <li>Knolliges Zypergras (<em>Cyperus rotundus</em>)</li>
+    <li>Knoten-Beinwell (<em>Symphytum tuberosum</em>)</li>
+    <li>Knotenblütige Mittagsblume (<em>Mesembryanthemum nodiflorum</em>)</li>
+    <li>Knotenblütiger Sellerie (<em>Apium nodiflorum</em>)</li>
+    <li>Knoten-Braunwurz (<em>Scrophularia nodosa</em>)</li>
+    <li>Knotiger Klettenkerbel (<em>Torilis nodosa</em>)</li>
+    <li>Knotiger Storchschnabel (<em>Geranium nodosum</em>)</li>
+    <li>Knotiges Mastkraut (<em>Sagina nodosa</em>)</li>
+    <li>Kohldistel (<em>Cirsium oleraceum</em>)</li>
+    <li>Kohl-Lauch (<em>Allium oleraceum</em>)</li>
+    <li>Kolben-Sumach (<em>Rhus typhina</em>)</li>
+    <li>Kolkwitzie (<em>Kolkwitzia amabilis</em>)</li>
+    <li>Koloquinte (<em>Citrullus colocynthis</em>)</li>
+    <li>Kolorado-Tanne (<em>Abies concolor</em>)</li>
+    <li>Kompass-Lattich (<em>Lactuca serriola</em>)</li>
+    <li>Königs-Rispenfarn (<em>Osmunda regalis</em>)</li>
+    <li>Kopf-Binse (<em>Juncus capitatus</em>)</li>
+    <li>Kopfblütige Gilie (<em>Gilia capitata</em>)</li>
+    <li>Kopf-Segge (<em>Carex capitata</em>)</li>
+    <li>Korallenbeere (<em>Symphoricarpos orbiculatus</em>)</li>
+    <li>Korb-Weide (<em>Salix viminalis</em>)</li>
+    <li>Kornblume (<em>Centaurea cyanus</em>)</li>
+    <li>Kornelkirsche (<em>Cornus mas</em>)</li>
+    <li>Korn-Rade (<em>Agrostemma githago</em>)</li>
+    <li>Kosmee (<em>Cosmos bipinnatus</em>)</li>
+    <li>Köstliches Fensterblatt (<em>Monstera deliciosa</em>)</li>
+    <li>Krähenfuß-Laugenblume (<em>Cotula coronopifolia</em>)</li>
+    <li>Krähenfuß-Wegerich (<em>Plantago coronopus</em>)</li>
+    <li>Krainer Tollkraut (<em>Scopolia carniolica</em>)</li>
+    <li>Kratzbeere (<em>Rubus caesius</em>)</li>
+    <li>Krause Ringdistel (<em>Carduus crispus</em>)</li>
+    <li>Krauser Ampfer (<em>Rumex crispus</em>)</li>
+    <li>Krauser Rollfarn (<em>Cryptogramma crispa</em>)</li>
+    <li>Krauses Laichkraut (<em>Potamogeton crispus</em>)</li>
+    <li>Kraut-Weide (<em>Salix herbacea</em>)</li>
+    <li>Krebsschere (<em>Stratiotes aloides</em>)</li>
+    <li>Kretische Hundszunge (<em>Cynoglossum creticum</em>)</li>
+    <li>Kretischer Ziest (<em>Stachys cretica</em>)</li>
+    <li>Kreuzblättrige Wolfsmilch (<em>Euphorbia lathyris</em>)</li>
+    <li>Kreuz-Enzian (<em>Gentiana cruciata</em>)</li>
+    <li>Kriechende Gemswurz (<em>Doronicum pardalianches</em>)</li>
+    <li>Kriechende Hauhechel (<em>Ononis repens</em>)</li>
+    <li>Kriechende Nelkenwurz (<em>Geum reptans</em>)</li>
+    <li>Kriechende Rose (<em>Rosa arvensis</em>)</li>
+    <li>Kriechender Günsel (<em>Ajuga reptans</em>)</li>
+    <li>Kriechender Hahnenfuß (<em>Ranunculus repens</em>)</li>
+    <li>Kriechendes Fingerkraut (<em>Potentilla reptans</em>)</li>
+    <li>Kriechendes Gipskraut (<em>Gypsophila repens</em>)</li>
+    <li>Kriechendes Netzblatt (<em>Goodyera repens</em>)</li>
+    <li>Kriech-Quecke (<em>Elymus repens</em>)</li>
+    <li>Kriech-Wacholder (<em>Juniperus horizontalis</em>)</li>
+    <li>Kriech-Weide (<em>Salix repens</em>)</li>
+    <li>Krummholz-Kiefer (<em>Pinus mugo</em>)</li>
+    <li>Kuchenbaum (<em>Cercidiphyllum japonicum</em>)</li>
+    <li>Kuckucks-Lichtnelke (<em>Silene flos-cuculi</em>)</li>
+    <li>Kugel-Ginster (<em>Genista radiata</em>)</li>
+    <li>Kugelköpfiger Lauch (<em>Allium sphaerocephalon</em>)</li>
+    <li>Kugelsamige Platterbse (<em>Lathyrus sphaericus</em>)</li>
+    <li>Kugel-Teufelskralle (<em>Phyteuma orbiculare</em>)</li>
+    <li>Kulturapfel (<em>Malus domestica</em>)</li>
+    <li>Kulturbirne (<em>Pyrus communis</em>)</li>
+    <li>Kümmel-Silge (<em>Selinum carvifolia</em>)</li>
+    <li>Läger-Rispengras (<em>Poa supina</em>)</li>
+    <li>Landnelke (<em>Dianthus caryophyllus</em>)</li>
+    <li>Langährige Segge (<em>Carex elongata</em>)</li>
+    <li>Langblättrige Hasenohr (<em>Bupleurum longifolium</em>)</li>
+    <li>Langblättriger Sonnentau (<em>Drosera anglica</em>)</li>
+    <li>Langblättriges Waldvöglein (<em>Cephalanthera longifolia</em>)</li>
+    <li>Langes Zypergras (<em>Cyperus longus</em>)</li>
+    <li>Langgranniger Walch (<em>Aegilops triuncialis</em>)</li>
+    <li>Langstieliger Mannsschild (<em>Androsace elongata</em>)</li>
+    <li>Lanzett-Froschlöffel (<em>Alisma lanceolatum</em>)</li>
+    <li>Lauch-Gamander (<em>Teucrium scordium</em>)</li>
+    <li>Lauchhederichblättrige Glockenblume (<em>Campanula alliariifolia</em>)</li>
+    <li>Lavendel-Weide (<em>Salix eleagnos</em>)</li>
+    <li>Lawsons Scheinzypresse (<em>Chamaecyparis lawsoniana</em>)</li>
+    <li>Laxmanns Rohrkolben (<em>Typha laxmannii</em>)</li>
+    <li>Leberblümchen (<em>Hepatica nobilis</em>)</li>
+    <li>Lederhülsenbaum (<em>Gleditsia triacanthos</em>)</li>
+    <li>Lein-Seide (<em>Cuscuta epilinum</em>)</li>
+    <li>Liebliche Weigelie (<em>Weigela florida</em>)</li>
+    <li>Liegender Ehrenpreis (<em>Veronica prostrata</em>)</li>
+    <li>Liegendes Hartheu (<em>Hypericum humifusum</em>)</li>
+    <li>Loesels Rauke (<em>Sisymbrium loeselii</em>)</li>
+    <li>Lorbeerblättriger Schneeball (<em>Viburnum tinus</em>)</li>
+    <li>Lorbeerkirsche (<em>Prunus laurocerasus</em>)</li>
+    <li>Lorbeer-Seidelbast (<em>Daphne laureola</em>)</li>
+    <li>Lorbeer-Weide (<em>Salix pentandra</em>)</li>
+    <li>Lungen-Enzian (<em>Gentiana pneumonanthe</em>)</li>
+    <li>Luzile-Blaustern (<em>Scilla luciliae</em>)</li>
+    <li>Madie (<em>Madia sativa</em>)</li>
+    <li>Madonnen-Lilie (<em>Lilium candidum</em>)</li>
+    <li>Mähnen-Gerste (<em>Hordeum jubatum</em>)</li>
+    <li>Mährisches Labkraut (<em>Galium valdepilosum</em>)</li>
+    <li>Maiglöckchen (<em>Convallaria majalis</em>)</li>
+    <li>Majoran (<em>Origanum majorana</em>)</li>
+    <li>Malteser Flockenblume (<em>Centaurea melitensis</em>)</li>
+    <li>Mandelbaum (<em>Prunus dulcis</em>)</li>
+    <li>Mandelbäumchen (<em>Prunus triloba</em>)</li>
+    <li>Mandelblättrige Wolfsmilch (<em>Euphorbia amygdaloides</em>)</li>
+    <li>Mangold (<em>Beta vulgaris</em>)</li>
+    <li>Manna-Esche (<em>Fraxinus ornus</em>)</li>
+    <li>Mannsblut (<em>Hypericum calycinum</em>)</li>
+    <li>Mariendistel (<em>Silybum marianum</em>)</li>
+    <li>Marien-Glockenblume (<em>Campanula medium</em>)</li>
+    <li>Marokko-Leinkraut (<em>Linaria maroccana</em>)</li>
+    <li>Märzenbecher (<em>Leucojum vernum</em>)</li>
+    <li>März-Veilchen (<em>Viola odorata</em>)</li>
+    <li>Mauer-Doppelsame (<em>Diplotaxis muralis</em>)</li>
+    <li>Mauer-Felsenblümchen (<em>Draba muralis</em>)</li>
+    <li>Mauer-Gänsefuß (<em>Chenopodium murale</em>)</li>
+    <li>Mauerraute (<em>Asplenium ruta-muraria</em>)</li>
+    <li>Mauer-Zimbelkraut (<em>Cymbalaria muralis</em>)</li>
+    <li>Mäuse-Gerste (<em>Hordeum murinum</em>)</li>
+    <li>Medusenhaupt (<em>Taeniatherum caput-medusae</em>)</li>
+    <li>Meerfenchel (<em>Crithmum maritimum</em>)</li>
+    <li>Meerrettich (<em>Armoracia rusticana</em>)</li>
+    <li>Mehlige Königskerze (<em>Verbascum lychnitis</em>)</li>
+    <li>Melone (<em>Cucumis melo</em>)</li>
+    <li>Mexikanisches Berufkraut (<em>Erigeron karvinskianus</em>)</li>
+    <li>Mieren-Weidenröschen (<em>Epilobium alsinifolium</em>)</li>
+    <li>Milder Mauerpfeffer (<em>Sedum sexangulare</em>)</li>
+    <li>Mittelgebirgs-Brombeere (<em>Rubus montanus</em>)</li>
+    <li>Mittel-Klee (<em>Trifolium medium</em>)</li>
+    <li>Mittelmeer-Feuerdorn (<em>Pyracantha coccinea</em>)</li>
+    <li>Mittelmeer-Trespe (<em>Bromus madritensis</em>)</li>
+    <li>Mittel-Wegerich (<em>Plantago media</em>)</li>
+    <li>Mittlere Taubnessel (<em>Lamium confertum</em>)</li>
+    <li>Mittlerer Lerchensporn (<em>Corydalis intermedia</em>)</li>
+    <li>Mittlerer Sonnentau (<em>Drosera intermedia</em>)</li>
+    <li>Mittlerer Wasserschlauch (<em>Utricularia intermedia</em>)</li>
+    <li>Mittleres Fingerkraut (<em>Potentilla intermedia</em>)</li>
+    <li>Mittleres Wintergrün (<em>Pyrola media</em>)</li>
+    <li>Mohrenhirse (<em>Sorghum halepense</em>)</li>
+    <li>Moltebeere (<em>Rubus chamaemorus</em>)</li>
+    <li>Monte-Baldo-Segge (<em>Carex baldensis</em>)</li>
+    <li>Moorbärlapp (<em>Lycopodiella inundata</em>)</li>
+    <li>Moor-Binse (<em>Juncus stygius</em>)</li>
+    <li>Moorbirke (<em>Betula pubescens</em>)</li>
+    <li>Moor-Gagel (<em>Myrica gale</em>)</li>
+    <li>Moor-Greiskraut (<em>Tephroseris palustris</em>)</li>
+    <li>Moor-Heidelbeere (<em>Vaccinium uliginosum</em>)</li>
+    <li>Moor-Klee (<em>Trifolium spadiceum</em>)</li>
+    <li>Moorkönig (<em>Pedicularis sceptrum-carolinum</em>)</li>
+    <li>Moor-Labkraut (<em>Galium uliginosum</em>)</li>
+    <li>Moor-Steinbrech (<em>Saxifraga hirculus</em>)</li>
+    <li>Moos-Dickblatt (<em>Crassula tillaea</em>)</li>
+    <li>Moosglöckchen (<em>Linnaea borealis</em>)</li>
+    <li>Moos-Nabelmiere (<em>Moehringia muscosa</em>)</li>
+    <li>Moos-Steinbrech (<em>Saxifraga bryoides</em>)</li>
+    <li>Moschus-Gauklerblume (<em>Mimulus moschatus</em>)</li>
+    <li>Moschuskraut (<em>Adoxa moschatellina</em>)</li>
+    <li>Moschus-Malve (<em>Malva moschata</em>)</li>
+    <li>Moschus-Schafgarbe (<em>Achillea erba-rotta</em>)</li>
+    <li>Moschus-Steinbrech (<em>Saxifraga moschata</em>)</li>
+    <li>Muhlenbergia mexicana (<em>Muhlenbergia mexicana</em>)</li>
+    <li>Muskatellersalbei (<em>Salvia sclarea</em>)</li>
+    <li>Nacktstängel-Kugelblume (<em>Globularia nudicaulis</em>)</li>
+    <li>Nacktstiel-Ehrenpreis (<em>Veronica aphylla</em>)</li>
+    <li>Nadelkraut (<em>Crassula helmsii</em>)</li>
+    <li>Nelken-Haferschmiele (<em>Aira caryophyllea</em>)</li>
+    <li>Nelken-Leimkraut (<em>Silene armeria</em>)</li>
+    <li>Nesselblatt-Ehrenpreis (<em>Veronica urticifolia</em>)</li>
+    <li>Nesselblättrige Glockenblume (<em>Campanula trachelium</em>)</li>
+    <li>Netz-Weide (<em>Salix reticulata</em>)</li>
+    <li>Neuseeländischer Spinat (<em>Tetragonia tetragonioides</em>)</li>
+    <li>Nickende Distel (<em>Carduus nutans</em>)</li>
+    <li>Nickender Löwenzahn (<em>Leontodon saxatilis</em>)</li>
+    <li>Nickender Milchstern (<em>Ornithogalum nutans</em>)</li>
+    <li>Nickendes Leimkraut (<em>Silene nutans</em>)</li>
+    <li>Nickendes Perlgras (<em>Melica nutans</em>)</li>
+    <li>Niederliegendes Fingerkraut (<em>Potentilla anglica</em>)</li>
+    <li>Niederliegendes Mastkraut (<em>Sagina procumbens</em>)</li>
+    <li>Niedrige Schuppenwurz (<em>Lathraea clandestina</em>)</li>
+    <li>Niedrige Schwarzwurzel (<em>Scorzonera humilis</em>)</li>
+    <li>Niedriges Fingerkraut (<em>Potentilla supina</em>)</li>
+    <li>Nizzäische Käsepappel (<em>Malva nicaeensis</em>)</li>
+    <li>Nordamerikanische Seide (<em>Cuscuta campestris</em>)</li>
+    <li>Nordischer Drachenkopf (<em>Dracocephalum ruyschiana</em>)</li>
+    <li>Nordisches Labkraut (<em>Galium boreale</em>)</li>
+    <li>Nördliche Gagel (<em>Myrica pensylvanica</em>)</li>
+    <li>Norwegisches Ruhrkraut (<em>Gnaphalium norvegicum</em>)</li>
+    <li>Nussfrüchtiger Wasserstern (<em>Callitriche obtusangula</em>)</li>
+    <li>Ohio Rosskastanie (<em>Aesculus glabra</em>)</li>
+    <li>Ohnhorn-Knabenkraut (<em>Orchis anthropophora</em>)</li>
+    <li>Ohr-Weide (<em>Salix aurita</em>)</li>
+    <li>Oleander (<em>Nerium oleander</em>)</li>
+    <li>Orientalische Nieswurz (<em>Helleborus orientalis</em>)</li>
+    <li>Orientalische Platane (<em>Platanus orientalis</em>)</li>
+    <li>Orientalische Zackenschote (<em>Bunias orientalis</em>)</li>
+    <li>Orientalischer Beinwell (<em>Symphytum orientale</em>)</li>
+    <li>Orientalischer Bocksbart (<em>Tragopogon orientalis</em>)</li>
+    <li>Österreichische Gämswurz (<em>Doronicum austriacum</em>)</li>
+    <li>Österreichische Mehlbeere (<em>Sorbus austriaca</em>)</li>
+    <li>Österreichische Schwarzwurzel (<em>Scorzonera austriaca</em>)</li>
+    <li>Österreichischer Lein (<em>Linum austriacum</em>)</li>
+    <li>Ovalblättriger Liguster (<em>Ligustrum ovalifolium</em>)</li>
+    <li>Palmwedel-Segge (<em>Carex muskingumensis</em>)</li>
+    <li>Pannonische Katzenminze (<em>Nepeta nuda</em>)</li>
+    <li>Pannonische Salzaster (<em>Tripolium pannonicum</em>)</li>
+    <li>Pannonische Wicke (<em>Vicia pannonica</em>)</li>
+    <li>Papierblume (<em>Xeranthemum annuum</em>)</li>
+    <li>Paprika (<em>Capsicum annuum</em>)</li>
+    <li>Pariser Labkraut (<em>Galium parisiense</em>)</li>
+    <li>Pastinak (<em>Pastinaca sativa</em>)</li>
+    <li>Pechnelke (<em>Silene viscaria</em>)</li>
+    <li>Pennsylvanisches Glaskraut (<em>Parietaria pensylvanica</em>)</li>
+    <li>Perlfarn (<em>Onoclea sensibilis</em>)</li>
+    <li>Persischer Ehrenpreis (<em>Veronica persica</em>)</li>
+    <li>Persischer Klee (<em>Trifolium resupinatum</em>)</li>
+    <li>Pfahlrohr (<em>Arundo donax</em>)</li>
+    <li>Pfeifenwinde (<em>Aristolochia macrophylla</em>)</li>
+    <li>Pfennigkraut (<em>Lysimachia nummularia</em>)</li>
+    <li>Pfingst-Nelke (<em>Dianthus gratianopolitanus</em>)</li>
+    <li>Pfirsich (<em>Prunus persica</em>)</li>
+    <li>Pfirsichblättrige Glockenblume (<em>Campanula persicifolia</em>)</li>
+    <li>Pflaume (<em>Prunus domestica</em>)</li>
+    <li>Pfriemenginster (<em>Spartium junceum</em>)</li>
+    <li>Phrygische Flockenblume (<em>Centaurea phrygia</em>)</li>
+    <li>Physospermum cornubiense (<em>Physospermum cornubiense</em>)</li>
+    <li>Pickelhauben-Brombeere (<em>Rubus mucronulatus</em>)</li>
+    <li>Piemont-Kreuzlabkraut (<em>Cruciata pedemontana</em>)</li>
+    <li>Pillen-Brennessel (<em>Urtica pilulifera</em>)</li>
+    <li>Pillen-Segge (<em>Carex pilulifera</em>)</li>
+    <li>Pimpinell-Rose (<em>Rosa spinosissima</em>)</li>
+    <li>Piripiri Stachelnüsschen (<em>Acaena novae-zelandiae</em>)</li>
+    <li>Platanen-Hahnenfuß (<em>Ranunculus platanifolius</em>)</li>
+    <li>Platthalm-Binse (<em>Juncus compressus</em>)</li>
+    <li>Platthalm-Rispengras (<em>Poa compressa</em>)</li>
+    <li>Polei-Minze (<em>Mentha pulegium</em>)</li>
+    <li>Portulak (<em>Portulaca oleracea</em>)</li>
+    <li>Portulakröschen (<em>Portulaca grandiflora</em>)</li>
+    <li>Pracht-Himbeere (<em>Rubus spectabilis</em>)</li>
+    <li>Prächtige Fetthenne (<em>Hylotelephium spectabile</em>)</li>
+    <li>Pracht-Königskerze (<em>Verbascum speciosum</em>)</li>
+    <li>Pracht-Nelke (<em>Dianthus superbus</em>)</li>
+    <li>Prachtscharte (<em>Liatris spicata</em>)</li>
+    <li>Prärie-Kokardenblume (<em>Gaillardia aristata</em>)</li>
+    <li>Prärie-Schlickgras (<em>Spartina pectinata</em>)</li>
+    <li>Preiselbeere (<em>Vaccinium vitis-idaea</em>)</li>
+    <li>Purgier-Kreuzdorn (<em>Rhamnus cathartica</em>)</li>
+    <li>Purgier-Lein (<em>Linum catharticum</em>)</li>
+    <li>Purpurblaue Rindszunge (<em>Buglossoides purpurocaerulea</em>)</li>
+    <li>Purpur-Enzian (<em>Gentiana purpurea</em>)</li>
+    <li>Purpur-Fetthenne (<em>Sedum telephium</em>)</li>
+    <li>Purpur-Geißklee (<em>Cytisus purpureus</em>)</li>
+    <li>Purpurglöckchen (<em>Heuchera sanguinea</em>)</li>
+    <li>Purpur-Knabenkraut (<em>Orchis purpurea</em>)</li>
+    <li>Purpur-Königskerze (<em>Verbascum phoeniceum</em>)</li>
+    <li>Purpur-Leinkraut (<em>Linaria purpurea</em>)</li>
+    <li>Purpur-Platterbse (<em>Lathyrus clymenum</em>)</li>
+    <li>Purpurrote Taubnessel (<em>Lamium purpureum</em>)</li>
+    <li>Purpur-Sonnenhut (<em>Echinacea purpurea</em>)</li>
+    <li>Purpur-Waldfetthenne (<em>Hylotelephium telephium</em>)</li>
+    <li>Purpur-Weide (<em>Salix purpurea</em>)</li>
+    <li>Purpur-Wicke (<em>Vicia benghalensis</em>)</li>
+    <li>Puschkinie (<em>Puschkinia scilloides</em>)</li>
+    <li>Pyramiden-Günsel (<em>Ajuga pyramidalis</em>)</li>
+    <li>Pyramiden-Spitzorchis (<em>Anacamptis pyramidalis</em>)</li>
+    <li>Pyrenäen-Drachenmaul (<em>Horminum pyrenaicum</em>)</li>
+    <li>Pyrenäen-Margerite (<em>Leucanthemum maximum</em>)</li>
+    <li>Pyrenäen-Milchstern (<em>Ornithogalum pyrenaicum</em>)</li>
+    <li>Pyrenäen-Pippau (<em>Crepis pyrenaica</em>)</li>
+    <li>Pyrenäen-Storchschnabel (<em>Geranium pyrenaicum</em>)</li>
+    <li>Quendel-Ehrenpreis (<em>Veronica serpyllifolia</em>)</li>
+    <li>Quendel-Sandkraut (<em>Arenaria serpyllifolia</em>)</li>
+    <li>Quendel-Sommerwurz (<em>Orobanche alba</em>)</li>
+    <li>Quirlblättriges Läusekraut (<em>Pedicularis verticillata</em>)</li>
+    <li>Quirlblättriges Mädchenauge (<em>Coreopsis verticillata</em>)</li>
+    <li>Quirlblütiger Salbei (<em>Salvia verticillata</em>)</li>
+    <li>Quirlige Knorpelmiere (<em>Illecebrum verticillatum</em>)</li>
+    <li>Quirliges Tausendblatt (<em>Myriophyllum verticillatum</em>)</li>
+    <li>Quirl-Malve (<em>Malva verticillata</em>)</li>
+    <li>Quirl-Schaumkraut (<em>Cardamine enneaphyllos</em>)</li>
+    <li>Quirl-Weißwurz (<em>Polygonatum verticillatum</em>)</li>
+    <li>Rainfarn (<em>Tanacetum vulgare</em>)</li>
+    <li>Rainfarn-Phacelie (<em>Phacelia tanacetifolia</em>)</li>
+    <li>Rainkohl (<em>Lapsana communis</em>)</li>
+    <li>Ranken-Erdrauch (<em>Fumaria capreolata</em>)</li>
+    <li>Ranken-Platterbse (<em>Lathyrus aphaca</em>)</li>
+    <li>Raps (<em>Brassica napus</em>)</li>
+    <li>Rapunzel-Glockenblume (<em>Campanula rapunculus</em>)</li>
+    <li>Rasen-Haarsimse (<em>Trichophorum cespitosum</em>)</li>
+    <li>Rasen-Segge (<em>Carex cespitosa</em>)</li>
+    <li>Rasen-Steinbrech (<em>Saxifraga rosacea</em>)</li>
+    <li>Rasen-Vergißmeinnicht (<em>Myosotis laxa</em>)</li>
+    <li>Raue Deutzie (<em>Deutzia scabra</em>)</li>
+    <li>Raue Gänsedistel (<em>Sonchus asper</em>)</li>
+    <li>Rauer Hahnenfuß (<em>Ranunculus sardous</em>)</li>
+    <li>Rauer Klee (<em>Trifolium scabrum</em>)</li>
+    <li>Rauer Löwenzahn (<em>Leontodon hispidus</em>)</li>
+    <li>Rauer Schneckenklee (<em>Medicago polymorpha</em>)</li>
+    <li>Raues Straußgras (<em>Agrostis scabra</em>)</li>
+    <li>Rauhaarige Gänsekresse (<em>Arabis hirsuta</em>)</li>
+    <li>Rauhaarige Wicke (<em>Vicia hirsuta</em>)</li>
+    <li>Rauhaariger Kälberkropf (<em>Chaerophyllum hirsutum</em>)</li>
+    <li>Rauhaariges Veilchen (<em>Viola hirta</em>)</li>
+    <li>Rauhe Flockenblume (<em>Centaurea aspera</em>)</li>
+    <li>Rauhe Nelke (<em>Dianthus armeria</em>)</li>
+    <li>Raukenähnlicher Doppelsame (<em>Diplotaxis erucoides</em>)</li>
+    <li>Rautenblättrige Glockenblume (<em>Campanula rhomboidalis</em>)</li>
+    <li>Reichblättriges Läusekraut (<em>Pedicularis foliosa</em>)</li>
+    <li>Reif-Weide (<em>Salix daphnoides</em>)</li>
+    <li>Reisquecke (<em>Leersia oryzoides</em>)</li>
+    <li>Reseden-Schaumkraut (<em>Cardamine resedifolia</em>)</li>
+    <li>Riesen-Bärenklau (<em>Heracleum mantegazzianum</em>)</li>
+    <li>Riesen-Goldrute (<em>Solidago gigantea</em>)</li>
+    <li>Riesen-Mannsschild (<em>Androsace maxima</em>)</li>
+    <li>Riesen-Nelke (<em>Dianthus giganteus</em>)</li>
+    <li>Riesen-Schachtelhalm (<em>Equisetum telmateia</em>)</li>
+    <li>Riesen-Schuppenkopf (<em>Cephalaria gigantea</em>)</li>
+    <li>Riesen-Schwingel (<em>Festuca gigantea</em>)</li>
+    <li>Riesen-Taubnessel (<em>Lamium orvala</em>)</li>
+    <li>Rindsaugen-Margerite (<em>Coleostephus myconis</em>)</li>
+    <li>Rippenfarn (<em>Blechnum spicant</em>)</li>
+    <li>Rispelstrauch (<em>Myricaria germanica</em>)</li>
+    <li>Rispen-Flockenblume (<em>Centaurea paniculata</em>)</li>
+    <li>Rispen-Flockenblume (<em>Centaurea stoebe</em>)</li>
+    <li>Rispen-Fuchsschwanz (<em>Amaranthus cruentus</em>)</li>
+    <li>Rispen-Hortensie (<em>Hydrangea paniculata</em>)</li>
+    <li>Rispen-Sauerampfer (<em>Rumex thyrsiflorus</em>)</li>
+    <li>Rispen-Segge (<em>Carex paniculata</em>)</li>
+    <li>Roggen-Trespe (<em>Bromus secalinus</em>)</li>
+    <li>Rohr-Fuchsschwanzgras (<em>Alopecurus arundinaceus</em>)</li>
+    <li>Rohr-Glanzgras (<em>Phalaris arundinacea</em>)</li>
+    <li>Röhricht-Brennessel (<em>Urtica kioviensis</em>)</li>
+    <li>Röhrige Wasserfenchel (<em>Oenanthe fistulosa</em>)</li>
+    <li>Röhriger Affodill (<em>Asphodelus fistulosus</em>)</li>
+    <li>Rohr-Schwingel (<em>Festuca arundinacea</em>)</li>
+    <li>Rosen-Lauch (<em>Allium roseum</em>)</li>
+    <li>Rosen-Malve (<em>Malva alcea</em>)</li>
+    <li>Rosenrotes Weidenröschen (<em>Epilobium roseum</em>)</li>
+    <li>Rosmarinheide (<em>Andromeda polifolia</em>)</li>
+    <li>Rosmarin-Seidelbast (<em>Daphne cneorum</em>)</li>
+    <li>Rosmarin-Weide (<em>Salix rosmarinifolia</em>)</li>
+    <li>Rosmarin-Weidenröschen (<em>Epilobium dodonaei</em>)</li>
+    <li>Ross-Minze (<em>Mentha longifolia</em>)</li>
+    <li>Rostblättrige Alpenrose (<em>Rhododendron ferrugineum</em>)</li>
+    <li>Rostfarbiger Fingerhut (<em>Digitalis ferruginea</em>)</li>
+    <li>Rostroter Wimperfarn (<em>Woodsia ilvensis</em>)</li>
+    <li>Rostrotes Kopfried (<em>Schoenus ferrugineus</em>)</li>
+    <li>Rost-Segge (<em>Carex ferruginea</em>)</li>
+    <li>Rot-Ahorn (<em>Acer rubrum</em>)</li>
+    <li>Rotblättrige Rose (<em>Rosa glauca</em>)</li>
+    <li>Rotbuche (<em>Fagus sylvatica</em>)</li>
+    <li>Rote Heckenkirsche (<em>Lonicera xylosteum</em>)</li>
+    <li>Rote Johannisbeere (<em>Ribes rubrum</em>)</li>
+    <li>Rote Kugelorchis (<em>Traunsteinera globosa</em>)</li>
+    <li>Rote Lichtnelke (<em>Silene dioica</em>)</li>
+    <li>Rote Schuppenmiere (<em>Spergularia rubra</em>)</li>
+    <li>Rote Spargelbohne (<em>Lotus tetragonolobus</em>)</li>
+    <li>Rote Spornblume (<em>Centranthus ruber</em>)</li>
+    <li>Rote Wasserlinse (<em>Lemna turionifera</em>)</li>
+    <li>Rote Witwenblume (<em>Knautia macedonica</em>)</li>
+    <li>Roteiche (<em>Quercus rubra</em>)</li>
+    <li>Roter Fingerhut (<em>Digitalis purpurea</em>)</li>
+    <li>Roter Gänsefuß (<em>Chenopodium rubrum</em>)</li>
+    <li>Roter Gänsefuß (<em>Oxybasis rubra</em>)</li>
+    <li>Roter Holunder (<em>Sambucus racemosa</em>)</li>
+    <li>Roter Hornmohn (<em>Glaucium corniculatum</em>)</li>
+    <li>Roter Lein (<em>Linum grandiflorum</em>)</li>
+    <li>Roter Steinbrech (<em>Saxifraga oppositifolia</em>)</li>
+    <li>Rotes Waldvöglein (<em>Cephalanthera rubra</em>)</li>
+    <li>Rot-Esche (<em>Fraxinus pennsylvanica</em>)</li>
+    <li>Rotfrüchtige Zaunrübe (<em>Bryonia dioica</em>)</li>
+    <li>Rotgelbes Fuchsschwanzgras (<em>Alopecurus aequalis</em>)</li>
+    <li>Rotkelchige Nachtkerze (<em>Oenothera glazioviana</em>)</li>
+    <li>Rot-Klee (<em>Trifolium pratense</em>)</li>
+    <li>Rötliches Laichkraut (<em>Potamogeton rutilus</em>)</li>
+    <li>Rübsen (<em>Brassica rapa</em>)</li>
+    <li>Rundblatt-Labkraut (<em>Galium rotundifolium</em>)</li>
+    <li>Rundblättrige Glockenblume (<em>Campanula rotundifolia</em>)</li>
+    <li>Rundblättrige Minze (<em>Mentha suaveolens</em>)</li>
+    <li>Rundblättriger Sonnentau (<em>Drosera rotundifolia</em>)</li>
+    <li>Rundblättriger Steinbrech (<em>Saxifraga rotundifolia</em>)</li>
+    <li>Rundblättriger Storchschnabel (<em>Geranium rotundifolium</em>)</li>
+    <li>Rundblättriges Hasenohr (<em>Bupleurum rotundifolium</em>)</li>
+    <li>Rundblättriges Wintergrün (<em>Pyrola rotundifolia</em>)</li>
+    <li>Runzelblättriger Schneeball (<em>Viburnum rhytidophyllum</em>)</li>
+    <li>Runzliger Windsbock (<em>Rapistrum rugosum</em>)</li>
+    <li>Ruprechtsfarn (<em>Gymnocarpium robertianum</em>)</li>
+    <li>Ruten-Doppelsame (<em>Diplotaxis viminea</em>)</li>
+    <li>Rutenhirse (<em>Panicum virgatum</em>)</li>
+    <li>Ruten-Lattich (<em>Lactuca viminea</em>)</li>
+    <li>Ruten-Leinkraut (<em>Linaria spartea</em>)</li>
+    <li>Ruten-Schöterich (<em>Erysimum hieraciifolium</em>)</li>
+    <li>Saat-Esparsette (<em>Onobrychis viciifolia</em>)</li>
+    <li>Saat-Hafer (<em>Avena sativa</em>)</li>
+    <li>Saat-Hohlzahn (<em>Galeopsis segetum</em>)</li>
+    <li>Saat-Lein (<em>Linum usitatissimum</em>)</li>
+    <li>Saat-Mohn (<em>Papaver dubium</em>)</li>
+    <li>Saat-Wicke (<em>Vicia sativa</em>)</li>
+    <li>Saat-Wolfsmilch (<em>Euphorbia segetalis</em>)</li>
+    <li>Saat-Wucherblume (<em>Glebionis segetum</em>)</li>
+    <li>Sadebaum (<em>Juniperus sabina</em>)</li>
+    <li>Salbei-Gamander (<em>Teucrium scorodonia</em>)</li>
+    <li>Sal-Weide (<em>Salix caprea</em>)</li>
+    <li>Salz-Hasenohr (<em>Bupleurum tenuissimum</em>)</li>
+    <li>Samt-Brombeere (<em>Rubus vestitus</em>)</li>
+    <li>Samt-Frauenmantel (<em>Alchemilla mollis</em>)</li>
+    <li>Samtgras (<em>Lagurus ovatus</em>)</li>
+    <li>Sandbirke (<em>Betula pendula</em>)</li>
+    <li>Sand-Hafer (<em>Avena strigosa</em>)</li>
+    <li>Sand-Hornkraut (<em>Cerastium semidecandrum</em>)</li>
+    <li>Sand-Mohn (<em>Papaver argemone</em>)</li>
+    <li>Sand-Nelke (<em>Dianthus arenarius</em>)</li>
+    <li>Sand-Schaumkresse (<em>Arabidopsis arenosa</em>)</li>
+    <li>Sand-Segge (<em>Carex arenaria</em>)</li>
+    <li>Sand-Sommerwurz (<em>Orobanche arenaria</em>)</li>
+    <li>Sand-Strohblume (<em>Helichrysum arenarium</em>)</li>
+    <li>Sand-Thymian (<em>Thymus serpyllum</em>)</li>
+    <li>Sand-Tragant (<em>Astragalus arenarius</em>)</li>
+    <li>Sandwatt-Queller (<em>Salicornia procumbens</em>)</li>
+    <li>Sand-Wegerich (<em>Plantago arenaria</em>)</li>
+    <li>Sand-Zwerggras (<em>Mibora minima</em>)</li>
+    <li>Sauerkirsche (<em>Prunus cerasus</em>)</li>
+    <li>Saum-Segge (<em>Carex hostiana</em>)</li>
+    <li>Savoyer Habichtskraut (<em>Hieracium sabaudum</em>)</li>
+    <li>Schaben-Königskerz (<em>Verbascum blattaria</em>)</li>
+    <li>Schachblume (<em>Fritillaria meleagris</em>)</li>
+    <li>Schamahirse (<em>Echinochloa colona</em>)</li>
+    <li>Scharfer Hahnenfuß (<em>Ranunculus acris</em>)</li>
+    <li>Scharfer Mauerpfeffer (<em>Sedum acre</em>)</li>
+    <li>Scharfes Berufkraut (<em>Erigeron acris</em>)</li>
+    <li>Scharfkraut (<em>Asperugo procumbens</em>)</li>
+    <li>Scharlach-Fuchsie (<em>Fuchsia magellanica</em>)</li>
+    <li>Scheiben-Schneckenklee (<em>Medicago orbicularis</em>)</li>
+    <li>Scheiden-Goldstern (<em>Gagea spathacea</em>)</li>
+    <li>Scheiden-Segge (<em>Carex vaginata</em>)</li>
+    <li>Scheidiges Wollgras (<em>Eriophorum vaginatum</em>)</li>
+    <li>Scheinerdbeer-Fingerkraut (<em>Potentilla indica</em>)</li>
+    <li>Scheinkerrie (<em>Rhodotypos scandens</em>)</li>
+    <li>Scheinzyper-Segge (<em>Carex pseudocyperus</em>)</li>
+    <li>Scheuchzer-Glockenblume (<em>Campanula scheuchzeri</em>)</li>
+    <li>Scheuchzer-Wollgras (<em>Eriophorum scheuchzeri</em>)</li>
+    <li>Schild-Ampfer (<em>Rumex scutatus</em>)</li>
+    <li>Schild-Ehrenpreis (<em>Veronica scutellata</em>)</li>
+    <li>Schild-Wasserhahnenfuß (<em>Ranunculus peltatus</em>)</li>
+    <li>Schillernde Schwertlilie (<em>Iris versicolor</em>)</li>
+    <li>Schlaf-Mohn (<em>Papaver somniferum</em>)</li>
+    <li>Schlamm-Ehrenpreis (<em>Veronica anagalloides</em>)</li>
+    <li>Schlammling (<em>Limosella aquatica</em>)</li>
+    <li>Schlamm-Segge (<em>Carex limosa</em>)</li>
+    <li>Schlangen-Fetthenne (<em>Sedum morganianum</em>)</li>
+    <li>Schlangen-Knöterich (<em>Bistorta officinalis</em>)</li>
+    <li>Schlangen-Lauch (<em>Allium scorodoprasum</em>)</li>
+    <li>Schlanke Königskerze (<em>Verbascum virgatum</em>)</li>
+    <li>Schlanker Augentrost (<em>Euphrasia micrantha</em>)</li>
+    <li>Schlauch-Enzian (<em>Gentiana utriculosa</em>)</li>
+    <li>Schleier-Gipskraut (<em>Gypsophila paniculata</em>)</li>
+    <li>Schlesische Weide (<em>Salix silesiaca</em>)</li>
+    <li>Schling-Knöterich (<em>Fallopia baldschuanica</em>)</li>
+    <li>Schlitzblatt-Karde (<em>Dipsacus laciniatus</em>)</li>
+    <li>Schlitzblättrige Brombeere (<em>Rubus laciniatus</em>)</li>
+    <li>Schlitzblättriger Sonnenhut (<em>Rudbeckia laciniata</em>)</li>
+    <li>Schlitzblättriger Storchschnabel (<em>Geranium dissectum</em>)</li>
+    <li>Schlitzblatt-Schwarzwurzel (<em>Scorzonera laciniata</em>)</li>
+    <li>Schmalblättrige Ölweide (<em>Elaeagnus angustifolia</em>)</li>
+    <li>Schmalblättrige Wicke (<em>Vicia angustifolia</em>)</li>
+    <li>Schmalblättriger Doppelsame (<em>Diplotaxis tenuifolia</em>)</li>
+    <li>Schmalblättriger Klee (<em>Trifolium angustifolium</em>)</li>
+    <li>Schmalblättriger Lein (<em>Linum tenuifolium</em>)</li>
+    <li>Schmalblättriger Merk (<em>Berula erecta</em>)</li>
+    <li>Schmalblättriger Rohrkolben (<em>Typha angustifolia</em>)</li>
+    <li>Schmalblättriges Greiskraut (<em>Senecio inaequidens</em>)</li>
+    <li>Schmalblättriges Lungenkraut (<em>Pulmonaria angustifolia</em>)</li>
+    <li>Schmalblättriges Weidenröschen (<em>Epilobium angustifolium</em>)</li>
+    <li>Schmalblättriges Wollgras (<em>Eriophorum angustifolium</em>)</li>
+    <li>Schmaler Hornklee (<em>Lotus angustissimus</em>)</li>
+    <li>Schmalflügeliger Wanzensame (<em>Corispermum leptopterum</em>)</li>
+    <li>Schmalköpfige Distel (<em>Carduus tenuiflorus</em>)</li>
+    <li>Schmallippige Ständelwurz (<em>Epipactis leptochila</em>)</li>
+    <li>Schneeball-Ahorn (<em>Acer opalus</em>)</li>
+    <li>Schneeballblättrige Blasenspiere (<em>Physocarpus opulifolius</em>)</li>
+    <li>Schnee-Enzian (<em>Gentiana nivalis</em>)</li>
+    <li>Schneeweiße Hainsimse (<em>Luzula nivea</em>)</li>
+    <li>Schnittlauch (<em>Allium schoenoprasum</em>)</li>
+    <li>Schöne Johanniskraut (<em>Hypericum pulchrum</em>)</li>
+    <li>Schöner Ampfer (<em>Rumex pulcher</em>)</li>
+    <li>Schöner Pippau (<em>Crepis pulchra</em>)</li>
+    <li>Schopf-Kreuzblümchen (<em>Polygala comosa</em>)</li>
+    <li>Schopf-Träubel (<em>Muscari comosum</em>)</li>
+    <li>Schotendotter (<em>Erysimum marshallii</em>)</li>
+    <li>Schriftfarn (<em>Asplenium ceterach</em>)</li>
+    <li>Schutt-Kresse (<em>Lepidium ruderale</em>)</li>
+    <li>Schwalbenwurz-Enzian (<em>Gentiana asclepiadea</em>)</li>
+    <li>Schwarzdorn (<em>Prunus spinosa</em>)</li>
+    <li>Schwarze Apfelbeere (<em>Aronia melanocarpa</em>)</li>
+    <li>Schwarze Flockenblume (<em>Centaurea nigra</em>)</li>
+    <li>Schwarze Heckenkirsche (<em>Lonicera nigra</em>)</li>
+    <li>Schwarze Johannisbeere (<em>Ribes nigrum</em>)</li>
+    <li>Schwarze Königskerze (<em>Verbascum nigrum</em>)</li>
+    <li>Schwarze Maulbeere (<em>Morus nigra</em>)</li>
+    <li>Schwarze Nieswurz (<em>Helleborus niger</em>)</li>
+    <li>Schwarze Platterbse (<em>Lathyrus niger</em>)</li>
+    <li>Schwarze Schalbenwurz (<em>Vincetoxicum nigrum</em>)</li>
+    <li>Schwarze Tollkirsche (<em>Atropa bella-donna</em>)</li>
+    <li>Schwarze Walnuss (<em>Juglans nigra</em>)</li>
+    <li>Schwarzer Holunder (<em>Sambucus nigra</em>)</li>
+    <li>Schwarzer Lauch (<em>Allium nigrum</em>)</li>
+    <li>Schwarzer Nachtschatten (<em>Solanum nigrum</em>)</li>
+    <li>Schwarzerle (<em>Alnus glutinosa</em>)</li>
+    <li>Schwarzes Bilsenkraut (<em>Hyoscyamus niger</em>)</li>
+    <li>Schwarzes Kopfried (<em>Schoenus nigricans</em>)</li>
+    <li>Schwarzfrüchtiger Zweizahn (<em>Bidens frondosa</em>)</li>
+    <li>Schwarzkiefer (<em>Pinus nigra</em>)</li>
+    <li>Schwärzliche Flockenblume (<em>Centaurea nigrescens</em>)</li>
+    <li>Schwarz-Pappel (<em>Populus nigra</em>)</li>
+    <li>Schwarzrandige Schafgarbe (<em>Achillea atrata</em>)</li>
+    <li>Schwarzschopf-Segge (<em>Carex appropinquata</em>)</li>
+    <li>Schwarzstieliger Streifenfarn (<em>Asplenium adiantum-nigrum</em>)</li>
+    <li>Schwarzviolette Akelei (<em>Aquilegia atrata</em>)</li>
+    <li>Schweden-Klee (<em>Trifolium hybridum</em>)</li>
+    <li>Schwedische Mehlbeere (<em>Sorbus intermedia</em>)</li>
+    <li>Schwedischer Hartriegel (<em>Cornus suecica</em>)</li>
+    <li>Schweizer Labkraut (<em>Galium megalospermum</em>)</li>
+    <li>Schweizer Mannsschild (<em>Androsace helvetica</em>)</li>
+    <li>Schweizer Weide (<em>Salix helvetica</em>)</li>
+    <li>Schwert-Alant (<em>Inula ensifolia</em>)</li>
+    <li>Schwertblättrige Binse (<em>Juncus ensifolius</em>)</li>
+    <li>Schwimmendes Froschkraut (<em>Luronium natans</em>)</li>
+    <li>See-Kiefer (<em>Pinus pinaster</em>)</li>
+    <li>Seggen-Schuppenried (<em>Kobresia simpliciuscula</em>)</li>
+    <li>Seiden-Backenklee (<em>Dorycnium pentaphyllum</em>)</li>
+    <li>Seidenbaum (<em>Albizia julibrissin</em>)</li>
+    <li>Senf-Rauke (<em>Eruca vesicaria</em>)</li>
+    <li>Serbische Fichte (<em>Picea omorika</em>)</li>
+    <li>Sherards Rose (<em>Rosa sherardii</em>)</li>
+    <li>Sibirische Glockenblume (<em>Campanula sibirica</em>)</li>
+    <li>Sibirische Ulme (<em>Ulmus pumila</em>)</li>
+    <li>Sibirischer Blaustern (<em>Scilla siberica</em>)</li>
+    <li>Sibirisches Herzgespann (<em>Leonurus sibiricus</em>)</li>
+    <li>Sibirisches Tellerkraut (<em>Claytonia sibirica</em>)</li>
+    <li>Sichelmöhre (<em>Falcaria vulgaris</em>)</li>
+    <li>Silberahorn (<em>Acer saccharinum</em>)</li>
+    <li>Silber-Brandschopf (<em>Celosia argentea</em>)</li>
+    <li>Silber-Fingerkraut (<em>Potentilla argentea</em>)</li>
+    <li>Silberlinde (<em>Tilia tomentosa</em>)</li>
+    <li>Silber-Ölweide (<em>Elaeagnus commutata</em>)</li>
+    <li>Silber-Pappel (<em>Populus alba</em>)</li>
+    <li>Silber-Perowskie (<em>Perovskia atriplicifolia</em>)</li>
+    <li>Silberweide (<em>Salix alba</em>)</li>
+    <li>Silberwurz (<em>Dryas octopetala</em>)</li>
+    <li>Skabiosen-Flockenblume (<em>Centaurea scabiosa</em>)</li>
+    <li>Skorpionskraut (<em>Coronilla scorpioides</em>)</li>
+    <li>Soja (<em>Glycine max</em>)</li>
+    <li>Sommer-Adonisröschen (<em>Adonis aestivalis</em>)</li>
+    <li>Sommeraster (<em>Callistephus chinensis</em>)</li>
+    <li>Sommer-Bohnenkraut (<em>Satureja hortensis</em>)</li>
+    <li>Sommer-Knotenblume (<em>Leucojum aestivum</em>)</li>
+    <li>Sommerlinde (<em>Tilia platyphyllos</em>)</li>
+    <li>Sommer-Wendelorchis (<em>Spiranthes aestivalis</em>)</li>
+    <li>Sonderbares Glanzgras (<em>Phalaris paradoxa</em>)</li>
+    <li>Sonnenblume (<em>Helianthus annuus</em>)</li>
+    <li>Sonnwend-Wolfsmilch (<em>Euphorbia helioscopia</em>)</li>
+    <li>Sorgho (<em>Sorghum bicolor</em>)</li>
+    <li>Spanische Golddistel (<em>Scolymus hispanicus</em>)</li>
+    <li>Spanische Hasenglöckchen (<em>Hyacinthoides hispanica</em>)</li>
+    <li>Spanischer Mauerpfeffer (<em>Sedum hispanicum</em>)</li>
+    <li>Sparrige Binse (<em>Juncus squarrosus</em>)</li>
+    <li>Sparrige Segge (<em>Carex muricata</em>)</li>
+    <li>Späte Gelb-Segge (<em>Carex viridula</em>)</li>
+    <li>Späte Traubenkirsche (<em>Prunus serotina</em>)</li>
+    <li>Späte Wald-Trespe (<em>Bromus ramosus</em>)</li>
+    <li>Speckbaum (<em>Portulacaria afra</em>)</li>
+    <li>Speierling (<em>Sorbus domestica</em>)</li>
+    <li>Spiegelndes Laichkraut (<em>Potamogeton lucens</em>)</li>
+    <li>Spießblättriges Helmkraut (<em>Scutellaria hastifolia</em>)</li>
+    <li>Spießblättriges Tännelkraut (<em>Kickxia elatine</em>)</li>
+    <li>Spieß-Melde (<em>Atriplex prostrata</em>)</li>
+    <li>Spinat (<em>Spinacia oleracea</em>)</li>
+    <li>Spinnweben-Hauswurz (<em>Sempervivum arachnoideum</em>)</li>
+    <li>Spitzahorn (<em>Acer platanoides</em>)</li>
+    <li>Spitzblütige Binse (<em>Juncus acutiflorus</em>)</li>
+    <li>Spitzel-Knabenkraut (<em>Orchis spitzelii</em>)</li>
+    <li>Spitzkletten-Rispenkraut (<em>Iva xanthiifolia</em>)</li>
+    <li>Spitz-Wegerich (<em>Plantago lanceolata</em>)</li>
+    <li>Sporn-Stiefmütterchen (<em>Viola calcarata</em>)</li>
+    <li>Spreizende Melde (<em>Atriplex patula</em>)</li>
+    <li>Spreiz-Schöterich (<em>Erysimum repandum</em>)</li>
+    <li>Spring-Schaumkraut (<em>Cardamine impatiens</em>)</li>
+    <li>Spritzgurke (<em>Ecballium elaterium</em>)</li>
+    <li>Sprossende Felsennelke (<em>Petrorhagia prolifera</em>)</li>
+    <li>Sprossender Bärlapp (<em>Lycopodium annotinum</em>)</li>
+    <li>Stachelbeere (<em>Ribes uva-crispa</em>)</li>
+    <li>Stacheliger Skorpionsschwanz (<em>Scorpiurus muricatus</em>)</li>
+    <li>Stachelspitziges Laichkraut (<em>Potamogeton friesii</em>)</li>
+    <li>Stängellose Schlüsselblume (<em>Primula vulgaris</em>)</li>
+    <li>Stängelloses Leimkraut (<em>Silene acaulis</em>)</li>
+    <li>Stängelumfassende Gelbdolde (<em>Smyrnium perfoliatum</em>)</li>
+    <li>Stängelumfassende Taubnessel (<em>Lamium amplexicaule</em>)</li>
+    <li>Stängelumfassender Knotenfuß (<em>Streptopus amplexifolius</em>)</li>
+    <li>Stängelumfassendes Hellerkraut (<em>Thlaspi perfoliatum</em>)</li>
+    <li>Starre Segge (<em>Carex bigelowii</em>)</li>
+    <li>Stattliches Knabenkraut (<em>Orchis mascula</em>)</li>
+    <li>Stauden-Ambrosie (<em>Ambrosia psilostachya</em>)</li>
+    <li>Stechender Hohlzahn (<em>Galeopsis tetrahit</em>)</li>
+    <li>Stech-Fichte (<em>Picea pungens</em>)</li>
+    <li>Stechginster (<em>Ulex europaeus</em>)</li>
+    <li>Steife Rauke (<em>Sisymbrium strictissimum</em>)</li>
+    <li>Steife Winterkresse (<em>Barbarea stricta</em>)</li>
+    <li>Steifes Eisenkraut (<em>Verbena rigida</em>)</li>
+    <li>Steif-Lolch (<em>Lolium rigidum</em>)</li>
+    <li>Steif-Segge (<em>Carex elata</em>)</li>
+    <li>Stein-Nelke (<em>Dianthus sylvestris</em>)</li>
+    <li>Steinweichsel (<em>Prunus mahaleb</em>)</li>
+    <li>Stengellose Kratzdistel (<em>Cirsium acaule</em>)</li>
+    <li>Stengelloser Tragant (<em>Astragalus exscapus</em>)</li>
+    <li>Steppen-Aschenkraut (<em>Tephroseris integrifolia</em>)</li>
+    <li>Steppen-Salbei (<em>Salvia nemorosa</em>)</li>
+    <li>Steppen-Spitzkiel (<em>Oxytropis pilosa</em>)</li>
+    <li>Steppen-Steinkraut (<em>Alyssum desertorum</em>)</li>
+    <li>Steppen-Wolfsmilch (<em>Euphorbia seguieriana</em>)</li>
+    <li>Sterners Labkraut (<em>Galium sterneri</em>)</li>
+    <li>Stern-Flockenblume (<em>Centaurea calcitrapa</em>)</li>
+    <li>Stern-Steinbrech (<em>Saxifraga stellaris</em>)</li>
+    <li>Stieleiche (<em>Quercus robur</em>)</li>
+    <li>Stielfrüchtiger Wasserstern (<em>Callitriche brutia</em>)</li>
+    <li>Stinkende Nieswurz (<em>Helleborus foetidus</em>)</li>
+    <li>Stinkender Storchschnabel (<em>Geranium robertianum</em>)</li>
+    <li>Stink-Hundskamille (<em>Anthemis cotula</em>)</li>
+    <li>Stink-Pippau (<em>Crepis foetida</em>)</li>
+    <li>Stockrose (<em>Alcea rosea</em>)</li>
+    <li>Strahlendfarbener Löwenzahn (<em>Taraxacum laeticolor</em>)</li>
+    <li>Strahlenlose Kamille (<em>Matricaria discoidea</em>)</li>
+    <li>Strand-Binse (<em>Juncus maritimus</em>)</li>
+    <li>Strand-Dreizack (<em>Triglochin maritima</em>)</li>
+    <li>Strand-Grasnelke (<em>Armeria maritima</em>)</li>
+    <li>Strand-Mannstreu (<em>Eryngium maritimum</em>)</li>
+    <li>Strandroggen (<em>Leymus arenarius</em>)</li>
+    <li>Strand-Salzschwaden (<em>Puccinellia maritima</em>)</li>
+    <li>Strand-Segge (<em>Carex extensa</em>)</li>
+    <li>Strand-Silberkraut (<em>Lobularia maritima</em>)</li>
+    <li>Strand-Sode (<em>Suaeda maritima</em>)</li>
+    <li>Strand-Tausendgüldenkraut (<em>Centaurium littorale</em>)</li>
+    <li>Strand-Wegerich (<em>Plantago maritima</em>)</li>
+    <li>Strand-Zaunwinde (<em>Calystegia soldanella</em>)</li>
+    <li>Straucheibisch (<em>Hibiscus syriacus</em>)</li>
+    <li>Strauch-Kronwicke (<em>Hippocrepis emerus</em>)</li>
+    <li>Strauch-Rosskastanie (<em>Aesculus parviflora</em>)</li>
+    <li>Straußenfarn (<em>Matteuccia struthiopteris</em>)</li>
+    <li>Strauß-Gilbweiderich (<em>Lysimachia thyrsiflora</em>)</li>
+    <li>Strauß-Glockenblume (<em>Campanula thyrsoides</em>)</li>
+    <li>Strauß-Steinbrech (<em>Saxifraga cotyledon</em>)</li>
+    <li>Streifen-Klee (<em>Trifolium striatum</em>)</li>
+    <li>Streifen-Leinkraut (<em>Linaria repens</em>)</li>
+    <li>Stumpfblättrige Weide (<em>Salix retusa</em>)</li>
+    <li>Stumpfblättriger Ampfer (<em>Rumex obtusifolius</em>)</li>
+    <li>Stumpfblättriger Mannsschild (<em>Androsace obtusifolia</em>)</li>
+    <li>Stumpfblütige Binse (<em>Juncus subnodulosus</em>)</li>
+    <li>Stumpfe Segge (<em>Carex obtusata</em>)</li>
+    <li>Stumpfkantiger Wasserstern (<em>Callitriche cophocarpa</em>)</li>
+    <li>Stumpfköpfige Sumpfbinse (<em>Eleocharis obtusa</em>)</li>
+    <li>Stundenblume (<em>Hibiscus trionum</em>)</li>
+    <li>Südamerika-Berufkraut (<em>Erigeron bonariensis</em>)</li>
+    <li>Sudeten-Hainsimse (<em>Luzula sudetica</em>)</li>
+    <li>Südlicher Acker-Frauenmantel (<em>Aphanes australis</em>)</li>
+    <li>Südlicher Zürgelbaum (<em>Celtis australis</em>)</li>
+    <li>Südöstlicher Aronstab (<em>Arum cylindraceum</em>)</li>
+    <li>Sumpf-Ampfer (<em>Rumex palustris</em>)</li>
+    <li>Sumpf-Blutauge (<em>Potentilla palustris</em>)</li>
+    <li>Sumpf-Calla (<em>Calla palustris</em>)</li>
+    <li>Sumpf-Dotterblume (<em>Caltha palustris</em>)</li>
+    <li>Sumpf-Dreizack (<em>Triglochin palustris</em>)</li>
+    <li>Sumpf-Eiche (<em>Quercus palustris</em>)</li>
+    <li>Sumpfenzian (<em>Swertia perennis</em>)</li>
+    <li>Sumpf-Gänsedistel (<em>Sonchus palustris</em>)</li>
+    <li>Sumpf-Glanzkraut (<em>Liparis loeselii</em>)</li>
+    <li>Sumpf-Helmkraut (<em>Scutellaria galericulata</em>)</li>
+    <li>Sumpf-Herzblatt (<em>Parnassia palustris</em>)</li>
+    <li>Sumpf-Heusenkraut (<em>Ludwigia palustris</em>)</li>
+    <li>Sumpf-Hornklee (<em>Lotus pedunculatus</em>)</li>
+    <li>Sumpf-Kratzdistel (<em>Cirsium palustre</em>)</li>
+    <li>Sumpf-Kreuzblümchen (<em>Polygala amarella</em>)</li>
+    <li>Sumpf-Läusekraut (<em>Pedicularis palustris</em>)</li>
+    <li>Sumpf-Pippau (<em>Crepis paludosa</em>)</li>
+    <li>Sumpf-Platterbse (<em>Lathyrus palustris</em>)</li>
+    <li>Sumpf-Porst (<em>Ledum palustre</em>)</li>
+    <li>Sumpf-Reitgras (<em>Calamagrostis canescens</em>)</li>
+    <li>Sumpf-Rispengras (<em>Poa palustris</em>)</li>
+    <li>Sumpf-Ruhrkraut (<em>Gnaphalium uliginosum</em>)</li>
+    <li>Sumpf-Schachtelhalm (<em>Equisetum palustre</em>)</li>
+    <li>Sumpf-Schafgarbe (<em>Achillea ptarmica</em>)</li>
+    <li>Sumpf-Segge (<em>Carex acutiformis</em>)</li>
+    <li>Sumpf-Siegwurz (<em>Gladiolus palustris</em>)</li>
+    <li>Sumpf-Stendelwurz (<em>Epipactis palustris</em>)</li>
+    <li>Sumpf-Storchschnabel (<em>Geranium palustre</em>)</li>
+    <li>Sumpf-Veilchen (<em>Viola palustris</em>)</li>
+    <li>Sumpf-Vergißmeinnicht (<em>Myosotis scorpioides</em>)</li>
+    <li>Sumpf-Wasserstern (<em>Callitriche palustris</em>)</li>
+    <li>Sumpf-Weichorchis (<em>Hammarbya paludosa</em>)</li>
+    <li>Sumpf-Ziest (<em>Stachys palustris</em>)</li>
+    <li>Süßdolde (<em>Myrrhis odorata</em>)</li>
+    <li>Tannenwedel (<em>Hippuris vulgaris</em>)</li>
+    <li>Tataren-Buchweizen (<em>Fagopyrum tataricum</em>)</li>
+    <li>Tataren-Heckenkirsche (<em>Lonicera tatarica</em>)</li>
+    <li>Tatarischer Steppenahorn (<em>Acer tataricum</em>)</li>
+    <li>Taube Trespe (<em>Bromus sterilis</em>)</li>
+    <li>Taubenkropf-Leimkraut (<em>Silene vulgaris</em>)</li>
+    <li>Tauben-Skabiose (<em>Scabiosa columbaria</em>)</li>
+    <li>Tauben-Storchschnabel (<em>Geranium columbinum</em>)</li>
+    <li>Tauber Hafer (<em>Avena sterilis</em>)</li>
+    <li>Täuschende Flockenblume (<em>Centaurea decipiens</em>)</li>
+    <li>Täuschender Nachtschatten (<em>Solanum decipiens</em>)</li>
+    <li>Teich-Schachtelhalm (<em>Equisetum fluviatile</em>)</li>
+    <li>Teich-Wasserstern (<em>Callitriche stagnalis</em>)</li>
+    <li>Teppichsteinbrech (<em>Saxifraga hypnoides</em>)</li>
+    <li>Thunberg-Berberitze (<em>Berberis thunbergii</em>)</li>
+    <li>Thunbergs Spierstrauch (<em>Spiraea thunbergii</em>)</li>
+    <li>Thüringer Strauchpappel (<em>Lavatera thuringiaca</em>)</li>
+    <li>Thymianblütige Drachenkopf (<em>Dracocephalum thymiflorum</em>)</li>
+    <li>Tomatillo (<em>Physalis philadelphica</em>)</li>
+    <li>Tommasini-Krokus (<em>Crocus tommasinianus</em>)</li>
+    <li>Topinambur (<em>Helianthus tuberosus</em>)</li>
+    <li>Torfgränke (<em>Chamaedaphne calyculata</em>)</li>
+    <li>Torf-Veilchen (<em>Viola epipsila</em>)</li>
+    <li>Toskanisches Geissblatt (<em>Lonicera etrusca</em>)</li>
+    <li>Traubeneiche (<em>Quercus petraea</em>)</li>
+    <li>Trauben-Gamander (<em>Teucrium botrys</em>)</li>
+    <li>Trauben-Steinbrech (<em>Saxifraga paniculata</em>)</li>
+    <li>Trespen-Federschwingel (<em>Vulpia bromoides</em>)</li>
+    <li>Trollblume (<em>Trollius europaeus</em>)</li>
+    <li>Trübe Flockenblume (<em>Centaurea diluta</em>)</li>
+    <li>Trübe Nachtviole (<em>Hesperis tristis</em>)</li>
+    <li>Tulpenbaum (<em>Liriodendron tulipifera</em>)</li>
+    <li>Tüpfel-Enzian (<em>Gentiana punctata</em>)</li>
+    <li>Turgenie (<em>Turgenia latifolia</em>)</li>
+    <li>Turin-Meier (<em>Asperula taurina</em>)</li>
+    <li>Türkenbund-Lilie (<em>Lilium martagon</em>)</li>
+    <li>Türkische Drachenkopf (<em>Dracocephalum moldavica</em>)</li>
+    <li>Türkischer Mohn (<em>Papaver orientale</em>)</li>
+    <li>Turmgänsekresse (<em>Pseudoturritis turrita</em>)</li>
+    <li>Turm-Gänsekresse (<em>Arabis turrita</em>)</li>
+    <li>Turmkraut (<em>Turritis glabra</em>)</li>
+    <li>Übersehene Traubenhyazinthe (<em>Muscari neglectum</em>)</li>
+    <li>Übersehener Walch (<em>Aegilops neglecta</em>)</li>
+    <li>Ufer-Reitgras (<em>Calamagrostis pseudophragmites</em>)</li>
+    <li>Ufer-Segge (<em>Carex riparia</em>)</li>
+    <li>Ufer-Wolfstrapp (<em>Lycopus europaeus</em>)</li>
+    <li>Ulmenblatt-Brombeere (<em>Rubus ulmifolius</em>)</li>
+    <li>Unechter Gänsefuß (<em>Chenopodium hybridum</em>)</li>
+    <li>Ungarische Eiche (<em>Quercus frainetto</em>)</li>
+    <li>Ungarische Rauke (<em>Sisymbrium altissimum</em>)</li>
+    <li>Ungarn-Enzian (<em>Gentiana pannonica</em>)</li>
+    <li>Ungleichblättriges Labkraut (<em>Galium anisophyllon</em>)</li>
+    <li>Urweltmammutbaum (<em>Metasequoia glyptostroboides</em>)</li>
+    <li>Venuskamm (<em>Scandix pecten-veneris</em>)</li>
+    <li>Verbundener Frauenmantel (<em>Alchemilla conjuncta</em>)</li>
+    <li>Verlot-Beifuß (<em>Artemisia verlotiorum</em>)</li>
+    <li>Verschiedenblättrige Kresse (<em>Lepidium heterophyllum</em>)</li>
+    <li>Verschiedenblättrige Platterbse (<em>Lathyrus heterophyllus</em>)</li>
+    <li>Verschiedensamige Melde (<em>Atriplex micrantha</em>)</li>
+    <li>Verwechselte Trespe (<em>Bromus commutatus</em>)</li>
+    <li>Vielblütige Brombeere (<em>Rubus polyanthemus</em>)</li>
+    <li>Vielblütige Weißwurz (<em>Polygonatum multiflorum</em>)</li>
+    <li>Vielblütiger Ginster (<em>Cytisus multiflorus</em>)</li>
+    <li>Vielsamiger Gänsefuß (<em>Chenopodium polyspermum</em>)</li>
+    <li>Vielstänglige Sumpfsimse (<em>Eleocharis multicaulis</em>)</li>
+    <li>Vierblättrige Einbeere (<em>Paris quadrifolia</em>)</li>
+    <li>Vierblättriges Nagelkraut (<em>Polycarpon tetraphyllum</em>)</li>
+    <li>Vierkantiges Weidenröschen (<em>Epilobium tetragonum</em>)</li>
+    <li>Viermänniges Schaumkraut (<em>Cardamine hirsuta</em>)</li>
+    <li>Viersamige Wicke (<em>Vicia tetrasperma</em>)</li>
+    <li>Violette Sommerwurz (<em>Orobanche purpurea</em>)</li>
+    <li>Violetter Dingel (<em>Limodorum abortivum</em>)</li>
+    <li>Virginia-Dreimasterblume (<em>Tradescantia virginiana</em>)</li>
+    <li>Virginische Gelenkblume (<em>Physostegia virginiana</em>)</li>
+    <li>Virginische Kresse (<em>Lepidium virginicum</em>)</li>
+    <li>Virginische Quecke (<em>Elymus virginicus</em>)</li>
+    <li>Virginische Traubenkirsche (<em>Prunus virginiana</em>)</li>
+    <li>Virginischer Rautenfarn (<em>Botrychium virginianum</em>)</li>
+    <li>Virginischer Schneeflockenstrauch (<em>Chionanthus virginicus</em>)</li>
+    <li>Virginischer Tabak (<em>Nicotiana tabacum</em>)</li>
+    <li>Virginischer Wacholder (<em>Juniperus virginiana</em>)</li>
+    <li>Vogelbeere (<em>Sorbus aucuparia</em>)</li>
+    <li>Vogelkirsche (<em>Prunus avium</em>)</li>
+    <li>Vogelknöterich (<em>Polygonum aviculare</em>)</li>
+    <li>Vogel-Nestwurz (<em>Neottia nidus-avis</em>)</li>
+    <li>Vogel-Wicke (<em>Vicia cracca</em>)</li>
+    <li>Vogesen-Stiefmütterchen (<em>Viola lutea</em>)</li>
+    <li>Wahlberg-Haselblattbrombeere (<em>Rubus wahlbergii</em>)</li>
+    <li>Walch (<em>Aegilops cylindrica</em>)</li>
+    <li>Wald-Bingelkraut (<em>Mercurialis perennis</em>)</li>
+    <li>Wald-Engelwurz (<em>Angelica sylvestris</em>)</li>
+    <li>Wald-Erdbeere (<em>Fragaria vesca</em>)</li>
+    <li>Wald-Flattergras (<em>Milium effusum</em>)</li>
+    <li>Wald-Frauenfarn (<em>Athyrium filix-femina</em>)</li>
+    <li>Wald-Geißblatt (<em>Lonicera periclymenum</em>)</li>
+    <li>Waldgerste (<em>Hordelymus europaeus</em>)</li>
+    <li>Wald-Goldstern (<em>Gagea lutea</em>)</li>
+    <li>Wald-Greiskraut (<em>Senecio sylvaticus</em>)</li>
+    <li>Wald-Habichtskraut (<em>Hieracium murorum</em>)</li>
+    <li>Wald-Hainsimse (<em>Luzula sylvatica</em>)</li>
+    <li>Waldkiefer (<em>Pinus sylvestris</em>)</li>
+    <li>Wald-Läusekraut (<em>Pedicularis sylvatica</em>)</li>
+    <li>Waldmeister (<em>Galium odoratum</em>)</li>
+    <li>Wald-Mohn (<em>Meconopsis cambricum</em>)</li>
+    <li>Wald-Platterbse (<em>Lathyrus sylvestris</em>)</li>
+    <li>Wald-Reitgras (<em>Calamagrostis arundinacea</em>)</li>
+    <li>Wald-Ruhrkraut (<em>Gnaphalium sylvaticum</em>)</li>
+    <li>Wald-Sanikel (<em>Sanicula europaea</em>)</li>
+    <li>Wald-Schachtelhalm (<em>Equisetum sylvaticum</em>)</li>
+    <li>Wald-Schaumkraut (<em>Cardamine flexuosa</em>)</li>
+    <li>Wald-Schaumspiere (<em>Holodiscus discolor</em>)</li>
+    <li>Wald-Schwingel (<em>Festuca altissima</em>)</li>
+    <li>Wald-Segge (<em>Carex sylvatica</em>)</li>
+    <li>Wald-Simse (<em>Scirpus sylvaticus</em>)</li>
+    <li>Wald-Storchschnabel (<em>Geranium sylvaticum</em>)</li>
+    <li>Wald-Veilchen (<em>Viola reichenbachiana</em>)</li>
+    <li>Wald-Vergissmeinnicht (<em>Myosotis sylvatica</em>)</li>
+    <li>Wald-Wicke (<em>Vicia sylvatica</em>)</li>
+    <li>Wald-Witwenblume (<em>Knautia maxima</em>)</li>
+    <li>Wald-Zaunwinde (<em>Calystegia silvatica</em>)</li>
+    <li>Wald-Ziest (<em>Stachys sylvatica</em>)</li>
+    <li>Walliser Levkoje (<em>Matthiola fruticulosa</em>)</li>
+    <li>Walliser Schaf-Schwingel (<em>Festuca valesiaca</em>)</li>
+    <li>Warzige Glanzmispel (<em>Photinia villosa</em>)</li>
+    <li>Wasser-Ampfer (<em>Rumex aquaticus</em>)</li>
+    <li>Wasser-Braunwurz (<em>Scrophularia auriculata</em>)</li>
+    <li>Wasserfalle (<em>Aldrovanda vesiculosa</em>)</li>
+    <li>Wasser-Knöterich (<em>Persicaria amphibia</em>)</li>
+    <li>Wasser-Lobelie (<em>Lobelia dortmanna</em>)</li>
+    <li>Wassermiere (<em>Stellaria aquatica</em>)</li>
+    <li>Wasser-Minze (<em>Mentha aquatica</em>)</li>
+    <li>Wasserpfeffer (<em>Persicaria hydropiper</em>)</li>
+    <li>Wasserschierling (<em>Cicuta virosa</em>)</li>
+    <li>Wasser-Schwaden (<em>Glyceria maxima</em>)</li>
+    <li>Wasser-Schwertlilie (<em>Iris pseudacorus</em>)</li>
+    <li>Wasser-Segge (<em>Carex aquatilis</em>)</li>
+    <li>Wasser-Sumpfkresse (<em>Rorippa amphibia</em>)</li>
+    <li>Weber-Karde (<em>Dipsacus sativus</em>)</li>
+    <li>Wechselblättriges Milzkraut (<em>Chrysosplenium alternifolium</em>)</li>
+    <li>Wechselblatt-Wasserpest (<em>Lagarosiphon major</em>)</li>
+    <li>Wechselblütiges Tausendblatt (<em>Myriophyllum alterniflorum</em>)</li>
+    <li>Weg-Distel (<em>Carduus acanthoides</em>)</li>
+    <li>Wege-Rauke (<em>Sisymbrium officinale</em>)</li>
+    <li>Wegerich-Grasnelke (<em>Armeria arenaria</em>)</li>
+    <li>Wegerich-Natternkopf (<em>Echium plantagineum</em>)</li>
+    <li>Weg-Malve (<em>Malva neglecta</em>)</li>
+    <li>Weiche Rose (<em>Rosa mollis</em>)</li>
+    <li>Weicher Storchschnabel (<em>Geranium molle</em>)</li>
+    <li>Weiches Lungenkraut (<em>Pulmonaria mollis</em>)</li>
+    <li>Weidenblatt-Ampfer (<em>Rumex triangulivalvis</em>)</li>
+    <li>Weidenblättriger Alant (<em>Inula salicina</em>)</li>
+    <li>Weidenblättriger Spierstrauch (<em>Spiraea salicifolia</em>)</li>
+    <li>Weidenblatt-Rindsauge (<em>Buphthalmum salicifolium</em>)</li>
+    <li>Weihnachtsstern (<em>Euphorbia pulcherrima</em>)</li>
+    <li>Weinberg-Lauch (<em>Allium vineale</em>)</li>
+    <li>Wein-Raute (<em>Ruta graveolens</em>)</li>
+    <li>Weißbeerige Mistel (<em>Viscum album</em>)</li>
+    <li>Weiße Braunelle (<em>Prunella laciniata</em>)</li>
+    <li>Weiße Fetthenne (<em>Sedum album</em>)</li>
+    <li>Weiße Lichtnelke (<em>Silene latifolia</em>)</li>
+    <li>Weiße Maulbeere (<em>Morus alba</em>)</li>
+    <li>Weiße Narzisse (<em>Narcissus poeticus</em>)</li>
+    <li>Weiße Pestwurz (<em>Petasites albus</em>)</li>
+    <li>Weiße Resede (<em>Reseda alba</em>)</li>
+    <li>Weiße Schwalbenwurz (<em>Vincetoxicum hirundinaria</em>)</li>
+    <li>Weiße Taubnessel (<em>Lamium album</em>)</li>
+    <li>Weiße Waldhyazinthe (<em>Platanthera bifolia</em>)</li>
+    <li>Weiße Zaunrübe (<em>Bryonia alba</em>)</li>
+    <li>Weißer Fuchsschwanz (<em>Amaranthus albus</em>)</li>
+    <li>Weißer Gänsefuß (<em>Chenopodium album</em>)</li>
+    <li>Weißer Germer (<em>Veratrum album</em>)</li>
+    <li>Weißer Senf (<em>Sinapis alba</em>)</li>
+    <li>Weißer Steinklee (<em>Melilotus albus</em>)</li>
+    <li>Weißes Fingerkraut (<em>Potentilla alba</em>)</li>
+    <li>Weißes Labkraut (<em>Galium album</em>)</li>
+    <li>Weißes Schnabelried (<em>Rhynchospora alba</em>)</li>
+    <li>Weißes Straußgras (<em>Agrostis stolonifera</em>)</li>
+    <li>Weißes Veilchen (<em>Viola alba</em>)</li>
+    <li>Weiß-Esche (<em>Fraxinus americana</em>)</li>
+    <li>Weiß-Klee (<em>Trifolium repens</em>)</li>
+    <li>Weißliches Berufkraut (<em>Erigeron sumatrensis</em>)</li>
+    <li>Weißrandiger Nachtschatten (<em>Solanum marginatum</em>)</li>
+    <li>Weiß-Tanne (<em>Abies alba</em>)</li>
+    <li>Wenigblütige Segge (<em>Carex pauciflora</em>)</li>
+    <li>Wermut (<em>Artemisia absinthium</em>)</li>
+    <li>Westalpen-Klee (<em>Trifolium alpinum</em>)</li>
+    <li>Westamerikanische Hemlocktanne (<em>Tsuga heterophylla</em>)</li>
+    <li>Westlicher Erdbeerbaum (<em>Arbutus unedo</em>)</li>
+    <li>Weymouth-Kiefer (<em>Pinus strobus</em>)</li>
+    <li>Wiesen-Alant (<em>Inula britannica</em>)</li>
+    <li>Wiesen-Bocksbart (<em>Tragopogon pratensis</em>)</li>
+    <li>Wiesen-Flockenblume (<em>Centaurea jacea</em>)</li>
+    <li>Wiesen-Glockenblume (<em>Campanula patula</em>)</li>
+    <li>Wiesen-Goldstern (<em>Gagea pratensis</em>)</li>
+    <li>Wiesen-Kammgras (<em>Cynosurus cristatus</em>)</li>
+    <li>Wiesen-Kerbel (<em>Anthriscus sylvestris</em>)</li>
+    <li>Wiesen-Kümmel (<em>Carum carvi</em>)</li>
+    <li>Wiesen-Labkraut (<em>Galium mollugo</em>)</li>
+    <li>Wiesen-Lieschgras (<em>Phleum pratense</em>)</li>
+    <li>Wiesen-Margerite (<em>Leucanthemum vulgare</em>)</li>
+    <li>Wiesen-Pippau (<em>Crepis biennis</em>)</li>
+    <li>Wiesen-Platterbse (<em>Lathyrus pratensis</em>)</li>
+    <li>Wiesen-Salbei (<em>Salvia pratensis</em>)</li>
+    <li>Wiesen-Schachtelhalm (<em>Equisetum pratense</em>)</li>
+    <li>Wiesen-Schaumkraut (<em>Cardamine pratensis</em>)</li>
+    <li>Wiesen-Schlüsselblume (<em>Primula veris</em>)</li>
+    <li>Wiesen-Schwingel (<em>Festuca pratensis</em>)</li>
+    <li>Wiesen-Segge (<em>Carex nigra</em>)</li>
+    <li>Wiesen-Storchschnabel (<em>Geranium pratense</em>)</li>
+    <li>Wiesen-Wachtelweizen (<em>Melampyrum pratense</em>)</li>
+    <li>Wiesen-Witwenblume (<em>Knautia arvensis</em>)</li>
+    <li>Wildapfel (<em>Malus sylvestris</em>)</li>
+    <li>Wilde Karde (<em>Dipsacus fullonum</em>)</li>
+    <li>Wilde Malve (<em>Malva sylvestris</em>)</li>
+    <li>Wilde Möhre (<em>Daucus carota</em>)</li>
+    <li>Wilde Sumpfkresse (<em>Rorippa sylvestris</em>)</li>
+    <li>Wilde Tulpe (<em>Tulipa sylvestris</em>)</li>
+    <li>Wilder Wein (<em>Parthenocissus quinquefolia</em>)</li>
+    <li>Wildes Stiefmütterchen (<em>Viola tricolor</em>)</li>
+    <li>Wimper-Perlgras (<em>Melica ciliata</em>)</li>
+    <li>Wimper-Segge (<em>Carex pilosa</em>)</li>
+    <li>Windblumen-Königskerze (<em>Verbascum phlomoides</em>)</li>
+    <li>Winkel-Segge (<em>Carex remota</em>)</li>
+    <li>Winter-Bohnenkraut (<em>Satureja montana</em>)</li>
+    <li>Winterjasmin (<em>Jasminum nudiflorum</em>)</li>
+    <li>Winterlinde (<em>Tilia cordata</em>)</li>
+    <li>Winterling (<em>Eranthis hyemalis</em>)</li>
+    <li>Winterzwiebel (<em>Allium fistulosum</em>)</li>
+    <li>Wolliger Fingerhut (<em>Digitalis lanata</em>)</li>
+    <li>Wolliger Hahnenfuß (<em>Ranunculus lanuginosus</em>)</li>
+    <li>Wolliger Saflor (<em>Carthamus lanatus</em>)</li>
+    <li>Wolliger Schneeball (<em>Viburnum lantana</em>)</li>
+    <li>Wolliges Honiggras (<em>Holcus lanatus</em>)</li>
+    <li>Wollkopf-Kratzdistel (<em>Cirsium eriophorum</em>)</li>
+    <li>Wunderbaum (<em>Ricinus communis</em>)</li>
+    <li>Wunderblume (<em>Mirabilis jalapa</em>)</li>
+    <li>Wunder-Lauch (<em>Allium paradoxum</em>)</li>
+    <li>Wunder-Veilchen (<em>Viola mirabilis</em>)</li>
+    <li>Wurmlattich (<em>Helminthotheca echioides</em>)</li>
+    <li>Wurzellose Zwergwasserlinse (<em>Wolffia arrhiza</em>)</li>
+    <li>Ysop (<em>Hyssopus officinalis</em>)</li>
+    <li>Zarte Binse (<em>Juncus tenuis</em>)</li>
+    <li>Zarter Gauchheil (<em>Anagallis tenella</em>)</li>
+    <li>Zaun-Wicke (<em>Vicia sepium</em>)</li>
+    <li>Zebra-Ampelkraut (<em>Tradescantia zebrina</em>)</li>
+    <li>Zehnblättriger Sauerklee (<em>Oxalis decaphylla</em>)</li>
+    <li>Zerbrechlicher Blasenfarn (<em>Cystopteris fragilis</em>)</li>
+    <li>Zerreiche (<em>Quercus cerris</em>)</li>
+    <li>Ziegelrotes Lungenkraut (<em>Pulmonaria rubra</em>)</li>
+    <li>Zierliche Fetthenne (<em>Sedum forsterianum</em>)</li>
+    <li>Zierliche Wasserlinse (<em>Lemna minuta</em>)</li>
+    <li>Zierliches Tausendgüldenkraut (<em>Centaurium pulchellum</em>)</li>
+    <li>Zierliches Wollgras (<em>Eriophorum gracile</em>)</li>
+    <li>Zimt-Himbeere (<em>Rubus odoratus</em>)</li>
+    <li>Zirbel-Kiefer (<em>Pinus cembra</em>)</li>
+    <li>Zitronen-Melisse (<em>Melissa officinalis</em>)</li>
+    <li>Zittergras-Segge (<em>Carex brizoides</em>)</li>
+    <li>Zitterpappel (<em>Populus tremula</em>)</li>
+    <li>Zitzen-Sumpfsimse (<em>Eleocharis mamillata</em>)</li>
+    <li>Zottiger Klappertopf (<em>Rhinanthus alectorolophus</em>)</li>
+    <li>Zottiges Fingerkraut (<em>Potentilla crantzii</em>)</li>
+    <li>Zottiges Franzosenkraut (<em>Galinsoga quadriradiata</em>)</li>
+    <li>Zottiges Weidenröschen (<em>Epilobium hirsutum</em>)</li>
+    <li>Zungen-Hahnenfuß (<em>Ranunculus lingua</em>)</li>
+    <li>Zurückgebogener Amarant (<em>Amaranthus retroflexus</em>)</li>
+    <li>Zurückgekrümmter Salbei (<em>Salvia reflexa</em>)</li>
+    <li>Zweiblättrige Schattenblume (<em>Maianthemum bifolium</em>)</li>
+    <li>Zweiblättriger Blaustern (<em>Scilla bifolia</em>)</li>
+    <li>Zweiblütiger Krokus (<em>Crocus biflorus</em>)</li>
+    <li>Zweiblütiges Sandkraut (<em>Arenaria biflora</em>)</li>
+    <li>Zweiblütiges Veilchen (<em>Viola biflora</em>)</li>
+    <li>Zweifarbige Brombeere (<em>Rubus bifrons</em>)</li>
+    <li>Zweigriffeliger Weißdorn (<em>Crataegus laevigata</em>)</li>
+    <li>Zweihäusige Segge (<em>Carex dioica</em>)</li>
+    <li>Zweijährige Nachtkerze (<em>Oenothera biennis</em>)</li>
+    <li>Zweijähriger Lein (<em>Linum bienne</em>)</li>
+    <li>Zweiknotiger Krähenfuß (<em>Lepidium didymum</em>)</li>
+    <li>Zweinervige Segge (<em>Carex binervis</em>)</li>
+    <li>Zweischneidige Binse (<em>Juncus anceps</em>)</li>
+    <li>Zweispaltiger Hohlzahn (<em>Galeopsis bifida</em>)</li>
+    <li>Zweizeilige Segge (<em>Carex disticha</em>)</li>
+    <li>Zwerg Herzblume (<em>Dicentra eximia</em>)</li>
+    <li>Zwerg-Alpenglöckchen (<em>Soldanella pusilla</em>)</li>
+    <li>Zwerg-Baldrian (<em>Valeriana supina</em>)</li>
+    <li>Zwerg-Binse (<em>Juncus pygmaeus</em>)</li>
+    <li>Zwerg-Dattelpalme (<em>Phoenix roebelenii</em>)</li>
+    <li>Zwerg-Glockenblume (<em>Campanula cochleariifolia</em>)</li>
+    <li>Zwerg-Goldstern (<em>Gagea minima</em>)</li>
+    <li>Zwerg-Holunder (<em>Sambucus ebulus</em>)</li>
+    <li>Zwerg-Igelkolben (<em>Sparganium natans</em>)</li>
+    <li>Zwerg-Kreuzdorn (<em>Rhamnus pumila</em>)</li>
+    <li>Zwerg-Lein (<em>Radiola linoides</em>)</li>
+    <li>Zwerg-Lerchensporn (<em>Corydalis pumila</em>)</li>
+    <li>Zwerg-Miere (<em>Minuartia sedoides</em>)</li>
+    <li>Zwergorchis (<em>Chamorchis alpina</em>)</li>
+    <li>Zwerg-Primel (<em>Primula minima</em>)</li>
+    <li>Zwerg-Schneckenklee (<em>Medicago minima</em>)</li>
+    <li>Zwerg-Schwertlilie (<em>Iris pumila</em>)</li>
+    <li>Zwerg-Seegras (<em>Zostera noltii</em>)</li>
+    <li>Zwerg-Simsenlilie (<em>Tofieldia pusilla</em>)</li>
+    <li>Zwerg-Veilchen (<em>Viola pumila</em>)</li>
+    <li>Zwiebel-Binse (<em>Juncus bulbosus</em>)</li>
+    <li>Zwiebel-Rispengras (<em>Poa bulbosa</em>)</li>
+    <li>Zwiebel-Zahnwurz (<em>Cardamine bulbifera</em>)</li>
+    <li>Zylindrischer Walch (<em>Aegilops geniculata</em>)</li>
+    <li>Zymbelkraut-Steinbrech (<em>Saxifraga cymbalaria</em>)</li>
+    <li>Zypergras-Simse (<em>Scirpus cyperinus</em>)</li>
+    <li>Zypressen-Flachbärlapp (<em>Diphasiastrum tristachyum</em>)</li>
+    <li>Zypressen-Wolfsmilch (<em>Euphorbia cyparissias</em>)</li>
+    <li><em>Aloe humilis</em></li>
+    <li><em>Ambrosia maritima</em></li>
+    <li><em>Anchusa undulata</em></li>
+    <li><em>Anoda cristata</em></li>
+    <li><em>Aralia spinosa</em></li>
+    <li><em>Artemisia ludoviciana</em></li>
+    <li><em>Brassica tournefortii</em></li>
+    <li><em>Carduus pycnocephalus</em></li>
+    <li><em>Colchicum speciosum</em></li>
+    <li><em>Crassula peduncularis</em></li>
+    <li><em>Cynodon nlemfuensis</em></li>
+    <li><em>Cyperus alternifolius</em></li>
+    <li><em>Elymus pungens</em></li>
+    <li><em>Erigeron philadelphicus</em></li>
+    <li><em>Erigeron speciosus</em></li>
+    <li><em>Gilia tricolor</em></li>
+    <li><em>Glyceria canadensis</em></li>
+    <li><em>Haworthia fasciata</em></li>
+    <li><em>Helianthus atrorubens</em></li>
+    <li><em>Helianthus decapetalus</em></li>
+    <li><em>Helianthus giganteus</em></li>
+    <li><em>Ipomoea lacunosa</em></li>
+    <li><em>Ipomoea triloba</em></li>
+    <li><em>Lepidium bonariense</em></li>
+    <li><em>Linaria arenaria</em></li>
+    <li><em>Oenothera elata</em></li>
+    <li><em>Oenothera stricta</em></li>
+    <li><em>Ornithopus pinnatus</em></li>
+    <li><em>Oxalis debilis</em></li>
+    <li><em>Oxalis latifolia</em></li>
+    <li><em>Phalaris brachystachys</em></li>
+    <li><em>Plantago aristata</em></li>
+    <li><em>Polemonium reptans</em></li>
+    <li><em>Polypogon viridis</em></li>
+    <li><em>Pulmonaria saccharata</em></li>
+    <li><em>Rhagadiolus stellatus</em></li>
+    <li><em>Rhododendron catawbiense</em></li>
+    <li><em>Rhododendron ponticum</em></li>
+    <li><em>Rudbeckia triloba</em></li>
+    <li><em>Sedum caeruleum</em></li>
+    <li><em>Sida rhombifolia</em></li>
+    <li><em>Solanum laciniatum</em></li>
+    <li><em>Solanum pyracanthos</em></li>
+    <li><em>Solidago patula</em></li>
+    <li><em>Sonchus tenerrimus</em></li>
+    <li><em>Tagetes minuta</em></li>
+    <li><em>Trifolium pannonicum</em></li>
+    <li><em>Ulex minor</em></li>
+    <li><em>Verbena litoralis</em></li>
+    <li><em>Vicia bithynica</em></li>
+    <li><em>Vicia disperma</em></li>
+    <li><em>Vincetoxicum rossicum</em></li>
+  </ol>
+</main>
+{% endblock %}

@@ -1,0 +1,13 @@
+<ol class="specieslist">
+  {% for species in species_list %}
+  <li>
+    {% if lang == 'en' and 'engname' in species %}
+    <em>{{ species.sciname }}</em> ({{species.engname}})
+    {% elif 'gername' in species and species.gername %}
+    <em>{{ species.sciname }}</em> ({{species.gername}})
+    {% else %}
+    <em>{{ species.sciname }}</em>
+    {% endif %}
+  </li>
+  {% endfor %} 
+</ol>

@@ -21,6 +21,10 @@ urlpatterns = [
     path("dev/imprint", views.imprint, name="imprint"),
     path("dev/map", views.show_map, name="map"),
     path("dev/digitalaccessibilitystatement", views.digitalaccessibilitystatement, name="digitalaccessibilitystatement"),
+    path("dev/plantrecognition", views.plantrecognition, name="plantrecognition"),
+    path("dev/animalrecognition", views.animalrecognition, name="animalrecognition"),
+    path("dev/speciesimagerecognition", views.speciesimagerecognition, name="speciesimagerecognition"),
+    path("dev/speciesaudiorecognition", views.speciesaudiorecognition, name="speciesaudiorecognition"),
     path('', views.home, name="home"),
     re_path(
         r'^species/portrait[^/]*/(?P<id>[0-9]+)/?$', views.artportrait, name="artportrait"),

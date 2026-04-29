@@ -1,0 +1,37 @@
+{% extends "web/page_base.html" %}
+
+{% load static web_tags %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'web/css/recognition.css' %}">
+{% endblock %}
+{% block title %}Animal recognition{% endblock %}
+
+{% block header_title %}
+<h1>Animal recognition</h1>
+{% endblock %}
+
+{% block content %}
+<main class="text-container">
+  <p>
+    Your audio recordings of animals are determined by automated pattern recognition. The suggestions of sound recognition arise through the comparison of the animal sounds recorded by you with audio recordings, with which the algorithm was trained.
+  </p>
+  <p>
+    This means: 
+  </p>
+  <ol>
+    <li>Only species can be recognized that are contained in the training dataset.</li>
+    <li>Recognition works best when there is a high similarity to the recording situation and -quality of the training material (e.g. low background noise, appropriate distance, suitable microphone quality).</li>
+    <li>Incorrect or imprecise results may also be displayed.</li>
+  </ol>
+  <p>
+    The <a href="https://zenodo.org/records/18247420">Algorithmus</a> was trained, among other things, with audio recordings of birds, mammals, amphibians and grasshoppers. Both curated reference recordings and verified Naturblick recordings were used. The main sources of the training material are the following: <a href="https://www.museumfuernaturkunde.berlin/en/research/collection/animal-sound-archive/">Tierstimmenarchiv MfN</a>, <a href="https://xeno-canto.org/">Xeno-canto</a>, <a href="https://www.inaturalist.org/">iNaturalist</a>. 
+  </p>
+  <p>
+    The sound recognition was developed in collaboration with <a href="https://birdnet.cornell.edu/?lang=en">BirdNET</a> (<a href="https://www.tu-chemnitz.de/index.html.en">TU Chemnitz</a>, <a href="https://www.birds.cornell.edu/ccb/">K. Lisa Yang Center for Conservation Bioacoustics</a>, <a href="https://www.birds.cornell.edu">Cornell Lab of Ornithology</a>). Automated sound identification serves as support for your nature observation and does not replace expert identification. Especially in complex acoustic environments or with overlapping sounds, recognition accuracy may be limited.
+  </p>
+  <p>
+    The following species can be identified with the pattern recognition:
+  </p>
+  {% include "partials/patternrecognition_species.html" %}
+</main>
+{% endblock %}
