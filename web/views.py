@@ -118,9 +118,10 @@ def index(request):
             "portrait_set", to_attr="prefetched_portraits"
         )
     ))
-    ids=[370, 12, 160, 701, 73, 639, 661, 713]
+    ids = [370, 12, 160, 701, 73, 639, 661, 713]
     if lang == "dels":
-        ids.remove(12)
+        ids = [370, 73, 160, 701, 704, 639, 661, 713]
+
     species_qs = species_qs.filter(id__in=ids)
     species_dict = {
         s.id: (
