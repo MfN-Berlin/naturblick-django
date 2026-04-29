@@ -780,3 +780,8 @@ def animalrecognition(request):
         "lang": translation.get_language()
     })
 
+def speciesimagerecognition(request):
+    return web_render(request, "speciesimagerecognition")
+
+def speciesaudiorecognition(request):
+    return web_render(request, "speciesaudiorecognition")
