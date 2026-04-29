@@ -7,7 +7,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{% block title %}{% endblock %}</title>
-    <base href="/">
     <link rel="icon" href="{% static 'favicon.ico' %}">
     {% for og in og_list %}
     <meta property="{{ og.property }}" content="{{ og.content }}">

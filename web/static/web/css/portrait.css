@@ -36,19 +36,37 @@ body {
             }
         }
 
-        > section.grid-1-2 {
+        .grid-1-1 {
+            display: grid;
+            gap: var(--default-pad);
+            grid-template-columns: var(--grid-1-1-columns);
+        }
+
+        .grid-1-2 {
             display: grid;
             gap: var(--default-pad);
             grid-template-columns: var(--grid-1-2-columns);
         }
 
-        > section.grid-2-1 {
+        .grid-2-1 {
             display: grid;
             gap: var(--default-pad);
             grid-template-columns: var(--grid-2-1-columns);
         }
 
-        > section.grid-2-3 {
+        .grid-5-7 {
+            display: grid;
+            gap: var(--default-pad);
+            grid-template-columns: var(--grid-5-7-columns);
+        }
+
+        .grid-7-5 {
+            display: grid;
+            gap: var(--default-pad);
+            grid-template-columns: var(--grid-7-5-columns);
+        }
+
+        .grid-2-3 {
             display: grid;
             gap: var(--default-pad);
             grid-template-columns: var(--grid-2-3-columns);
@@ -68,15 +86,11 @@ body {
                     break-inside: avoid;
                 }
             }
-            > div {
-                columns: min(var(--max-columns), 2);
+            .no-image {
+                ul {
+                    columns: min(var(--max-columns), 2);
+                }
             }
-            > div.with-image {
-                display: grid;
-                gap: var(--default-pad);
-                grid-template-columns: var(--grid-2-1-columns);
-            }
-
         }
 
         > section.features {
@@ -184,6 +198,10 @@ body {
                         color: var(--relax);
                         text-decoration: underline;
                     }
+                }
+                p:target {
+                    background: var(--white);
+                }
             }
         }
     }

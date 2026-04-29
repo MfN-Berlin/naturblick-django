@@ -19,7 +19,7 @@
       {% endfor %}
     </ul>
   </div>
-  {% if audio %}
+  {% if audio and audio.audio_title %}
   {% include "partials/audio.html" with title=audio.audio_title licence=audio.licence png=audio.png url=audio.url only %}
   {% endif %}
   {% if similar_species %}

@@ -124,11 +124,13 @@
 
     function validateAndUpdateNumberOfColumns(event) {
         const width = window.innerWidth;
-        let columns = 2;
-        if (width > 1023) {
+        let columns = 1;
+        if (width > 1150) {
             columns = 4;
-        } else if (width < 1024 && width > 767) {
+        } else if (width < 1150 && width > 900) {
             columns = 3;
+        } else if (width < 900 && width > 500) {
+            columns = 2;
         }
 
         if(columns != numberOfColumns) {
