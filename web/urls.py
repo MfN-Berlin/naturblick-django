@@ -11,7 +11,7 @@ urlpatterns = [
     path("dev/species/portrait/data", views.search_portrait_data, name="search_portrait_data"),
     re_path(
         r'^dev/species/portrait/(?P<id>[0-9]+)$', views.portrait, name="portrait"),
-    path("dev/species/portrait;view=grid", views.search_portrait, name="search_portrait"),
+    path("dev/species/portrait;view=grid", views.search_portrait),
     path("dev/species/portrait", views.search_portrait, name="search_portrait"),
     path("dev/faq", views.faq, name="faq"),
     path("dev/mobileapp", views.mobileapp, name="mobileapp"),

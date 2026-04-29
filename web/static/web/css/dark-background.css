@@ -6,6 +6,7 @@ html {
         }
     }
     footer {
+        color: var(--white);
         nav {
             ul:last-child {
                 a {

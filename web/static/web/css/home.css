@@ -26,9 +26,27 @@ header {
 
 body {
     main  {
+        max-width: 1400px;
         color: white;
         a {
             border-bottom: 2px solid rgba(255, 255, 255, .5);
+        }
+        section.species-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            #species-masonry {
+                columns: max(min(4, var(--max-columns)), 2);
+                a {
+                    border-bottom: 0;
+                }
+            }
+            > a {
+                margin: auto;
+                font-size: var( --font-size-h3);
+                line-height: var(--line-height-h3);
+                font-weight: 700;
+            }
         }
     }
 
