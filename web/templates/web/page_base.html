@@ -2,7 +2,8 @@
 {% load i18n static web_tags %}
 
 <!doctype html>
-<html lang="en">
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -27,7 +28,7 @@
   <header>
     <div id="header-container">
       <div class="top-bar">
-        <a class="top-left" href="{% url 'index' %}{% querystring %}">
+        <a class="top-left" href="{% url 'index' %}{% keep_only_lang %}">
           <img src="{% static 'logo.svg' %}">
           <p>Naturblick</p>
         </a>
@@ -38,9 +39,9 @@
               <ul>
                 {# <a href="#">Artportraits - todo</a>#}
                 {# <a href="#">Beobachtungen mit Naturblick - todo</a>#}
-                <li><a href="{% url 'mobileapp' %}{% querystring %}">{% translate "Über die App" %}</a></li>
-                <li><a href="{% url 'about' %}{% querystring %}">{% translate "Über uns" %}</a></li>
-                <li><a href="{% url 'faq' %}{% querystring %}">{% translate "Häufige Fragen" %}</a></li>
+                <li><a href="{% url 'mobileapp' %}{% keep_only_lang %}">{% translate "Über die App" %}</a></li>
+                <li><a href="{% url 'about' %}{% keep_only_lang %}">{% translate "Über uns" %}</a></li>
+                <li><a href="{% url 'faq' %}{% keep_only_lang %}">{% translate "Häufige Fragen" %}</a></li>
               </ul>
             </nav>
           </details>
@@ -71,12 +72,12 @@
 <footer>
   <nav>
     <ul>
-      <li><a href="{% url 'kontakt' %}{% querystring %}">{% translate "Kontakt" %}</a></li>
+      <li><a href="{% url 'kontakt' %}{% keep_only_lang %}">{% translate "Kontakt" %}</a></li>
     </ul>
     <ul>
-      <li><a href="{% url 'privacy' %}{% querystring %}">{% translate "Datenschutz" %}</a></li>
-      <li><a href="{% url 'imprint' %}{% querystring %}">{% translate "Impressum" %}</a></li>
-      <li><a href="{% url 'digitalaccessibilitystatement' %}{% querystring %}">{% translate "Digitale Barrierefreiheit" %}</a></li>
+      <li><a href="{% url 'privacy' %}{% keep_only_lang %}">{% translate "Datenschutz" %}</a></li>
+      <li><a href="{% url 'imprint' %}{% keep_only_lang %}">{% translate "Impressum" %}</a></li>
+      <li><a href="{% url 'digitalaccessibilitystatement' %}{% keep_only_lang %}">{% translate "Digitale Barrierefreiheit" %}</a></li>
     </ul>
   </nav>
   <div>

@@ -25,7 +25,7 @@
         {% include "partials/masonry_tile.html" %}
         {% endfor %}
         </div>
-        <a href="{% url 'search_portrait'%}{% querystring %}">Discover more species {% inline_svg 'right-arrow.svg' %}</a>
+        <a href="{% url 'search_portrait'%}{% keep_only_lang %}">Discover more species {% inline_svg 'right-arrow.svg' %}</a>
     </section>
     <hr>
     <section>

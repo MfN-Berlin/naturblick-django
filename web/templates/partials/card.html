@@ -1,7 +1,9 @@
+{% load web_tags %}
+
 <h2>{{ title }}</h2>
 <p>{{ subtitle }}</p>
 {% if url %}
     <a href="{{ url }}">{{ link_text }}</a>
 {% else %}
-    <a href="{% url path_name %}{% querystring %}">{{ link_text }}</a>
+    <a href="{% url path_name %}{% keep_only_lang %}">{{ link_text }}</a>
 {% endif %}
