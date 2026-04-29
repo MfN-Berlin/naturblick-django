@@ -264,6 +264,13 @@
           }
         });
 
+        map.on("zoom", () => {
+            map.getSource('splited-obs-source').setData({
+                type: "FeatureCollection",
+                features: []
+            });
+        });
+
         map.on("mouseenter", ["unclustered-observation-icons", "cluster-observations", "splited-observation"], () => {
           map.getCanvas().style.cursor = "pointer";
         });
