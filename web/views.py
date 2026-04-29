@@ -767,3 +767,16 @@ def pattern_matching(pattern_matching_confirmed, pattern_matching_executed,
             pattern_matching_text = _(
                 "Die Art war nicht unter den drei Arten mit der größten Übereinstimmung mit dem trainierten Vergleichsmaterial der Mustererkennung.")
     return pattern_matching_text
+
+def plantrecognition(request):
+    return web_render(request, "plantrecognition", context={
+        "species_list": requests.get(f"{settings.PLAYBACK_URL}imageidspecies").json(),
+        "lang": translation.get_language()
+    })
+
+def animalrecognition(request):
+    return web_render(request, "animalrecognition", context={
+        "species_list": requests.get(f"{settings.PLAYBACK_URL}soundidspecies").json(),
+        "lang": translation.get_language()
+    })
+

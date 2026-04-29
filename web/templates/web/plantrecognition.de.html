@@ -1,0 +1,37 @@
+{% extends "web/page_base.html" %}
+
+{% load static web_tags %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'web/css/recognition.css' %}">
+{% endblock %}
+{% block title %}Pflanzenerkennung{% endblock %}
+
+{% block header_title %}
+<h1>Pflanzenerkennung</h1>
+{% endblock %}
+
+{% block content %}
+<main class="text-container">
+  <p>
+    Deine Fotos von Pflanzen werden durch Mustererkennung bestimmt. Die Vorschläge der Mustererkennung entstehen durch den Vergleich des von dir gemachten Fotos mit Fotos von Pflanzen, mit denen der Algorithmus trainiert wurde.
+  </p>
+  <p>Das bedeutet:</p>
+  <ol>
+    <li>es können nur Arten erkannt werden, die auch trainiert wurden,</li>
+    <li>auch nicht trainierte Arten können Übereinstimmungen mit dem trainierten Material haben,</li>
+    <li>die Erkennung funktioniert am besten, wenn eine große Ähnlichkeit zu der Aufnahmesituation und -qualität des Trainingsmaterials besteht (z.B. Pflanzen in der freien Natur) und</li>
+    <li>es können auch falsche Ergebnisse angezeigt werden.</li>
+  </ol>
+
+  <p>
+    Seit Mai 2025 nutzen wir die Mustererkennung von Pl@ntNet für die Pflanzenerkennung (verfügbar ab App-Version 4.3.0). Wir nutzen dabei immer die aktuelle Pl@ntNet-Version. Mehr Informationen zu Pl@ntNet findest du unter: <a href="https://www.plantnet.org/en/about">www.plantnet.org/en/about/</a>.
+  </p>
+  <p>
+    Bis April 2025 basierte die Pflanzenerkennung auf einer von uns entwickelten und trainierten Mustererkennung (gilt für alle App-Versionen niederiger als 4.3.0). Das Bildmaterial dafür stammte von naturgucker, den LIFECLEF Challenges und iNaturalist.
+  </p>
+  <p>
+    Folgende Arten können mit der Mustererkennung bestimmt werden:
+  </p>
+  {% include "partials/patternrecognition_species.html" %}
+</main>
+{% endblock %}

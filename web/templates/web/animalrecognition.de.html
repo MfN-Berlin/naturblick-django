@@ -1,0 +1,38 @@
+{% extends "web/page_base.html" %}
+
+{% load static web_tags %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'web/css/recognition.css' %}">
+{% endblock %}
+{% block title %}Tiererkennung{% endblock %}
+
+{% block header_title %}
+<h1>Tiererkennung</h1>
+{% endblock %}
+
+{% block content %}
+<main class="text-container">
+  <p>
+    Deine Audioaufnahmen von Tieren werden durch automatisierte Mustererkennung bestimmt. Die Vorschläge der Lauterkennung entstehen durch den Vergleich der von dir aufgenommenen Tierlaute mit Audioaufnahmen, mit denen der Algorithmus trainiert wurde.
+  </p>
+  <p>
+    Das bedeutet:
+  </p>
+  <ol>
+    <li>Es können nur Arten erkannt werden, die im Trainingsdatensatz enthalten sind.</li>
+    <li>Die Erkennung funktioniert am besten, wenn eine große Ähnlichkeit zur Aufnahmesituation und -qualität des Trainingsmaterials besteht (z.B. geringe Hintergrundgeräusche, passende Distanz, geeignete Mikrofonqualität).</li>
+    <li>Es können auch falsche oder ungenaue Ergebnisse angezeigt werden.</li>
+  </ol>
+
+  <p>
+    Der <a href="https://zenodo.org/records/18247420">Algorithmus</a> wurde u.a. mit Audioaufnahmen von Vögeln, Säugetieren, Amphibien und Heuschrecken trainiert. Dabei kamen sowohl kuratierte Referenzaufnahmen als auch verifizierte Naturblick-Aufnahmen zum Einsatz. Die Hauptquellen des Trainingsmaterial sind folgende: <a href="https://www.museumfuernaturkunde.berlin/forschung/sammlung/tierstimmenarchiv/">Tierstimmenarchiv MfN</a>, <a href="https://xeno-canto.org/">Xeno-canto</a>, <a href="https://www.inaturalist.org/">iNaturalist</a>.
+  </p>
+  <p>
+    Die Lauterkennung wurde in Zusammenarbeit mit <a href="https://birdnet.cornell.edu/?lang=de">BirdNET</a> (<a href="https://www.tu-chemnitz.de/index.html">TU Chemnitz</a>, <a href="https://www.birds.cornell.edu/ccb/">K. Lisa Yang Center for Conservation Bioacoustics</a>, <a href="https://www.birds.cornell.edu">Cornell Lab of Ornithology</a>) entwickelt. Die automatisierte Lautbestimmung dient als Unterstützung deiner Naturbeobachtung und ersetzt keine fachliche Bestimmung. Insbesondere in komplexen akustischen Umgebungen oder bei überlappenden Lauten kann die Erkennungsgenauigkeit eingeschränkt sein.
+  </p>
+  <p>
+    Folgende Arten können mit der Mustererkennung bestimmt werden:
+  </p>
+  {% include "partials/patternrecognition_species.html" %}
+</main>
+{% endblock %}
