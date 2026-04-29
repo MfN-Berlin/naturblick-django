@@ -41,7 +41,9 @@
                 {# <a href="#">Beobachtungen mit Naturblick - todo</a>#}
                 <li><a href="{% url 'mobileapp' %}{% keep_only_lang %}">{% translate "Über die App" %}</a></li>
                 <li><a href="{% url 'about' %}{% keep_only_lang %}">{% translate "Über uns" %}</a></li>
+                {% if language != 'dels' %}
                 <li><a href="{% url 'faq' %}{% keep_only_lang %}">{% translate "Häufige Fragen" %}</a></li>
+                {% endif %}
               </ul>
             </nav>
           </details>
@@ -53,7 +55,9 @@
             <div class="initial-zoomed">A&nbsp;</div>
             <div class="initial-unzoomed">A</div>
           </a>
+          {% if show_dels %}
           {% block dels %}{% include "partials/dels.html" %}{% endblock %}
+          {% endif %}
         </div>
       </div>
       {% block header %}

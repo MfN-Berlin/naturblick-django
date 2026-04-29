@@ -9,8 +9,8 @@ from django.core.exceptions import BadRequest
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Prefetch, Q
 from django.http import \
+    Http404, \
     HttpResponse, \
-    HttpResponseNotFound, \
     JsonResponse
 from django.shortcuts import redirect, render
 from django.template import TemplateDoesNotExist
@@ -254,7 +254,7 @@ def portrait(request, id):
     try:
         species = Species.objects.get(id=id)
     except Species.DoesNotExist:
-        return HttpResponseNotFound("This species does not exist")
+        raise Http404()
 
     fauna = is_fauna(species)
     objects = Faunaportrait.objects if fauna else Floraportrait.objects
@@ -276,7 +276,7 @@ def portrait(request, id):
             .get(species_id=id, language=language)
         )
     except:
-        return HttpResponseNotFound("This portrait does not exist")
+        raise Http404()
 
     descriptions = [portrait.short_description, portrait.male_description, portrait.female_description,
                     portrait.juvenile_description] if fauna else [portrait.short_description,
@@ -454,16 +454,26 @@ def imprint(request):
     return web_render(request, "imprint")
 
 
+DELS_TO_DE_FALLBACKS = ['imprint', 'digitalaccessibilitystatement']
+
 def web_render(request, template: str, context={}) -> HttpResponse:
     language = translation.get_language()
     context["language"] = language
+
+    try:
+        get_template(f"web/{template}.dels.html")
+        context["show_dels"] = language != 'en'
+    except TemplateDoesNotExist:
+        context["show_dels"] = template in DELS_TO_DE_FALLBACKS and language != 'en'
+
     try:
         get_template(f"web/{template}.{language}.html")
         return render(request, f"web/{template}.{language}.html", context)
     except TemplateDoesNotExist:
-        print("Fallback to DE ")
-        return render(request, f"web/{template}.de.html", context)
-
+        if template in DELS_TO_DE_FALLBACKS and language == 'dels':
+            return render(request, f"web/{template}.de.html", context)
+        else:
+            raise Http404()
 
 def digitalaccessibilitystatement(request):
     return web_render(request, "digitalaccessibilitystatement")
