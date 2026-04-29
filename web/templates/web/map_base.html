@@ -224,9 +224,9 @@
           const zoom = await map.getSource("observations").getClusterExpansionZoom(clusterId);
           const zooming = map.easeTo({
             center: first_feature.geometry.coordinates,
-            zoom: zoom + 0.5
+            zoom: zoom
           });
-          if (!zooming._zooming) {
+          if (zoom >= map.getZoom()) {
             const leaves = await map.getSource("observations").getClusterLeaves(clusterId);
             const coordinates = first_feature.geometry.coordinates.slice();
 
