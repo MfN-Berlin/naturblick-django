@@ -264,11 +264,25 @@
           }
         });
 
-        map.on("zoom", () => {
+        function setSplitedObsSourceEmpty() {
             map.getSource('splited-obs-source').setData({
                 type: "FeatureCollection",
                 features: []
             });
+        }
+
+        map.on("zoom", () => {
+            setSplitedObsSourceEmpty()
+        });
+
+        map.on("click", (e) => {
+            const features = map.queryRenderedFeatures(e.point, {
+                layers: ["splited-observation"]
+            });
+
+            if (features.length === 0) {
+                setSplitedObsSourceEmpty();
+            }
         });
 
         map.on("mouseenter", ["unclustered-observation-icons", "cluster-observations", "splited-observation"], () => {
