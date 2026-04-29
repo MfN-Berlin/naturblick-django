@@ -36,6 +36,8 @@
     const mfn = [{{ longitude|unlocalize }}, {{ latitude|unlocalize }}];
     const obsProxyTemplate = "{% url 'obs' 0 %}";
 
+    const unclusteredIconSize = 0.7;
+
     var map = new maplibregl.Map({
         container: 'map',
         style: 'https://tiles.openfreemap.org/styles/bright',
@@ -43,6 +45,28 @@
         zoom: {{ zoom }},
         cluster: true,
     });
+
+    function clickUnclustered(map, e) {
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const obs_id = e.features[0].properties.id;
+        const group = e.features[0].properties.group;
+        const url = obsProxyTemplate.replace("0", obs_id);
+
+        // Ensure that if the map is zoomed out such that
+        // multiple copies of the feature are visible, the
+        // popup appears over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                (async function () {
+                    addObsDetailPopup(map, html, coordinates)
+                })();
+            });
+    }
 
     async function addImage(ident) {
         const url = `{% static '' %}${ident}.svg`;
@@ -72,8 +96,32 @@
 
     loadImages();
 
-    map.on('load', () => {
+    async function addObsDetailPopup(map, html, coordinates) {
+        window.MAP_BOX_KEY = "{{ MAP_BOX_KEY }}";
+        const location = await getLocation(coordinates[1], coordinates[0]);
+        html = html.replace('__PLACE__', location);
 
+        {% get_current_language as LANGUAGE_CODE %}
+        moment.locale("{{ LANGUAGE_CODE }}");
+
+        const temp = document.createElement('div');
+        temp.innerHTML = html;
+        const el = temp.querySelector('#obs_popup');
+        const obs_date = el.getAttribute("obs-date");
+
+        const when = moment(obs_date).fromNow();
+        html = html.replace('__WHEN__', when);
+
+        new maplibregl.Popup({ className: 'map-popup' })
+            .setLngLat(coordinates)
+            .setHTML(html)
+            .addTo(map);
+
+        const audio = document.getElementById('audio')
+        init_audio(audio);
+    }
+
+    map.on('load', () => {
         map.addSource('observations', {
             type: 'geojson',
             data: '{% url 'map_proxy' %}',
@@ -134,68 +182,115 @@
                     'tree', 'groups/tree_map',
                     'observation_map'
                 ],
-                'icon-size': 0.8,
+                'icon-size': unclusteredIconSize,
             }
         });
 
         map.on('click', 'unclustered-observation-icons', async (e) => {
-            const coordinates = e.features[0].geometry.coordinates.slice();
-            const obs_id = e.features[0].properties.id;
-            const group = e.features[0].properties.group;
-            const url = obsProxyTemplate.replace("0", obs_id);
+            clickUnclustered(map, e);
+        });
 
-            // Ensure that if the map is zoomed out such that
-            // multiple copies of the feature are visible, the
-            // popup appears over the copy being pointed to.
+        map.addSource('splited-obs-source', {
+            type: 'geojson',
+            data: { type: 'FeatureCollection', features: [] }
+        });
+
+        map.addLayer({
+            id: 'splited-observation',
+            type: 'symbol',
+            source: 'splited-obs-source',
+            layout: {
+                'icon-image': [
+                    'match',
+                    ['get', 'group'],
+                    'bird', 'groups/bird_map',
+                    'mammal', 'groups/mammal_map',
+                    'tree', 'groups/tree_map',
+                    'observation_map'
+                ],
+                'icon-size': unclusteredIconSize,
+            }
+        });
+
+        map.on('click', 'splited-observation', async (e) => {
+            clickUnclustered(map, e);
+        });
+
+        map.on("click", "cluster-observations", async (e) => {
+          const first_feature = e.features[0];
+          var clusterId = first_feature.properties.cluster_id;
+          if (!clusterId) return;
+
+          const zoom = await map.getSource("observations").getClusterExpansionZoom(clusterId);
+          const zooming = map.easeTo({
+            center: first_feature.geometry.coordinates,
+            zoom: zoom + 0.5
+          });
+          if (!zooming._zooming) {
+            const leaves = await map.getSource("observations").getClusterLeaves(clusterId);
+            const coordinates = first_feature.geometry.coordinates.slice();
+
             while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
             }
 
-            fetch(url)
-                .then(response => response.text())
-                .then(html => {
-                    (async function () {
-                        window.MAP_BOX_KEY = "{{ MAP_BOX_KEY }}";
-                        const location = await getLocation(coordinates[1], coordinates[0]);
-                        html = html.replace('__PLACE__', location);
+            const center = coordinates;
+            var step = 0;
+            const centerPixel = map.project(center);
+            const pixelStep = 45;
 
-                        {% get_current_language as LANGUAGE_CODE %}
-                        moment.locale("{{ LANGUAGE_CODE }}");
+            const splited_obs = leaves.map((f, i) => {
+                step += 1;
+                const newPixel = {
+                    x: centerPixel.x,
+                    y: centerPixel.y - pixelStep * (i + 1)
+                };
+                const foo = map.unproject(newPixel)
+                return {
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [
+                            foo.lng,
+                            foo.lat
+                        ]
+                    },
+                    properties: f.properties
+                };
+            });
 
-                        const temp = document.createElement('div');
-                        temp.innerHTML = html;
-                        const el = temp.querySelector('#obs_popup');
-                        const obs_date = el.getAttribute("obs-date");
-
-                        const when = moment(obs_date).fromNow();
-                        html = html.replace('__WHEN__', when);
-
-                        new maplibregl.Popup({ className: 'map-popup' })
-                            .setLngLat(coordinates)
-                            .setHTML(html)
-                            .addTo(map);
-
-                        const audio = document.getElementById('audio')
-                        init_audio(audio);
-                    })();
-                });
+            map.getSource('splited-obs-source').setData({
+                type: "FeatureCollection",
+                features: splited_obs
+            });
+          }
         });
 
-        map.on("click", "cluster-observations", async (e) => {
-          const feature = e.features[0];
-          var clusterId = feature.properties.cluster_id;
-          if (!clusterId) return;
-          const zoom = await map.getSource("observations").getClusterExpansionZoom(clusterId);
-          map.easeTo({
-            center: feature.geometry.coordinates,
-            zoom: zoom + 0.5,
-          });
+        function setSplitedObsSourceEmpty() {
+            map.getSource('splited-obs-source').setData({
+                type: "FeatureCollection",
+                features: []
+            });
+        }
+
+        map.on("zoom", () => {
+            setSplitedObsSourceEmpty()
         });
 
-        map.on("mouseenter", ["unclustered-observation-icons", "cluster-observations"], () => {
+        map.on("click", (e) => {
+            const features = map.queryRenderedFeatures(e.point, {
+                layers: ["splited-observation"]
+            });
+
+            if (features.length === 0) {
+                setSplitedObsSourceEmpty();
+            }
+        });
+
+        map.on("mouseenter", ["unclustered-observation-icons", "cluster-observations", "splited-observation"], () => {
           map.getCanvas().style.cursor = "pointer";
         });
-        map.on("mouseleave", ["unclustered-observation-icons", "cluster-observations"], () => {
+        map.on("mouseleave", ["unclustered-observation-icons", "cluster-observations", "splited-observation"], () => {
           map.getCanvas().style.cursor = "";
         });
 

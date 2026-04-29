@@ -11,6 +11,7 @@ export DJANGODEV_USE_POSTGRES="false"
 export DJANGO_POSTGRES="species"
 export DJANGO_POSTGRES_USER="naturblick"
 export DJANGO_POSTGRES_PASSWORD="CxxOKzBllAQPnt1qgldN"
+export MAP_BOX_KEY="another_super_secret..."
 source env/bin/activate
 ```
 
