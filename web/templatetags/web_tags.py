@@ -1,5 +1,6 @@
 from django import template
 from django.contrib.staticfiles import finders
+from django.http import QueryDict
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.templatetags.static import static
@@ -26,6 +27,14 @@ def toggle_dels(request):
 
     query = params.urlencode()
     return f"{request.path}?{query}" if query else request.path
+
+@register.simple_tag(takes_context=True)
+def keep_only_lang(context):
+    request = context['request']
+    if 'lang' in request.GET:
+        return str("?" + QueryDict(f"lang={request.GET['lang']}").urlencode())
+    else:
+        return ""
 
 @register.simple_tag
 def inline_svg(path):
