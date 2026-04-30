@@ -332,3 +332,54 @@ mark.red {
 mark.gray {
     color: var(--fun);
 }
+
+
+
+.dels-text {
+    p {
+        margin-bottom: var(--line-height-regular);
+    }
+
+    a {
+        color: var(--relax);
+        text-decoration: underline;
+        border-bottom: none;
+    }
+
+    ul {
+        list-style: none;
+        li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: var(--dels-li-bottom-margin);
+
+            &:before {
+                content: "";
+                position: absolute;
+                left: 10px;
+                top: calc(var(--line-height-regular) / 2);
+                transform: translateY(-2px);
+                width: 4px;
+                height: 4px;
+                border-radius: 100%;
+                background-color: var(--fun);
+            }
+        }
+    }
+
+    ol {
+        counter-reset: section;
+        list-style: none;
+        li {
+            margin-left: 6px;
+            margin-bottom: var(--dels-li-bottom-margin);
+            &:before {
+                counter-increment: section;
+                content: counters(section, "");
+                margin-right: 12px;
+
+                color: var(--fun);
+            }
+        }
+    }
+}
