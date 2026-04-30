@@ -60,6 +60,10 @@
                         column.replaceChildren();
                     }
                 }
+                let speciesIterCount = 0;
+                const speciesCount = xhr.responseXML.body.children.length;
+                const threshold = 1 + 1/numberOfColumns;
+
                 for (const species of xhr.responseXML.body.children) {
                     let smallest = null;
                     let smallest_size = null;
@@ -74,7 +78,16 @@
                             smallest_size = size;
                         }
                     }
-                    smallest.appendChild(species.cloneNode(true));
+                    const remainder = speciesCount - speciesIterCount
+                    const isLastRow = speciesCount / speciesIterCount <= threshold;
+
+                    if (reset == true && remainder < numberOfColumns && isLastRow) {
+                        let index = speciesCount - speciesIterCount -1;
+                        masonry.children[index].appendChild(species.cloneNode(true));
+                    } else {
+                        smallest.appendChild(species.cloneNode(true));
+                    }
+                    speciesIterCount += 1;
                 }
                 offset+=limit;
             }
