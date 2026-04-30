@@ -78,10 +78,9 @@
                             smallest_size = size;
                         }
                     }
-                    const remainder = speciesCount - speciesIterCount
                     const isLastRow = speciesCount / speciesIterCount <= threshold;
 
-                    if (reset == true && remainder < numberOfColumns && isLastRow) {
+                    if (reset == true && isLastRow) {
                         let index = speciesCount - speciesIterCount -1;
                         masonry.children[index].appendChild(species.cloneNode(true));
                     } else {
