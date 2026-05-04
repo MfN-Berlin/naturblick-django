@@ -29,6 +29,10 @@ body {
     line-height: var(--line-height-regular);
     .main-container {
         background-color: var(--white);
+
+        li::marker {
+            color: var(--chill);
+        }
     }
 }
 
@@ -331,4 +335,23 @@ mark.red {
 
 mark.gray {
     color: var(--fun);
+}
+
+
+
+.dels-text {
+    p {
+        margin-bottom: var(--line-height-regular);
+    }
+
+    a {
+        color: var(--relax);
+        text-decoration: underline;
+        border-bottom: none;
+    }
+
+    li {
+        margin-bottom: var(--dels-li-bottom-margin);
+        padding-left: 8px;
+    }
 }
