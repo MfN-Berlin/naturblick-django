@@ -7,16 +7,12 @@ function fontZoomToggle() {
     let next;
     if ((saved ?? def) === def) {
         next = zoomed
-        document.documentElement.style.setProperty('--zoomed-color', "#ccc");
-        document.documentElement.style.setProperty('--unzoomed-color', "inherit");
     } else {
         next = def
-        root.style.setProperty('--font-zoom', next);
-        document.documentElement.style.setProperty('--zoomed-color', "inherit");
-        document.documentElement.style.setProperty('--unzoomed-color', "#ccc");
     }
     root.style.setProperty('--font-zoom', next);
     localStorage.setItem('font-zoom', next);
+    initFontZoom();
 }
 
 function initFontZoom() {
