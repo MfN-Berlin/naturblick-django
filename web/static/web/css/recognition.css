@@ -1,5 +1,0 @@
-ol.specieslist {
-    li::marker {
-        color: var(--chill);
-    }
-}

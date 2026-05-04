@@ -3,6 +3,9 @@ html {
     body {
         .main-container {
             background-image: url("../img/background_grain_opt.png");
+            li::marker {
+                color: var(--fun);
+            }
         }
     }
     footer {
