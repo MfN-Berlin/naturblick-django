@@ -194,25 +194,25 @@ def endangerstatus(species, language):
             case 'gefahrdet':
                 endangervalue += 'orange\">endangered</mark>'
             case 'Vorwarnliste':
-                endangervalue += 'orange\"Warning list</mark>'
+                endangervalue += 'orange\">Warning list</mark>'
             case 'ausgestorbenOderVerschollen':
-                endangervalue += 'red\"extinct or missing</mark>'
+                endangervalue += 'red\">extinct or missing</mark>'
             case 'vomAussterbenBedroht':
-                endangervalue += 'red\"threatened with extinction</mark>'
+                endangervalue += 'red\">threatened with extinction</mark>'
             case 'starkGefahrdet':
-                endangervalue += 'red\"severely endangered</mark>'
+                endangervalue += 'red\">severely endangered</mark>'
             case 'GefahrdungUnbekanntenAusmasses':
-                endangervalue += 'gray\"endangerment unknown</mark>'
+                endangervalue += 'gray\">endangerment unknown</mark>'
             case 'extremSelten':
-                endangervalue += 'orange\"extremly rare</mark>'
+                endangervalue += 'orange\">extremly rare</mark>'
             case 'DatenUnzureichend':
-                endangervalue += 'gray\"insufficient data available</mark>'
+                endangervalue += 'gray\">insufficient data available</mark>'
             case 'ungefahrdet':
-                endangervalue += 'green\"not endangered</mark>'
+                endangervalue += 'green\">not endangered</mark>'
             case 'nichtBewertet':
-                endangervalue += 'gray\"not evaluated</mark>'
+                endangervalue += 'gray\">not evaluated</mark>'
             case 'keinNachweis':
-                endangervalue += 'gray\"no proof</mark>'
+                endangervalue += 'gray\">no proof</mark>'
             case _:
                 return None
         return mark_safe(endangervalue)
