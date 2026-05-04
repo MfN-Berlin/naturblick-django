@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-04 13:47+0200\n"
+"POT-Creation-Date: 2026-05-04 16:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -84,37 +84,42 @@ msgstr "Birds"
 msgid "Beobachtung"
 msgstr "Observation"
 
-#: templates/web/page_base.html:42
+#: templates/web/page_base.html:41
+msgid "Naturblick Karte"
+msgstr "Naturblick map"
+
+#: templates/web/page_base.html:43 templates/web/search_portrait.html:10
+#: templates/web/search_portrait.html:14
+msgid "Artportraits"
+msgstr "Species portraits"
+
+#: templates/web/page_base.html:44
 msgid "Über die App"
 msgstr "About Naturblick"
 
-#: templates/web/page_base.html:43
+#: templates/web/page_base.html:45
 msgid "Über uns"
 msgstr "About us"
 
-#: templates/web/page_base.html:45
+#: templates/web/page_base.html:47
 msgid "Häufige Fragen"
 msgstr "FAQ"
 
-#: templates/web/page_base.html:79
+#: templates/web/page_base.html:81
 msgid "Kontakt"
 msgstr "Contact"
 
-#: templates/web/page_base.html:82
+#: templates/web/page_base.html:84
 msgid "Datenschutz"
 msgstr "General Privacy Notice"
 
-#: templates/web/page_base.html:83
+#: templates/web/page_base.html:85
 msgid "Impressum"
 msgstr "Imprint"
 
-#: templates/web/page_base.html:84
+#: templates/web/page_base.html:86
 msgid "Digitale Barrierefreiheit"
 msgstr "Digital accessibility statement"
-
-#: templates/web/search_portrait.html:10 templates/web/search_portrait.html:14
-msgid "Artportraits"
-msgstr "Species portraits"
 
 #: templates/web/search_portrait.html:15
 msgid "Finde Tiere und Pflanzen, indem du einen Artnamen eingibst."
@@ -244,3 +249,8 @@ msgid ""
 msgstr ""
 "The species was not among the three species with the closest match to the "
 "trained reference material of the pattern recognition."
+
+#, fuzzy
+#~| msgid "Diese Beobachtung ist plausibel."
+#~ msgid "Beobachtungen mit Naturblick"
+#~ msgstr "Naturblick map"

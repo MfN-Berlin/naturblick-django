@@ -37,8 +37,10 @@
             <summary>Menu {% inline_svg 'menu_bars.svg' %}</summary>
             <nav>
               <ul>
-                {# <a href="#">Artportraits - todo</a>#}
-                {# <a href="#">Beobachtungen mit Naturblick - todo</a>#}
+                {% if LANGUAGE_CODE != 'dels' %}
+                <li><a href="{% url 'map' %}{% keep_only_lang %}">{% translate "Naturblick Karte" %}</a></li>
+                {% endif %}
+                <li><a href="{% url 'search_portrait' %}{% keep_only_lang %}">{% translate "Artportraits" %}</a></li>
                 <li><a href="{% url 'mobileapp' %}{% keep_only_lang %}">{% translate "Über die App" %}</a></li>
                 <li><a href="{% url 'about' %}{% keep_only_lang %}">{% translate "Über uns" %}</a></li>
                 {% if LANGUAGE_CODE != 'dels' %}
