@@ -25,7 +25,7 @@ body {
         max-width: 1000px;
         margin: 0px auto;
         background-color: white;
-        border-radius: 8px;
+        border-radius: var(--normal-radius);
         color: var(--black);
         padding: var(--default-pad) 0 0 0;
 
@@ -159,7 +159,7 @@ body {
                     a {
                         display: block;
                         box-shadow: var(--shadow);
-                        border-radius: 8px;
+                        border-radius: var(--normal-radius);
                         padding: var(--default-pad);
                         background-color: white;
 
@@ -183,7 +183,7 @@ body {
         > section.sources {
             display: block;
             background: var(--mild);
-            border-radius: 0 0 8px 8px;
+            border-radius: 0 0 var(--normal-radius) var(--normal-radius);
             > div {
                 columns: var(--sources-columns);
                 column-fill: balance;

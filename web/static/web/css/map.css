@@ -144,11 +144,11 @@ body {
     width: 80px;
     height: auto;
     margin-bottom: auto;
-    border-radius: 8px;
+    border-radius: var(--normal-radius);
 }
 
 #obs-img {
     width: 160px;
     height: auto;
-    border-radius: 8px;
+    border-radius: var(--normal-radius);
 }

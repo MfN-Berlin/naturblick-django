@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="{% static 'web/css/mini-map.css' %}">
 {% endblock %}
 
-{% block title %}Naturblick{% endblock %}
+{% block title %}{% translate "Beobachtung" %}{% endblock %}
 
 {% block header_title %}
 {% group_svg group %}
@@ -30,10 +30,10 @@
     <section id="detail-header">
         <img src="{{ species_avatar }}">
         <div>
-            <p>{{ sciname }}</p>
+            <h5>{{ sciname }}</h5>
             <h2>{{ name }}</h2>
             {% if additional_names %}
-            <p>{{ additional_names }}</p>
+            <h3>{{ additional_names }}</h3>
             {% endif %}
 
             <div>
@@ -50,22 +50,18 @@
     <section id="obs-info">
         {% inline_svg 'observation.svg' %}
         <h3 id="seen-by">{{ seen_by }}</h3>
-        {% if assessment %}
-        <div class="boxes two-boxes">
-            {% else %}
-            <div class="boxes one-box">
-                {% endif %}
 
-                {% include "partials/obs_detail_plausible."|add:language|add:".html" %}
+        <div class="boxes {% if assessment %}two-boxes{% endif %}">
+          {% include "partials/obs_detail_plausible."|add:language|add:".html" %}
 
-                {% if assessment %}
-                    {% include "partials/obs_detail_assessment."|add:language|add:".html" %}
-                {% endif %}
-            </div>
+          {% if assessment %}
+          {% include "partials/obs_detail_assessment."|add:language|add:".html" %}
+          {% endif %}
+        </div>
 
-            {% if is_forschungsfall_nachtigall %}
-            {% include "partials/obs_detail_nightingale."|add:language|add:".html" %}
-            {% endif %}
+        {% if is_forschungsfall_nachtigall %}
+        {% include "partials/obs_detail_nightingale."|add:language|add:".html" %}
+        {% endif %}
     </section>
     <section id="faq">
         {% include "partials/obs_detail_faq."|add:language|add:".html" %}
