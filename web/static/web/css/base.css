@@ -151,8 +151,9 @@ header {
     
     .header-title {
         width: 100%;
-        padding-top: var(--header-title-top-padding);
-        padding-bottom: var(--header-title-bottom-padding);
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: var(--header-title-top-padding) var(--default-pad) var(--header-title-bottom-padding) var(--default-pad); 
         h1 p {
             font-size: var(--font-size-small);
             line-height: var(--line-height-small);
