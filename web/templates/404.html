@@ -1,0 +1,15 @@
+{% extends "web/page_base.html" %}
+
+{% load static web_tags i18n %}
+
+{% block title %}{% translate "Seite nicht gefunden" %}{% endblock %}
+
+{% block header_title %}
+<h1>{% translate "Seite nicht gefunden" %}</h1>
+{% endblock %}
+
+{% block content %}
+<main class="text-container">
+    <img src="{% static 'hedgehog_1215140_1920_f86dc15dd5.jpg' %}" />
+</main>
+{% endblock %}
