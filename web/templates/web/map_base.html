@@ -7,12 +7,14 @@
 <script src="{% static 'web/js/audio.js' %}"></script>
 <script src="{% static 'web/js/geocode.js' %}"></script>
 <script src="{% static 'web/js/moment-with-locales.min.js' %}"></script>
+<script src="{% static 'web/js/mini-audio.js' %}"></script>
 {% endblock %}
 
 {% block css %}
 <link href='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css' rel='stylesheet'/>
 <link rel="stylesheet" href="{% static 'web/css/map.css' %}">
 <link rel="stylesheet" href="{% static 'web/css/audio.css' %}">
+<link rel="stylesheet" href="{% static 'web/css/mini-audio.css' %}">
 {% endblock %}
 
 {% block header %}{% endblock %}
@@ -117,6 +119,7 @@
 
         const audio = document.getElementById('audio')
         init_audio(audio);
+        initMiniAudioPlayer("mini-audio");
     }
 
     map.on('load', () => {
