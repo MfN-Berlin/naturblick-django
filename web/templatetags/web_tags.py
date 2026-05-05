@@ -4,8 +4,10 @@ from django.http import QueryDict
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.templatetags.static import static
+from xml.etree import ElementTree
 
-
+ElementTree.register_namespace("", "http://www.w3.org/2000/svg")
+ElementTree.register_namespace("xlink", "http://www.w3.org/1999/xlink")
 register = template.Library()
 
 @register.simple_tag
@@ -40,7 +42,7 @@ def keep_only_lang(context):
 def inline_svg(path):
     full_path = finders.find(path)
     with open(full_path, 'r', encoding='utf-8') as f:
-        return mark_safe(f.read())
+        return mark_safe(ElementTree.tostring(ElementTree.fromstring(f.read()), encoding='unicode', xml_declaration=False))
 
 @register.simple_tag
 def group_svg(group):
