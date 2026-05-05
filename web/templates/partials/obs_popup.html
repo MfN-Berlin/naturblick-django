@@ -22,7 +22,7 @@
     <div id="obs_popup-fauna-main">
         {% translate "Gehört __WHEN__ von " as title %}
         {% with title=title|add:obs_data.cc_name|add:" in __PLACE__" licence='<a href="https://creativecommons.org/licenses/by/4.0/">CC BY-SA 4.0</a> '|add:obs_data.cc_name %}
-        {% include "partials/audio.html" with title=title licence=licence png=obs_data.png_url url=obs_data.mp4_url %}
+        {% include "partials/audio.html" with id="observation-audio" title=title licence=licence png=obs_data.png_url url=obs_data.mp4_url %}
         {% endwith %}
     </div>
     {% else %}

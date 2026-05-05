@@ -1,4 +1,12 @@
-function init_audio(audio) {
+function init_audio(id) {
+    const audio = document.getElementById(`${id}-audio`);
+    const btn = document.getElementById(`${id}-playBtn`);
+    const widther = document.getElementById(`${id}-widther`);
+    const spec_cont = document.getElementById(`${id}-spectrogram_container`);
+    const audio_start = document.getElementById(`${id}-audio_start`);
+    const audio_end = document.getElementById(`${id}-audio_end`);
+    const playTemplate = document.getElementById(`${id}-play-template`);
+    const pauseTemplate = document.getElementById(`${id}-pause-template`);
     function formatTime(seconds) {
         const total = Math.round(seconds);
         const m = Math.floor(total / 60);
@@ -13,7 +21,7 @@ function init_audio(audio) {
         widther.style = `width: ${newWidth}%`
         if (!once) {
             setTimeout( () => {
-                if (!running) {
+                if (audio.paused) {
                     return;
                 }
                 updateTime();
@@ -21,21 +29,25 @@ function init_audio(audio) {
         }
     }
 
-    let running = false;
+        btn.replaceChildren(
+            document.importNode(playTemplate.content, true)
+        );
 
-    const btn = document.getElementById('playBtn');
-    const widther = document.getElementById('widther');
-    const spec_cont = document.getElementById('spectrogram_container');
-    const audio_start = document.getElementById('audio_start');
-    const audio_end = document.getElementById('audio_end');
+    audio.addEventListener('pause', () => {
+        btn.replaceChildren(
+            document.importNode(playTemplate.content, true)
+        );
+    });
 
-    audio.onpause = function() {
-        running = false;
-    }
-
+    audio.addEventListener('play', () => {
+        btn.replaceChildren(
+            document.importNode(pauseTemplate.content, true)
+        );
+    });
+    
     audio.addEventListener('timeupdate', () => {
         audio_start.innerHTML = formatTime(audio.currentTime);
-    })
+    });
 
     audio.addEventListener("loadedmetadata", () => {
         audio_end.innerHTML = formatTime(audio.duration);
@@ -48,16 +60,14 @@ function init_audio(audio) {
         new_value = Number((x / rect.width ) * audio.duration).toFixed(6);
         audio.currentTime = new_value;
         updateTime(true);
-    })
+    });
 
     btn.addEventListener('click', () => {
       if (audio.paused == true) {
         audio.play();
-        running = true;
         updateTime();
       } else {
         audio.pause();
-        running = false;
       }
     });
 }
