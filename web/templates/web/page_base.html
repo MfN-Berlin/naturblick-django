@@ -37,18 +37,20 @@
             <summary>Menu {% inline_svg 'menu_bars.svg' %}</summary>
             <nav>
               <ul>
-                {# <a href="#">Artportraits - todo</a>#}
-                {# <a href="#">Beobachtungen mit Naturblick - todo</a>#}
+                {% if LANGUAGE_CODE != 'dels' %}
+                <li><a href="{% url 'map' %}{% keep_only_lang %}">{% translate "Naturblick Karte" %}</a></li>
+                {% endif %}
+                <li><a href="{% url 'search_portrait' %}{% keep_only_lang %}">{% translate "Artportraits" %}</a></li>
                 <li><a href="{% url 'mobileapp' %}{% keep_only_lang %}">{% translate "Über die App" %}</a></li>
                 <li><a href="{% url 'about' %}{% keep_only_lang %}">{% translate "Über uns" %}</a></li>
-                {% if language != 'dels' %}
+                {% if LANGUAGE_CODE != 'dels' %}
                 <li><a href="{% url 'faq' %}{% keep_only_lang %}">{% translate "Häufige Fragen" %}</a></li>
                 {% endif %}
               </ul>
             </nav>
           </details>
           <a href="{% toggle_lang request %}">
-            {% if language == "en" %}{% inline_svg 'lang_en.svg' %}
+            {% if LANGUAGE_CODE == "en" %}{% inline_svg 'lang_en.svg' %}
             {% else %}{% inline_svg 'lang_de.svg' %}
             {% endif %}</a>
           <a href="#" onclick="fontZoomToggle(); return false;">

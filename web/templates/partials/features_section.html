@@ -34,7 +34,7 @@
       <div>
         <img src="{{ sim.img }}">
         <div>
-          <h4>{{ sim.name }}</h4>
+          {% if sim.name %}<h4>{{ sim.name }}</h4>{% endif %}
           <h5>{{ sim.sciname }}</h5>
         </div>
       </div>
