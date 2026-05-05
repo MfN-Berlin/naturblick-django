@@ -68,7 +68,7 @@ main  {
         }
     }
     #obs-info {
-        svg {
+        > svg {
             width: 48px;
             height: auto;
             fill: var(--black);
