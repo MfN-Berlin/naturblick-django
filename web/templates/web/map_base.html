@@ -34,7 +34,7 @@
 
 <script>
     const mfn = [{{ longitude|unlocalize }}, {{ latitude|unlocalize }}];
-    const obsProxyTemplate = "{% url 'obs' 0 %}";
+    const obsProxyTemplate = "{% url 'obs' 0 %}{% keep_only_lang %}";
 
     const unclusteredIconSize = 0.7;
 
@@ -125,7 +125,7 @@
     map.on('load', () => {
         map.addSource('observations', {
             type: 'geojson',
-            data: '{% url 'map_proxy' %}',
+            data: '{% url 'map_proxy' %}{% keep_only_lang %}',
             cluster: true,
             clusterMaxZoom: 22,
             clusterRadius: 50,
