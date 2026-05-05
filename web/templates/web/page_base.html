@@ -90,11 +90,13 @@
     Naturblick 2020<br>
     Museum für Naturkunde Berlin
   </div>
-  {% if dark %}
-  <img src="{% static 'footer_mfnlogo_inverted.svg' %}">
-  {% else %}
-  <img src="{% static 'footer_mfnlogo.svg' %}">
-  {% endif %}
+  <a href="{% if LANGUAGE_CODE == "en" %}https://www.museumfuernaturkunde.berlin/en/{% else %}https://www.museumfuernaturkunde.berlin/{% endif %}">
+    {% if dark %}
+    <img src="{% static 'footer_mfnlogo_inverted.svg' %}">
+    {% else %}
+    <img src="{% static 'footer_mfnlogo.svg' %}">
+    {% endif %}
+  </a>
 </footer>
 {% endblock %}
 </body>

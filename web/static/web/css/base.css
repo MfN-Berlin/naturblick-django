@@ -216,8 +216,10 @@ footer {
         color: var(--grey);
         order: 3;
     }
-    > img {
-        height: 65px;
+    > a {
+        img {
+            height: 65px;
+        }
         order: var(--footer-logo-order);
     }
 }
