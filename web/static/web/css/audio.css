@@ -1,7 +1,7 @@
 .audio {
     color: white;
     background-color: var(--relax);
-    border-radius: 8px;
+    border-radius: var(--normal-radius);
     padding: 16px;
     box-shadow: var(--shadow);
     font-weight: var(--font-weight-bold);

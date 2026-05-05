@@ -40,6 +40,9 @@
     "Segoe UI Symbol";
 
   --sources-columns: 3;
+  --observation-start-column: 2;
+  --observation-boxes-flex-direction: row;
+
   /* TODO: Fixed or device dependent? */
   --font-size-regular-no-zoom: 16px;
   --line-height-regular-no-zoom: 24px;
@@ -116,6 +119,7 @@
 
   --font-weight-bold: 700;
   --tablet-min: 768px;
+  --normal-radius: 8px;
   --small-radius: 4px;
 
   --dels-li-bottom-margin: 24px;
@@ -153,6 +157,8 @@
         --grid-5-7-columns: 5fr 7fr;
         --grid-7-5-columns: 7fr 5fr;
         --sources-columns: 2;
+        --observation-start-column: 1;
+        --observation-boxes-flex-direction: column;
     }
 }
 
@@ -187,6 +193,8 @@
         --grid-5-7-columns: 1fr;
         --grid-7-5-columns: 1fr;
         --sources-columns: 1;
+        --observation-start-column: 1;
+        --observation-boxes-flex-direction: column;
     }
 }
 
