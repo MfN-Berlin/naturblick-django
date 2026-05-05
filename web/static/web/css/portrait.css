@@ -166,7 +166,7 @@ body {
 
                         > div {
                             display: flex;
-                            > div {
+                            > div:not(:first-child) {
                                 margin-left: var(--half-pad);
                             }
                             margin: 0 0 var(--half-pad) 0;
