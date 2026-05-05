@@ -22,6 +22,12 @@
     {% endif %}
     {% block css %}{% endblock %}
 
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ request.path }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Naturblick">
+    <meta property="og:locale" content="{% if LANGUAGE_CODE == 'en' %}en_GB{% else %}de_DE{% endif %}">
+    {% block og %}{% endblock %}
+
     <script src="{% static 'web/js/web.js' %}"></script>
 </head>
 <body>

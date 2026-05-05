@@ -2,6 +2,14 @@
 
 {% load static i18n web_tags l10n %}
 
+{% block og %}
+    {% if jpg_url %}
+        {% include "partials/og.html" with title=name description=_("Beobachtung") abs_img_url=request.scheme|add:"://"|add:request.META.HTTP_HOST|add:jpg_url %}
+    {% else %}
+        {% include "partials/og.html" with title=name description=_("Beobachtung") abs_img_url=request.scheme|add:"://"|add:request.META.HTTP_HOST|add:species_avatar %}
+    {% endif %}
+{% endblock %}
+
 {% block js %}
 <script src='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'></script>
 <script>
