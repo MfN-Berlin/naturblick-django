@@ -1,0 +1,11 @@
+button.mini-audio {
+    border: 0;
+    padding: 0;
+    background-color: transparent;
+    cursor: pointer;
+    svg {
+        fill: var(--chill);
+        stroke: var(--chill);
+        stroke-width: 0px;
+    }
+}

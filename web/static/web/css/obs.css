@@ -57,6 +57,10 @@ main  {
                     border: 2px solid;
                     font-weight: var(--font-weight-bold);
                 }
+                button.mini-audio svg {
+                    height: calc(var(--font-size-regular) * 2);
+                    width: calc(var(--font-size-regular) * 2);
+                }
             }
         }
         img {
@@ -82,9 +86,11 @@ main  {
         align-items: center;
         grid-template-columns: 48px 1fr;
 
-        .boxes {
+        > .boxes, > p {
             grid-column-start: var(--observation-start-column);
             grid-column-end: 3;
+        }
+        > .boxes {
             display: flex;
             flex-direction: var(--observation-boxes-flex-direction);
             gap: var(--default-pad);
