@@ -20,7 +20,7 @@ from django.utils import translation
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 
-from species.models import Species, SpeciesName, Portrait, Floraportrait, Faunaportrait, Tag, EvaluationAuthor
+from species.models import Species, Portrait, Floraportrait, Faunaportrait, Tag, EvaluationAuthor
 
 
 class Og:
@@ -179,8 +179,9 @@ def sims(language, similar_species):
         "name": similar_species.species.engname if language == "en" else similar_species.species.gername,
         "sciname": similar_species.species.sciname,
         "differences": similar_species.differences,
-        "url": reverse("portrait", kwargs={"id": similar_species.species.id}),
-        "img": similar_species.species.avatar_new.imagefile.image.url
+        "url": reverse("portrait", kwargs={"id": similar_species.species.id}) if Portrait.objects.filter(
+            species=similar_species.species.id).exists() else None,
+        "img": similar_species.species.avatar_new.imagefile.image.url if similar_species.species.avatar_new else None
     }
 
 
@@ -280,10 +281,10 @@ def portrait(request, id):
 
     descriptions = [portrait.short_description, portrait.male_description, portrait.female_description,
                     portrait.juvenile_description] if fauna else [portrait.short_description,
-                                                                     portrait.leaf_description,
-                                                                     portrait.stem_axis_description,
-                                                                     portrait.flower_description,
-                                                                     portrait.fruit_description]
+                                                                  portrait.leaf_description,
+                                                                  portrait.stem_axis_description,
+                                                                  portrait.flower_description,
+                                                                  portrait.fruit_description]
 
     image_sources = [(source_from_image(portrait.descmeta), "img-description-ref")]
     if hasattr(portrait, "inthecitymeta"):
@@ -456,6 +457,7 @@ def imprint(request):
 
 DELS_TO_DE_FALLBACKS = ['imprint', 'digitalaccessibilitystatement']
 
+
 def web_render(request, template: str, context={}) -> HttpResponse:
     language = translation.get_language()
     context["language"] = language
@@ -474,6 +476,7 @@ def web_render(request, template: str, context={}) -> HttpResponse:
             return render(request, f"web/{template}.de.html", context)
         else:
             raise Http404()
+
 
 def digitalaccessibilitystatement(request):
     return web_render(request, "digitalaccessibilitystatement")
@@ -779,11 +782,13 @@ def pattern_matching(pattern_matching_confirmed, pattern_matching_executed,
                 "Die Art war nicht unter den drei Arten mit der größten Übereinstimmung mit dem trainierten Vergleichsmaterial der Mustererkennung.")
     return pattern_matching_text
 
+
 def plantrecognition(request):
     return web_render(request, "plantrecognition", context={
         "species_list": requests.get(f"{settings.PLAYBACK_URL}imageidspecies").json(),
         "lang": translation.get_language()
     })
+
 
 def animalrecognition(request):
     return web_render(request, "animalrecognition", context={
@@ -791,8 +796,10 @@ def animalrecognition(request):
         "lang": translation.get_language()
     })
 
+
 def speciesimagerecognition(request):
     return web_render(request, "speciesimagerecognition")
+
 
 def speciesaudiorecognition(request):
     return web_render(request, "speciesaudiorecognition")

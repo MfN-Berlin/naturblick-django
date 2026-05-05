@@ -156,7 +156,8 @@ body {
                     display: flex;
                     flex-direction: column;
                     gap: var(--default-pad);
-                    a {
+
+                    a, > div {
                         display: block;
                         box-shadow: var(--shadow);
                         border-radius: var(--normal-radius);
@@ -165,7 +166,7 @@ body {
 
                         > div {
                             display: flex;
-                            > div {
+                            > div:not(:first-child) {
                                 margin-left: var(--half-pad);
                             }
                             margin: 0 0 var(--half-pad) 0;

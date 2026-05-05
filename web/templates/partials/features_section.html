@@ -30,16 +30,18 @@
     <h3>{% translate "Verwechslungsarten" %}</h3>
     <div>
     {% for sim in similar_species %}
-    <a href="{{ sim.url }}">
+    {% if sim.url %}<a href="{{ sim.url }}">{% else %}<div>{% endif %}
       <div>
+        {% if sim.img %}
         <img src="{{ sim.img }}">
+        {% endif %}
         <div>
           {% if sim.name %}<h4>{{ sim.name }}</h4>{% endif %}
           <h5>{{ sim.sciname }}</h5>
         </div>
       </div>
       {{ sim.differences }}
-    </a>
+    {% if sim.url %}</a>{% else %}</div>{% endif %}
     {% endfor %}
     </div>
   </div>
