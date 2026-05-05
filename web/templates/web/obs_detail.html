@@ -9,9 +9,11 @@
 </script>
 <script src="{% static 'web/js/geocode.js' %}"></script>
 <script src="{% static 'web/js/moment-with-locales.min.js' %}"></script>
+<script src="{% static 'web/js/mini-audio.js' %}"></script>
 {% endblock %}
 
 {% block css %}
+<link rel="stylesheet" href="{% static 'web/css/mini-audio.css' %}">
 <link rel="stylesheet" href="{% static 'web/css/obs.css' %}">
 <link rel="stylesheet" href="{% static 'web/css/audio.css' %}">
 <link rel="stylesheet" href="{% static 'web/css/mini-map.css' %}">
@@ -38,9 +40,7 @@
 
             <div>
                 {% if portrait_audio_url %}
-                <audio controls>
-                    <source src="{{ portrait_audio_url|safe }}">
-                </audio>
+                {% include "partials/mini_audio.html" with id="species-audio" url=portrait_audio_url only %}
                 {% endif %}
                 <a href="{% url 'portrait' species_id  %}">Artportrait</a>
             </div>

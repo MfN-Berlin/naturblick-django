@@ -57,6 +57,10 @@ main  {
                     border: 2px solid;
                     font-weight: var(--font-weight-bold);
                 }
+                button.mini-audio svg {
+                    height: calc(var(--font-size-regular) * 2);
+                    width: calc(var(--font-size-regular) * 2);
+                }
             }
         }
         img {
