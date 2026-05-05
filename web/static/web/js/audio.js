@@ -29,9 +29,9 @@ function init_audio(id) {
         }
     }
 
-        btn.replaceChildren(
-            document.importNode(playTemplate.content, true)
-        );
+    btn.replaceChildren(
+        document.importNode(playTemplate.content, true)
+    );
 
     audio.addEventListener('pause', () => {
         btn.replaceChildren(

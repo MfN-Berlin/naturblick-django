@@ -1,40 +1,5 @@
-{% load web_tags static %}
+{% include "partials/audio_no_script.html" %}
 
-<template id="{{ id }}-play-template">
-  {% inline_svg 'play-media.svg' %}
-</template>
-
-<template id="{{ id }}-pause-template">
-  {% inline_svg 'pause-media.svg' %}
-</template>
-
-<div class="audio">
-    <div>
-        <button id="{{ id }}-playBtn">{% inline_svg 'play-media.svg' %}</button>
-        <div>
-            <h3>{{ title }}</h3>
-            <p>{{ licence|safe }}</p>
-        </div>
-    </div>
-
-    <div class="spectrogram_container" id="{{ id }}-spectrogram_container">
-        <img src="{{ png }}">
-        <div class="cover" id="{{ id }}-widther" style="width: 0%;">
-            <img src="{{ png }}">
-        </div>
-    </div>
-
-    <div class="time">
-        <div id="{{ id }}-audio_start">00:00</div>
-        <div id="{{ id }}-audio_end"></div>
-    </div>
-
-    <audio id="{{ id }}-audio">
-        <source src="{{ url }}">
-    </audio>
-</div>
-
-<script src="{% static 'web/js/audio.js' %}"></script>
 <script>
-    init_audio("{{ id }}");
+  init_audio("{{ id }}");
 </script>

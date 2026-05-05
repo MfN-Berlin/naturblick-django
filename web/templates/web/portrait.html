@@ -9,6 +9,10 @@
 <p>{{ additional_name }}</p>
 {% endblock %}
 
+{% block js %}
+<script src="{% static 'web/js/audio.js' %}"></script>
+{% endblock %}
+
 {% block css %}
 <link rel="stylesheet" href="{% static 'web/css/portrait.css' %}">
 <link rel="stylesheet" href="{% static 'web/css/audio.css' %}">
