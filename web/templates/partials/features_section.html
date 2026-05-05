@@ -21,6 +21,9 @@
   </div>
   {% if audio and audio.audio_title %}
   {% include "partials/audio.html" with id="species-audio" title=audio.audio_title licence=audio.licence png=audio.png url=audio.url only %}
+  <script>
+    init_audio("species-audio");
+  </script>
   {% endif %}
   {% if similar_species %}
   </div>

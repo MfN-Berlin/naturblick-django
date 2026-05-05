@@ -40,8 +40,3 @@
         <a href="{% url 'map_obs' obs_data.obs_id %}?lang={{ obs_data.language }}">{% translate "Erfahre mehr" %} {% inline_svg 'right-arrow.svg' %}</a>
     </div>
 </div>
-
-<script>
-    const p = document.getElementById("seen_by");
-    p.textContent = p.textContent.replace("__WHEN__", "__WHEN_REPLACED__");
-</script>

@@ -1,4 +1,4 @@
-{% load web_tags static %}
+{% load web_tags %}
 
 <template id="{{ id }}-play-template">
   {% inline_svg 'play-media.svg' %}
@@ -34,7 +34,3 @@
     </audio>
 </div>
 
-<script src="{% static 'web/js/audio.js' %}"></script>
-<script>
-    init_audio("{{ id }}");
-</script>
