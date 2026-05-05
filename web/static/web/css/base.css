@@ -114,12 +114,12 @@ header {
             }
             .initial-zoomed {
                 color: var(--zoomed-color);
-                font-size: var(--font-size-small);
+                font-size: var(--font-size-regular-no-zoom);
             }
             
             .initial-unzoomed {
                 color: var(--unzoomed-color);
-                font-size: var(--font-size-big);
+                font-size: calc(var(--font-size-regular-no-zoom) * var(--zoomed-font-zoom));
             }
         }
         
