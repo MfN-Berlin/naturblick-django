@@ -2,6 +2,11 @@
 
 {% load static web_tags %}
 
+{% block og %}
+{% include "partials/og.html" with title=species_name description=descriptions|first abs_img_url=request.scheme|add:"://"|add:request.META.HTTP_HOST|add:portrait.descmeta.image_file.image.url %}
+{% endblock %}
+
+
 {% block header_title %}
 {% group_svg portrait.species.group %}
 <p>{{ portrait.species.sciname }}</p>

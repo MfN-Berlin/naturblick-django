@@ -2,6 +2,10 @@
 
 {% load static i18n web_tags %}
 
+{% block og %}
+{% include "partials/og.html" with title="Naturblick" description="Discover Nature" abs_img_url="https://naturblick.museumfuernaturkunde.berlin/strapi/uploads/large_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg" %}
+{% endblock %}
+
 {% block css %}
 <link rel="stylesheet" href="{% static 'web/css/home.css' %}">
 <link rel="stylesheet" href="{% static 'web/css/masonry.css' %}">
