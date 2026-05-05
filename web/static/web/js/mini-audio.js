@@ -3,43 +3,29 @@ function initMiniAudioPlayer(id) {
     const button = document.getElementById(`${id}-toggle`);
     const toggleStoppedTemplate = document.getElementById(`${id}-toggle-stopped`);
     const togglePlayingTemplate = document.getElementById(`${id}-toggle-playing`);
-    let state; // 1 stopped, 2 loading, 3 playing
 
-    function updateState(newState) {
-        switch(newState) {
-        case 1:
-            button.replaceChildren(
-                document.importNode(toggleStoppedTemplate.content, true)
-            );
-            break;
-        case 2:
-            break;
-        case 3:
-            button.replaceChildren(
-                document.importNode(togglePlayingTemplate.content, true)
-            );
-            break;
-        }
-        state = newState;
-    }
+    audio.addEventListener("play", (_) => {
+        button.replaceChildren(
+            document.importNode(togglePlayingTemplate.content, true)
+        );
+    });
+
+    audio.addEventListener("pause", (_) => {
+        button.replaceChildren(
+            document.importNode(toggleStoppedTemplate.content, true)
+        );
+    });
 
     // Start stopped
-    updateState(1);
+    button.replaceChildren(
+        document.importNode(toggleStoppedTemplate.content, true)
+    );
 
     button.addEventListener("click", (event) => {
-        switch(state) {
-        case 1:
-            audio
-                .play()
-                .then((_) => updateState(3), (_) => updateState(1));
-            updateState(2);
-            break;
-        case 2:
-            break;
-        case 3:
+        if(audio.paused) {
+            audio.play();
+        } else {
             audio.pause();
-            updateState(1);
-            break;
         }
     });
 }
