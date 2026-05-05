@@ -6,7 +6,11 @@
         <div>
             <p>{{ obs_data.sciname }}</p>
 
-            <h2>{{ obs_data.name }}</h2>
+            <h2>{{ obs_data.name }}
+                {% if obs_data.is_fauna %}
+                    {% include "partials/mini_audio.html" with id="mini-audio" url=obs_data.portrait_audio_url only %}
+                {% endif %}
+            </h2>
 
             {% if obs_data.additional_names %}
             <p>{{ obs_data.additional_names }}</p>

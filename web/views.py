@@ -571,10 +571,10 @@ def obs(request, obs_id):
         "js_date_time": json["data"]["dateTime"],
         "language": language
     }
-
     if fauna:
         obs_data["png_url"] = f"/api/projects/observations/{obs_id}/audio.mp4.png"
         obs_data["mp4_url"] = f"/api/projects/observations/{obs_id}/audio.mp4"
+        obs_data["portrait_audio_url"] = Faunaportrait.objects.filter(species=species_id).first().faunaportrait_audio_file.audio_file.url
     else:
         obs_data["jpg_url"] = f"/api/projects/observations/{obs_id}/image.jpg"
 
