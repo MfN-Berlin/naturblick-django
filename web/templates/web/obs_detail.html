@@ -42,6 +42,9 @@
             <div>
                 {% if portrait_audio_url %}
                 {% include "partials/mini_audio.html" with id="species-audio" url=portrait_audio_url only %}
+                <script>
+                  initMiniAudioPlayer("species-audio");
+                </script>
                 {% endif %}
                 <a href="{% url 'portrait' species_id  %}">Artportrait</a>
             </div>

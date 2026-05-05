@@ -6,6 +6,9 @@
 
 {% if is_fauna %}
 {% include "partials/audio.html" with id="observation-audio" png=png_url url=mp4_url %}
+<script>
+  init_audio("observation-audio");
+</script>
 {% else %}
 <img src="{{jpg_url}}">
 {% endif %}

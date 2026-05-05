@@ -1,4 +1,12 @@
-{% include "partials/mini_audio.html" %}
-<script>
-  initMiniAudioPlayer("{{ id }}");
-</script>
+{% load web_tags %}
+
+<template id="{{ id }}-toggle-stopped">
+  {% inline_svg 'sound-speaker.svg' %}
+</template>
+<template id="{{ id }}-toggle-playing">
+  {% inline_svg 'pause-media.svg' %}
+</template>
+<audio id="{{ id }}">
+  <source src="{{ url|safe }}">
+</audio>
+<button class="mini-audio" id="{{ id }}-toggle"></button>
