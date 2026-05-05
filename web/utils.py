@@ -9,7 +9,7 @@ def from_time(now, time):
         if years > 1:
             return _("vor {years} Jahren").format(years=years)
         else:
-            return "vor einem Jahr"
+            return _("vor einem Jahr")
     elif months > 1:
         return _("vor {months} Monaten").format(months=months)
     else:
