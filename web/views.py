@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import partial
 
 import requests
@@ -22,7 +22,7 @@ from django.utils.translation import gettext as _
 from requests import HTTPError
 
 from species.models import Species, Portrait, Floraportrait, Faunaportrait, Tag, EvaluationAuthor
-
+from web.utils import from_time, response_json
 
 class Og:
     def __init__(self, property, content):
@@ -89,23 +89,21 @@ def map_page(request, obs_id):
         s = Species.objects.filter(id=species_id).first()
         cc_name = json["data"]["ccName"]
         date_time = datetime.fromisoformat(json["data"]["dateTime"])
-        date = date_time.strftime("%d.%m.%Y")
         coords = json["data"]["coords"]["coordinates"]
 
         ogs_list.append(Og("og:title", s.engname if lang == "en" else s.gername))
 
         obs_type = json["data"]["obsType"]
-        if obs_type in ["image", "unidentifiedimage"]:
+        if is_image(obs_type):
             ogs_list.append(Og("og:image",
                                f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/image.jpg"))
             ogs_list.append(Og("og:twitter:image",
                                f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/image.jpg"))
-        elif obs_type in ["audio", "unidentifiedaudio"]:
+        elif is_audio(obs_type):
             ogs_list.append(Og("og:audio",
                                f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/audio.mp4"))
 
-        ogs_list.append(Og("og:description",
-                           seen_by(cc_name, date, coords[1], coords[0])))
+        ogs_list.append(Og("og:description", seen_by(fauna, cc_name, date_time)))
     except:
         pass
 
@@ -336,6 +334,14 @@ def is_fauna(
     return True if species.group.nature == 'fauna' else False
 
 
+def is_audio(obs_type: str) -> bool:
+    return obs_type in ["audio", "unidentifiedaudio"]
+
+
+def is_image(obs_type: str) -> bool:
+    return obs_type in ["image", "unidentifiedimage"]
+
+
 def filter_species_by_query(species_qs, query, lang):
     if not query:
         return species_qs
@@ -502,8 +508,11 @@ def og_url(request):
     return f'{request.get_host()}{request.get_full_path().replace("/index", "")}'
 
 
-def seen_by(user, date):
-    return _("Gesehen von {user} __WHEN__ in __PLACE__").format(user=user, date=date)
+def seen_by(obs_type, user, date):
+    if is_audio(obs_type):
+        return _("Gehört von {user} {when} in __PLACE__").format(user=user, when=from_time(datetime.now(timezone.utc), date))        
+    else:
+        return _("Gesehen von {user} {when} in __PLACE__").format(user=user, when=from_time(datetime.now(timezone.utc), date))
 
 
 def add_image_ogs(request, ogs_list, image):
@@ -551,17 +560,17 @@ def map_proxy(request):
 
 def obs(request, obs_id):
     language = translation.get_language()
-    json = requests.get(f"{settings.PLAYBACK_URL}projects/observations/{obs_id}").json()
-    species_id = json["data"]["species"]
+    data = response_json(requests.get(f"{settings.PLAYBACK_URL}projects/observations/{obs_id}")).get("data")
+    species_id = data["species"]
     s = Species.objects.filter(id=species_id).first()
-    cc_name = json["data"]["ccName"]
-    date_time = datetime.fromisoformat(json["data"]["dateTime"])
+    obs_type = data["obsType"]
+    cc_name = data["ccName"]
+    date_time = datetime.fromisoformat(data["dateTime"])
     date = date_time.strftime("%d.%m.%Y")
-    coords = json["data"]["coords"]["coordinates"]
+    coords = data["coords"]["coordinates"]
     additional_names = ", ".join(
         s.speciesname_set.filter(language=language).values_list("name", flat=True))
 
-    fauna = is_fauna(s)
     obs_data = {
         "obs_id": obs_id,
         "sciname": s.sciname,
@@ -569,22 +578,26 @@ def obs(request, obs_id):
         "additional_names": additional_names,
         "coords": coords,
         "cc_name": cc_name,
-        "date": date,
         "species_avatar": s.avatar_new.imagefile.image.url,
-        "is_fauna": fauna,
-        "js_date_time": json["data"]["dateTime"],
+        "is_image": is_image(obs_type),
+        "is_audio": is_audio(obs_type),
         "language": language
     }
-    if fauna:
-        obs_data["png_url"] = f"/api/projects/observations/{obs_id}/audio.mp4.png"
-        obs_data["mp4_url"] = f"/api/projects/observations/{obs_id}/audio.mp4"
+
+    if is_fauna(s):
         obs_data["portrait_audio_url"] = Faunaportrait.objects.filter(
             species=species_id).first().faunaportrait_audio_file.audio_file.url
-    else:
+
+    if is_audio(obs_type):
+        obs_data["png_url"] = f"/api/projects/observations/{obs_id}/audio.mp4.png"
+        obs_data["mp4_url"] = f"/api/projects/observations/{obs_id}/audio.mp4"
+    elif is_image(obs_type):
         obs_data["jpg_url"] = f"/api/projects/observations/{obs_id}/image.jpg"
 
     return render(request, "partials/obs_popup.html", {
-        "obs_data": obs_data
+        "obs_data": obs_data,
+        "title": seen_by(obs_type, cc_name, date_time),
+        "species_has_audio": "portrait_audio_url" in obs_data
     })
 
 
@@ -653,22 +666,15 @@ def confirmation(assessment, pattern_matching_executed, pattern_matching_confirm
 
 
 def map_obs(request, obs_id):
-    response = requests.get(f"{settings.PLAYBACK_URL}projects/observations/{obs_id}")
-
-    try:
-        response.raise_for_status()
-    except HTTPError:
-        if response.status_code == 404:
-            raise Http404()
-        raise
-    data = response.json().get("data")
+    data = response_json(
+        requests.get(f"{settings.PLAYBACK_URL}projects/observations/{obs_id}")
+    ).get("data")
     species_id = data.get("species")
     species = Species.objects.filter(id=species_id).first()
     cc_name = data.get("ccName")
+    obs_type = data.get("obsType")
     language = translation.get_language()
     date_time = datetime.fromisoformat(data.get("dateTime"))
-    date = date_time.strftime("%d.%m.%Y")
-    js_date_time = data.get("dateTime")
     coords = data.get("coords").get("coordinates")
 
     fauna = is_fauna(species)
@@ -730,8 +736,6 @@ def map_obs(request, obs_id):
         "group": species.group,
         "cc_name": cc_name,
         "locale": translation.get_language(),
-        "date_time": date_time,
-        "js_date_time": js_date_time,
         "name": species.engname if language == 'en' else species.gername,
         "sciname": species.sciname,
         "species_avatar": species.avatar_new.imagefile.image.url,
@@ -739,7 +743,7 @@ def map_obs(request, obs_id):
         "portrait_audio_url": portrait.faunaportrait_audio_file.audio_file.url if fauna else None,
         "is_fauna": fauna,
         "additional_names": additional_names,
-        "seen_by": seen_by(cc_name, date),
+        "seen_by": seen_by(obs_type, cc_name, date_time),
         "within_range": _("Sie liegt im Verbreitungsgebiet.") if within_range else _(
             "Sie liegt nicht im Verbreitungsgebiet."),
         "plausibility": plausibility(within_timeframe, within_range),

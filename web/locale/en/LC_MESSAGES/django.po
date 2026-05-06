@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-05 17:02+0200\n"
+"POT-Creation-Date: 2026-05-06 12:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,17 +30,7 @@ msgstr "Features"
 msgid "Verwechslungsarten"
 msgstr "Similar species"
 
-#: templates/partials/obs_popup.html:23
-msgid "Gehört __WHEN__ von "
-msgstr "Seen __WHEN__ by "
-
-#: templates/partials/obs_popup.html:31
-#, fuzzy
-#| msgid "Gesehen von {user} __WHEN__ in __PLACE__"
-msgid "Gesehen __WHEN__ von"
-msgstr "Seen by {user} __WHEN__ in __PLACE__"
-
-#: templates/partials/obs_popup.html:40
+#: templates/partials/obs_popup.html:41
 msgid "Erfahre mehr"
 msgstr "Learn more"
 
@@ -64,24 +54,24 @@ msgstr "Distribution"
 msgid "Quellen"
 msgstr "Sources"
 
-#: templates/web/map_base.html:28
+#: templates/web/map_base.html:27
 msgid "Alle"
 msgstr "All"
 
-#: templates/web/map_base.html:29
+#: templates/web/map_base.html:28
 msgid "Bäume"
 msgstr "Trees"
 
-#: templates/web/map_base.html:30
+#: templates/web/map_base.html:29
 msgid "Säugetiere"
 msgstr "Mammals"
 
-#: templates/web/map_base.html:31
+#: templates/web/map_base.html:30
 msgid "Vögel"
 msgstr "Birds"
 
 #: templates/web/obs_detail.html:7 templates/web/obs_detail.html:9
-#: templates/web/obs_detail.html:31 templates/web/obs_detail.html:35
+#: templates/web/obs_detail.html:30 templates/web/obs_detail.html:34
 msgid "Beobachtung"
 msgstr "Observation"
 
@@ -148,48 +138,53 @@ msgstr "{months} months ago"
 msgid "neulich"
 msgstr "recently"
 
-#: views.py:33
+#: views.py:34
 msgid "Entdecke die Natur"
 msgstr "Discover Nature"
 
-#: views.py:327
+#: views.py:326
 msgid "Beschreibung"
 msgstr "Short Description"
 
-#: views.py:328
+#: views.py:327
 msgid "In der Stadt"
 msgstr "In the city"
 
-#: views.py:329
+#: views.py:328
 msgid "Wissenswertes"
 msgstr "Fun Facts"
 
-#: views.py:505
+#: views.py:513
 #, python-brace-format
-msgid "Gesehen von {user} __WHEN__ in __PLACE__"
-msgstr "Seen by {user} __WHEN__ in __PLACE__"
+msgid "Gehört von {user} {when} in __PLACE__"
+msgstr "Heard by {user} {when} in __PLACE__"
 
-#: views.py:595
+#: views.py:515
+#, python-brace-format
+msgid "Gesehen von {user} {when} in __PLACE__"
+msgstr "Seen by {user} {when} in __PLACE__"
+
+#: views.py:613
 msgid "Diese Beobachtung ist plausibel."
 msgstr "This observation is plausible."
 
-#: views.py:597
+#: views.py:615
 msgid "Diese Beobachtung ist teilweise plausibel."
 msgstr "This observation is partly plausible."
 
-#: views.py:599
+#: views.py:617
 msgid "Diese Beobachtung ist nicht plausibel."
 msgstr "This observation is not plausible."
 
-#: views.py:604
+#: views.py:622
 msgid "Es hat noch kein:e Expert:in die Beobachtung angesehen."
 msgstr "No expert has looked at the observation yet."
 
-#: views.py:606
+#: views.py:624
 msgid "Ein:e Expert:in konnte die Bestimmung bestätigen."
 msgstr "An expert was able to confirm the identification."
 
-#: views.py:609
+#: views.py:627
 msgid ""
 "Ein:e Expert:in konnte die Artbestimmung nicht sicher bestätigen, hält sie "
 "aber für wahrscheinlich richtig."
@@ -197,7 +192,7 @@ msgstr ""
 "An expert could not confirm the identification with certainty, but considers "
 "it likely to be correct."
 
-#: views.py:612
+#: views.py:630
 msgid ""
 "Ein:e Expert:in konnte die Artbestimmung nicht sicher ausschließen, hält sie "
 "aber für wahrscheinlich falsch."
@@ -205,47 +200,47 @@ msgstr ""
 "An expert could not confirm the identification with certainty, but considers "
 "it likely to be wrong."
 
-#: views.py:614
+#: views.py:632
 msgid "Ein:e Expert:in ist sich nach Sichtung des Mediums nicht sicher."
 msgstr "An expert is not sure after viewing the medium."
 
-#: views.py:630 views.py:643 views.py:647
+#: views.py:648 views.py:661 views.py:665
 msgid "Dieser Artzuordnung wurde teilweise zugestimmt."
 msgstr "This species identification was partially agreed to."
 
-#: views.py:632
+#: views.py:650
 msgid "Diese Artzuordnung wurde noch nicht angesehen."
 msgstr "This species identification was not assessed yet."
 
-#: views.py:634 views.py:649
+#: views.py:652 views.py:667
 msgid "Diese Artzuordnung kann nicht sicher eingeschätzt werden."
 msgstr "This species identification cannot be assessed with certainty."
 
-#: views.py:641 views.py:650
+#: views.py:659 views.py:668
 msgid "Dieser Artzuordnung wurde zugestimmt."
 msgstr "This species identification was agreed to."
 
-#: views.py:735
+#: views.py:754
 msgid "Sie liegt im Verbreitungsgebiet."
 msgstr "It lies within the geographic range."
 
-#: views.py:736
+#: views.py:755
 msgid "Sie liegt nicht im Verbreitungsgebiet."
 msgstr "It lies outside the geographic range."
 
-#: views.py:738
+#: views.py:757
 msgid "Sie wurde im Aktivitätszeitraum gemacht."
 msgstr "It was made during the activity period."
 
-#: views.py:739
+#: views.py:758
 msgid "Sie wurde nicht im Aktivitätszeitraum gemacht."
 msgstr "It was not made during the activity period."
 
-#: views.py:772
+#: views.py:789
 msgid "Es wurde keine Mustererkennung durchgeführt."
 msgstr "Pattern recognition was not used to identify this observation."
 
-#: views.py:776
+#: views.py:793
 msgid ""
 " hatte die größte Übereinstimmung mit dem trainierten Vergleichsmaterial der "
 "Mustererkennung."
@@ -253,7 +248,7 @@ msgstr ""
 "had the closest match to the trained reference material of the pattern "
 "recognition."
 
-#: views.py:779
+#: views.py:796
 msgid ""
 "Die Art war unter den drei Arten mit der größten Übereinstimmung mit dem "
 "trainierten Vergleichsmaterial der Mustererkennung."
@@ -261,7 +256,7 @@ msgstr ""
 "The species was among the three species with the closest match to the "
 "trained reference material of the pattern recognition."
 
-#: views.py:782
+#: views.py:799
 msgid ""
 "Die Art war nicht unter den drei Arten mit der größten Übereinstimmung mit "
 "dem trainierten Vergleichsmaterial der Mustererkennung."

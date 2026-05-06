@@ -14,3 +14,12 @@ def from_time(now, time):
         return _("vor {months} Monaten").format(months=months)
     else:
         return  _("neulich")
+
+def response_json(response):
+    try:
+        response.raise_for_status()
+        return response.json()
+    except HTTPError:
+        if response.status_code == 404:
+            raise Http404()
+        raise

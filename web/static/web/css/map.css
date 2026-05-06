@@ -61,11 +61,11 @@ body {
     line-height: var(--line-height-big);
 }
 
-#obs_popup {
+#obs-popup {
     display: flex;
     flex-direction: column;
 
-    #obs_popup-header {
+    #obs-popup-header {
         display: flex;
         padding: var(--default-pad);
         gap: 16px;
@@ -95,7 +95,7 @@ body {
 
     }
 
-    #obs_popup-flora-main {
+    #obs-popup-image-main {
         background: var(--mild);
         padding: var(--default-pad);
         display: flex;
@@ -122,13 +122,13 @@ body {
         }
     }
 
-    #obs_popup-fauna-main {
+    #obs-popup-audio-main {
         .audio {
             border-radius: 0;
         }
     }
 
-    #obs_popup-footer {
+    #obs-popup-footer {
         padding-bottom: 8px;
         text-align: right;
         color: var(--chill);
