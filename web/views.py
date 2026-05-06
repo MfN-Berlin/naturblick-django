@@ -19,6 +19,7 @@ from django.urls import reverse
 from django.utils import translation
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
+from rest_framework.exceptions import NotFound
 
 from species.models import Species, Portrait, Floraportrait, Faunaportrait, Tag, EvaluationAuthor
 
@@ -651,119 +652,118 @@ def confirmation(assessment, pattern_matching_executed, pattern_matching_confirm
 
 
 def map_obs(request, obs_id):
-    try:
-        data = requests.get(
-            f"{settings.PLAYBACK_URL}projects/observations/{obs_id}").json().get("data")
-        species_id = data.get("species")
-        species = Species.objects.filter(id=species_id).first()
-        cc_name = data.get("ccName")
-        language = translation.get_language()
-        date_time = datetime.fromisoformat(data.get("dateTime"))
-        date = date_time.strftime("%d.%m.%Y")
-        js_date_time = data.get("dateTime")
-        coords = data.get("coords").get("coordinates")
+    data = requests.get(
+        f"{settings.PLAYBACK_URL}projects/observations/{obs_id}").json().get("data")
+    if not data:
+        raise Http404()
+    species_id = data.get("species")
+    species = Species.objects.filter(id=species_id).first()
+    cc_name = data.get("ccName")
+    language = translation.get_language()
+    date_time = datetime.fromisoformat(data.get("dateTime"))
+    date = date_time.strftime("%d.%m.%Y")
+    js_date_time = data.get("dateTime")
+    coords = data.get("coords").get("coordinates")
 
-        fauna = is_fauna(species)
-        objects = Faunaportrait.objects if fauna else Floraportrait.objects
-        additional_names = ", ".join(
-            species.speciesname_set.filter(language=language).values_list("name", flat=True))
+    fauna = is_fauna(species)
+    objects = Faunaportrait.objects if fauna else Floraportrait.objects
+    additional_names = ", ".join(
+        species.speciesname_set.filter(language=language).values_list("name", flat=True))
 
-        within_range = data.get("withinRange")
-        within_timeframe = data.get("withinTimeframe")
-        plausibility_author_id = data.get("plausibilityAuthor")
-        pattern_matching_executed = data.get("patternMatchingExecuted")
+    within_range = data.get("withinRange")
+    within_timeframe = data.get("withinTimeframe")
+    plausibility_author_id = data.get("plausibilityAuthor")
+    pattern_matching_executed = data.get("patternMatchingExecuted")
 
-        is_forschungsfall_nachtigall = True if len(data.get("projects")) > 0 and data.get("projects")[0] == 1 else False
+    is_forschungsfall_nachtigall = True if len(data.get("projects")) > 0 and data.get("projects")[0] == 1 else False
 
-        assessment_author_id = data.get("assessmentAuthor")
-        assessment = data.get("assessment")
-        suggested_species = data.get("suggestedSpecies")  # [['bird_...', 99], [...], [...] ]
+    assessment_author_id = data.get("assessmentAuthor")
+    assessment = data.get("assessment")
+    suggested_species = data.get("suggestedSpecies")  # [['bird_...', 99], [...], [...] ]
 
-        pattern_matching_confirmed = suggested_species[0][0] == species.speciesid if suggested_species and len(
-            suggested_species) > 0 else False
-        pattern_matching_medium = suggested_species[1][0] == species.speciesid if suggested_species and len(
-            suggested_species) > 1 else False
+    pattern_matching_confirmed = suggested_species[0][0] == species.speciesid if suggested_species and len(
+        suggested_species) > 0 else False
+    pattern_matching_medium = suggested_species[1][0] == species.speciesid if suggested_species and len(
+        suggested_species) > 1 else False
 
-        matched_species = []
-        if suggested_species:
-            matched_species = [species_matching_score(Species.objects.filter(speciesid=s[0]).first(), round(s[1]))
-                               for s in suggested_species
-                               ]
+    matched_species = []
+    if suggested_species:
+        matched_species = [species_matching_score(Species.objects.filter(speciesid=s[0]).first(), round(s[1]))
+                           for s in suggested_species
+                           ]
 
-        portrait = (
-            objects
-            .select_related(
-                "descmeta",
-                "inthecitymeta",
-                "funfactmeta",
-            )
-            .prefetch_related(
-                "goodtoknow_set",
-                "source_set",
-                "unambigousfeature_set",
-                "similarspecies_set__species__avatar_new__imagefile",
-            )
-            .get(species_id=species.id, language=language)
+    portrait = (
+        objects
+        .select_related(
+            "descmeta",
+            "inthecitymeta",
+            "funfactmeta",
         )
+        .prefetch_related(
+            "goodtoknow_set",
+            "source_set",
+            "unambigousfeature_set",
+            "similarspecies_set__species__avatar_new__imagefile",
+        )
+        .get(species_id=species.id, language=language)
+    )
 
-        p_author = EvaluationAuthor.objects.get(id=plausibility_author_id)
-        plausibility_author_text = f"{p_author.name}, {p_author.institution}"
+    p_author = EvaluationAuthor.objects.get(id=plausibility_author_id)
+    plausibility_author_text = f"{p_author.name}, {p_author.institution}"
 
-        pattern_matching_text = pattern_matching(pattern_matching_confirmed, pattern_matching_executed,
-                                                 pattern_matching_medium, species)
+    pattern_matching_text = pattern_matching(pattern_matching_confirmed, pattern_matching_executed,
+                                             pattern_matching_medium, species)
 
-        a_author = EvaluationAuthor.objects.get(id=assessment_author_id) if assessment_author_id else None
-        assessment_author_text = f"{a_author.name}, {a_author.institution}" if a_author else None
-        confirmation_text = confirmation(assessment, pattern_matching_executed, pattern_matching_confirmed,
-                                         pattern_matching_medium) if assessment else None
+    a_author = EvaluationAuthor.objects.get(id=assessment_author_id) if assessment_author_id else None
+    assessment_author_text = f"{a_author.name}, {a_author.institution}" if a_author else None
+    confirmation_text = confirmation(assessment, pattern_matching_executed, pattern_matching_confirmed,
+                                     pattern_matching_medium) if assessment else None
 
-        context = {
-            "obs_id": obs_id,
-            "group": species.group,
-            "cc_name": cc_name,
-            "locale": translation.get_language(),
-            "date_time": date_time,
-            "js_date_time": js_date_time,
-            "name": species.engname if language == 'en' else species.gername,
-            "sciname": species.sciname,
-            "species_avatar": species.avatar_new.imagefile.image.url,
-            "species_id": species.id,
-            "portrait_audio_url": portrait.faunaportrait_audio_file.audio_file.url if fauna else None,
-            "is_fauna": fauna,
-            "additional_names": additional_names,
-            "seen_by": seen_by(cc_name, date),
-            "within_range": _("Sie liegt im Verbreitungsgebiet.") if within_range else _(
-                "Sie liegt nicht im Verbreitungsgebiet."),
-            "plausibility": plausibility(within_timeframe, within_range),
-            "within_timeframe": _("Sie wurde im Aktivitätszeitraum gemacht.") if within_timeframe else _(
-                "Sie wurde nicht im Aktivitätszeitraum gemacht."),
-            "plausibility_author_text": plausibility_author_text,
-            "assessment_author_text": assessment_author_text,
-            "coords": coords,
-            "assessment_text": assessment_text(assessment),
-            "assessment": assessment,
-            "matched_species": matched_species,
-            "pattern_matching_confirmed": pattern_matching_confirmed,
-            "pattern_matching_medium": pattern_matching_medium,
-            "pattern_matching_text": pattern_matching_text,
-            "pattern_matching_executed": pattern_matching_executed,
-            "is_forschungsfall_nachtigall": is_forschungsfall_nachtigall,
-            "confirmation_text": confirmation_text,
-            "individuals": data.get("individuals"),
-            "MAP_BOX_KEY": os.getenv('MAP_BOX_KEY'),
-            "dark": True
-        }
+    context = {
+        "obs_id": obs_id,
+        "group": species.group,
+        "cc_name": cc_name,
+        "locale": translation.get_language(),
+        "date_time": date_time,
+        "js_date_time": js_date_time,
+        "name": species.engname if language == 'en' else species.gername,
+        "sciname": species.sciname,
+        "species_avatar": species.avatar_new.imagefile.image.url,
+        "species_id": species.id,
+        "portrait_audio_url": portrait.faunaportrait_audio_file.audio_file.url if fauna else None,
+        "is_fauna": fauna,
+        "additional_names": additional_names,
+        "seen_by": seen_by(cc_name, date),
+        "within_range": _("Sie liegt im Verbreitungsgebiet.") if within_range else _(
+            "Sie liegt nicht im Verbreitungsgebiet."),
+        "plausibility": plausibility(within_timeframe, within_range),
+        "within_timeframe": _("Sie wurde im Aktivitätszeitraum gemacht.") if within_timeframe else _(
+            "Sie wurde nicht im Aktivitätszeitraum gemacht."),
+        "plausibility_author_text": plausibility_author_text,
+        "assessment_author_text": assessment_author_text,
+        "coords": coords,
+        "assessment_text": assessment_text(assessment),
+        "assessment": assessment,
+        "matched_species": matched_species,
+        "pattern_matching_confirmed": pattern_matching_confirmed,
+        "pattern_matching_medium": pattern_matching_medium,
+        "pattern_matching_text": pattern_matching_text,
+        "pattern_matching_executed": pattern_matching_executed,
+        "is_forschungsfall_nachtigall": is_forschungsfall_nachtigall,
+        "confirmation_text": confirmation_text,
+        "individuals": data.get("individuals"),
+        "MAP_BOX_KEY": os.getenv('MAP_BOX_KEY'),
+        "dark": True
+    }
 
-        if fauna:
-            context["png_url"] = f"/api/projects/observations/{obs_id}/audio.mp4.png"
-            context["mp4_url"] = f"/api/projects/observations/{obs_id}/audio.mp4"
-        else:
-            context["jpg_url"] = f"/api/projects/observations/{obs_id}/image.jpg"
+    if fauna:
+        context["png_url"] = f"/api/projects/observations/{obs_id}/audio.mp4.png"
+        context["mp4_url"] = f"/api/projects/observations/{obs_id}/audio.mp4"
+    else:
+        context["jpg_url"] = f"/api/projects/observations/{obs_id}/image.jpg"
 
-        context["language"] = language
-        return render(request, f"web/obs_detail.html", context)
-    except:
-        pass
+    context["language"] = language
+    return render(request, f"web/obs_detail.html", context)
 
 
 def pattern_matching(pattern_matching_confirmed, pattern_matching_executed,
