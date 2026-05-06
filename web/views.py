@@ -19,7 +19,7 @@ from django.urls import reverse
 from django.utils import translation
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
-from rest_framework.exceptions import NotFound
+from requests import HTTPError
 
 from species.models import Species, Portrait, Floraportrait, Faunaportrait, Tag, EvaluationAuthor
 
@@ -578,7 +578,8 @@ def obs(request, obs_id):
     if fauna:
         obs_data["png_url"] = f"/api/projects/observations/{obs_id}/audio.mp4.png"
         obs_data["mp4_url"] = f"/api/projects/observations/{obs_id}/audio.mp4"
-        obs_data["portrait_audio_url"] = Faunaportrait.objects.filter(species=species_id).first().faunaportrait_audio_file.audio_file.url
+        obs_data["portrait_audio_url"] = Faunaportrait.objects.filter(
+            species=species_id).first().faunaportrait_audio_file.audio_file.url
     else:
         obs_data["jpg_url"] = f"/api/projects/observations/{obs_id}/image.jpg"
 
@@ -652,10 +653,15 @@ def confirmation(assessment, pattern_matching_executed, pattern_matching_confirm
 
 
 def map_obs(request, obs_id):
-    data = requests.get(
-        f"{settings.PLAYBACK_URL}projects/observations/{obs_id}").json().get("data")
-    if not data:
-        raise Http404()
+    response = requests.get(f"{settings.PLAYBACK_URL}projects/observations/{obs_id}")
+
+    try:
+        response.raise_for_status()
+    except HTTPError:
+        if response.status_code == 404:
+            raise Http404()
+        raise
+    data = response.json().get("data")
     species_id = data.get("species")
     species = Species.objects.filter(id=species_id).first()
     cc_name = data.get("ccName")
