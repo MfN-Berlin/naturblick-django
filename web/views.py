@@ -1,7 +1,9 @@
 import os
 from datetime import datetime, timezone
 from functools import partial
+from typing import Any
 
+import markdown
 import requests
 from django import forms
 from django.conf import settings
@@ -19,7 +21,6 @@ from django.urls import reverse
 from django.utils import translation
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
-from requests import HTTPError
 
 from species.models import Species, Portrait, Floraportrait, Faunaportrait, Tag, EvaluationAuthor
 from web.utils import from_time, response_json
@@ -248,8 +249,6 @@ def endangerstatus(species, language):
 
 def portrait(request, id):
     language = translation.get_language()
-    if language not in ["de", "en"]:
-        language = "de"
 
     try:
         species = Species.objects.get(id=id)
@@ -296,11 +295,11 @@ def portrait(request, id):
 
     goodtoknows = {}
     for gtk in portrait.goodtoknow_set.all().order_by("ordering"):
-        goodtoknows.setdefault(gtk.type, []).append(gtk.fact)
+        goodtoknows.setdefault(gtk.type, []).append(markdown.markdown(gtk.fact))
     goodtoknows.setdefault("other", []).append(endangerstatus(species=portrait.species, language=language))
     additional_names = ", ".join(species.speciesname_set.filter(language=language).values_list("name", flat=True))
     similar_species = [sims(language, s) for s in portrait.similarspecies_set.all()]
-    unambigousfeature = list(portrait.unambigousfeature_set.all().values_list("description", flat=True))
+    unambigousfeature = [ markdown.markdown(x) for x in list(portrait.unambigousfeature_set.all().values_list("description", flat=True))]
 
     audio = {
         "audio_title": portrait.audio_title,
@@ -313,8 +312,8 @@ def portrait(request, id):
         "id": id,
         "dark": True,
         "portrait": portrait,
-        "descriptions": [x for x in descriptions if x is not None],
-        "inthecity": [x for x in [portrait.city_habitat, portrait.human_interaction] if x is not None],
+        "descriptions": [ markdown.markdown(x) for x in descriptions if x is not None],
+        "inthecity": [ markdown.markdown(x) for x in [portrait.city_habitat, portrait.human_interaction] if x is not None],
         "goodtoknows": goodtoknows,
         "image_sources": image_sources,
         "sources": sources,
@@ -325,7 +324,8 @@ def portrait(request, id):
         "species_name": species.engname if language == "en" else species.gername,
         "species_description": _("Beschreibung"),
         "species_inthecity": _("In der Stadt"),
-        "species_goodtoknows": _("Wissenswertes")
+        "species_goodtoknows": _("Wissenswertes"),
+        "show_dels": language != 'en' and objects.filter(species_id=id, language='dels').exists()
     })
 
 
@@ -460,7 +460,6 @@ def privacy(request):
 
 def imprint(request):
     return web_render(request, "imprint")
-
 
 DELS_TO_DE_FALLBACKS = ['imprint', 'digitalaccessibilitystatement']
 

@@ -7,11 +7,11 @@
       <ul>
         {% for type, facts in goodtoknows.items %}
             {% for fact in facts %}
-                {% if type == 'usage' %}<li><strong>{% translate "Nutzung" %}</strong>: {{ fact }}</li>
-                {% elif type == 'blossom' %}<li><strong>{% translate "Blütezeit" %}</strong>: {{ fact }}</li>
-                {% elif type == 'lifeform' %}<li><strong>{% translate "Lebensform" %}</strong>: {{ fact }}</li>
-                {% elif type == 'distribution' %}<li><strong>{% translate "Verbreitung" %}</strong>: {{ fact }}</li>
-                {% else %}<li>{{ fact }}</li>
+                {% if type == 'usage' %}<li><strong>{% translate "Nutzung" %}</strong>: {{ fact|safe }}</li>
+                {% elif type == 'blossom' %}<li><strong>{% translate "Blütezeit" %}</strong>: {{ fact|safe }}</li>
+                {% elif type == 'lifeform' %}<li><strong>{% translate "Lebensform" %}</strong>: {{ fact|safe }}</li>
+                {% elif type == 'distribution' %}<li><strong>{% translate "Verbreitung" %}</strong>: {{ fact|safe }}</li>
+                {% else %}<li>{{ fact|safe }}</li>
                 {% endif %}
             {% endfor %}
         {% endfor %}
