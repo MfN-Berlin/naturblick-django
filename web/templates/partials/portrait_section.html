@@ -3,7 +3,7 @@
     <div>
         <h2>{{ title }}</h2>
         {% for desc in descriptions %}
-          <p>{{ desc }}</p>
+          {{ desc|safe }}
         {% endfor %}
     </div>
 </section>

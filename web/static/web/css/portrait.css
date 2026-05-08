@@ -148,6 +148,9 @@ body {
                     background-color: var(--character);
                     border-radius: var(--small-radius);
                     padding: 6px 12px;
+                    p {
+                        margin: 0;
+                    }
                 }
             }
 
