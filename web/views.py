@@ -735,6 +735,7 @@ def map_obs(request, obs_id):
         "group": species.group,
         "cc_name": cc_name,
         "locale": translation.get_language(),
+        "date_time": date_time,
         "name": species.engname if language == 'en' else species.gername,
         "sciname": species.sciname,
         "species_avatar": species.avatar_new.imagefile.image.url,

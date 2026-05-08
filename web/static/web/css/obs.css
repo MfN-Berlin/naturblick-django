@@ -27,6 +27,7 @@ main  {
                 margin: 0;
                 line-height: var(--line-height-regular);
                 font-size: var(--font-size-regular);
+                font-style: italic;
             }
             h5 {
                 margin: 0;
