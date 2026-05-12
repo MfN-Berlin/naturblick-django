@@ -32,6 +32,9 @@
 </div>
 
 <script>
+    const url = "{% url 'map_proxy' %}{% keep_only_lang %}"
+    const data = fetch(url).then(r => r.json());
+
     const mfn = [{{ longitude|unlocalize }}, {{ latitude|unlocalize }}];
     const obsProxyTemplate = "{% url 'obs' 0 %}{% keep_only_lang %}";
 
@@ -119,23 +122,21 @@
     map.on('load', () => {
         map.addSource('observations', {
             type: 'geojson',
-            data: '{% url 'map_proxy' %}{% keep_only_lang %}',
+            data: {},
             cluster: true,
             clusterMaxZoom: 22,
-            clusterRadius: 50,
-            clusterProperties: {
-                all_count: ["+", 1],
-                tree_count: ["+", ["case", ["==", ["get","group"], "tree"], 1, 0]],
-                mammal_count: ["+", ["case", ["==", ["get","group"], "mammal"], 1, 0]],
-                bird_count: ["+", ["case", ["==", ["get","group"], "bird"], 1, 0]],
-            }
+            clusterRadius: 50
+        });
+
+        data.then((d) => {
+            map.getSource('observations').setData(d);
         });
 
         map.addLayer({
             id: 'cluster-observations',
             type: 'circle',
             source: 'observations',
-            filter: ['>', ['get', 'all_count'], 1],
+            filter: ['has', 'point_count'],
             paint: {
                 'circle-color': [
                     'step',
@@ -152,9 +153,9 @@
             id: 'cluster-count',
             type: 'symbol',
             source: 'observations',
-            filter: ['>', ['get', 'all_count'], 1],
+            filter: ['has', 'point_count'],
             layout: {
-                'text-field': ["get", "all_count"],
+                'text-field': ['get', 'point_count'],
                 'text-font': ['Noto Sans Regular'],
                 'text-size': 12
             },
@@ -302,37 +303,15 @@
     document.querySelectorAll('input[name="group"]').forEach(radio => {
         radio.addEventListener('change', (e) => {
             const group = e.target.value;
-
-            map.setLayoutProperty(
-                "cluster-count",
-                "text-field",
-                ["get", `${group}_count`]
-            );
-
-            let filter_property;
-            switch (group) {
-                case "all":
-                    filter_property = 'all_count'
-                    break;
-                case "tree":
-                    filter_property = 'tree_count'
-                    break;
-                case "mammal":
-                    filter_property = 'mammal_count'
-                    break;
-                case "bird":
-                    filter_property = 'bird_count'
-                    break;
-            }
-            let clusterGroupFilter = ['>', ['get', filter_property], 1];
-            let unclusteredGroupFilter = group == "all" ? ['!', ['has', 'point_count']] :
-                ['all',
-                ['!', ['has', 'point_count']],
-                ['==', ['get', 'group'], group]];
-
-            map.setFilter('cluster-observations', clusterGroupFilter);
-            map.setFilter('cluster-count', clusterGroupFilter);
-            map.setFilter('unclustered-observation-icons', unclusteredGroupFilter);
+            data.then((d) => {
+                const filtered = {
+                    type: 'FeatureCollection',
+                    features: d.features.filter(
+                        f => f.properties.group === group || group == 'all'
+                    )
+                };
+                map.getSource("observations").setData(filtered)
+            });
         });
     });
 </script>
