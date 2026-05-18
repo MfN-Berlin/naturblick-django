@@ -1,8 +1,7 @@
 import requests
 from admin_ordering.models import OrderableModel
-from django.db import models
 from django.db.models import ForeignKey, URLField, CASCADE, RESTRICT
-from django.db.models import Q
+from django.contrib.gis.db import models
 from django.db.models.constraints import UniqueConstraint
 from django_currentuser.db.models import CurrentUserField
 from image_cropping import ImageRatioField

@@ -1,7 +1,6 @@
 import os
 from datetime import datetime, timezone
 from functools import partial
-from typing import Any
 
 import markdown
 import requests
@@ -24,6 +23,7 @@ from django.utils.translation import gettext as _
 
 from species.models import Species, Portrait, Floraportrait, Faunaportrait, Tag, EvaluationAuthor
 from web.utils import from_time, response_json
+
 
 class Og:
     def __init__(self, property, content):
@@ -299,7 +299,8 @@ def portrait(request, id):
     goodtoknows.setdefault("other", []).append(endangerstatus(species=portrait.species, language=language))
     additional_names = ", ".join(species.speciesname_set.filter(language=language).values_list("name", flat=True))
     similar_species = [sims(language, s) for s in portrait.similarspecies_set.all()]
-    unambigousfeature = [ markdown.markdown(x) for x in list(portrait.unambigousfeature_set.all().values_list("description", flat=True))]
+    unambigousfeature = [markdown.markdown(x) for x in
+                         list(portrait.unambigousfeature_set.all().values_list("description", flat=True))]
 
     audio = {
         "audio_title": portrait.audio_title,
@@ -312,8 +313,9 @@ def portrait(request, id):
         "id": id,
         "dark": True,
         "portrait": portrait,
-        "descriptions": [ markdown.markdown(x) for x in descriptions if x is not None],
-        "inthecity": [ markdown.markdown(x) for x in [portrait.city_habitat, portrait.human_interaction] if x is not None],
+        "descriptions": [markdown.markdown(x) for x in descriptions if x is not None],
+        "inthecity": [markdown.markdown(x) for x in [portrait.city_habitat, portrait.human_interaction] if
+                      x is not None],
         "goodtoknows": goodtoknows,
         "image_sources": image_sources,
         "sources": sources,
@@ -461,6 +463,19 @@ def privacy(request):
 def imprint(request):
     return web_render(request, "imprint")
 
+
+def naturespots(request):
+    longitude = request.GET.get("lng", 13.3792)
+    latitude = request.GET.get("lat", 52.5295)
+    zoom = request.GET.get("zoomLevel", 9)
+
+    return render(request, "web/naturespots.html", context={
+        "longitude": longitude,
+        "latitude": latitude,
+        "zoom": zoom
+    })
+
+
 DELS_TO_DE_FALLBACKS = ['imprint', 'digitalaccessibilitystatement']
 
 
@@ -509,9 +524,11 @@ def og_url(request):
 
 def seen_by(obs_type, user, date):
     if is_audio(obs_type):
-        return _("Gehört von {user} {when} in __PLACE__").format(user=user, when=from_time(datetime.now(timezone.utc), date))        
+        return _("Gehört von {user} {when} in __PLACE__").format(user=user,
+                                                                 when=from_time(datetime.now(timezone.utc), date))
     else:
-        return _("Gesehen von {user} {when} in __PLACE__").format(user=user, when=from_time(datetime.now(timezone.utc), date))
+        return _("Gesehen von {user} {when} in __PLACE__").format(user=user,
+                                                                  when=from_time(datetime.now(timezone.utc), date))
 
 
 def add_image_ogs(request, ogs_list, image):
@@ -555,6 +572,12 @@ def map_proxy(request):
         f"{settings.PLAYBACK_URL}projects/map"
     )
     return to_geojson_view(r.json())
+
+
+def geo_proxy(request):
+    return JsonResponse(requests.get(
+        f"http://0.0.0.0:9000/naturespots"
+    ).json())
 
 
 def obs(request, obs_id):
