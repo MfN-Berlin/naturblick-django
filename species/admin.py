@@ -331,7 +331,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     list_display = ['id', 'speciesid', 'sciname', 'gername', 'avatar_crop', 'accepted', 'portrait', 'gbif', 'plantnet',
                     'search']
     list_display_links = ['id', 'speciesid']
-    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, HasSynonymsFilter,
+    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, 'primary_name_not_found', HasSynonymsFilter,
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
                    HasBirdnetIdFilter,
                    'autoid', HasAvatarFilter, HasFemaleAvatarFilter, 'avatar_not_found', HasAdditionalNames, 'rank', 'status',
@@ -339,9 +339,8 @@ class SpeciesAdmin(admin.ModelAdmin):
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
               'group',
-              'gername',
               'sciname',
-              'engname',
+              ('gername', 'engname', 'primary_name_not_found'),
               'wikipedia',
               'autoid',
               ('red_list_germany',
@@ -367,7 +366,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     ordering = ('sciname',)
     filter_horizontal = ['tag']
     autocomplete_fields = ['avatar_new', 'female_avatar_new']
-    actions = ['make_autoid_enabled', 'import_avatar_from_wikimedia', 'import_image_from_wikimedia', 'make_avatar_not_found']
+    actions = ['make_autoid_enabled', 'import_avatar_from_wikimedia', 'import_image_from_wikimedia', 'make_avatar_not_found', 'make_primary_name_not_found']
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -389,6 +388,19 @@ class SpeciesAdmin(admin.ModelAdmin):
             messages.SUCCESS,
         )
 
+    @admin.action(description="Mark selected species with primary name not found")
+    def make_primary_name_not_found(self, request, queryset):
+        updated = queryset.update(primary_name_not_found=True)
+        self.message_user(
+            request,
+            ngettext(
+                "%d species was successfully marked with primary name not found.",
+                "%d species were successfully marked with primary name not found.",
+                updated,
+            )
+            % updated,
+            messages.SUCCESS,
+        )
     
     @admin.action(description="Mark selected species as available for autoid")
     def make_autoid_enabled(self, request, queryset):

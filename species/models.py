@@ -193,6 +193,7 @@ class Species(models.Model):
     status = models.CharField(blank=True, null=True, max_length=255)
     gbif_incompatible = models.BooleanField(default=False, verbose_name="Taxa is incompatible with the GBIF taxonomy")
     avatar_not_found = models.BooleanField(default=False, verbose_name="Avatar was not found")
+    primary_name_not_found = models.BooleanField(default=False, verbose_name="Primary name was not found")
     speciesid.short_description = "Species ID"
 
     def validate_gbif(self):
