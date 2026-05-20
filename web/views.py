@@ -576,7 +576,7 @@ def map_proxy(request):
 
 def geo_proxy(request):
     return JsonResponse(requests.get(
-        f"http://0.0.0.0:9000/naturespots"
+        f"{settings.PLAYBACK_URL}naturespots"
     ).json())
 
 
