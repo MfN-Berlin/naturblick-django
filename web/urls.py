@@ -7,6 +7,7 @@ urlpatterns = [
     path("dev/communities/nightingaleproject", views.nightingaleproject, name="nightingaleproject"),
     path("dev/map/observation/<int:obs_id>", views.map_obs, name="map_obs"),
     path("dev/map_proxy", views.map_proxy, name="map_proxy"),
+    path("dev/geo_proxy", views.geo_proxy, name="geo_proxy"),
     path("dev/obs/<int:obs_id>", views.obs, name="obs"),
     path("dev/species/portrait/data", views.search_portrait_data, name="search_portrait_data"),
     re_path(
@@ -19,6 +20,7 @@ urlpatterns = [
     path("dev/kontakt", views.kontakt, name="kontakt"),
     path("dev/privacy", views.privacy, name="privacy"),
     path("dev/imprint", views.imprint, name="imprint"),
+    path("dev/naturespots", views.naturespots, name="naturespots"),
     path("dev/map", views.show_map, name="map"),
     path("dev/digitalaccessibilitystatement", views.digitalaccessibilitystatement, name="digitalaccessibilitystatement"),
     path("dev/plantrecognition", views.plantrecognition, name="plantrecognition"),
