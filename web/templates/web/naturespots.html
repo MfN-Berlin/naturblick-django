@@ -77,17 +77,16 @@
     });
 
     map.on("click", "naturespots", async (e) => {
-          const first_feature = e.features[0];
-          console.log(e.features[0].properties.name);
-          // get species data from another endpoint
-          // e.features[0].properties.id
+          const id = e.features[0].properties.id
+          let url = "{% url 'naturespotportrait' 0 %}".replace("0", id);
+          window.location.href = url;
     });
 
-    map.on("mouseenter", [], () => {
+    map.on("mouseenter", ["naturespots"], () => {
       map.getCanvas().style.cursor = "pointer";
     });
 
-    map.on("mouseleave", [], () => {
+    map.on("mouseleave", ["naturespots"], () => {
       map.getCanvas().style.cursor = "";
     });
 

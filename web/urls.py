@@ -21,6 +21,7 @@ urlpatterns = [
     path("dev/privacy", views.privacy, name="privacy"),
     path("dev/imprint", views.imprint, name="imprint"),
     path("dev/naturespots", views.naturespots, name="naturespots"),
+    path("dev/naturespot/<int:id>", views.naturespotportrait, name="naturespotportrait"),
     path("dev/map", views.show_map, name="map"),
     path("dev/digitalaccessibilitystatement", views.digitalaccessibilitystatement, name="digitalaccessibilitystatement"),
     path("dev/plantrecognition", views.plantrecognition, name="plantrecognition"),
