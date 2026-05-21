@@ -41,7 +41,6 @@ body {
 
 #map-radio {
     bottom: var(--default-pad);
-    width: 120px;
 }
 
 .maplibregl-popup {

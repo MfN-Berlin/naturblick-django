@@ -8,7 +8,7 @@ from django import forms
 from django.conf import settings
 from django.core.exceptions import BadRequest
 from django.core.handlers.wsgi import WSGIRequest
-from django.db.models import Prefetch, Q
+from django.db.models import Prefetch, Q, F
 from django.http import \
     Http404, \
     HttpResponse, \
@@ -576,8 +576,67 @@ def map_proxy(request):
 
 def geo_proxy(request):
     return JsonResponse(requests.get(
-        f"{settings.PLAYBACK_URL}naturespots"
+        f"http://0.0.0.0:9000/naturespots"
     ).json())
+
+
+def naturespot_proxy(request, id):
+    return JsonResponse(requests.get(
+        f"http://0.0.0.0:9000/naturespots"
+    ).json())
+
+
+def naturespotportrait(request, id):
+    language = translation.get_language()
+    ids_json = requests.get(f"http://0.0.0.0:9000/naturespots/{id}".format(id=id)).json()
+
+    name_field = "gername"
+    if language == 'en':
+        "endname"
+
+    data = list(Species.objects.select_related(
+        "portrait"
+    ).filter(
+        id__in=ids_json["ids"],
+        portrait__language=language
+    ).order_by(name_field).values(
+        name=F(name_field),
+        sci=F("sciname"),
+        pid=F("portrait__species__id")
+    ))
+
+    schutzstatus = ""
+    match ids_json["schutzstatus"]:
+        case 'a_nd':
+            schutzstatus = _("Naturdenkmal")
+        case 'b_spa':
+            schutzstatus = _("Special protected area")
+        case 'c_ffh':
+            schutzstatus = _("Fauna-Flora-Habitat")
+        case 'd_np':
+            schutzstatus = _("Naturpark")
+        case 'e_fnd':
+            schutzstatus = _("Naturdenkmale Bäume und Findlinge")
+        case 'f_fspr':
+            schutzstatus = _("Flächen mit spezieller Regelung")
+        case 'g_glb':
+            schutzstatus = _("geschützter Landschaftsbestandteil")
+        case 'h_nsg':
+            schutzstatus = _("Naturschutzgebiet")
+        case 'i_lsg':
+            schutzstatus = _("Landschaftsschutzgebiet")
+        case 'j_br':
+            schutzstatus = _("Biosphärenreservat")
+        case 'k_natp':
+            schutzstatus = _("Nationalpark")
+
+    return web_render(request, "naturespotportrait", {
+        "id": id,
+        "name": ids_json["name"],
+        "schutzstatus": schutzstatus,
+        "data": data
+    }
+                      )
 
 
 def obs(request, obs_id):

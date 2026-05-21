@@ -1,0 +1,36 @@
+{% extends "web/page_base.html" %}
+
+{% load static web_tags %}
+
+{% block og %}
+{% endblock %}
+
+
+{% block header_title %}
+<p>{{ schutzstatus }}</p>
+<h1>{{ name }}</h1>
+<p></p>
+{% endblock %}
+
+{% block js %}
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'web/css/portrait.css' %}">
+{% endblock %}
+
+{% block content %}
+<main>
+    {% if data %}
+    <h2>Andere Benutzer haben hier {{ data|length }} verschiedene Arten gesehen</h2>
+    <ul>
+        {% for species in data %}
+        <li>{% if species.pid %}<a href="{% url 'portrait' species.pid %}">{{ species.name }} {{ species.sci }} →</a>{% else %}{{ species.name }} {{ species.sci }}{% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <h2>Andere Benutzer konnten hier bisher noch keine Arten beobachten</h2>
+    {% endif %}
+</main>
+{% endblock %}
