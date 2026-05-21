@@ -576,19 +576,19 @@ def map_proxy(request):
 
 def geo_proxy(request):
     return JsonResponse(requests.get(
-        f"http://0.0.0.0:9000/naturespots"
+        f"{settings.PLAYBACK_URL}naturespots"
     ).json())
 
 
 def naturespot_proxy(request, id):
     return JsonResponse(requests.get(
-        f"http://0.0.0.0:9000/naturespots"
+        f"{settings.PLAYBACK_URL}naturespots"
     ).json())
 
 
 def naturespotportrait(request, id):
     language = translation.get_language()
-    ids_json = requests.get(f"http://0.0.0.0:9000/naturespots/{id}".format(id=id)).json()
+    ids_json = requests.get(f"{settings.PLAYBACK_URL}naturespots/{id}".format(id=id)).json()
 
     name_field = "gername"
     if language == 'en':
