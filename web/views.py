@@ -576,32 +576,32 @@ def map_proxy(request):
 
 def geo_proxy(request):
     return JsonResponse(requests.get(
-        f"http://0.0.0.0:9000/naturespots"
+        f"{settings.PLAYBACK_URL}naturespots"
     ).json())
 
 
 def naturespot_proxy(request, id):
     return JsonResponse(requests.get(
-        f"http://0.0.0.0:9000/naturespots"
+        f"{settings.PLAYBACK_URL}naturespots"
     ).json())
 
 
 def naturespotportrait(request, id):
     language = translation.get_language()
-    ids_json = requests.get(f"http://0.0.0.0:9000/naturespots/{id}".format(id=id)).json()
+    ids_json = requests.get(f"{settings.PLAYBACK_URL}naturespots/{id}".format(id=id)).json()
 
     name_field = "gername"
     if language == 'en':
         "engname"
 
-    data = list(Species.objects.filter(
+    data = [{ "name": v[0], "sciname": v[1], "pid": v[2] } for v in Species.objects.filter(
         id__in=ids_json["ids"],
         portrait__language=language
-    ).order_by(name_field).values(
-        name=F(name_field),
-        sci=F("sciname"),
-        pid=F("portrait__species_id") # we want to know whether there is an artportrait of this species or not
-    ))
+    ).order_by(name_field).values_list(
+        name_field,
+        "sciname",
+        "portrait__species_id" # we want to know whether there is an artportrait of this species or not
+    )]
 
     schutzstatus = ""
     match ids_json["schutzstatus"]:
