@@ -592,17 +592,15 @@ def naturespotportrait(request, id):
 
     name_field = "gername"
     if language == 'en':
-        "endname"
+        "engname"
 
-    data = list(Species.objects.select_related(
-        "portrait"
-    ).filter(
+    data = list(Species.objects.filter(
         id__in=ids_json["ids"],
         portrait__language=language
     ).order_by(name_field).values(
         name=F(name_field),
         sci=F("sciname"),
-        pid=F("portrait__species__id")
+        pid=F("portrait__species_id") # we want to know whether there is an artportrait of this species or not
     ))
 
     schutzstatus = ""
