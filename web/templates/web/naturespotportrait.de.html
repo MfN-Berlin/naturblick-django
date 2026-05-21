@@ -25,7 +25,7 @@
     <h2>Andere Benutzer haben hier {{ data|length }} verschiedene Arten gesehen</h2>
     <ul>
         {% for species in data %}
-        <li>{% if species.pid %}<a href="{% url 'portrait' species.pid %}">{{ species.name }} {{ species.sci }} →</a>{% else %}{{ species.name }} {{ species.sci }}{% endif %}
+        <li>{% if species.pid %}<a href="{% url 'portrait' species.pid %}">{{ species.name }} - {{ species.sci }} →</a>{% else %}{{ species.name }} - {{ species.sci }}{% endif %}
         </li>
         {% endfor %}
     </ul>
