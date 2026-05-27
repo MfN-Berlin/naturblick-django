@@ -10,8 +10,18 @@ header {
     position: absolute;
     top: 0;
 
-   .top-right a, .top-right > details {
+   .top-right > a, .top-right > details {
         background-color: rgba(0, 0, 0, 0.6);
+   }
+   .top-bar {
+       details {
+           nav {
+               ul {
+                   background-image: none;
+                   background-color: rgba(0, 0, 0, 0.9);
+               }
+           }
+       }
    }
 
    .header-title {

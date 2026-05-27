@@ -3,6 +3,9 @@
   --font-size-jumbo: 60px; /* 40/ 45 on not tablet/ desktop */
   --line-height-jumbo: 60px;
 
+  --font-size-h3: 25px;
+  --line-height-h3: 30px;
+
   --home-button-vertical-pad: 17px;
   --home-button-horizontal-pad: 24px;
   --home-button-text-display: block;
@@ -62,9 +65,6 @@
 
   --font-size-h2: 30px;
   --line-height-h2: 36px;
-
-  --font-size-h3: 25px;
-  --line-height-h3: 30px;
 
   --font-size-h4: 22px;
   --line-height-h4: 28px;
@@ -132,6 +132,9 @@
         --font-size-jumbo: 40px;
         --line-height-jumbo: 45px;
 
+        --font-size-h3: 25px;
+        --line-height-h3: 30px;
+
         --home-button-vertical-pad: 12px;
         --home-button-horizontal-pad: 18px;
         --home-button-text-display: block;
@@ -165,8 +168,11 @@
 /* Mobile */
 @media (max-width: 768px) {
     :root {
-        --font-size-jumbo: 20px;
-        --line-height-jumbo: 25px;
+        --font-size-jumbo: 22px;
+        --line-height-jumbo: 28px;
+
+        --font-size-h3: 18px;
+        --line-height-h3: 22px;
 
         --home-button-vertical-pad: 9px;
         --home-button-horizontal-pad: 12px;

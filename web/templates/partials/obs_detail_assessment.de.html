@@ -1,7 +1,7 @@
 {% load i18n web_tags %}
 
 <div class="plausible">
-<h4>{{ confirmation_text }}<a href="{% url 'map_obs' obs_id %}#faq">Was bedeutet das?</a></h4>
+<h4>{{ confirmation_text }} <a href="{% url 'map_obs' obs_id %}#faq">Was bedeutet das?</a></h4>
 <p>Geprüft durch {{ assessment_author_text }}</p>
 
 {% if is_fauna %}
