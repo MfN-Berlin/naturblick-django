@@ -191,6 +191,8 @@ class HasPrimaryName(admin.SimpleListFilter):
         return [
             ("g", "German"),
             ("e", "English"),
+            ("ng", "No German"),
+            ("ne", "No English"),
             ("b", "Both"),
             ("i", "Either"),
             ("n", "None")
@@ -204,6 +206,14 @@ class HasPrimaryName(admin.SimpleListFilter):
         if self.value() == "e":
             return queryset.filter(
                 engname__isnull=False
+            )
+        if self.value() == "ng":
+            return queryset.filter(
+                gername__isnull=True
+            )
+        if self.value() == "ne":
+            return queryset.filter(
+                engname__isnull=True
             )
         if self.value() == "b":
             return queryset.filter(
