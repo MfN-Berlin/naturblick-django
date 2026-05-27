@@ -389,12 +389,16 @@ class SpeciesSearchForm(forms.Form):
 
 
 def search_portrait(request):
+    lang = translation.get_language()
+    if lang == "dels":
+        return redirect_dels_index()
     form = SpeciesSearchForm(request.GET)
     is_valid_or_raise(form)
     return render(request, "web/search_portrait.html", {
         "lang": translation.get_language(),
         "query": form.cleaned_data["query"],
-        "dark": True
+        "dark": True,
+        "show_dels": lang != 'en'
     })
 
 
@@ -748,6 +752,9 @@ def confirmation(assessment, pattern_matching_executed, pattern_matching_confirm
 
 
 def map_obs(request, obs_id):
+    language = translation.get_language()
+    if language == 'dels':
+        return redirect_dels_index()
     data = response_json(
         requests.get(f"{settings.PLAYBACK_URL}projects/observations/{obs_id}")
     ).get("data")
@@ -755,7 +762,6 @@ def map_obs(request, obs_id):
     species = Species.objects.filter(id=species_id).first()
     cc_name = data.get("ccName")
     obs_type = data.get("obsType")
-    language = translation.get_language()
     date_time = datetime.fromisoformat(data.get("dateTime"))
     coords = data.get("coords").get("coordinates")
 
@@ -856,6 +862,7 @@ def map_obs(request, obs_id):
         context["jpg_url"] = f"/api/projects/observations/{obs_id}/image.jpg"
 
     context["language"] = language
+    context["show_dels"] = language != 'en'
     return render(request, f"web/obs_detail.html", context)
 
 
