@@ -158,3 +158,14 @@ body {
 .map-popup, .map {
     font-family: var(--default-font-family);
 }
+
+#hide {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    svg {
+        fill: var(--chill);
+        stroke: var(--chill);
+        stroke-width: 0px;
+    }
+}

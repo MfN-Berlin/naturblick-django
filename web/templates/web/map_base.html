@@ -21,6 +21,7 @@
 {% block content %}
 <div id="map" class="map">
     <div id="map-info" class="map-overlay">
+        <div id="hide" onclick="document.getElementById('map-info').style.display='none';">{% inline_svg 'close-small.svg' %}</div>
         {% block map_info %}{% endblock %}
     </div>
     <div id="map-radio" class="map-overlay">
