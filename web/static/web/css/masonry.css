@@ -17,11 +17,8 @@
         h5 {
             margin: 8px 0 0 0;
         }
-        img {
-            display: inline;
-            margin: 0;
-        }
         padding: var(--half-pad);
+        margin-bottom: var(--half-pad);
     }
     
     a:hover {
