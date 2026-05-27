@@ -31,11 +31,15 @@
     </div>
 </div>
 
-<script>
+<script
+  data-longitude="{{ longitude|unlocalize }}"
+  data-latitude="{{ latitude|unlocalize }}"
+  data-zoom="{{ zoom }}">
+    const scriptData = document.currentScript.dataset;
     const url = "{% url 'map_proxy' %}{% keep_only_lang %}"
     const data = fetch(url).then(r => r.json());
 
-    const mfn = [{{ longitude|unlocalize }}, {{ latitude|unlocalize }}];
+    const mfn = [scriptData.longitude, scriptData.latitude];
     const obsProxyTemplate = "{% url 'obs' 0 %}{% keep_only_lang %}";
 
     const unclusteredIconSize = 0.7;
@@ -44,7 +48,7 @@
         container: 'map',
         style: 'https://tiles.openfreemap.org/styles/bright',
         center: mfn,
-        zoom: {{ zoom }},
+        zoom: scriptData.zoom,
         cluster: true,
     });
 
