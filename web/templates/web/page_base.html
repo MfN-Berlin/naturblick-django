@@ -45,21 +45,22 @@
               <ul>
                 {% if LANGUAGE_CODE != 'dels' %}
                 <li><a href="{% url 'map' %}{% keep_only_lang %}">{% translate "Naturblick Karte" %}</a></li>
-                {% endif %}
                 <li><a href="{% url 'search_portrait' %}{% keep_only_lang %}">{% translate "Artportraits" %}</a></li>
+                {% endif %}
                 <li><a href="{% url 'mobileapp' %}{% keep_only_lang %}">{% translate "Über die App" %}</a></li>
                 <li><a href="{% url 'about' %}{% keep_only_lang %}">{% translate "Über uns" %}</a></li>
                 {% if LANGUAGE_CODE != 'dels' %}
                 <li><a href="{% url 'faq' %}{% keep_only_lang %}">{% translate "Häufige Fragen" %}</a></li>
                 {% endif %}
-                <!-- <li><a href="{% url 'naturespots' %}{% keep_only_lang %}">{% translate "Naturorte" %}</a></li> -->
               </ul>
             </nav>
           </details>
+          {% if LANGUAGE_CODE != "dels" %}
           <a href="{% toggle_lang request %}">
             {% if LANGUAGE_CODE == "en" %}{% inline_svg 'lang_en.svg' %}
             {% else %}{% inline_svg 'lang_de.svg' %}
             {% endif %}</a>
+          {% endif %}
           <a href="#" onclick="fontZoomToggle(); return false;">
             <div class="initial-zoomed">A&nbsp;</div>
             <div class="initial-unzoomed">A</div>
