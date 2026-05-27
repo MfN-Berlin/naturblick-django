@@ -12,7 +12,7 @@ from django.db.models import Prefetch, Q, F
 from django.http import \
     Http404, \
     HttpResponse, \
-    JsonResponse
+    JsonResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.template import TemplateDoesNotExist
 from django.template.loader import get_template
@@ -90,7 +90,6 @@ def map_page(request, obs_id):
         s = Species.objects.filter(id=species_id).first()
         cc_name = json["data"]["ccName"]
         date_time = datetime.fromisoformat(json["data"]["dateTime"])
-        coords = json["data"]["coords"]["coordinates"]
 
         ogs_list.append(Og("og:title", s.engname if lang == "en" else s.gername))
 
@@ -275,6 +274,8 @@ def portrait(request, id):
             .get(species_id=id, language=language)
         )
     except:
+        if language == 'dels':
+            return redirect_dels_index()
         raise Http404()
 
     descriptions = [portrait.short_description, portrait.male_description, portrait.female_description,
@@ -327,8 +328,13 @@ def portrait(request, id):
         "species_description": _("Beschreibung"),
         "species_inthecity": _("In der Stadt"),
         "species_goodtoknows": _("Wissenswertes"),
-        "show_dels": language != 'en' and objects.filter(species_id=id, language='dels').exists()
+        "show_dels": language != 'en'
     })
+
+
+def redirect_dels_index() -> HttpResponseRedirect:
+    url = reverse("index")
+    return redirect(f"{url}?lang=dels")
 
 
 def is_fauna(
@@ -482,12 +488,7 @@ DELS_TO_DE_FALLBACKS = ['imprint', 'digitalaccessibilitystatement']
 def web_render(request, template: str, context={}) -> HttpResponse:
     language = translation.get_language()
     context["language"] = language
-
-    try:
-        get_template(f"web/{template}.dels.html")
-        context["show_dels"] = language != 'en'
-    except TemplateDoesNotExist:
-        context["show_dels"] = template in DELS_TO_DE_FALLBACKS and language != 'en'
+    context["show_dels"] = language != 'en'
 
     try:
         get_template(f"web/{template}.{language}.html")
@@ -495,6 +496,8 @@ def web_render(request, template: str, context={}) -> HttpResponse:
     except TemplateDoesNotExist:
         if template in DELS_TO_DE_FALLBACKS and language == 'dels':
             return render(request, f"web/{template}.de.html", context)
+        elif language == 'dels':
+            return redirect_dels_index()
         else:
             raise Http404()
 
