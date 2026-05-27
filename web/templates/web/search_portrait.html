@@ -26,7 +26,8 @@
   </form>
   <div id="species-masonry">
   </div>
-  <script>
+  <script data-lang="{{ lang }}">
+    const scriptData = document.currentScript.dataset;
     const masonry = document.getElementById("species-masonry");
     const search = document.getElementById("species-search");
     const searchField = document.getElementById("species-search-field");
@@ -84,7 +85,7 @@
         xhr.addEventListener("abort", fetchingDone);
         const url = "{% url 'search_portrait_data' %}"
         const searchParams = new URLSearchParams();
-        searchParams.set("lang", "{{ lang }}");
+        searchParams.set("lang", scriptData.lang);
         searchParams.set("offset", offset);
         searchParams.set("limit", limit);
         if(searchField.value) {
