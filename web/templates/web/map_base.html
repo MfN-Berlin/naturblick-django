@@ -35,13 +35,14 @@
   data-longitude="{{ longitude|unlocalize }}"
   data-latitude="{{ latitude|unlocalize }}"
   data-zoom="{{ zoom }}">
+    const POPUP_WIDTH = 540;
     const scriptData = document.currentScript.dataset;
     const url = "{% url 'map_proxy' %}{% keep_only_lang %}"
     const data = fetch(url).then(r => r.json());
 
     const mfn = [scriptData.longitude, scriptData.latitude];
     const obsProxyTemplate = "{% url 'obs' 0 %}{% keep_only_lang %}";
-
+    const mapObsPoxyTemplate = "{% url 'map_obs' 0 %}{% keep_only_lang %}";
     const unclusteredIconSize = 0.7;
 
     var map = new maplibregl.Map({
@@ -53,8 +54,14 @@
     });
 
     function clickUnclustered(map, e) {
-        const coordinates = e.features[0].geometry.coordinates.slice();
         const obs_id = e.features[0].properties.id;
+        if(window.innerWidth < POPUP_WIDTH * 1.25) {
+            const url = mapObsPoxyTemplate.replace("0", obs_id);
+            window.location.href = url;
+            return;
+        }
+
+        const coordinates = e.features[0].geometry.coordinates.slice();
         const group = e.features[0].properties.group;
         const url = obsProxyTemplate.replace("0", obs_id);
 
