@@ -316,6 +316,19 @@ class HasBirdnetIdFilter(YesNoFilter):
                 birdnetid__isnull=True
             )
 
+class HasSpaceFilter(YesNoFilter):
+    title = "Sciname has space"
+    parameter_name = "has_space"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                sciname__contains=" "
+            )
+        if self.value() == "n":
+            return queryset.exclude(
+                sciname__contains=" "
+            )
 
 class ImportImageFromWikimediaForm(forms.Form):
     wikimedia_url = forms.URLField(label="Wikimedia image URL")
@@ -345,7 +358,7 @@ class SpeciesAdmin(admin.ModelAdmin):
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
                    HasBirdnetIdFilter,
                    'autoid', HasAvatarFilter, HasFemaleAvatarFilter, 'avatar_not_found', HasAdditionalNames, 'rank', 'status',
-                   'gbif_incompatible', 'group']
+                   'gbif_incompatible', HasSpaceFilter, 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
               'group',
