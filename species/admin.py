@@ -358,7 +358,7 @@ class SpeciesAdmin(admin.ModelAdmin):
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
                    HasBirdnetIdFilter,
                    'autoid', HasAvatarFilter, HasFemaleAvatarFilter, 'avatar_not_found', HasAdditionalNames, 'rank', 'status',
-                   'gbif_incompatible', HasSpaceFilter, 'group']
+                   'gbif_incompatible', HasSpaceFilter, 'gbif_needs_approval', 'group']
     search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
     fields = ['speciesid',
               'group',
@@ -374,14 +374,13 @@ class SpeciesAdmin(admin.ModelAdmin):
                'activity_end_hour'),
               ('avatar_new', 'avatar_not_found'),
               'female_avatar_new',
-              'gbifusagekey',
+              ('gbifusagekey', 'gbif_incompatible', 'gbif_needs_approval'),
               'rank',
               'status',
               'accepted_species',
               'plantnetpowoid',
               'birdnetid',
               'is_hidden',
-              'gbif_incompatible',
               'tag',
               ]
 
@@ -571,7 +570,10 @@ class SpeciesAdmin(admin.ModelAdmin):
     @admin.display()
     def gbif(self, obj):
         if obj.gbifusagekey is None:
-            return '-'
+            if obj.gbif_incompatible:
+                return 'Not compatible'
+            else:
+                return '-'
         else:
             gbif_url = f'https://www.gbif.org/species/{obj.gbifusagekey}'
             return format_html(f'<a href="{{}}">{obj.gbifusagekey}</a>', gbif_url)
