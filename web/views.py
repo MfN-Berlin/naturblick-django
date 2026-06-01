@@ -8,7 +8,7 @@ from django import forms
 from django.conf import settings
 from django.core.exceptions import BadRequest
 from django.core.handlers.wsgi import WSGIRequest
-from django.db.models import Prefetch, Q, F
+from django.db.models import Prefetch, Q
 from django.http import \
     Http404, \
     HttpResponse, \
@@ -20,6 +20,7 @@ from django.urls import reverse
 from django.utils import translation
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
+from rest_framework.exceptions import NotFound
 
 from species.models import Species, Portrait, Floraportrait, Faunaportrait, Tag, EvaluationAuthor
 from web.utils import from_time, response_json
@@ -31,83 +32,15 @@ class Og:
         self.content = content
 
 
-def home(request):
-    description = _("Entdecke die Natur")
-    ogs_list = [Og("og:title", "Naturblick"),
-                Og("og:description", description),
-                Og("og:twitter:image",
-                   "https://naturblick.museumfuernaturkunde.berlin/strapi/uploads/large_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg"),
-                Og("og:twitter:image",
-                   "https://naturblick.museumfuernaturkunde.berlin/strapi/uploads/large_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg"),
-                Og("og:image:width", 1200),
-                Og("og:image:height", 521)
-                ] + default_ogs(request)
-
-    return render(request, "web/base.html", {"og_list": ogs_list})
-
-
-def artportrait(request, id):
-    lang = translation.get_language()
-
-    p = Portrait.objects.filter(species_id=id, language=lang).first()
-    ogs_list = []
-    if p:
-        ogs_list.append(Og("og:description", p.short_description))
-        ogs_list.append(Og("og:title", p.species.engname if lang == "en" else p.species.gername))
-
-        desc_meta = p.descmeta
-        if desc_meta:
-            image = desc_meta.image_file.large if desc_meta.image_file.large else desc_meta.image_file.image
-            ogs_list = add_image_ogs(request, ogs_list, image)
-
-    return default_response(request, ogs_list)
-
-
 def old_artportrait(request, species_id):
     lang = translation.get_language()
     int_id = Species.objects.filter(speciesid=species_id).values_list(
         "id", flat=True).first()
 
-    if int_id:
-        url = reverse("artportrait", kwargs={"id": int_id})
-        return redirect(f"{url}?lang={lang}", permanent=True)
-    else:
-        return default_response(request, [])
-
-
-# for subsites like Wissensweiten
-def sub_page(request):
-    return default_response(request, [])
-
-
-def map_page(request, obs_id):
-    lang = translation.get_language()
-    ogs_list = []
-
-    try:
-        json = requests.get(f"{settings.PLAYBACK_URL}projects/observations/{obs_id}").json()
-        species_id = json["data"]["species"]
-        s = Species.objects.filter(id=species_id).first()
-        cc_name = json["data"]["ccName"]
-        date_time = datetime.fromisoformat(json["data"]["dateTime"])
-
-        ogs_list.append(Og("og:title", s.engname if lang == "en" else s.gername))
-
-        obs_type = json["data"]["obsType"]
-        if is_image(obs_type):
-            ogs_list.append(Og("og:image",
-                               f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/image.jpg"))
-            ogs_list.append(Og("og:twitter:image",
-                               f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/image.jpg"))
-        elif is_audio(obs_type):
-            ogs_list.append(Og("og:audio",
-                               f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/audio.mp4"))
-
-        ogs_list.append(Og("og:description", seen_by(fauna, cc_name, date_time)))
-    except:
-        pass
-
-    return default_response(request, ogs_list)
+    if not int_id:
+        raise NotFound("Species not found")
+    url = reverse("portrait", kwargs={"id": int_id})
+    return redirect(f"{url}?lang={lang}", permanent=True)
 
 
 def index(request):
@@ -135,10 +68,21 @@ def index(request):
 
     }
     species = [species_dict[id] for id in ids]
+    description = _("Entdecke die Natur")
+    ogs_list = [Og("og:title", "Naturblick"),
+                Og("og:description", description),
+                Og("og:twitter:image",
+                   "https://naturblick.museumfuernaturkunde.berlin/strapi/uploads/large_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg"),
+                Og("og:twitter:image",
+                   "https://naturblick.museumfuernaturkunde.berlin/strapi/uploads/large_Header_2023_klein_beschnitten_belichted_7cca538a55.jpg"),
+                Og("og:image:width", 1200),
+                Og("og:image:height", 521)
+                ] + default_ogs(request)
     return web_render(request, "index", context={
         "lang": lang,
         "dark": True,
-        "species": species
+        "species": species,
+        "og_list": ogs_list
     })
 
 
@@ -310,7 +254,17 @@ def portrait(request, id):
         "png": f"{portrait.faunaportrait_audio_file.audio_file.url.replace("audio_files", "spectrogram_images")}.png"
     } if fauna and portrait.faunaportrait_audio_file else None
 
+    ogs_list = default_ogs(request)
+    ogs_list.append(Og("og:description", portrait.short_description))
+    ogs_list.append(Og("og:title", portrait.species.engname if language == "en" else portrait.species.gername))
+
+    desc_meta = portrait.descmeta
+    if desc_meta:
+        image = desc_meta.image_file.large if desc_meta.image_file.large else desc_meta.image_file.image
+        ogs_list = add_image_ogs(request, ogs_list, image)
+
     return render(request, "web/portrait.html", context={
+        "og_list": ogs_list,
         "id": id,
         "dark": True,
         "portrait": portrait,
@@ -510,14 +464,6 @@ def digitalaccessibilitystatement(request):
     return web_render(request, "digitalaccessibilitystatement")
 
 
-def default_response(request, more_ogs=None):
-    if more_ogs is None:
-        more_ogs = []
-    ogs_list = more_ogs + default_ogs(request)
-
-    return render(request, "web/base.html", {"og_list": ogs_list})
-
-
 def default_ogs(request: WSGIRequest) -> list[Og]:
     return [Og("og:type", "website"),
             Og("og:site-name", "Naturblick"),
@@ -601,13 +547,13 @@ def naturespotportrait(request, id):
     if language == 'en':
         "engname"
 
-    data = [{ "name": v[0], "sciname": v[1], "pid": v[2] } for v in Species.objects.filter(
+    data = [{"name": v[0], "sciname": v[1], "pid": v[2]} for v in Species.objects.filter(
         id__in=ids_json["ids"],
         portrait__language=language
     ).order_by(name_field).values_list(
         name_field,
         "sciname",
-        "portrait__species_id" # we want to know whether there is an artportrait of this species or not
+        "portrait__species_id"  # we want to know whether there is an artportrait of this species or not
     )]
 
     schutzstatus = ""
@@ -863,6 +809,35 @@ def map_obs(request, obs_id):
 
     context["language"] = language
     context["show_dels"] = language != 'en'
+
+    # ogs
+
+    ogs_list = []
+
+    try:
+        species_id = data["species"]
+        s = Species.objects.filter(id=species_id).first()
+        cc_name = data["ccName"]
+        date_time = datetime.fromisoformat(data["dateTime"])
+
+        ogs_list.append(Og("og:title", s.engname if language == "en" else s.gername))
+
+        obs_type = data["obsType"]
+        if is_image(obs_type):
+            ogs_list.append(Og("og:image",
+                               f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/image.jpg"))
+            ogs_list.append(Og("og:twitter:image",
+                               f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/image.jpg"))
+        elif is_audio(obs_type):
+            ogs_list.append(Og("og:audio",
+                               f"https://naturblick.museumfuernaturkunde.berlin/api/projects/observations/{obs_id}/audio.mp4"))
+
+        ogs_list.append(Og("og:description", seen_by(fauna, cc_name, date_time)))
+    except:
+        pass
+
+    context["og_list"] = ogs_list
+
     return render(request, f"web/obs_detail.html", context)
 
 
