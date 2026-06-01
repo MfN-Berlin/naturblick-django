@@ -51,7 +51,6 @@ LOGGING = {
     },
 }
 
-FORCE_SCRIPT_NAME = '/django/'
 STATIC_URL = '/django/static/'
 
 CSRF_COOKIE_SECURE = True
