@@ -262,6 +262,10 @@ svg {
 
 .text-container {
     max-width: 768px;
+    a {
+        text-decoration: underline;
+        color: var(--relax);
+    }
 }
 
 
