@@ -427,6 +427,8 @@ def privacy(request):
 def imprint(request):
     return web_render(request, "imprint")
 
+def delsbedienung(request):
+    return web_render(request, "delsbedienung")
 
 def naturespots(request):
     longitude = request.GET.get("lng", 13.3792)
