@@ -29,6 +29,10 @@
     {% block og %}{% endblock %}
 
     <script src="{% static 'web/js/web.js' %}"></script>
+
+    {% for og in og_list %}
+        <meta property="{{ og.property }}" content="{{ og.content }}">
+    {% endfor %}
 </head>
 <body>
   <header>
