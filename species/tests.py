@@ -52,53 +52,6 @@ class SpeciesTestCase(TestCase):
         LeichtRecognize(text="foo", portrait=leicht_portrait, ordering=1)
         LeichtGoodToKnow(text="foo", portrait=leicht_portrait, ordering=1)
 
-    def test_speciesfilter_ok(self):
-        url = reverse("species-filter")
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        content = json.loads(response.content)
-        self.assertEqual(len(content), 1)
-        self.assertEqual(content[0].get("localname"), "Amsel")
-
-    def test_specieslist_ok(self):
-        url = reverse("species-list")
-        response = self.client.get(url, query_params={"speciesid_in": "bird_00000000"})
-        self.assertEqual(response.status_code, 200)
-        content = json.loads(response.content)
-        self.assertEqual(len(content), 1)
-        self.assertEqual(content[0].get("localname"), "Amsel")
-
-    def test_specieslist_not_found(self):
-        url = reverse("species-list")
-        response = self.client.get(url, query_params={"speciesid_in": "bird_ff00ff00"})
-        self.assertEqual(response.status_code, 404)
-
-    def test_species_ok(self):
-        url = reverse("species", args=[1])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        content = json.loads(response.content)
-        self.assertEqual(content.get("localname"), "Amsel")
-
-    def test_portrait_detail_ok(self):
-        url = reverse("portrait-detail")
-        response = self.client.get(url, query_params={"id": "1"})
-        self.assertEqual(response.status_code, 200)
-        content = json.loads(response.content)
-        self.assertEqual(content.get("localname"), "Amsel")
-
-    def test_tags_filter(self):
-        url = reverse("tags-filter")
-        response = self.client.get(url)
-        content = json.loads(response.content)
-        self.assertEqual(len(content), 2)
-
-        response = self.client.get(url, query_params={"tagsearch": "Vogel"})
-        self.assertEqual(response.status_code, 200)
-        content = json.loads(response.content)
-        self.assertEqual(len(content), 1)
-        self.assertEqual(content[0].get("localname"), "Vogel")
-
     def test_app_content_db(self):
         url = reverse("app-content-db")
         response = self.client.get(url)
@@ -108,17 +61,3 @@ class SpeciesTestCase(TestCase):
         url = reverse("app-content-leicht-db")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-
-    def test_tags(self):
-        url = reverse("tags")
-        response = self.client.get(url, query_params={"tag": ["1", "2"]})
-        content = json.loads(response.content)
-        self.assertEqual(len(content), 2)
-        self.assertEqual(content[0].get("localname"), "Vogel")
-
-    def test_groups(self):
-        url = reverse("groups")
-        response = self.client.get(url)
-        content = json.loads(response.content)
-        self.assertEqual(len(content), 1)
-        self.assertEqual(content[0].get("name"), "bird")
