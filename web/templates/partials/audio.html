@@ -8,7 +8,7 @@
   {% inline_svg 'pause-media.svg' %}
 </template>
 
-<div class="audio">
+<div class="audio {% if not licence %}audio-oneline{% endif %}">
     <div>
         <button id="{{ id }}-playBtn">{% inline_svg 'play-media.svg' %}</button>
         <div>
@@ -17,16 +17,18 @@
         </div>
     </div>
 
-    <div class="spectrogram_container" id="{{ id }}-spectrogram_container">
-        <img src="{{ png }}">
-        <div class="cover" id="{{ id }}-widther" style="width: 0%;">
+    <div>
+        <div class="spectrogram_container" id="{{ id }}-spectrogram_container">
             <img src="{{ png }}">
+            <div class="cover" id="{{ id }}-widther" style="width: 0%;">
+                <img src="{{ png }}">
+            </div>
         </div>
-    </div>
 
-    <div class="time">
-        <div id="{{ id }}-audio_start">00:00</div>
-        <div id="{{ id }}-audio_end"></div>
+        <div class="time">
+            <div id="{{ id }}-audio_start">00:00</div>
+            <div id="{{ id }}-audio_end"></div>
+        </div>
     </div>
 
     <audio id="{{ id }}-audio">
