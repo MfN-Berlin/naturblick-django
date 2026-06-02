@@ -24,6 +24,7 @@
             background: none;
             border: none;
             font-size: var(--font-size-big);
+            padding: 0;
             svg {
                 width: 48px;
                 height: 48px;
@@ -77,4 +78,8 @@
         line-height: var(--line-height-super-small);
         opacity: .5;
     }
+}
+
+.audio-oneline {
+    display: flex;
 }
