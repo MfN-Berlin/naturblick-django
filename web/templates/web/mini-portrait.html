@@ -1,0 +1,26 @@
+{% extends "web/page_base.html" %}
+
+{% load static web_tags %}
+
+{% block og %}
+{% endblock %}
+
+
+{% block header_title %}
+{% group_svg species.group %}
+<p>{{ species.sciname }}</p>
+{%if species_name %}<h1>{{ species_name }}</h1>{% endif %}
+<p><a href="{{ wikipedia }}">Wikipedia: {{ wikipedia_uq }}</a></p>
+{%if species_avatar %}<img src="{{species_avatar}}" >{% endif %}
+{% endblock %}
+
+{% block js %}
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'web/css/portrait.css' %}">
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
