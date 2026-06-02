@@ -1,0 +1,104 @@
+{% extends "web/page_base.html" %}
+
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'web/css/plantnetdemo.css' %}">
+{% endblock %}
+
+{% block header %}<h1>Plantnetdemo</h1>{% endblock %}
+
+{% block content %}
+<img src="{% url 'plantnetimg' thumbnail_id %}">
+<div class="plantnet-table-view">
+  <table>
+    <caption>
+      Species
+    </caption>
+    <thead>
+      <tr>
+        <th>Score</th>
+        <th>Species</th>
+        <th>Genus</th>
+        <th>Family</th>
+        <th>Gbif</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in pn.results %}
+      <tr>
+        <td>{{ result.score }}</td>
+        <td>{{ result.species.scientificNameWithoutAuthor }}</td>
+        <td>{{ result.species.genus.scientificNameWithoutAuthor }}</td>
+        <td>{{ result.species.family.scientificNameWithoutAuthor }}</td>
+        <td><a href="https://www.gbif.org/species/{{ result.gbif.id }}">{{ result.gbif.id }}</a>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table>
+    <caption>
+      Genera
+    </caption>
+    <thead>
+      <tr>
+        <th>Score</th>
+        <th>Genus</th>
+        <th>Family</th>
+        <th>Gbif</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in pn.otherResults.genus %}
+      <tr>
+        <td>{{ result.score }}</td>
+        <td>{{ result.genus.scientificName }}</td>
+        <td>{{ result.genus.family.scientificNameWithoutAuthor }}</td>
+        <td><a href="https://www.gbif.org/species/{{ result.gbif.id }}">{{ result.gbif.id }}</a>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table>
+    <caption>
+      Families
+    </caption>
+    <thead>
+      <tr>
+        <th>Score</th>
+        <th>Family</th>
+        <th>Gbif</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in pn.otherResults.family %}
+      <tr>
+        <td>{{ result.score }}</td>
+        <td>{{ result.family.scientificName }}</td>
+        <td><a href="https://www.gbif.org/species/{{ result.gbif.id }}">{{ result.gbif.id }}</a>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table>
+    <caption>
+      Predicted organs
+    </caption>
+    <thead>
+      <tr>
+        <th>Score</th>
+        <th>Organ</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in pn.predictedOrgans %}
+      <tr>
+        <td>{{ result.score }}</td>
+        <td>{{ result.organ }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+

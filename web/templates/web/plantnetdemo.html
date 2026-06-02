@@ -9,95 +9,35 @@
 {% block header %}<h1>Plantnetdemo</h1>{% endblock %}
 
 {% block content %}
-<div class="plantnet-table-view">
+<form action="/plantnetdemo" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+{% if observations %}
   <table>
     <caption>
-      Species.
+      Image observations
     </caption>
     <thead>
       <tr>
-        <th>Score</th>
+        <th>Date</th>
         <th>Species</th>
-        <th>Genus</th>
-        <th>Family</th>
-        <th>Gbif</th>
+        <th>Avatar</th>
+        <th>Plantnet</th>
       </tr>
     </thead>
     <tbody>
-      {% for result in pn.results %}
+      {% for observation in observations %}
       <tr>
-        <td>{{ result.score }}</td>
-        <td>{{ result.species.scientificNameWithoutAuthor }}</td>
-        <td>{{ result.species.genus.scientificNameWithoutAuthor }}</td>
-        <td>{{ result.species.family.scientificNameWithoutAuthor }}</td>
-        <td><a href="https://www.gbif.org/species/{{ result.gbif.id }}">{{ result.gbif.id }}</a>
+        <td>{{ observation.created }}</td>
+        <td>{{ observation.sciname }}</td>
+        <td><img src="{% url 'plantnetimg' observation.thumbnailId %}"></td>
+        <td><a href="{% url 'plantnetresults' observation.thumbnailId %}">Identify</a></td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-  <table>
-    <caption>
-      Genera.
-    </caption>
-    <thead>
-      <tr>
-        <th>Score</th>
-        <th>Genus</th>
-        <th>Family</th>
-        <th>Gbif</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for result in pn.otherResults.genus %}
-      <tr>
-        <td>{{ result.score }}</td>
-        <td>{{ result.genus.scientificName }}</td>
-        <td>{{ result.genus.family.scientificNameWithoutAuthor }}</td>
-        <td><a href="https://www.gbif.org/species/{{ result.gbif.id }}">{{ result.gbif.id }}</a>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <table>
-    <caption>
-      Families.
-    </caption>
-    <thead>
-      <tr>
-        <th>Score</th>
-        <th>Family</th>
-        <th>Gbif</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for result in pn.otherResults.family %}
-      <tr>
-        <td>{{ result.score }}</td>
-        <td>{{ result.family.scientificName }}</td>
-        <td><a href="https://www.gbif.org/species/{{ result.gbif.id }}">{{ result.gbif.id }}</a>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <table>
-    <caption>
-      Predicted organs.
-    </caption>
-    <thead>
-      <tr>
-        <th>Score</th>
-        <th>Organ</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for result in pn.predictedOrgans %}
-      <tr>
-        <td>{{ result.score }}</td>
-        <td>{{ result.organ }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+{% endif %}
 {% endblock %}
 

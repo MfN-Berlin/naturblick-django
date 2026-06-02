@@ -1,3 +1,4 @@
+import json
 import os
 from datetime import datetime, timezone
 from functools import partial
@@ -21,6 +22,7 @@ from django.urls import reverse
 from django.utils import translation
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
+from django.contrib.auth.decorators import login_required
 from rest_framework.exceptions import NotFound
 
 from species.models import Species, Portrait, Floraportrait, Faunaportrait, Tag, EvaluationAuthor
@@ -896,8 +898,57 @@ def speciesimagerecognition(request):
 def speciesaudiorecognition(request):
     return web_render(request, "speciesaudiorecognition")
 
-def plantnetdemo(request, thumbnail_id):
-    return render(request, "web/plantnetdemo.html", context={
-        "thumbnail_id": thumbnail_id,
-        "pn": requests.get(f"{settings.PLAYBACK_URL}highertaxonsimageid?mediaId={thumbnail_id}").json()
-    })
+class ViewResultsForm(forms.Form):
+    device_identifier = forms.CharField(label="Device identifier", max_length=100)
+
+@login_required
+def plantnetdemo(request):
+
+    if request.method == "POST":
+        form = ViewResultsForm(request.POST)
+        if form.is_valid():
+            request.session['device_identifier'] = form.cleaned_data['device_identifier']
+            observations = requests.put(
+                f"{settings.PLAYBACK_URL}obs/androidsync",
+                files= {'operations': (None, json.dumps({"operations": [], "syncInfo": {"deviceIdentifier": request.session['device_identifier']}}))},
+                headers={'X-MfN-Device-Id': request.session['device_identifier']}
+            ).json()['data']
+            image_observations = [o for o in observations if o['obsType'] == 'image']
+    else:
+        form = ViewResultsForm()
+        observations = None
+        try:
+            del request.session['device_identifier']
+        except:
+            pass
+    return render(
+            request,
+            "web/plantnetdemo.html",
+            context={
+                "form": form,
+                "observations": image_observations
+        })
+
+@login_required
+def plantnetresults(request, thumbnail_id):
+    plantnet_data = requests.get(f"{settings.PLAYBACK_URL}highertaxonsimageid?mediaId={thumbnail_id}").json()
+    return render(
+        request,
+        "web/plantnetresults.html",
+        context={
+            "thumbnail_id": thumbnail_id,
+            "pn": plantnet_data
+        })
+    
+@login_required
+def plantnetimg(request, thumbnail_id):
+    url = f"{settings.PLAYBACK_URL}media/{thumbnail_id}"
+    r = requests.get(url, stream=True, headers={'X-MfN-Device-Id': request.session['device_identifier']})
+
+    r.raise_for_status()
+    
+    return HttpResponse(
+        r.iter_content(chunk_size=8192),
+        content_type=r.headers.get("Content-Type", "image/jpeg")
+    )
+

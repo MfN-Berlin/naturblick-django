@@ -31,5 +31,7 @@ urlpatterns = [
     path("speciesaudiorecognition", views.speciesaudiorecognition, name="speciesaudiorecognition"),
     re_path(
         r'^species/portrait[^/]*/(?P<species_id>[a-z]+_[a-f0-9]{8})/?$', views.old_artportrait),
-    path('plantnetdemo/<uuid:thumbnail_id>', views.plantnetdemo, name="plantnetdemo")
+    path('plantnetdemo', views.plantnetdemo, name="plantnetdemo"),
+    path('plantnetdemo/<uuid:thumbnail_id>', views.plantnetresults, name="plantnetresults"),
+    path('plantnetdemo/<uuid:thumbnail_id>.jpeg', views.plantnetimg, name="plantnetimg")
 ]
