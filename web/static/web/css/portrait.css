@@ -4,6 +4,7 @@
         font-weight: 900;
         font-size: var(--font-size-h3);
         line-height: var(--line-height-h3);
+        font-style: italic;
     }
 
     p:last-of-type {

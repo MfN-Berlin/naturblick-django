@@ -1,6 +1,7 @@
 import os
 from datetime import datetime, timezone
 from functools import partial
+from urllib.parse import quote
 
 import markdown
 import requests
@@ -190,6 +191,17 @@ def endangerstatus(species, language):
         return mark_safe(endangervalue)
 
 
+def mini_artportrait(request, species):
+    language = translation.get_language()
+    return render(request, "web/mini-portrait.html", {
+        "species": species,
+        "species_name": species.engname if language == "en" else species.gername,
+        "dark": True,
+        "wikipedia": f"https://en.wikipedia.org/wiki/{quote(species.sciname)}" if language == 'en' else f"https://de.wikipedia.org/wiki/{quote(species.sciname)}",
+        "species_avatar": species.avatar_new.imagefile.image.url if species.avatar_new else None
+    })
+
+
 def portrait(request, id):
     language = translation.get_language()
 
@@ -220,7 +232,8 @@ def portrait(request, id):
     except:
         if language == 'dels':
             return redirect_dels_index()
-        raise Http404()
+
+        return mini_artportrait(request, species)
 
     descriptions = [portrait.short_description, portrait.male_description, portrait.female_description,
                     portrait.juvenile_description] if fauna else [portrait.short_description,
@@ -427,8 +440,10 @@ def privacy(request):
 def imprint(request):
     return web_render(request, "imprint")
 
+
 def delsbedienung(request):
     return web_render(request, "delsbedienung")
+
 
 def naturespots(request):
     longitude = request.GET.get("lng", 13.3792)
