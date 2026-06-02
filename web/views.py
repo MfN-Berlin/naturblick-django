@@ -880,3 +880,9 @@ def speciesimagerecognition(request):
 
 def speciesaudiorecognition(request):
     return web_render(request, "speciesaudiorecognition")
+
+def plantnetdemo(request, thumbnail_id):
+    return render(request, "web/plantnetdemo.html", context={
+        "thumbnail_id": thumbnail_id,
+        "pn": requests.get(f"{settings.PLAYBACK_URL}highertaxonsimageid?mediaId={thumbnail_id}").json()
+    })

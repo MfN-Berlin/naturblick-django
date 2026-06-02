@@ -1,0 +1,23 @@
+.plantnet-table-view {
+    padding: var(--default-pad);
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: var(--default-pad);
+    table {
+        height: fit-content;
+        td, th {
+            padding: calc(var(--default-pad) / 8);
+        }
+        tbody tr:nth-child(odd) {
+            background-color: var(--character);
+        }
+        tbody tr:nth-child(even) {
+            background-color: var(--mild);
+        }
+
+        thead {
+            background-color: var(--chill);
+        }
+    }
+}
