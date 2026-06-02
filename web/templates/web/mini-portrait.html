@@ -10,7 +10,7 @@
 {% group_svg species.group %}
 <p>{{ species.sciname }}</p>
 {%if species_name %}<h1>{{ species_name }}</h1>{% endif %}
-<p><a href="{{ wikipedia }}">Wikipedia: {{ wikipedia_uq }}</a></p>
+<p><a href="{{ wikipedia }}">{% translate "Schaue in Wikipedia nach" %}</a></p>
 {%if species_avatar %}<img src="{{species_avatar}}" >{% endif %}
 {% endblock %}
 

@@ -198,7 +198,6 @@ def mini_artportrait(request, species):
         "species_name": species.engname if language == "en" else species.gername,
         "dark": True,
         "wikipedia": f"https://en.wikipedia.org/wiki/{quote(species.sciname)}" if language == 'en' else f"https://de.wikipedia.org/wiki/{quote(species.sciname)}",
-        "wikipedia_uq": f"https://en.wikipedia.org/wiki/{species.sciname}" if language == 'en' else f"https://de.wikipedia.org/wiki/{species.sciname}",
         "species_avatar": species.avatar_new.imagefile.image.url if species.avatar_new else None
     })
 
