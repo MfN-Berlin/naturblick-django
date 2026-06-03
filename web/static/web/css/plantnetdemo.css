@@ -1,23 +1,38 @@
 .plantnet-table-view {
-    padding: var(--default-pad);
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
     gap: var(--default-pad);
-    table {
-        height: fit-content;
-        td, th {
-            padding: calc(var(--default-pad) / 8);
+}
+table {
+    height: fit-content;
+    td, th {
+        padding: calc(var(--default-pad) / 8);
+        img {
+            widht: calc(var(--default-pad) * 4);
+            height: calc(var(--default-pad) * 4);
         }
-        tbody tr:nth-child(odd) {
-            background-color: var(--character);
-        }
-        tbody tr:nth-child(even) {
-            background-color: var(--mild);
-        }
+    }
+    tbody tr:nth-child(odd) {
+        background-color: var(--character);
+    }
+    tbody tr:nth-child(even) {
+        background-color: var(--mild);
+    }
+    thead {
+        background-color: var(--chill);
+    }
+}
+.main-container {
+    padding: var(--default-pad);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--default-pad);
 
-        thead {
-            background-color: var(--chill);
-        }
+    > img {
+        widht: calc(var(--default-pad) * 16);
+        height: calc(var(--default-pad) * 16);
     }
 }
