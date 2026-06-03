@@ -901,7 +901,7 @@ def speciesaudiorecognition(request):
 class ViewResultsForm(forms.Form):
     device_identifier = forms.CharField(label="Device identifier", max_length=100)
 
-@login_required
+@login_required(login_url='/admin/login/')
 def plantnetdemo(request):
 
     if request.method == "POST":
@@ -916,7 +916,7 @@ def plantnetdemo(request):
             image_observations = [o for o in observations if o['obsType'] == 'image']
     else:
         form = ViewResultsForm()
-        observations = None
+        image_observations = None
         try:
             del request.session['device_identifier']
         except:
@@ -929,7 +929,7 @@ def plantnetdemo(request):
                 "observations": image_observations
         })
 
-@login_required
+@login_required(login_url='/admin/login/')
 def plantnetresults(request, thumbnail_id):
     plantnet_data = requests.get(f"{settings.PLAYBACK_URL}highertaxonsimageid?mediaId={thumbnail_id}").json()
     return render(
@@ -939,8 +939,8 @@ def plantnetresults(request, thumbnail_id):
             "thumbnail_id": thumbnail_id,
             "pn": plantnet_data
         })
-    
-@login_required
+
+@login_required(login_url='/admin/login/')
 def plantnetimg(request, thumbnail_id):
     url = f"{settings.PLAYBACK_URL}media/{thumbnail_id}"
     r = requests.get(url, stream=True, headers={'X-MfN-Device-Id': request.session['device_identifier']})
