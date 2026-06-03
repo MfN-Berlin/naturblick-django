@@ -942,7 +942,7 @@ def plantnetresults(request, thumbnail_id):
 
 @login_required(login_url='/admin/login/')
 def plantnetimg(request, thumbnail_id):
-    url = f"{settings.PLAYBACK_URL}media/{thumbnail_id}"
+    url = f"https://naturblick.museumfuernaturkunde.berlin/api/media/{thumbnail_id}"
     r = requests.get(url, stream=True, headers={'X-MfN-Device-Id': request.session['device_identifier']})
 
     r.raise_for_status()
