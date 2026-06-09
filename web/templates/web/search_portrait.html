@@ -31,6 +31,12 @@
       {% endfor %}
     </datalist>
   </form>
+  <template id="selected-tag-template">
+    <div>
+      <span></span>
+      {% inline_svg 'close-small.svg' %}
+    </div>
+  </template>
   <div id="selected-tags">
     <p>{% translate 'Ausgewählte Tags' %}:</p>
   </div>
@@ -44,7 +50,7 @@
     const tagField = document.getElementById("species-tag-field");
     const tagDatalist = document.getElementById("species-tags");
     const tagList = document.getElementById("selected-tags");
-
+    const tagTemplate = document.getElementById("selected-tag-template");
     let offset = 0;
     let numberOfColumns = 0;
     let hasMore = true;
@@ -165,7 +171,7 @@
     }
 
     function removeTag(event) {
-        tagList.removeChild(event.target);
+        tagList.removeChild(event.target.closest("div"));
         fetchMore(true);
     }
     
@@ -176,11 +182,13 @@
             const option = options[i];
             if(option.value.toLowerCase() == tagField.value.toLowerCase()) {
                 tagField.value = "";
-                const tagElement = document.createElement("span");
-                tagElement.textContent = option.value;
-                tagElement.dataset.tagId = option.dataset.tagId;
-                tagElement.addEventListener("click", removeTag);
-                tagList.appendChild(tagElement);
+                const clone = document.importNode(tagTemplate.content, true);
+                const span = clone.querySelector("span");
+                span.textContent = option.value;
+                span.dataset.tagId = option.dataset.tagId;
+                const div = clone.querySelector("div");
+                div.addEventListener("click", removeTag);
+                tagList.appendChild(clone);
                 fetchMore(true);
             }
         }

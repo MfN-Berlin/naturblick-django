@@ -50,7 +50,10 @@ main {
     align-items: baseline;
     gap: var(--half-pad);
     margin: 0 var(--half-pad) var(--half-pad) var(--half-pad);
-    span {
+    div {
+        display: flex;
+        column-gap: 8px;
+        align-items: center;
         background-color: var(--relax);
         border-radius: var(--small-radius);
         padding: 4px 8px;
