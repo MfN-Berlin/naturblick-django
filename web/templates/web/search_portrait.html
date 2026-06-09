@@ -134,7 +134,18 @@
         } else {
             current.searchParams.delete("query");
         }
-        history.pushState({}, "", current.toString());
+        const tags = tagList.querySelectorAll("span");
+        if(tags.length > 0) {
+            const tag = tags[0];
+            current.searchParams.set("tag", tag.dataset.tagId);
+            for (var i = 1; i < tags.length; i++) {
+                const tag = tags[i];
+                current.searchParams.append("tag", tag.dataset.tagId);
+            }
+        } else {
+            current.searchParams.delete("tag");
+        }
+        history.replaceState({}, "", current.toString());
     }
 
     function formSubmit(event) {
@@ -172,27 +183,37 @@
 
     function removeTag(event) {
         tagList.removeChild(event.target.closest("div"));
+        updateQuery();
+        fetchMore(true);
+    }
+
+    function addTag(name, id) {
+        const clone = document.importNode(tagTemplate.content, true);
+        const span = clone.querySelector("span");
+        span.textContent = name;
+        span.dataset.tagId = id;
+        const div = clone.querySelector("div");
+        div.addEventListener("click", removeTag);
+        tagList.appendChild(clone);
+        updateQuery();
         fetchMore(true);
     }
     
     function tagInput(event) {
         const options = tagDatalist.children;
-        //tagField.placeholder = "";
         for (var i = 0; i < options.length; i++) {
             const option = options[i];
             if(option.value.toLowerCase() == tagField.value.toLowerCase()) {
                 tagField.value = "";
-                const clone = document.importNode(tagTemplate.content, true);
-                const span = clone.querySelector("span");
-                span.textContent = option.value;
-                span.dataset.tagId = option.dataset.tagId;
-                const div = clone.querySelector("div");
-                div.addEventListener("click", removeTag);
-                tagList.appendChild(clone);
-                fetchMore(true);
+                addTag(option.value, option.dataset.tagId);
             }
         }
     }
+
+    // Add tags
+    {% for tag in selected_tags %}
+    addTag("{{ tag.name }}", {{ tag.id }});
+    {% endfor %}
     
     // Initialize masonry
     validateAndUpdateNumberOfColumns({});
@@ -201,7 +222,6 @@
     searchField.addEventListener("input", formInput);
     document.addEventListener("scroll",onScroll);
     window.addEventListener("resize", validateAndUpdateNumberOfColumns);
-    
   </script>
 </main>
 {% endblock %}

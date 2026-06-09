@@ -367,6 +367,7 @@ def search_portrait(request):
         "lang": translation.get_language(),
         "query": form.cleaned_data["query"],
         "tags": Tag.objects.all(),
+        "selected_tags": Tag.objects.filter(id__in=form.cleaned_data["tag"]),
         "dark": True,
         "show_dels": lang != 'en'
     })
