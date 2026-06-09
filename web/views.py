@@ -363,11 +363,12 @@ def search_portrait(request):
         return redirect_dels_index()
     form = SpeciesSearchForm(request.GET)
     is_valid_or_raise(form)
+    tags = Tag.objects.filter(species__portrait__published=True).distinct()
     return render(request, "web/search_portrait.html", {
         "lang": translation.get_language(),
         "query": form.cleaned_data["query"],
-        "tags": Tag.objects.all(),
-        "selected_tags": Tag.objects.filter(id__in=form.cleaned_data["tag"]),
+        "tags": tags,
+        "selected_tags": tags.filter(id__in=form.cleaned_data["tag"]),
         "dark": True,
         "show_dels": lang != 'en'
     })
