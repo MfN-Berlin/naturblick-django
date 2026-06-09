@@ -23,7 +23,17 @@
       {% inline_svg 'search.svg' %}
     </label>
     <input id="species-search-field" type="search" autocomplete="off" placeholder="{% translate 'Artname' %}" value="{{ query }}"/>
+
+    <input id="species-tag-field" type="search" autocomplete="off" placeholder="{% translate 'Tag' %}" value="" list="species-tags"/>
+    <datalist id="species-tags">
+      {% for tag in tags %}
+      <option value="{{ tag.name }}" data-tag-id="{{ tag.id }}"></option>
+      {% endfor %}
+    </datalist>
   </form>
+  <div id="selected-tags">
+    <p>{% translate 'Ausgewählte Tags' %}:</p>
+  </div>
   <div id="species-masonry">
   </div>
   <script data-lang="{{ lang }}">
@@ -31,6 +41,10 @@
     const masonry = document.getElementById("species-masonry");
     const search = document.getElementById("species-search");
     const searchField = document.getElementById("species-search-field");
+    const tagField = document.getElementById("species-tag-field");
+    const tagDatalist = document.getElementById("species-tags");
+    const tagList = document.getElementById("selected-tags");
+
     let offset = 0;
     let numberOfColumns = 0;
     let hasMore = true;
@@ -91,6 +105,11 @@
         if(searchField.value) {
             searchParams.set("query", searchField.value);
         }
+        const tags = tagList.querySelectorAll("span");
+        for (var i = 0; i < tags.length; i++) {
+            const tag = tags[i];
+            searchParams.append("tag", tag.dataset.tagId);
+        }
         xhr.open("GET", `${url}?${searchParams}`);
         xhr.responseType = "document";
         xhr.send();
@@ -145,9 +164,31 @@
         }
     }
 
+    function removeTag(event) {
+        tagList.removeChild(event.target);
+        fetchMore(true);
+    }
+    
+    function tagInput(event) {
+        const options = tagDatalist.children;
+        //tagField.placeholder = "";
+        for (var i = 0; i < options.length; i++) {
+            const option = options[i];
+            if(option.value.toLowerCase() == tagField.value.toLowerCase()) {
+                tagField.value = "";
+                const tagElement = document.createElement("span");
+                tagElement.textContent = option.value;
+                tagElement.dataset.tagId = option.dataset.tagId;
+                tagElement.addEventListener("click", removeTag);
+                tagList.appendChild(tagElement);
+                fetchMore(true);
+            }
+        }
+    }
+    
     // Initialize masonry
     validateAndUpdateNumberOfColumns({});
-
+    tagField.addEventListener("input", tagInput);
     search.addEventListener("submit",formSubmit);
     searchField.addEventListener("input", formInput);
     document.addEventListener("scroll",onScroll);

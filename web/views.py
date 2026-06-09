@@ -366,6 +366,7 @@ def search_portrait(request):
     return render(request, "web/search_portrait.html", {
         "lang": translation.get_language(),
         "query": form.cleaned_data["query"],
+        "tags": Tag.objects.all(),
         "dark": True,
         "show_dels": lang != 'en'
     })
