@@ -447,12 +447,12 @@ def delsbedienung(request):
     return web_render(request, "delsbedienung")
 
 
-def naturespots(request):
+def observationspots(request):
     longitude = request.GET.get("lng", 13.3792)
     latitude = request.GET.get("lat", 52.5295)
     zoom = request.GET.get("zoomLevel", 9)
 
-    return render(request, "web/naturespots.html", context={
+    return render(request, "web/observationspots.html", context={
         "longitude": longitude,
         "latitude": latitude,
         "zoom": zoom
@@ -546,21 +546,20 @@ def map_proxy(request):
     return to_geojson_view(r.json())
 
 
-def geo_proxy(request):
+def observation_spots_proxy(request):
     return JsonResponse(requests.get(
-        f"{settings.PLAYBACK_URL}naturespots"
+        f"{settings.PLAYBACK_URL}observationspots"
+    ).json())
+
+def spotobs_proxy(request):
+    return JsonResponse(requests.get(
+        f"{settings.PLAYBACK_URL}spotobs"
     ).json())
 
 
-def naturespot_proxy(request, id):
-    return JsonResponse(requests.get(
-        f"{settings.PLAYBACK_URL}naturespots"
-    ).json())
-
-
-def naturespotportrait(request, id):
+def observationspotportrait(request, id):
     language = translation.get_language()
-    ids_json = requests.get(f"{settings.PLAYBACK_URL}naturespots/{id}".format(id=id)).json()
+    ids_json = requests.get(f"{settings.PLAYBACK_URL}observationspots/{id}".format(id=id)).json()
 
     name_field = "gername"
     if language == 'en':
@@ -575,35 +574,9 @@ def naturespotportrait(request, id):
         "portrait__species_id"  # we want to know whether there is an artportrait of this species or not
     )]
 
-    schutzstatus = ""
-    match ids_json["schutzstatus"]:
-        case 'a_nd':
-            schutzstatus = _("Naturdenkmal")
-        case 'b_spa':
-            schutzstatus = _("Special protected area")
-        case 'c_ffh':
-            schutzstatus = _("Fauna-Flora-Habitat")
-        case 'd_np':
-            schutzstatus = _("Naturpark")
-        case 'e_fnd':
-            schutzstatus = _("Naturdenkmale Bäume und Findlinge")
-        case 'f_fspr':
-            schutzstatus = _("Flächen mit spezieller Regelung")
-        case 'g_glb':
-            schutzstatus = _("geschützter Landschaftsbestandteil")
-        case 'h_nsg':
-            schutzstatus = _("Naturschutzgebiet")
-        case 'i_lsg':
-            schutzstatus = _("Landschaftsschutzgebiet")
-        case 'j_br':
-            schutzstatus = _("Biosphärenreservat")
-        case 'k_natp':
-            schutzstatus = _("Nationalpark")
 
-    return web_render(request, "naturespotportrait", {
+    return web_render(request, "observationspotportrait", {
         "id": id,
-        "name": ids_json["name"],
-        "schutzstatus": schutzstatus,
         "data": data
     }
                       )

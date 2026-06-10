@@ -1,0 +1,127 @@
+{% extends "web/page_base.html" %}
+
+{% load static web_tags i18n l10n %}
+
+{% block js %}
+<script src='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'></script>
+{% endblock %}
+
+{% block css %}
+<link href='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css' rel='stylesheet'/>
+<link rel="stylesheet" href="{% static 'web/css/map.css' %}">
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div id="map" class="map">
+
+    <div id="map-radio" class="map-overlay">
+<!--        <input type="radio" name="group" value="all" checked><label>{% translate "Alle" %}</label><br>-->
+<!--        <input type="radio" name="group" value="Winter"><label>{% translate "Winter" %}</label><br>-->
+<!--        <input type="radio" name="group" value="Frühling"><label>{% translate "Frühling" %}</label><br>-->
+<!--        <input type="radio" name="group" value="Sommer"><label>{% translate "Sommer" %}</label><br>-->
+<!--        <input type="radio" name="group" value="Herbst"><label>{% translate "Herbst" %}</label><br>-->
+        <input type="radio" name="group" value="hdb_a"><label>"min_cluster_size": 10</label><br>
+        <input type="radio" name="group" value="hdb_b"><label>"min_cluster_size": 20</label><br>
+        <input type="radio" name="group" value="hdb_c"><label>"min_cluster_size": 40</label><br>
+        <input type="radio" name="group" value="hdb_d"><label>"min_cluster_size": 80</label><br>
+        <input type="radio" name="group" value="hdb_e"><label>"min_cluster_size": 40, "min_samples": 10</label><br>
+        <input type="radio" name="group" value="hdb_f"><label>"min_cluster_size": 40, "min_samples": 20</label><br>
+        <input type="radio" name="group" value="hdb_g"><label>"min_cluster_size": 80, "min_samples": 10</label><br>
+        <input type="radio" name="group" value="hdb_h"><label>"min_cluster_size": 80, "min_samples": 40</label><br>
+<!--        <input type="radio" name="group" value="dbscan_a"><label>{% translate "dbscan_a" %}</label><br>-->
+<!--        <input type="radio" name="group" value="dbscan_b"><label>{% translate "dbscan_b" %}</label><br>-->
+    </div>
+</div>
+
+<script>
+    const mfn = [{{ longitude|unlocalize }}, {{ latitude|unlocalize }}];
+
+    var map = new maplibregl.Map({
+        container: 'map',
+        style: 'https://tiles.openfreemap.org/styles/bright',
+        center: mfn,
+        zoom: {{ zoom }},
+        cluster: false,
+    });
+
+    map.on('load', () => {
+        map.addSource('observationspots', {
+            'type': 'geojson',
+            'data': "{% url 'observation_spots_proxy' %}"
+        });
+
+        map.addSource('spotobs', {
+            'type': 'geojson',
+            'data': "{% url 'spotobs_proxy' %}"
+        });
+
+        map.addLayer({
+            'id': 'observationspots',
+            'type': 'fill',
+            'source': 'observationspots',
+            'paint': {
+                'fill-color': '#d95f02',
+                'fill-opacity': 0.8
+            }
+        });
+
+        map.addLayer({
+            'id': 'spotobs',
+            'type': 'circle',
+            'source': 'spotobs',
+            'paint': {
+                'circle-color': '#1f78b4',
+                'circle-opacity': 0.8,
+                'circle-radius': 2
+            }
+        });
+    });
+
+    map.on("click", "observationspots", async (e) => {
+          const id = e.features[0].properties.id
+          let url = "{% url 'observationspotportrait' 0 %}".replace("0", id);
+          window.location.href = url;
+    });
+
+    map.on("mouseenter", ["observationspots"], () => {
+      map.getCanvas().style.cursor = "pointer";
+    });
+
+    map.on("mouseleave", ["observationspots"], () => {
+      map.getCanvas().style.cursor = "";
+    });
+
+    map.on("moveend", () => {
+        const center = map.getCenter();
+        const current = new URL(window.location.href);
+        current.searchParams.set("lat", center.lat);
+        current.searchParams.set("lng", center.lng);
+        current.searchParams.set("zoomLevel", map.getZoom());
+        history.pushState({}, "", current.toString());
+    });
+
+    document.querySelectorAll('input[name="group"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.value == 'all') {
+                map.setFilter('observationspots', undefined);
+                map.setFilter('spotobs', undefined);
+            } else {
+                map.setFilter('observationspots', [
+                  '==',
+                  ['get', 'algorithm'],
+                  e.target.value
+                ]);
+           /*     map.setFilter('spotobs', [
+                  '==',
+                  ['get', 'algorithm'],
+                  e.target.value
+                ]); */
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block footer %}{% endblock %}
