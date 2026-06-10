@@ -363,9 +363,15 @@ def search_portrait(request):
         return redirect_dels_index()
     form = SpeciesSearchForm(request.GET)
     is_valid_or_raise(form)
+    if lang == "en":
+        tags = Tag.objects.filter(species__portrait__published=True).distinct().order_by("english_name")
+    else:
+        tags = Tag.objects.filter(species__portrait__published=True).distinct().order_by("name")
     return render(request, "web/search_portrait.html", {
         "lang": translation.get_language(),
         "query": form.cleaned_data["query"],
+        "tags": tags,
+        "selected_tags": tags.filter(id__in=form.cleaned_data["tag"]),
         "dark": True,
         "show_dels": lang != 'en'
     })

@@ -148,7 +148,7 @@ body {
                 li {
                     background-color: var(--character);
                     border-radius: var(--small-radius);
-                    padding: 6px 12px;
+                    padding: 4px 8px;
                     p {
                         margin: 0;
                     }
