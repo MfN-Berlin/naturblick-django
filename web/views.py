@@ -458,6 +458,17 @@ def observationspots(request):
         "zoom": zoom
     })
 
+def observationspotsselect(request):
+    longitude = request.GET.get("lng", 13.3792)
+    latitude = request.GET.get("lat", 52.5295)
+    zoom = request.GET.get("zoomLevel", 9)
+
+    return render(request, "web/observationspotsselect.html", context={
+        "longitude": longitude,
+        "latitude": latitude,
+        "zoom": zoom
+    })
+
 
 DELS_TO_DE_FALLBACKS = ['imprint', 'digitalaccessibilitystatement']
 
@@ -549,6 +560,18 @@ def map_proxy(request):
 def observation_spots_proxy(request):
     return JsonResponse(requests.get(
         f"{settings.PLAYBACK_URL}observationspots"
+    ).json())
+
+def observation_spotsselect_proxy(request):
+    lat = request.GET.get('lat')
+    lng = request.GET.get('lng')
+    dist = request.GET.get('dist')
+    return JsonResponse(requests.get(
+        f"{settings.PLAYBACK_URL}observationgeospots", {
+            "lat": lat,
+            "lng": lng,
+            "dist": dist
+        }
     ).json())
 
 def spotobs_proxy(request):
