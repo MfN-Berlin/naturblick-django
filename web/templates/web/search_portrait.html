@@ -12,7 +12,7 @@
 {% block header_title %}
   {% inline_svg 'all.svg' %}
   <h1>{% translate "Artportraits" %}</h1>
-  <p>{% translate "Finde Tiere und Pflanzen, indem du einen Artnamen eingibst." %}</p>
+  <p>{% translate "Finde Tiere und Pflanzen, indem du einen Artnamen eingibst oder nach Schlagwörtern sortierst." %}</p>
 {% endblock %}
 
 {% block content %}
@@ -24,10 +24,14 @@
     </label>
     <input id="species-search-field" type="search" autocomplete="off" placeholder="{% translate 'Artname' %}" value="{{ query }}"/>
 
-    <input id="species-tag-field" type="search" autocomplete="off" placeholder="{% translate 'Tag' %}" value="" list="species-tags"/>
+    <input id="species-tag-field" type="search" autocomplete="off" placeholder="{% translate 'Schlagwort' %}" value="" list="species-tags"/>
     <datalist id="species-tags">
       {% for tag in tags %}
+      {% if LANGUAGE_CODE != 'en' %}
       <option value="{{ tag.name }}" data-tag-id="{{ tag.id }}"></option>
+      {% else %}
+      <option value="{{ tag.english_name }}" data-tag-id="{{ tag.id }}"></option>
+      {% endif %}
       {% endfor %}
     </datalist>
   </form>
@@ -38,7 +42,7 @@
     </div>
   </template>
   <div id="selected-tags">
-    <p>{% translate 'Ausgewählte Tags' %}:</p>
+    <p>{% translate 'Ausgewählte Schlagwörter' %}:</p>
   </div>
   <div id="species-masonry">
   </div>
@@ -212,7 +216,11 @@
 
     // Add tags
     {% for tag in selected_tags %}
+    {% if LANGUAGE_CODE != 'en' %}
     addTag("{{ tag.name }}", {{ tag.id }});
+    {% else %}
+    addTag("{{ tag.english_name }}", {{ tag.id }});
+    {% endif %}
     {% endfor %}
     
     // Initialize masonry
