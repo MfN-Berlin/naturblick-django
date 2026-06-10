@@ -165,18 +165,21 @@ msgid "Digitale Barrierefreiheit"
 msgstr "Digital accessibility statement"
 
 #: templates/web/search_portrait.html:15
-msgid "Finde Tiere und Pflanzen, indem du einen Artnamen eingibst oder nach Schlagwörtern sortierst."
-msgstr "Find animals and plants by entering a species name or sorting them by tags."
+msgid ""
+"Finde Tiere und Pflanzen, indem du einen Artnamen eingibst oder nach "
+"Schlagwörtern sortierst."
+msgstr ""
+"Find animals and plants by entering a species name or sorting them by tags."
 
 #: templates/web/search_portrait.html:25
 msgid "Artname"
 msgstr "Species name"
 
-#: templates/web/search_portrait.html:27
-msgid "Schlagwort"
-msgstr "Tag name"
+#: templates/web/search_portrait.html:28
+msgid "Schlagwort auswählen"
+msgstr "Select tag"
 
-#: templates/web/search_portrait.html:41
+#: templates/web/search_portrait.html:45
 msgid "Ausgewählte Schlagwörter"
 msgstr "Selected tags"
 

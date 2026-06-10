@@ -24,16 +24,16 @@
     </label>
     <input id="species-search-field" type="search" autocomplete="off" placeholder="{% translate 'Artname' %}" value="{{ query }}"/>
 
-    <input id="species-tag-field" type="search" autocomplete="off" placeholder="{% translate 'Schlagwort' %}" value="" list="species-tags"/>
-    <datalist id="species-tags">
+    <select id="species-tag-field"/>
+    <option value="0">{% translate 'Schlagwort auswählen' %}</option>
       {% for tag in tags %}
       {% if LANGUAGE_CODE != 'en' %}
-      <option value="{{ tag.name }}" data-tag-id="{{ tag.id }}"></option>
+      <option value="{{ tag.id }}">{{ tag.name }}</option>
       {% else %}
-      <option value="{{ tag.english_name }}" data-tag-id="{{ tag.id }}"></option>
+      <option value="{{ tag.id }}">{{ tag.english_name }}</option>
       {% endif %}
       {% endfor %}
-    </datalist>
+    </select>
   </form>
   <template id="selected-tag-template">
     <div>
@@ -198,14 +198,11 @@
         fetchMore(true);
     }
     
-    function tagInput(event) {
-        const options = tagDatalist.children;
-        for (var i = 0; i < options.length; i++) {
-            const option = options[i];
-            if(option.value.toLowerCase() == tagField.value.toLowerCase()) {
-                tagField.value = "";
-                addTag(option.value, option.dataset.tagId);
-            }
+    function tagChange(event) {
+        if(tagField.selectedIndex != 0 && tagField.selectedOptions.length > 0) {
+            const option = tagField.selectedOptions[0];
+            addTag(option.text, option.value);
+            tagField.selectedIndex = 0;
         }
     }
 
@@ -220,7 +217,7 @@
     
     // Initialize masonry
     validateAndUpdateNumberOfColumns({});
-    tagField.addEventListener("input", tagInput);
+    tagField.addEventListener("change", tagChange);
     search.addEventListener("submit",formSubmit);
     searchField.addEventListener("input", formInput);
     document.addEventListener("scroll",onScroll);

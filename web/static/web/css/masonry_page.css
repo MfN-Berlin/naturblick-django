@@ -24,7 +24,7 @@ main {
         input[type="submit"] {
             display: none;
         }
-        input[type="search"] {
+        input[type="search"], select {
             width: 100%;
             max-width: 400px;
             font-size: var(--font-size-big);
