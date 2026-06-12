@@ -9,11 +9,13 @@ from django.core import management
 from django.http import FileResponse, HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import generics
 from rest_framework.views import APIView
 
 from naturblick import settings
 from .leicht_db import create_leicht_db, leicht_portrait
-from .models import Portrait
+from .models import Portrait, Group
+from .serializers import GroupSerializer
 from .utils import create_sqlite_file
 from .utils import cropped_image
 
@@ -81,6 +83,9 @@ class AppContentCharacterValue(APIView):
             data = json.load(f)
         return Response(data)
 
+class GroupsList(generics.ListAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
 
 @api_view(['GET'])
 def specgram(request, filename):
