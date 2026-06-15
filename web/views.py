@@ -193,11 +193,12 @@ def endangerstatus(species, language):
         return mark_safe(endangervalue)
 
 
-def mini_artportrait(request, species):
+def mini_artportrait(request, species, redirected_from):
     language = translation.get_language()
     return render(request, "web/mini-portrait.html", {
         "species": species,
         "species_name": species.engname if language == "en" else species.gername,
+        "redirected_from": redirected_from,
         "dark": True,
         "wikipedia": f"https://en.wikipedia.org/wiki/{quote(species.sciname)}" if language == 'en' else f"https://de.wikipedia.org/wiki/{quote(species.sciname)}",
         "species_avatar": species.avatar_new.imagefile.image.url if species.avatar_new else None
@@ -209,6 +210,10 @@ def portrait(request, id):
 
     try:
         species = Species.objects.get(id=id)
+        redirected_from = None
+        if species.accepted_species:
+            redirected_from = species.sciname
+            species = species.accepted_species
     except Species.DoesNotExist:
         raise Http404()
 
@@ -229,13 +234,13 @@ def portrait(request, id):
                 "unambigousfeature_set",
                 "similarspecies_set__species__avatar_new__imagefile",
             )
-            .get(species_id=id, language=language)
+            .get(species_id=species.id, language=language)
         )
     except:
         if language == 'dels':
             return redirect_dels_index()
 
-        return mini_artportrait(request, species)
+        return mini_artportrait(request, species, redirected_from)
 
     descriptions = [portrait.short_description, portrait.male_description, portrait.female_description,
                     portrait.juvenile_description] if fauna else [portrait.short_description,
@@ -280,8 +285,8 @@ def portrait(request, id):
 
     return render(request, "web/portrait.html", context={
         "og_list": ogs_list,
-        "id": id,
         "dark": True,
+        "redirected_from": redirected_from,
         "portrait": portrait,
         "descriptions": [markdown.markdown(x) for x in descriptions if x is not None],
         "inthecity": [markdown.markdown(x) for x in [portrait.city_habitat, portrait.human_interaction] if

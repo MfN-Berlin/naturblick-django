@@ -1,5 +1,5 @@
 .header-title {
-    p:first-of-type {
+    .scientific-name {
         color: var(--happy);
         font-weight: 900;
         font-size: var(--font-size-h3);
@@ -7,11 +7,21 @@
         font-style: italic;
     }
 
-    p:last-of-type {
+    .additional-names {
         font-style: italic;
-        font-size: var(--font-size-regular);
-        line-height: var(--line-height-regular);
         opacity: .5;
+    }
+
+    .redirected-from {
+        color: var(--fun);
+        span {
+            font-style: italic;
+        }
+    }
+
+    .wikipedia-link {
+        text-decoration: underline;
+        color: var(--character);
     }
 }
 
