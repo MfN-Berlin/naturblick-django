@@ -33,5 +33,6 @@ urlpatterns = [
         r'^species/portrait[^/]*/(?P<species_id>[a-z]+_[a-f0-9]{8})/?$', views.old_artportrait),
     path('plantnetdemo', views.plantnetdemo, name="plantnetdemo"),
     path('plantnetdemo/<uuid:thumbnail_id>', views.plantnetresults, name="plantnetresults"),
-    path('plantnetdemo/<uuid:thumbnail_id>.jpeg', views.plantnetimg, name="plantnetimg")
+    path('plantnetdemo/<uuid:thumbnail_id>.jpeg', views.plantnetimg, name="plantnetimg"),
+    path('naturblick-leicht-ci', views.nb_leicht_ci, name='nb_leicht_ci')
 ]
