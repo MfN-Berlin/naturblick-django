@@ -12,7 +12,7 @@
 {% block header_title %}
   {% inline_svg 'all.svg' %}
   <h1>{% translate "Artportraits" %}</h1>
-  <p>{% translate "Finde Tiere und Pflanzen, indem du einen Artnamen eingibst." %}</p>
+  <p>{% translate "Finde Tiere und Pflanzen, indem du einen Artnamen eingibst oder nach Schlagwörtern sortierst." %}</p>
 {% endblock %}
 
 {% block content %}
@@ -23,7 +23,27 @@
       {% inline_svg 'search.svg' %}
     </label>
     <input id="species-search-field" type="search" autocomplete="off" placeholder="{% translate 'Artname' %}" value="{{ query }}"/>
+
+    <input id="species-tag-field" type="search" autocomplete="off" placeholder="{% translate 'Schlagwort' %}" value="" list="species-tags"/>
+    <datalist id="species-tags">
+      {% for tag in tags %}
+      {% if LANGUAGE_CODE != 'en' %}
+      <option value="{{ tag.name }}" data-tag-id="{{ tag.id }}"></option>
+      {% else %}
+      <option value="{{ tag.english_name }}" data-tag-id="{{ tag.id }}"></option>
+      {% endif %}
+      {% endfor %}
+    </datalist>
   </form>
+  <template id="selected-tag-template">
+    <div>
+      <span></span>
+      {% inline_svg 'close-small.svg' %}
+    </div>
+  </template>
+  <div id="selected-tags">
+    <p>{% translate 'Ausgewählte Schlagwörter' %}:</p>
+  </div>
   <div id="species-masonry">
   </div>
   <script data-lang="{{ lang }}">
@@ -31,6 +51,10 @@
     const masonry = document.getElementById("species-masonry");
     const search = document.getElementById("species-search");
     const searchField = document.getElementById("species-search-field");
+    const tagField = document.getElementById("species-tag-field");
+    const tagDatalist = document.getElementById("species-tags");
+    const tagList = document.getElementById("selected-tags");
+    const tagTemplate = document.getElementById("selected-tag-template");
     let offset = 0;
     let numberOfColumns = 0;
     let hasMore = true;
@@ -91,6 +115,11 @@
         if(searchField.value) {
             searchParams.set("query", searchField.value);
         }
+        const tags = tagList.querySelectorAll("span");
+        for (var i = 0; i < tags.length; i++) {
+            const tag = tags[i];
+            searchParams.append("tag", tag.dataset.tagId);
+        }
         xhr.open("GET", `${url}?${searchParams}`);
         xhr.responseType = "document";
         xhr.send();
@@ -109,7 +138,13 @@
         } else {
             current.searchParams.delete("query");
         }
-        history.pushState({}, "", current.toString());
+        const tags = tagList.querySelectorAll("span");
+        current.searchParams.delete("tag");
+        for (var i = 0; i < tags.length; i++) {
+            const tag = tags[i];
+            current.searchParams.append("tag", tag.dataset.tagId);
+        }
+        history.replaceState({}, "", current.toString());
     }
 
     function formSubmit(event) {
@@ -145,14 +180,51 @@
         }
     }
 
+    function removeTag(event) {
+        tagList.removeChild(event.target.closest("div"));
+        updateQuery();
+        fetchMore(true);
+    }
+
+    function addTag(name, id) {
+        const clone = document.importNode(tagTemplate.content, true);
+        const span = clone.querySelector("span");
+        span.textContent = name;
+        span.dataset.tagId = id;
+        const div = clone.querySelector("div");
+        div.addEventListener("click", removeTag);
+        tagList.appendChild(clone);
+        updateQuery();
+        fetchMore(true);
+    }
+    
+    function tagInput(event) {
+        const options = tagDatalist.children;
+        for (var i = 0; i < options.length; i++) {
+            const option = options[i];
+            if(option.value.toLowerCase() == tagField.value.toLowerCase()) {
+                tagField.value = "";
+                addTag(option.value, option.dataset.tagId);
+            }
+        }
+    }
+
+    // Add tags
+    {% for tag in selected_tags %}
+    {% if LANGUAGE_CODE != 'en' %}
+    addTag("{{ tag.name }}", {{ tag.id }});
+    {% else %}
+    addTag("{{ tag.english_name }}", {{ tag.id }});
+    {% endif %}
+    {% endfor %}
+    
     // Initialize masonry
     validateAndUpdateNumberOfColumns({});
-
+    tagField.addEventListener("input", tagInput);
     search.addEventListener("submit",formSubmit);
     searchField.addEventListener("input", formInput);
     document.addEventListener("scroll",onScroll);
     window.addEventListener("resize", validateAndUpdateNumberOfColumns);
-    
   </script>
 </main>
 {% endblock %}

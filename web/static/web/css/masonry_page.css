@@ -14,11 +14,11 @@ main {
     form {
         display: flex;
         align-items: flex-end;
+        column-gap: var(--half-pad);
         justify-content: center;
         padding-bottom: var(--default-pad);
         label {
             display: flex;
-            margin-right: 16px;
             cursor:pointer;
         }
         input[type="submit"] {
@@ -42,5 +42,27 @@ main {
             outline: none;
             border-bottom-color: var(--white);
         }
+    }
+}
+#selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--half-pad);
+    margin: 0 var(--half-pad) var(--half-pad) var(--half-pad);
+    div {
+        display: flex;
+        column-gap: 8px;
+        align-items: center;
+        background-color: var(--relax);
+        border-radius: var(--small-radius);
+        padding: 4px 8px;
+        cursor: pointer;
+    }
+    p {
+        margin: 0;
+    }
+    p:only-child {
+        display: none;
     }
 }
