@@ -71,7 +71,7 @@ msgid "Vögel"
 msgstr "Birds"
 
 #: templates/web/mini-portrait.html:14 templates/web/portrait.html:16
-msgid "Weiterleitet von:"
+msgid "Weitergeleitet von:"
 msgstr "Redirected from:"
 
 #: templates/web/mini-portrait.html:16
