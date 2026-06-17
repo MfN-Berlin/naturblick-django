@@ -1,6 +1,6 @@
 {% extends "web/page_base.html" %}
 
-{% load static web_tags %}
+{% load static web_tags i18n %}
 
 {% block og %}
 {% include "partials/og.html" with title=species_name description=descriptions|first abs_img_url=request.scheme|add:"://"|add:request.META.HTTP_HOST|add:portrait.descmeta.image_file.image.url %}
@@ -9,9 +9,12 @@
 
 {% block header_title %}
 {% group_svg portrait.species.group %}
-<p>{{ portrait.species.sciname }}</p>
+<p class="scientific-name">{{ portrait.species.sciname }}</p>
 <h1>{{ species_name }}</h1>
-<p>{{ additional_name }}</p>
+<p class="additional-names">{{ additional_name }}</p>
+{% if redirected_from %}
+<p class="redirected-from">{% translate "Weitergeleitet von:" %} <span>{{ redirected_from }}</span></p>
+{% endif %}
 {% endblock %}
 
 {% block js %}
