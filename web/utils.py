@@ -1,4 +1,6 @@
 from django.utils.translation import gettext as _
+from django.http import Http404
+from requests.exceptions import HTTPError
 
 def from_time(now, time):
     delta = now - time
