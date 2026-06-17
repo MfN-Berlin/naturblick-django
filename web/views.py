@@ -957,3 +957,9 @@ def plantnetimg(request, thumbnail_id):
         content_type=r.headers.get("Content-Type", "image/jpeg")
     )
 
+def nb_leicht_ci(request):
+    return render(
+        request,
+        "web/nb_leicht_ci.html",
+        context={})
+    
