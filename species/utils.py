@@ -259,6 +259,7 @@ def create_sqlite_file():
     insert_characters(sqlite_cursor)
 
     sqlite_conn.commit()
+    sqlite_cursor.execute("VACUUM;")
     sqlite_conn.close()
 
     return temp_file.name
