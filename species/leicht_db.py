@@ -45,6 +45,7 @@ def create_leicht_db():
 
     insert_portrait(sqlite_cursor)
     sqlite_conn.commit()
+    sqlite_cursor.execute("VACUUM;")
     sqlite_conn.close()
 
     return temp_file.name
