@@ -31,7 +31,7 @@
         <td>{{ result.species.scientificNameWithoutAuthor }}</td>
         <td>{{ result.species.genus.scientificNameWithoutAuthor }}</td>
         <td>{{ result.species.family.scientificNameWithoutAuthor }}</td>
-        <td><a href="https://www.gbif.org/species/{{ result.gbif.id }}">{{ result.gbif.id }}</a>
+        <td><a href="https://old.gbif.org/species/{{ result.gbif.id }}">{{ result.gbif.id }}</a>
       </tr>
       {% endfor %}
     </tbody>
@@ -54,7 +54,7 @@
         <td>{{ result.score }}</td>
         <td>{{ result.genus.scientificName }}</td>
         <td>{{ result.genus.family.scientificNameWithoutAuthor }}</td>
-        <td><a href="https://www.gbif.org/species/{{ result.gbif.id }}">{{ result.gbif.id }}</a>
+        <td><a href="https://old.gbif.org/species/{{ result.gbif.id }}">{{ result.gbif.id }}</a>
       </tr>
       {% endfor %}
     </tbody>
@@ -75,7 +75,7 @@
       <tr>
         <td>{{ result.score }}</td>
         <td>{{ result.family.scientificName }}</td>
-        <td><a href="https://www.gbif.org/species/{{ result.gbif.id }}">{{ result.gbif.id }}</a>
+        <td><a href="https://old.gbif.org/species/{{ result.gbif.id }}">{{ result.gbif.id }}</a>
       </tr>
       {% endfor %}
     </tbody>
