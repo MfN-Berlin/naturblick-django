@@ -544,7 +544,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     def search(self, obj):
         plantnet_url = f'https://identify.plantnet.org/k-world-flora/species?search={obj.sciname}'
         plantnet_img_url = static('species/plantnet_white_border_marker.png')
-        gbif_url = f'https://www.gbif.org/species/search?q={obj.sciname}'
+        gbif_url = f'https://old.gbif.org/species/search?q={obj.sciname}'
         gbif_img_url = static('species/gbif-mark-green-logo.png')
         scientific_url_name = obj.sciname.replace(' ', '_')
         wikipedia_url = f'https://en.wikipedia.org/wiki/{scientific_url_name}'
@@ -575,7 +575,7 @@ class SpeciesAdmin(admin.ModelAdmin):
             else:
                 return '-'
         else:
-            gbif_url = f'https://www.gbif.org/species/{obj.gbifusagekey}'
+            gbif_url = f'https://old.gbif.org/species/{obj.gbifusagekey}'
             return format_html(f'<a href="{{}}">{obj.gbifusagekey}</a>', gbif_url)
 
     @admin.display(description='Synonym of')
