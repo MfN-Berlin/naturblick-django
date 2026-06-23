@@ -5,17 +5,24 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from django import forms
 from django.core import management
+from django.core.exceptions import BadRequest
+from django.db import connection
+from django.db.models import Prefetch
 from django.http import FileResponse, HttpResponse
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from django.utils import translation
 from rest_framework import generics
+from rest_framework.decorators import api_view
+from rest_framework.exceptions import NotFound
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from naturblick import settings
+from web.views import is_valid_or_raise
 from .leicht_db import create_leicht_db, leicht_portrait
-from .models import Portrait, Group
-from .serializers import GroupSerializer
+from .models import Portrait, Group, Species, SpeciesName, FaunaportraitAudioFile, Faunaportrait, Floraportrait
+from .serializers import GroupSerializer, DescMetaSerializer
 from .utils import create_sqlite_file
 from .utils import cropped_image
 
@@ -83,9 +90,11 @@ class AppContentCharacterValue(APIView):
             data = json.load(f)
         return Response(data)
 
+
 class GroupsList(generics.ListAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+
 
 @api_view(['GET'])
 def specgram(request, filename):
@@ -119,3 +128,70 @@ def specgram(request, filename):
         ]
         subprocess.run(magick_cmd, check=True)
         return FileResponse(open(specgram_path, "rb"))
+
+
+def get_accepted_portrait_species_id(lang, s_id):
+    query = """
+             SELECT
+            COALESCE(p2.species_id, p1.species_id),
+            CASE WHEN p2.species_id IS NOT NULL THEN s.sciname ELSE NULL END
+        FROM species AS s
+        LEFT JOIN portrait p1 ON p1.species_id = s.id AND p1.language = %s
+        LEFT JOIN portrait p2 ON p2.species_id = s.accepted_species_id AND p2.language = %s
+        WHERE s.id = %s;
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(query, [lang, lang, s_id])
+        result = cursor.fetchone()
+
+    if result:
+        species_id, sciname = result
+        return species_id, sciname
+    else:
+        return None, None
+
+
+
+#
+# called by playback HttpService and platform
+class VolunteerImages(generics.GenericAPIView):
+    class PortraitForm(forms.Form):
+        id = forms.IntegerField(required=False)
+
+        def clean(self):
+            cleaned_data = super().clean()
+            if not cleaned_data.get("id"):
+                raise forms.ValidationError(
+                    "id must be specified."
+                )
+
+    def get(self, request):
+        lang = translation.get_language()
+        form = self.PortraitForm(self.request.query_params)
+        is_valid_or_raise(form)
+        s_id = form.cleaned_data["id"]
+
+        if s_id:
+            species_id, _ = get_accepted_portrait_species_id(s_id=s_id, lang=lang)
+
+            if not species_id:
+                raise NotFound()
+
+            species_qs = Species.objects.filter(id=species_id).first()
+
+            is_fauna = species_qs.group.nature == 'fauna'
+            portrait_qs = Faunaportrait.objects.select_related(
+                'descmeta') if is_fauna else Floraportrait.objects.select_related('descmeta')
+
+            portrait_qs = portrait_qs.filter(species__id=species_id)
+            portrait_qs = portrait_qs.filter(language=lang).first()
+
+            if not portrait_qs:
+                raise NotFound()
+
+            descmeta_serializer = DescMetaSerializer(portrait_qs)
+        else:
+            raise BadRequest()
+
+        return Response(descmeta_serializer.data)
