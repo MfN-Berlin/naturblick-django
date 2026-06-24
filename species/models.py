@@ -191,6 +191,8 @@ class Species(models.Model):
     is_hidden = models.BooleanField(null=False, default=False)
     rank = models.CharField(blank=True, null=True, max_length=255)
     status = models.CharField(blank=True, null=True, max_length=255)
+    parent = models.ForeignKey("self", on_delete=models.PROTECT, blank=True, null=True, related_name="parent_set")
+    accepted = models.ForeignKey("self", on_delete=models.PROTECT, blank=True, null=True, related_name="accepted_set")
     gbif_incompatible = models.BooleanField(default=False, verbose_name="Taxa is incompatible with the GBIF taxonomy")
     avatar_not_found = models.BooleanField(default=False, verbose_name="Avatar was not found")
     primary_name_not_found = models.BooleanField(default=False, verbose_name="Primary name was not found")
@@ -212,15 +214,40 @@ class Species(models.Model):
 
             json = response.json()
 
-            is_accepted = not ('acceptedKey' in json)
             scientific_name = json['canonicalName']
 
-            # Always set rank and status from gbif response
+            if 'parentKey' in json and json['parentKey']:
+                try:
+                    parent = Species.objects.get(gbifusagekey=json['parentKey'])
+                except Species.DoesNotExist:
+                    raise ValidationError(
+                        {"gbifusagekey": f"The taxonomic parent (gbifusagekey: {json['parentKey']}) does not exist"})
+            else:
+                parent = None
+
+            if 'acceptedKey' in json and json['acceptedKey']:
+                try:
+                    accepted = Species.objects.get(gbifusagekey=json['acceptedKey'])
+                except Species.DoesNotExist:
+                    raise ValidationError(
+                        {"gbifusagekey": f"The accepted species (gbifusagekey: {json['acceptedKey']}) does not exist"})
+            else:
+                accepted = None
+
+            # Always set the following fields from gbif response
             self.rank = json['rank']
             self.status = json['taxonomicStatus']
+            self.parent = parent
+            self.accepted = accepted
+
+            if accepted:
+
+                # Only automatically set accepted_species for trivial relationships
+                if accepted.accepted_species_id is None and accepted.rank == 'SPECIES':
+                    self.accepted_species = accepted
 
             if self.accepted_species:
-                if not (json['rank'] in ['SUBSPECIES','VARIETY','FORM']) and is_accepted:
+                if not (json['rank'] in ['SUBSPECIES','VARIETY','FORM']) and accepted:
                     raise ValidationError(
                         {"gbifusagekey": "Accepted species can only be set for taxon that are accepted if they are SUBSPECIES, VARIETY or FORM"})
                 if self.birdnetid:
@@ -231,9 +258,9 @@ class Species(models.Model):
                     raise ValidationError(
                         {"plantnetpowoid": "Plantnetpowoid  can only be set for accepted_species"})
             else:
-                if not is_accepted:
+                if not accepted and (json['rank'] in ['SUBSPECIES','VARIETY','FORM', 'SPECIES']):
                     raise ValidationError(
-                        {"gbifusagekey": "Accepted species must be set for a GBIF species that is NOT accepted"})
+                        {"gbifusagekey": "Accepted species must be set for a GBIF species, subspecies, variety or form that is NOT accepted"})
 
             sciname_is_ok = False
 

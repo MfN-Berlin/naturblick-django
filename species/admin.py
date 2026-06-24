@@ -350,7 +350,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     inlines = [
         SpeciesNameInline
     ]
-    readonly_fields = ['speciesid', 'rank', 'status']
+    readonly_fields = ['speciesid', 'rank', 'status', 'parent', 'accepted']
     list_display = ['id', 'speciesid', 'sciname', 'gername', 'avatar_crop', 'accepted', 'portrait', 'gbif', 'plantnet',
                     'search']
     list_display_links = ['id', 'speciesid']
@@ -377,6 +377,8 @@ class SpeciesAdmin(admin.ModelAdmin):
               ('gbifusagekey', 'gbif_incompatible', 'gbif_needs_approval'),
               'rank',
               'status',
+              'parent',
+              'accepted',
               'accepted_species',
               'plantnetpowoid',
               'birdnetid',
