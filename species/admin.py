@@ -29,7 +29,7 @@ from imagekit.processors import ResizeToFit
 from species import utils
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Group, Floraportrait, Tag, SourcesImprint, SourcesTranslation, \
-    FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, LeichtPortrait, LeichtRecognize, LeichtGoodToKnow, \
+    FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, LeichtPortrait, LeichtDescription, \
     AudioFile, ImageCrop, ImageFile, BirdnetIdMapping, EvaluationAuthor
 from .utils import cropped_image, find_similar_imagefile
 
@@ -1020,20 +1020,10 @@ class BirdnetIdMappingAdmin(admin.ModelAdmin):
                            obj.species_birdnetid)
 
 
-class LeichtRecognizeInline(OrderableAdmin, admin.TabularInline):
+class LeichtDescriptionInline(OrderableAdmin, admin.TabularInline):
     extra = 0
-    model = LeichtRecognize
-    verbose_name = 'Leicht recognize text'
-    formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 60})}
-    }
-    ordering_field_hide_input = True
-
-
-class LeichtGoodtoknowInline(OrderableAdmin, admin.TabularInline):
-    extra = 0
-    model = LeichtGoodToKnow
-    verbose_name = 'Leicht goodtoknow text'
+    model = LeichtDescription
+    verbose_name = 'Leicht description text'
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 60})}
     }
@@ -1177,29 +1167,22 @@ class AudioFileAdmin(admin.ModelAdmin):
 
 @admin.register(LeichtPortrait)
 class LeichtPortraitAdmin(admin.ModelAdmin):
-    list_display = ['name', 'level', 'avatar_thumb', 'goodtoknow_thumb']
+    list_display = ['name', 'initially_visible', 'avatar_thumb']
     search_fields = ['name']
     search_help_text = 'Sucht über alle Namen'
     ordering = ["name"]
-    autocomplete_fields = ['avatar', 'audio', 'goodtoknow_image']
-    inlines = [LeichtRecognizeInline, LeichtGoodtoknowInline]
+    autocomplete_fields = ['avatar']
+    inlines = [LeichtDescriptionInline]
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 60})}
     }
-    readonly_fields = ['avatar_thumb', 'goodtoknow_thumb']
+    readonly_fields = ['avatar_thumb']
 
     @admin.display(
         description="Avatar"
     )
     def avatar_thumb(self, obj):
         image_url = cropped_image(obj.avatar.imagefile.image, cropping=obj.avatar.cropping, size=(100, 100))
-        return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
-
-    @admin.display(
-        description="Goodtoknow Image"
-    )
-    def goodtoknow_thumb(self, obj):
-        image_url = cropped_image(obj.goodtoknow_image.image, cropping=None, size=(100, 100))
         return mark_safe(f'<img src="{image_url}" width="100" height="100" />')
 
 

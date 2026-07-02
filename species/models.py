@@ -683,9 +683,8 @@ class AudioFile(models.Model):
 class LeichtPortrait(models.Model):
     name = models.TextField(default='unknown')
     avatar = models.ForeignKey(ImageCrop, on_delete=RESTRICT, default=1)
-    goodtoknow_image = models.ForeignKey(ImageFile, on_delete=RESTRICT, related_name="goodtoknow_image", default=1)
-    level = models.PositiveIntegerField(default=1)
-    audio = models.ForeignKey(AudioFile, on_delete=models.SET_NULL, blank=True, null=True)
+    initially_visible = models.BooleanField(default=False)
+    location = models.TextField(default='unknown')
 
     def __str__(self):
         return str(self.name)
@@ -694,28 +693,16 @@ class LeichtPortrait(models.Model):
         db_table = 'leichtportrait'
 
 
-class LeichtRecognize(OrderableModel):
+class LeichtDescription(OrderableModel):
     text = models.TextField()
     portrait = ForeignKey(LeichtPortrait, on_delete=models.CASCADE)
     ordering = models.IntegerField()
 
     def __str__(self):
-        return f"LeichtRecognize {self.text}"
+        return f"LeichtDescription {self.text}"
 
     class Meta(OrderableModel.Meta):
-        db_table = 'leichtrecognize'
-
-
-class LeichtGoodToKnow(OrderableModel):
-    text = models.TextField()
-    portrait = ForeignKey(LeichtPortrait, on_delete=models.CASCADE)
-    ordering = models.IntegerField()
-
-    def __str__(self):
-        return f"LeichtGoodToKnow {self.text}"
-
-    class Meta(OrderableModel.Meta):
-        db_table = 'leichtgtk'
+        db_table = 'leichtdescription'
 
 
 class EvaluationAuthor(models.Model):

@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from .models import Species, Group, SpeciesName, ImageFile, ImageCrop, DescMeta, \
-    Faunaportrait, Tag, PlantnetPowoidMapping, LeichtPortrait, LeichtRecognize, LeichtGoodToKnow
+    Faunaportrait, Tag, PlantnetPowoidMapping, LeichtPortrait, LeichtDescription
 
 
 def load_static_image(content_type="image/jpeg", file_name="test_amsel.jpg"):
@@ -48,9 +48,8 @@ class SpeciesTestCase(TestCase):
         PlantnetPowoidMapping.objects.create(plantnetpowoid="1234-1", species_plantnetpowoid=amsel)
 
         # Leicht
-        leicht_portrait = LeichtPortrait.objects.create(name="Vogel", avatar=crop, goodtoknow_image=imagefile)
-        LeichtRecognize(text="foo", portrait=leicht_portrait, ordering=1)
-        LeichtGoodToKnow(text="foo", portrait=leicht_portrait, ordering=1)
+        leicht_portrait = LeichtPortrait.objects.create(name="Vogel", avatar=crop, location="ganz nah", initially_visible=True)
+        LeichtDescription(text="foo", portrait=leicht_portrait, ordering=1)
 
     def test_app_content_db(self):
         url = reverse("app-content-db")

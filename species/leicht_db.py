@@ -14,23 +14,19 @@ def insert_portrait(sqlite_cursor):
         ((portrait.id,
           portrait.name,
           "#".join(
-              portrait.leichtrecognize_set.all()
+              portrait.leichtdescription_set.all()
               .order_by("ordering")
               .values_list("text", flat=True)
           ),
-          "#".join(
-              portrait.leichtgoodtoknow_set.all()
-              .order_by("ordering")
-              .values_list("text", flat=True)
-          ),
-          portrait.level)
+          portrait.location,
+          portrait.initially_visible)
          for portrait in leicht_portrait())
     )
 
 
 def create_tables(sqlite_cursor):
     sqlite_cursor.execute(
-        """CREATE TABLE IF NOT EXISTS `portrait` (`rowid` INTEGER NOT NULL, `name` TEXT NOT NULL, `recognize` TEXT NOT NULL, `good_to_know` TEXT NOT NULL, `level` INTEGER NOT NULL, PRIMARY KEY(`rowid`));"""
+        """CREATE TABLE IF NOT EXISTS `portrait` (`rowid` INTEGER NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `location` TEXT NOT NULL, `initially_visible` INTEGER, PRIMARY KEY(`rowid`));"""
     )
 
 
