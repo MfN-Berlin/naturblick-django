@@ -72,11 +72,8 @@ def app_content_leicht_image_list(request):
     for portrait in leicht_portrait():
         writer.writerow(
             ('avatar', cropped_image(portrait.avatar.imagefile.image, portrait.avatar.cropping), portrait.id))
-        writer.writerow(('recognize', portrait.avatar.imagefile.image.url, portrait.id))
-        writer.writerow(('goodtoknow', portrait.goodtoknow_image.image.url, portrait.id))
-
-        if hasattr(portrait, 'audio') and portrait.audio:
-            writer.writerow(('audio', portrait.audio.audio_file.url, portrait.id))
+        writer.writerow(
+            ('image', portrait.avatar.imagefile.image.url, portrait.id))
 
     return response
 
