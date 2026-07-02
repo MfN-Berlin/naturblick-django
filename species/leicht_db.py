@@ -26,7 +26,7 @@ def insert_portrait(sqlite_cursor):
 
 def create_tables(sqlite_cursor):
     sqlite_cursor.execute(
-        """CREATE TABLE IF NOT EXISTS `portrait` (`rowid` INTEGER NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `location` TEXT NOT NULL, `initially_visible` INTEGER, PRIMARY KEY(`rowid`));"""
+        """CREATE TABLE IF NOT EXISTS `portrait` (`rowid` INTEGER NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `location` TEXT NOT NULL, `initially_visible` INTEGER NOT NULL, PRIMARY KEY(`rowid`));"""
     )
 
 

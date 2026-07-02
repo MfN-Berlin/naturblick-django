@@ -9,7 +9,6 @@ from django import forms
 from django.core import management
 from django.core.exceptions import BadRequest
 from django.db import connection
-from django.db.models import Prefetch
 from django.http import FileResponse, HttpResponse
 from django.utils import translation
 from rest_framework import generics
