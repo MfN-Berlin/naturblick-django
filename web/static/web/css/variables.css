@@ -121,7 +121,7 @@
   --tablet-min: 768px;
   --normal-radius: 8px;
   --small-radius: 4px;
-
+  --border-bottom-width: 2px;
   --dels-li-bottom-margin: 24px;
 }
 
