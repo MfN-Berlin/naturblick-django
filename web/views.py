@@ -343,7 +343,11 @@ def filter_species_by_query(species_qs, query, lang):
 def filter_species_tags(species_qs, tags):
     if not tags:
         return species_qs
-    return species_qs.filter(tag__in=tags)
+
+    for tag in tags:
+        species_qs = species_qs.filter(tag=tag)
+
+    return species_qs
 
 
 def is_valid_or_raise(form):
@@ -375,10 +379,28 @@ def search_portrait(request):
     return render(request, "web/search_portrait.html", {
         "lang": translation.get_language(),
         "query": form.cleaned_data["query"],
-        "tags": tags,
         "selected_tags": tags.filter(id__in=form.cleaned_data["tag"]),
         "dark": True,
         "show_dels": lang != 'en'
+    })
+
+def search_tags(request):
+    lang = translation.get_language()
+    form = SpeciesSearchForm(request.GET)
+    is_valid_or_raise(form)
+    if lang == "en":
+        tags = Tag.objects.filter(species__portrait__published=True).distinct().order_by("english_name")
+    else:
+        tags = Tag.objects.filter(species__portrait__published=True).distinct().order_by("name")
+    tags = tags.exclude(id__in=form.cleaned_data["tag"])
+    return JsonResponse({
+        "tags": [
+            {
+                "id": tag.id,
+                "name": tag.english_name if lang == "en" else tag.name,
+            }
+            for tag in tags
+        ]
     })
 
 

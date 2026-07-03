@@ -26,13 +26,6 @@
 
     <select id="species-tag-field"/>
     <option value="0">{% translate 'Schlagwort auswählen' %}</option>
-      {% for tag in tags %}
-      {% if LANGUAGE_CODE != 'en' %}
-      <option value="{{ tag.id }}">{{ tag.name }}</option>
-      {% else %}
-      <option value="{{ tag.id }}">{{ tag.english_name }}</option>
-      {% endif %}
-      {% endfor %}
     </select>
   </form>
   <template id="selected-tag-template">
@@ -61,6 +54,37 @@
     let fetching = false;
     function fetchingDone() {
         fetching = false;
+    }
+
+    function loadTags() {
+      const xhr = new XMLHttpRequest();
+      const url = "{% url 'search_tags' %}"
+      xhr.onload = function () {
+        if (xhr.status == 200) {
+          tagField.replaceChildren();
+          tagField.add(new Option("{% translate 'Schlagwort auswählen' %}", "0" ));
+
+          // Add returned tags
+          xhr.response.tags.forEach(tag => {
+            tagField.add(new Option(tag.name, tag.id));
+          });
+        }
+      };
+
+      const searchParams = new URLSearchParams();
+      searchParams.set("lang", scriptData.lang);
+      if(searchField.value) {
+          searchParams.set("query", searchField.value);
+      }
+      const tags = tagList.querySelectorAll("span");
+      for (var i = 0; i < tags.length; i++) {
+          const tag = tags[i];
+          searchParams.append("tag", tag.dataset.tagId);
+      }
+
+      xhr.open("GET", `${url}?${searchParams}`);
+      xhr.responseType = "json";
+      xhr.send();
     }
 
     function needsMore() {
@@ -184,6 +208,7 @@
         tagList.removeChild(event.target.closest("div"));
         updateQuery();
         fetchMore(true);
+        loadTags();
     }
 
     function addTag(name, id) {
@@ -196,6 +221,7 @@
         tagList.appendChild(clone);
         updateQuery();
         fetchMore(true);
+        loadTags();
     }
     
     function tagChange(event) {
@@ -216,6 +242,7 @@
     {% endfor %}
     
     // Initialize masonry
+    loadTags();
     validateAndUpdateNumberOfColumns({});
     tagField.addEventListener("change", tagChange);
     search.addEventListener("submit",formSubmit);
