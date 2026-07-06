@@ -10,6 +10,7 @@ urlpatterns = [
     path("geo_proxy", views.geo_proxy, name="geo_proxy"),
     path("obs/<int:obs_id>", views.obs, name="obs"),
     path("species/portrait/data", views.search_portrait_data, name="search_portrait_data"),
+    path("species/portrait/tags", views.search_tags, name="search_tags"),
     re_path(
         r'^species/portrait/(?P<id>[0-9]+)$', views.portrait, name="portrait"),
     path("species/portrait;view=grid", views.search_portrait),

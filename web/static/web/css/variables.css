@@ -123,6 +123,9 @@
   --small-radius: 4px;
   --border-bottom-width: 2px;
   --dels-li-bottom-margin: 24px;
+
+  --masonry-form-direction: row;
+  --masonry-form-align: flex-end;
 }
 
 
@@ -162,6 +165,9 @@
         --sources-columns: 2;
         --observation-start-column: 1;
         --observation-boxes-flex-direction: column;
+
+        --masonry-form-direction: row;
+        --masonry-form-align: flex-end;
     }
 }
 
@@ -201,6 +207,9 @@
         --sources-columns: 1;
         --observation-start-column: 1;
         --observation-boxes-flex-direction: column;
+
+        --masonry-form-direction: column;
+        --masonry-form-align: stretch;
     }
 }
 
