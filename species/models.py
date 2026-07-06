@@ -12,6 +12,8 @@ from imagekit.processors import ResizeToFit
 from .choices import *
 from .validators import *
 
+# https://www.checklistbank.org/dataset/315557/metadata
+CHECKLIST_BANK_DATASET = 315557
 LARGE_WIDTH = 1200
 MEDIUM_WIDTH = 800
 SMALL_WIDTH = 400
@@ -195,77 +197,58 @@ class Species(models.Model):
     avatar_not_found = models.BooleanField(default=False, verbose_name="Avatar was not found")
     primary_name_not_found = models.BooleanField(default=False, verbose_name="Primary name was not found")
     gbif_needs_approval = models.BooleanField(default=False, verbose_name="Gbif needs approval")
+    colid = models.CharField(blank=True, null=True, max_length=5, unique=True)
+
     speciesid.short_description = "Species ID"
 
-    def validate_gbif(self):
-        if self.gbifusagekey:
-
-            if self.gbif_incompatible:
-                raise ValidationError({
-                    "gbif_incompatible": "Can not be set for a species with a gbifusagekey"})
-
-            response = requests.get(f"https://api.gbif.org/v1/species/{self.gbifusagekey}")
+    def validate_identifiers(self):
+        if self.colid:
+            response = requests.get(f"https://api.checklistbank.org/dataset/{CHECKLIST_BANK_DATASET}/nameusage/{self.colid}")
 
             if response.status_code != 200:
                 raise ValidationError({
-                    "gbifusagekey": f"{self.gbifusagekey} could not be validated as a valid GBIF usage key (GBIF returned {response.status_code})"})
+                    "colid": f"{self.gbifusagekey} could not be validated as a valid catalog of life identifier (Checklistbank returned {response.status_code})"})
 
             json = response.json()
 
-            is_accepted = not ('acceptedKey' in json)
-            scientific_name = json['canonicalName']
+            status = json['status']
+            rank = json['name']['rank']
 
-            # Always set rank and status from gbif response
-            self.rank = json['rank']
-            self.status = json['taxonomicStatus']
-
-            if self.accepted_species:
-                if not (json['rank'] in ['SUBSPECIES','VARIETY','FORM']) and is_accepted:
-                    raise ValidationError(
-                        {"gbifusagekey": "Accepted species can only be set for taxon that are accepted if they are SUBSPECIES, VARIETY or FORM"})
+            if 'accepted' in json:
+                accepted = json['accepted']
+                if not self.accepted_species:
+                    raise ValidationError({
+                        "accepted_species": f"A non accepted species must have an accepted_species set"
+                    })
                 if self.birdnetid:
                     raise ValidationError(
                         {"birdnetid": "Birdnetid can only be set for accepted_species"})
-
                 if self.plantnetpowoid:
                     raise ValidationError(
                         {"plantnetpowoid": "Plantnetpowoid  can only be set for accepted_species"})
             else:
-                if not is_accepted:
+                if self.accepted_species and not (rank in ['subspecies','variety','form']):
                     raise ValidationError(
-                        {"gbifusagekey": "Accepted species must be set for a GBIF species that is NOT accepted"})
+                        {"gbifusagekey": "Accepted species can only be set for taxon that are accepted if they are subspecies, variety or form"})
 
-            sciname_is_ok = False
+            self.status = status
+            self.rank = rank
 
-            if scientific_name == self.sciname.replace('×', '') and json['rank'] in ('VARIETY', 'FORM', 'SUBSPECIES', 'SPECIES'):
-                sciname_is_ok = True
+            if rank == 'subspecies' and 'subsp.' not in self.sciname:
+                raise ValidationError("A taxon of rank subspecies must have 'subsp.' in its scientific name")
 
-            if (scientific_name == self.sciname.replace('var. ', '') and json['rank'] == 'VARIETY'):
-                sciname_is_ok = True
+            if rank == 'variety' and 'var.' not in self.sciname:
+                raise ValidationError("A taxon of rank variety must have 'var.' in its scientific name")
 
-            if (scientific_name == self.sciname.replace('f. ', '') and json['rank'] == 'FORM'):
-                sciname_is_ok = True
-
-            if scientific_name == self.sciname:
-                sciname_is_ok = True
-
-            if not sciname_is_ok:
-                raise ValidationError(
-                    {"sciname": f"The scientific name does not match the canonical name ({scientific_name}) of the provided gbifusagekey."})
-
-            if json['rank'] == 'VARIETY' and 'var.' not in self.sciname:
-                raise ValidationError("A taxon of rank VARIETY must have 'var.' in its scientific name")
-
-            if json['rank'] == 'FORM' and 'f.' not in self.sciname:
-                raise ValidationError("A taxon of rank FORM must have 'f.' in its scientific name")
+            if rank == 'form' and 'f.' not in self.sciname:
+                raise ValidationError("A taxon of rank form must have 'f.' in its scientific name")
         else:
-
-            # Only species with gbifusagekey has rank and status
+            # Only species with colid has rank and status
             self.rank = None
             self.status = None
 
             if not self.id:
-                raise ValidationError({"gbifusagekey": "All new species must have gbifusagekey set"})
+                raise ValidationError({"colid": "All new species must have colid set"})
 
             if self.birdnetid:
                 raise ValidationError(
@@ -274,6 +257,19 @@ class Species(models.Model):
             if self.plantnetpowoid:
                 raise ValidationError(
                     {"plantnetpowoid": "Plantnetpowoid must NOT be set for a species without gbifusagekey"})
+
+        if self.gbifusagekey:
+
+            if self.gbif_incompatible:
+                raise ValidationError({
+                    "gbif_incompatible": "Can not be set for a species with a gbifusagekey"})
+
+            # If gbifusagekey is set, check that it exists
+            response = requests.get(f"https://api.gbif.org/v1/species/{self.gbifusagekey}")
+
+            if response.status_code != 200:
+                raise ValidationError({
+                    "gbifusagekey": f"{self.gbifusagekey} could not be validated as a valid GBIF usage key (GBIF returned {response.status_code})"})
 
     def generate_id_for_new_species(self):
         if not self.speciesid:
@@ -292,7 +288,7 @@ class Species(models.Model):
             raise ValidationError('Accepted species must not be self')
         if self.accepted_species and self.accepted_species.group != self.group:
             raise ValidationError('Accepted species must be in the same group')
-        self.validate_gbif()
+        self.validate_identifiers()
         self.generate_id_for_new_species()
 
     def __str__(self):

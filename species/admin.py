@@ -30,7 +30,7 @@ from species import utils
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Group, Floraportrait, Tag, SourcesImprint, SourcesTranslation, \
     FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, LeichtPortrait, LeichtDescription, \
-    AudioFile, ImageCrop, ImageFile, BirdnetIdMapping, EvaluationAuthor
+    AudioFile, ImageCrop, ImageFile, BirdnetIdMapping, EvaluationAuthor, CHECKLIST_BANK_DATASET
 from .utils import cropped_image, find_similar_imagefile
 
 admin.site.unregister(User)
@@ -351,8 +351,7 @@ class SpeciesAdmin(admin.ModelAdmin):
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid', 'rank', 'status']
-    list_display = ['id', 'speciesid', 'sciname', 'gername', 'avatar_crop', 'accepted', 'portrait', 'gbif', 'plantnet',
-                    'search']
+    list_display = ['id', 'speciesid', 'sciname', 'gername', 'avatar_crop', 'accepted', 'portrait', 'col', 'plantnet', 'search']
     list_display_links = ['id', 'speciesid']
     list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, 'primary_name_not_found', HasSynonymsFilter,
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
@@ -375,6 +374,7 @@ class SpeciesAdmin(admin.ModelAdmin):
               ('avatar_new', 'avatar_not_found'),
               'female_avatar_new',
               ('gbifusagekey', 'gbif_incompatible', 'gbif_needs_approval'),
+              'colid',
               'rank',
               'status',
               'accepted_species',
@@ -544,8 +544,8 @@ class SpeciesAdmin(admin.ModelAdmin):
     def search(self, obj):
         plantnet_url = f'https://identify.plantnet.org/k-world-flora/species?search={obj.sciname}'
         plantnet_img_url = static('species/plantnet_white_border_marker.png')
-        gbif_url = f'https://old.gbif.org/species/search?q={obj.sciname}'
-        gbif_img_url = static('species/gbif-mark-green-logo.png')
+        col_url = f'https://www.checklistbank.org/dataset/{CHECKLIST_BANK_DATASET}/names?content=SCIENTIFIC_NAME&q={obj.sciname}'
+        col_img_url = static('species/col_square_logo.jpg')
         scientific_url_name = obj.sciname.replace(' ', '_')
         wikipedia_url = f'https://en.wikipedia.org/wiki/{scientific_url_name}'
         wikipedia_img_url = static('species/Wikipedia-logo-v2.svg')
@@ -553,12 +553,12 @@ class SpeciesAdmin(admin.ModelAdmin):
         wikimedia_url = f'https://commons.wikimedia.org/w/index.php?search={scientific_wikimedia_url_name}&title=Special:MediaSearch&type=image'
         wikimedia_img_url = static('species/Wikimedia Commons Logo.svg')
         return format_html(
-            '<a title="GBIF" href="{}"><img class="image-link" src={}></a> | <a title="Wikipedia" href="{}"><img class="image-link" src={}></a> | <a href="{}"><img title="Wikimedia Image Search" class="image-link" src={}></a> | <a title="Plantnet" href="{}"><img class="image-link" src={}></a>',
-            gbif_url, gbif_img_url, wikipedia_url, wikipedia_img_url, wikimedia_url, wikimedia_img_url, plantnet_url,
+            '<a title="COL" href="{}"><img class="image-link" src={}></a> | <a title="Wikipedia" href="{}"><img class="image-link" src={}></a> | <a href="{}"><img title="Wikimedia Image Search" class="image-link" src={}></a> | <a title="Plantnet" href="{}"><img class="image-link" src={}></a>',
+            col_url, col_img_url, wikipedia_url, wikipedia_img_url, wikimedia_url, wikimedia_img_url, plantnet_url,
             plantnet_img_url)
 
     @admin.display(
-        description='Powo ID (Plantnet)'
+        description='Powo ID'
     )
     def plantnet(self, obj):
         if obj.plantnetpowoid is None:
@@ -567,16 +567,15 @@ class SpeciesAdmin(admin.ModelAdmin):
             plantnet_url = f'https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:{obj.plantnetpowoid}'
             return format_html(f'<a href="{{}}">{obj.plantnetpowoid}</a>', plantnet_url)
 
-    @admin.display()
-    def gbif(self, obj):
-        if obj.gbifusagekey is None:
-            if obj.gbif_incompatible:
-                return 'Not compatible'
-            else:
-                return '-'
+    @admin.display(
+        description="COL ID"
+    )
+    def col(self, obj):
+        if obj.colid is None:
+            return '-'
         else:
-            gbif_url = f'https://old.gbif.org/species/{obj.gbifusagekey}'
-            return format_html(f'<a href="{{}}">{obj.gbifusagekey}</a>', gbif_url)
+            col_url = f'https://www.checklistbank.org/dataset/{CHECKLIST_BANK_DATASET}/nameusage/{obj.colid}'
+            return format_html(f'<a href="{{}}">{obj.colid}</a>', col_url)
 
     @admin.display(description='Synonym of')
     def accepted(self, obj):
