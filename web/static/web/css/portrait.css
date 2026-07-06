@@ -23,6 +23,10 @@
         text-decoration: underline;
         color: var(--character);
     }
+
+    img {
+        width: 100%;
+    }
 }
 
 body {
