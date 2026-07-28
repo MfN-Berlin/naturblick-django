@@ -26,11 +26,11 @@
 
     <ul>
         <li>Take photos of plants and identify them with the automatic pattern recognition. You can currently identify
-            <a href="https://naturblick.museumfuernaturkunde.berlin/speciesimagerecognition?lang=en">2180 plant
+            <a href="{% url 'plantrecognition' %}{% keep_only_lang %}">3839 plant
                 species</a>.
         </li>
-        <li>Record bird calls and assign them to one of the <a
-                href="https://naturblick.museumfuernaturkunde.berlin/speciesaudiorecognition?lang=en">239 bird
+        <li>Record animal calls and assign them to one of the <a
+                href="{% url 'animalrecognition' %}{% keep_only_lang %}">533 animal
             species</a> using the automatic sound recognition.
         </li>
         <li>With the help of the feature selection you can identify many other animal and plant species. These include

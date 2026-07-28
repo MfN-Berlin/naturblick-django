@@ -17,9 +17,9 @@
     <h4>Welche Arten können mit Naturblick bestimmt werden?</h4>
     <p>Mit Naturblick können Pflanzen und Tiere bestimmt werden. Dazu gehören Amphibien, Bienen, Wildblumen, Bäume,
         Reptilien, Schmetterlinge, Säugetiere und Vögel. Hier findest du die <a
-                href="https://naturblick.museumfuernaturkunde.berlin/speciesaudiorecognition">Artenliste für die
+                href="{% url 'animalrecognition' %}{% keep_only_lang %}">Artenliste für die
             Lauterkennung</a> und die hier für die <a
-                href="https://naturblick.museumfuernaturkunde.berlin/speciesimagerecognition">Artenliste für die
+                href="{% url 'plantrecognition' %}{% keep_only_lang %}">Artenliste für die
             Bilderkennung</a>. Die Auswahl von Arten wird von uns kontinuierlich erweitert. Hilf uns weitere Arten und
         Artgruppen auszuwählen und schreibe uns eine Mail mit deinen Vorschlägen an naturblick@mfn.berlin.</p>
     <h3>Wieso zeigt die Ergebnisliste der Bestimmungsschlüssel immer so viele Arten?</h3>
@@ -33,9 +33,9 @@
         Vergleichsmaterial einer Art, mit dem die Mustererkennung trainiert wurde. Das bedeutet, es können nur Arten
         erkannt werden, die auch trainiert wurden und die Erkennung funktioniert am besten, wenn eine große Ähnlichkeit
         zu der Aufnahmesituation und -qualität besteht (z.B. Mikrofonqualität). Hier findest du die <a
-                href="https://naturblick.museumfuernaturkunde.berlin/speciesaudiorecognition">Artenliste für die
+                href="{% url 'animalrecognition' %}{% keep_only_lang %}">Artenliste für die
             Lauterkennung</a> und die hier für die <a
-                href="https://naturblick.museumfuernaturkunde.berlin/speciesimagerecognition">Artenliste für die
+                href="{% url 'plantrecognition' %}{% keep_only_lang %}">Artenliste für die
             Bilderkennung</a>. </p>
     <h3>Kann ich auch Fotos, die ich nicht mit der App gemacht habe, bestimmen?</h3>
     <p>Du kannst über das Feldbuch Fotos von Pflanzen aus deiner Galerie auswählen und mit der Bilderkennung bestimmen.

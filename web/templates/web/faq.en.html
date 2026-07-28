@@ -18,9 +18,9 @@
     <h4>Which species can be identified with Naturblick?</h4>
     <p>With Naturblick you can identify plants and animal species. These include amphibians, bees, wild flowers, trees,
         reptiles, butterflies, mammals and birds. Here you can find the species list for <a
-                href="https://naturblick.museumfuernaturkunde.berlin/speciesaudiorecognition?lang=en">sound
+                href="{% url 'animalrecognition' %}{% keep_only_lang %}">sound
             recognition</a> and the <a
-                href="https://naturblick.museumfuernaturkunde.berlin/speciesimagerecognition?lang=en">species list for
+                href="{% url 'plantrecognition' %}{% keep_only_lang %}">species list for
             image recognition</a>.
         The selection of species is constantly being expanded. Help us select further species and species groups and
         write us an e-mail with your suggestions to naturblick@mfn.berlin.</p>
@@ -35,9 +35,9 @@
         species with which the pattern recognition was trained. This means that only species that have been trained can
         be recognized and the recognition works best if there is a great similarity to the recording situation and
         quality (e.g. microphone quality). Here you can find the species list for <a
-                href="https://naturblick.museumfuernaturkunde.berlin/speciesaudiorecognition?lang=en">sound
+                href="{% url 'animalrecognition' %}{% keep_only_lang %}">sound
             recognition</a> and the <a
-                href="https://naturblick.museumfuernaturkunde.berlin/speciesimagerecognition?lang=en">species list for
+                href="{% url 'plantrecognition' %}{% keep_only_lang %}">species list for
             image recognition</a> here. </p>
     <h3>Can I also identify photos that I did not take with the app?</h3>
     <p>You can use the field book to select photos of plants from your gallery and identify them using image
