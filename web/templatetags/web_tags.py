@@ -1,4 +1,5 @@
 from django import template
+from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.http import QueryDict
 from django.utils.html import format_html
@@ -128,3 +129,11 @@ def img(path, widths, sizes):  #
         srcset,
         sizes
     )
+
+@register.simple_tag
+def maplibre_js():
+    return format_html('<script src="https://unpkg.com/maplibre-gl@{}/dist/maplibre-gl.js"></script>', settings.MAPLIBRE_VERSION)
+
+@register.simple_tag
+def maplibre_css():
+    return format_html('<link href="https://unpkg.com/maplibre-gl@{}/dist/maplibre-gl.css" rel="stylesheet"/>', settings.MAPLIBRE_VERSION)

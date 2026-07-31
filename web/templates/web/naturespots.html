@@ -3,11 +3,11 @@
 {% load static web_tags i18n l10n %}
 
 {% block js %}
-<script src='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'></script>
+{% maplibre_js %}
 {% endblock %}
 
 {% block css %}
-<link href='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css' rel='stylesheet'/>
+{% maplibre_css %}
 <link rel="stylesheet" href="{% static 'web/css/map.css' %}">
 {% endblock %}
 
