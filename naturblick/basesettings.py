@@ -152,3 +152,5 @@ LANGUAGES = [
     ("de", "German"),
     ("dels", "Leichte Sprache"),
 ]
+
+MAPLIBRE_VERSION = "5.24.0"
