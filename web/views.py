@@ -1023,10 +1023,10 @@ def password_has_at_least_9_characters(value):
     if len(value) < 9:
         raise ValidationError(_("Das Passwort muss mindestens 9 Zeichen enthalten"))
 
-class ResetPasswordForm(forms.Form):
-    password = forms.CharField(label=_("Passwort mit mindestens 9 Zeichen aus Groß- und Kleinbuchstaben und Zahl"), widget = forms.PasswordInput(render_value = True), validators = [password_has_at_least_9_characters, password_has_lower, password_has_upper, password_has_digits])
-
 def account_reset_password(request):
+    class ResetPasswordForm(forms.Form):
+        password = forms.CharField(label=_("Passwort mit mindestens 9 Zeichen aus Groß- und Kleinbuchstaben und Zahl"), widget = forms.PasswordInput(render_value = True), validators = [password_has_at_least_9_characters, password_has_lower, password_has_upper, password_has_digits])
+
     if request.method == "POST":
         form = ResetPasswordForm(request.POST)
         if form.is_valid():
