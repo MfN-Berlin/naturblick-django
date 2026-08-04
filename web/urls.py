@@ -36,5 +36,6 @@ urlpatterns = [
     path('plantnetdemo/<uuid:thumbnail_id>', views.plantnetresults, name="plantnetresults"),
     path('plantnetdemo/<uuid:thumbnail_id>.jpeg', views.plantnetimg, name="plantnetimg"),
     path('naturblick-leicht-ci', views.nb_leicht_ci, name='nb_leicht_ci'),
-    path('account/activate/<uuid:activation_id>', views.account_activate, name="activate")
+    path('account/activate/<uuid:activation_id>', views.account_activate, name="activate"),
+    path('account/reset-password', views.account_reset_password, name="reset_password")
 ]

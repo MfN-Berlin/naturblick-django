@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-15 10:02+0200\n"
+"POT-Creation-Date: 2026-08-04 11:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,6 +54,10 @@ msgstr "Distribution"
 msgid "Quellen"
 msgstr "Sources"
 
+#: templates/web/account_activate.html:8 templates/web/account_activate.html:11
+msgid "Benutzeraccount aktivieren"
+msgstr "Activate account"
+
 #: templates/web/map_base.html:28 templates/web/naturespots.html:20
 msgid "Alle"
 msgstr "All"
@@ -78,7 +82,7 @@ msgstr "Redirected from:"
 msgid "Schaue in Wikipedia nach"
 msgstr "Look it up on Wikipedia"
 
-#: templates/web/naturespots.html:21 views.py:586
+#: templates/web/naturespots.html:21 views.py:614
 msgid "Naturdenkmal"
 msgstr "Natural Monument"
 
@@ -86,39 +90,39 @@ msgstr "Natural Monument"
 msgid "Special Protected Area"
 msgstr "Special Protected Area"
 
-#: templates/web/naturespots.html:23 views.py:590
+#: templates/web/naturespots.html:23 views.py:618
 msgid "Fauna-Flora-Habitat"
 msgstr "Fauna-Flora-Habitat"
 
-#: templates/web/naturespots.html:24 views.py:592
+#: templates/web/naturespots.html:24 views.py:620
 msgid "Naturpark"
 msgstr "Nature Park"
 
-#: templates/web/naturespots.html:25 views.py:594
+#: templates/web/naturespots.html:25 views.py:622
 msgid "Naturdenkmale Bäume und Findlinge"
 msgstr "Natural Landmarks: Trees and Boulders"
 
-#: templates/web/naturespots.html:26 views.py:596
+#: templates/web/naturespots.html:26 views.py:624
 msgid "Flächen mit spezieller Regelung"
 msgstr "Areas subject to special regulations"
 
-#: templates/web/naturespots.html:27 views.py:598
+#: templates/web/naturespots.html:27 views.py:626
 msgid "geschützter Landschaftsbestandteil"
 msgstr "Protected Landscape Feature"
 
-#: templates/web/naturespots.html:28 views.py:600
+#: templates/web/naturespots.html:28 views.py:628
 msgid "Naturschutzgebiet"
 msgstr "Nature Reserve"
 
-#: templates/web/naturespots.html:29 views.py:602
+#: templates/web/naturespots.html:29 views.py:630
 msgid "Landschaftsschutzgebiet"
 msgstr "Landscape Conservation Area"
 
-#: templates/web/naturespots.html:30 views.py:604
+#: templates/web/naturespots.html:30 views.py:632
 msgid "Biosphärenreservat"
 msgstr "Biosphere Reserve"
 
-#: templates/web/naturespots.html:31 views.py:606
+#: templates/web/naturespots.html:31 views.py:634
 msgid "Nationalpark"
 msgstr "National Park"
 
@@ -164,6 +168,11 @@ msgstr "Imprint"
 msgid "Digitale Barrierefreiheit"
 msgstr "Digital accessibility statement"
 
+#: templates/web/reset_password.html:9 templates/web/reset_password.html:12
+#: templates/web/reset_password.html:21
+msgid "Passwort zurücksetzen"
+msgstr "Reset password"
+
 #: templates/web/search_portrait.html:15
 msgid ""
 "Finde Tiere und Pflanzen, indem du einen Artnamen eingibst oder nach "
@@ -175,29 +184,29 @@ msgstr ""
 msgid "Artname"
 msgstr "Species name"
 
-#: templates/web/search_portrait.html:28
+#: templates/web/search_portrait.html:28 templates/web/search_portrait.html:65
 msgid "Schlagwort auswählen"
 msgstr "Select tag"
 
-#: templates/web/search_portrait.html:45
+#: templates/web/search_portrait.html:38
 msgid "Ausgewählte Schlagwörter"
 msgstr "Selected tags"
 
-#: utils.py:10
+#: utils.py:12
 #, python-brace-format
 msgid "vor {years} Jahren"
 msgstr "{years} years ago"
 
-#: utils.py:12
+#: utils.py:14
 msgid "vor einem Jahr"
 msgstr "one year ago"
 
-#: utils.py:14
+#: utils.py:16
 #, python-brace-format
 msgid "vor {months} Monaten"
 msgstr "{months} months ago"
 
-#: utils.py:16
+#: utils.py:18
 msgid "neulich"
 msgstr "recently"
 
@@ -217,43 +226,43 @@ msgstr "In the city"
 msgid "Wissenswertes"
 msgstr "Fun Facts"
 
-#: views.py:504
+#: views.py:532
 #, python-brace-format
 msgid "Gehört von {user} {when} in __PLACE__"
 msgstr "Heard by {user} {when} in __PLACE__"
 
-#: views.py:507
+#: views.py:535
 #, python-brace-format
 msgid "Gesehen von {user} {when} in __PLACE__"
 msgstr "Seen by {user} {when} in __PLACE__"
 
-#: views.py:588
+#: views.py:616
 #, fuzzy
 #| msgid "Special Protected Area"
 msgid "Special protected area"
 msgstr "Special Protected Area"
 
-#: views.py:666
+#: views.py:694
 msgid "Diese Beobachtung ist plausibel."
 msgstr "This observation is plausible."
 
-#: views.py:668
+#: views.py:696
 msgid "Diese Beobachtung ist teilweise plausibel."
 msgstr "This observation is partly plausible."
 
-#: views.py:670
+#: views.py:698
 msgid "Diese Beobachtung ist nicht plausibel."
 msgstr "This observation is not plausible."
 
-#: views.py:675
+#: views.py:703
 msgid "Es hat noch kein:e Expert:in die Beobachtung angesehen."
 msgstr "No expert has looked at the observation yet."
 
-#: views.py:677
+#: views.py:705
 msgid "Ein:e Expert:in konnte die Bestimmung bestätigen."
 msgstr "An expert was able to confirm the identification."
 
-#: views.py:680
+#: views.py:708
 msgid ""
 "Ein:e Expert:in konnte die Artbestimmung nicht sicher bestätigen, hält sie "
 "aber für wahrscheinlich richtig."
@@ -261,7 +270,7 @@ msgstr ""
 "An expert could not confirm the identification with certainty, but considers "
 "it likely to be correct."
 
-#: views.py:683
+#: views.py:711
 msgid ""
 "Ein:e Expert:in konnte die Artbestimmung nicht sicher ausschließen, hält sie "
 "aber für wahrscheinlich falsch."
@@ -269,47 +278,47 @@ msgstr ""
 "An expert could not confirm the identification with certainty, but considers "
 "it likely to be wrong."
 
-#: views.py:685
+#: views.py:713
 msgid "Ein:e Expert:in ist sich nach Sichtung des Mediums nicht sicher."
 msgstr "An expert is not sure after viewing the medium."
 
-#: views.py:701 views.py:714 views.py:718
+#: views.py:729 views.py:742 views.py:746
 msgid "Dieser Artzuordnung wurde teilweise zugestimmt."
 msgstr "This species identification was partially agreed to."
 
-#: views.py:703
+#: views.py:731
 msgid "Diese Artzuordnung wurde noch nicht angesehen."
 msgstr "This species identification was not assessed yet."
 
-#: views.py:705 views.py:720
+#: views.py:733 views.py:748
 msgid "Diese Artzuordnung kann nicht sicher eingeschätzt werden."
 msgstr "This species identification cannot be assessed with certainty."
 
-#: views.py:712 views.py:721
+#: views.py:740 views.py:749
 msgid "Dieser Artzuordnung wurde zugestimmt."
 msgstr "This species identification was agreed to."
 
-#: views.py:806
+#: views.py:834
 msgid "Sie liegt im Verbreitungsgebiet."
 msgstr "It lies within the geographic range."
 
-#: views.py:807
+#: views.py:835
 msgid "Sie liegt nicht im Verbreitungsgebiet."
 msgstr "It lies outside the geographic range."
 
-#: views.py:809
+#: views.py:837
 msgid "Sie wurde im Aktivitätszeitraum gemacht."
 msgstr "It was made during the activity period."
 
-#: views.py:810
+#: views.py:838
 msgid "Sie wurde nicht im Aktivitätszeitraum gemacht."
 msgstr "It was not made during the activity period."
 
-#: views.py:871
+#: views.py:899
 msgid "Es wurde keine Mustererkennung durchgeführt."
 msgstr "Pattern recognition was not used to identify this observation."
 
-#: views.py:875
+#: views.py:903
 msgid ""
 " hatte die größte Übereinstimmung mit dem trainierten Vergleichsmaterial der "
 "Mustererkennung."
@@ -317,7 +326,7 @@ msgstr ""
 "had the closest match to the trained reference material of the pattern "
 "recognition."
 
-#: views.py:878
+#: views.py:906
 msgid ""
 "Die Art war unter den drei Arten mit der größten Übereinstimmung mit dem "
 "trainierten Vergleichsmaterial der Mustererkennung."
@@ -325,13 +334,68 @@ msgstr ""
 "The species was among the three species with the closest match to the "
 "trained reference material of the pattern recognition."
 
-#: views.py:881
+#: views.py:909
 msgid ""
 "Die Art war nicht unter den drei Arten mit der größten Übereinstimmung mit "
 "dem trainierten Vergleichsmaterial der Mustererkennung."
 msgstr ""
 "The species was not among the three species with the closest match to the "
 "trained reference material of the pattern recognition."
+
+#: views.py:997
+msgid ""
+"Dank für deine Bestätigung, dein Account ist jetzt aktiviert. Öffne die "
+"Naturblick App auf deinem Smartphone und logge dich dort ein."
+msgstr ""
+"Thank you for your confirmation, your account is now activated. Open the "
+"Naturblick app on your smartphone and log in there."
+
+#: views.py:999
+msgid ""
+"Der Link zur Aktivierung des Benutzeraccounts ist ungültig. Vielleicht ist "
+"der Account bereits aktiv?"
+msgstr ""
+"The link to activate the user account is invalid. Perhaps the account is "
+"already active?"
+
+#: views.py:1012
+msgid "Das Passwort muss mindestens eine Zahl enthalten"
+msgstr "The password must contain at least one digit"
+
+#: views.py:1016
+msgid "Das Passwort muss mindestens einen Kleinbuchstaben enthalten"
+msgstr "The password must contain at least one lowercase letter"
+
+#: views.py:1020
+msgid "Das Passwort muss mindestens einen Großbuchstaben enthalten"
+msgstr "The password must contain at least one uppercase letter"
+
+#: views.py:1024
+msgid "Das Passwort muss mindestens 9 Zeichen enthalten"
+msgstr "The password must contain at least 9 characters"
+
+#: views.py:1028
+msgid ""
+"Passwort mit mindestens 9 Zeichen aus Groß- und Kleinbuchstaben und Zahl"
+msgstr ""
+"Password with at least 9 characters from uppercase and lowercase letters and "
+"digits"
+
+#: views.py:1036
+msgid ""
+"Der Link zum Zurücksetzen des Passworts ist abgelaufen, bitte fordere eine "
+"neue Email zum Zurücksetzen des Passworts an."
+msgstr ""
+"The password reset link has expired, please request a new email to reset "
+"your password."
+
+#: views.py:1038
+msgid ""
+"Das Passwort ist erfolgreich zurückgesetzt. Öffne die Naturblick App auf "
+"deinem Smartphone und logge dich dort ein."
+msgstr ""
+"The password was successfully reset. Open the Naturblick app on your "
+"smartphone and log in there."
 
 #, fuzzy
 #~| msgid "Naturblick Karte"

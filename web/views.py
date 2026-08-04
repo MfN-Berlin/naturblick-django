@@ -8,7 +8,7 @@ import markdown
 import requests
 from django import forms
 from django.conf import settings
-from django.core.exceptions import BadRequest
+from django.core.exceptions import BadRequest, ValidationError
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Prefetch, Q
 from django.http import \
@@ -1006,3 +1006,44 @@ def account_activate(request, activation_id):
     else:
         # HEAD should not trigger activation
         return HttpResponse('')
+
+def password_has_digits(value):
+    if not any(c.isdigit() for c in value):
+        raise ValidationError(_("Das Passwort muss mindestens eine Zahl enthalten"))
+
+def password_has_lower(value):
+    if not any(c.islower() for c in value):
+        raise ValidationError(_("Das Passwort muss mindestens einen Kleinbuchstaben enthalten"))
+
+def password_has_upper(value):
+    if not any(c.isupper() for c in value):
+        raise ValidationError(_("Das Passwort muss mindestens einen Großbuchstaben enthalten"))
+
+def password_has_at_least_9_characters(value):
+    if len(value) < 9:
+        raise ValidationError(_("Das Passwort muss mindestens 9 Zeichen enthalten"))
+
+def account_reset_password(request):
+    class ResetPasswordForm(forms.Form):
+        password = forms.CharField(label=_("Passwort mit mindestens 9 Zeichen aus Groß- und Kleinbuchstaben und Zahl"), widget = forms.PasswordInput(render_value = True), validators = [password_has_at_least_9_characters, password_has_lower, password_has_upper, password_has_digits])
+
+    if request.method == "POST":
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            password = form.cleaned_data['password']
+            r = requests.post(f"{settings.PLAYBACK_URL}/password/reset/{request.GET['token']}", {"password": password})
+            if r.status_code == 400:
+                msg = _("Der Link zum Zurücksetzen des Passworts ist abgelaufen, bitte fordere eine neue Email zum Zurücksetzen des Passworts an.")
+            else:
+                msg = _("Das Passwort ist erfolgreich zurückgesetzt. Öffne die Naturblick App auf deinem Smartphone und logge dich dort ein.")
+                r.raise_for_status()
+            return render(request, "web/reset_password.html", {
+                "msg": msg
+            })
+    else:
+        form = ResetPasswordForm()
+
+    return render(request, "web/reset_password.html", {
+        "form": form
+    })
+
