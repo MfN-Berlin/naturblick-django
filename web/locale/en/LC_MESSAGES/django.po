@@ -344,7 +344,7 @@ msgstr ""
 
 #: views.py:997
 msgid ""
-"Dank für deine Bestätigung, dein Account ist jetzt aktiviert. Öffne die "
+"Danke für deine Bestätigung, dein Account ist jetzt aktiviert. Öffne die "
 "Naturblick App auf deinem Smartphone und logge dich dort ein."
 msgstr ""
 "Thank you for your confirmation, your account is now activated. Open the "
