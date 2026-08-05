@@ -994,7 +994,7 @@ def nb_leicht_ci(request):
 def account_activate(request, activation_id):
     if request.method != "HEAD":
         r = requests.get(f"{settings.PLAYBACK_URL}/account/activate/{activation_id}")
-        msg = _("Dank für deine Bestätigung, dein Account ist jetzt aktiviert. Öffne die Naturblick App auf deinem Smartphone und logge dich dort ein.")
+        msg = _("Danke für deine Bestätigung, dein Account ist jetzt aktiviert. Öffne die Naturblick App auf deinem Smartphone und logge dich dort ein.")
         if r.status_code == 400:
             msg = _("Der Link zur Aktivierung des Benutzeraccounts ist ungültig. Vielleicht ist der Account bereits aktiv?")
         else:
