@@ -29,12 +29,12 @@
     <ul>
         <li>Fotografiere Pflanzen und bestimme sie mit der automatischen Mustererkennung. Aktuell
             kannst du <a
-                    href="https://naturblick.museumfuernaturkunde.berlin/speciesimagerecognition">2180
+                    href="{% url 'plantrecognition' %}{% keep_only_lang %}">3839
                 Pflanzenarten</a> bestimmen.
         </li>
-        <li>Nehme Vogelstimmen auf und ordne sie mit der automatischen Lauterkennung einer der <a
-                href="https://naturblick.museumfuernaturkunde.berlin/speciesaudiorecognition">239
-            Vogelarten</a> zu.
+        <li>Nehme Tierstimmen auf und ordne sie mit der automatischen Lauterkennung einer der <a
+                href="{% url 'animalrecognition' %}{% keep_only_lang %}">533
+            Arten</a> zu.
         </li>
         <li>Mithilfe der Merkmalsauswahl kannst du viele weitere Tier- und Pflanzenarten bestimmen.
             Dazu gehören Säugetiere, Amphibien, Reptilien, Schmetterlinge, Schnecken, Bienen,

@@ -79,9 +79,9 @@
         <summary>What species can be determined by pattern recognition?</summary>
         <p>Our algorithms are continuously improved and the number of species that can be recognized is
             continuously increased. <a
-                    href="https://naturblick.museumfuernaturkunde.berlin/speciesaudiorecognition?lang=en">Here</a>
+                    href="{% url 'animalrecognition' %}{% keep_only_lang %}">Here</a>
             you can find the species list for sound recognition and <a
-                    href="https://naturblick.museumfuernaturkunde.berlin/speciesimagerecognition?lang=en">here</a>
+                    href="{% url 'plantrecognition' %}{% keep_only_lang %}">here</a>
             for image recognition.</p>
     </details>
     <details>
