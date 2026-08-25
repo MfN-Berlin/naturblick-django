@@ -201,6 +201,7 @@ class Species(models.Model):
     avatar_not_found = models.BooleanField(default=False, verbose_name="Avatar was not found")
     primary_name_not_found = models.BooleanField(default=False, verbose_name="Primary name was not found")
     gbif_needs_approval = models.BooleanField(default=False, verbose_name="Gbif needs approval")
+    # https://www.catalogueoflife.org/building/identifier
     colid = models.CharField(blank=True, null=True, max_length=5, unique=True)
     speciesid.short_description = "Species ID"
 
