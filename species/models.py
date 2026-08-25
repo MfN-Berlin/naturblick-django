@@ -1,3 +1,4 @@
+import re
 import requests
 from admin_ordering.models import OrderableModel
 from django.db import models
@@ -12,6 +13,11 @@ from imagekit.processors import ResizeToFit
 from .choices import *
 from .validators import *
 
+# https://www.checklistbank.org/dataset/316115/metadata
+CHECKLIST_BANK_DATASET = 316115
+# Collection of life sometimes include the genus within parens
+# We always store the scientific name without them
+MATCH_COL_PAREN = re.compile(" [(](.*)[)]")
 LARGE_WIDTH = 1200
 MEDIUM_WIDTH = 800
 SMALL_WIDTH = 400
@@ -195,9 +201,23 @@ class Species(models.Model):
     avatar_not_found = models.BooleanField(default=False, verbose_name="Avatar was not found")
     primary_name_not_found = models.BooleanField(default=False, verbose_name="Primary name was not found")
     gbif_needs_approval = models.BooleanField(default=False, verbose_name="Gbif needs approval")
+    colid = models.CharField(blank=True, null=True, max_length=5, unique=True)
     speciesid.short_description = "Species ID"
 
     def validate_gbif(self):
+        if self.colid:
+            response = requests.get(f"https://api.checklistbank.org/dataset/{CHECKLIST_BANK_DATASET}/nameusage/{self.colid}")
+            if response.status_code != 200:
+                raise ValidationError({
+                    "colid": f"{self.colid} could not be validated as a valid catalog of life identifier (Checklistbank returned {response.status_code})"})
+
+            json = response.json()
+            sciname = json['name']['scientificName']
+
+            if not (self.sciname == sciname or self.sciname == re.sub(MATCH_COL_PAREN, "", sciname)):
+                raise ValidationError({
+                    "sciname": f"The scientific name returned from checklistbank ({sciname}) does not match the sciname set for the species ({self.sciname}), even after removing the genus in parentheses"})
+
         if self.gbifusagekey:
 
             if self.gbif_incompatible:
