@@ -215,9 +215,9 @@ class Species(models.Model):
             json = response.json()
             sciname = json['name']['scientificName']
 
-            if not (self.sciname == sciname or self.sciname == re.sub(MATCH_COL_PAREN, "", sciname)):
+            if not (self.sciname == sciname or self.sciname == re.sub(MATCH_COL_PAREN, "", sciname) or self.sciname == sciname.replace("subsp. ", "")):
                 raise ValidationError({
-                    "sciname": f"The scientific name returned from checklistbank ({sciname}) does not match the sciname set for the species ({self.sciname}), even after removing the genus in parentheses"})
+                    "sciname": f"The scientific name returned from checklistbank ({sciname}) does not match the sciname set for the species ({self.sciname}), even after removing genus in parentheses or 'subsp.'"})
 
         if self.gbifusagekey:
 
