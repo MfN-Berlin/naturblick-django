@@ -107,6 +107,19 @@ class HasGbifusagekeyFilter(YesNoFilter):
                 gbifusagekey__isnull=True
             )
 
+class HasColidFilter(YesNoFilter):
+    title = "Catalogue of Life ID"
+    parameter_name = "has_colid"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                colid__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                colid__isnull=True
+            )
 
 class PortraitIsSynonymFilter(YesNoFilter):
     title = "portrait is synonym"
@@ -353,7 +366,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     readonly_fields = ['speciesid', 'rank', 'status']
     list_display = ['id', 'speciesid', 'sciname', 'gername', 'avatar_crop', 'accepted', 'portrait', 'gbif', 'col', 'plantnet', 'search']
     list_display_links = ['id', 'speciesid']
-    list_filter = ['group__nature', HasPortraitFilter, HasGbifusagekeyFilter, HasPrimaryName, 'primary_name_not_found', HasSynonymsFilter,
+    list_filter = ['group__nature', HasPortraitFilter, HasColidFilter, HasGbifusagekeyFilter, HasPrimaryName, 'primary_name_not_found', HasSynonymsFilter,
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
                    HasBirdnetIdFilter,
                    'autoid', HasAvatarFilter, HasFemaleAvatarFilter, 'avatar_not_found', HasAdditionalNames, 'rank', 'status',
