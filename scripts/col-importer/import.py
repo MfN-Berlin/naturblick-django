@@ -103,6 +103,36 @@ def prune_taxons(taxons):
     # Set all parents and accepted to allowed ranks and remove all not allowed ranks
     return { colid: dataclasses.replace(taxon, parent = find_next_parent(taxon, taxons), accepted = find_next_accepted(taxon, taxons)) for colid, taxon in taxons.items() if taxon.rank in ACCEPTED_RANKS or taxon.species_id != None }
 
+def merge_taxon(taxon, synonyms):
+    if taxon.colid in synonyms and taxon.species_id == None:
+        return dataclasses.replace(taxon, species_id = synonyms[taxon.colid].species_id)
+    else:
+        return taxon
+
+def print_deleted(taxons):
+    for accepted_id, synonym in taxons.items():
+        print(f"{synonym.name} ({synonym.colid}, {synonym.species_id}) replaced by {accepted_id}")
+
+def find_matching_parent(rank, name, taxon, taxons):
+    if taxon.rank == rank and taxon.name == name:
+        return taxon.colid
+    elif taxon.parent != None:
+        return find_matching_parent(rank, name, taxons[taxon.parent], taxons)
+    else:
+        return None
+
+def delete_false_synonyms(taxons):
+    false_synonyms = dict()
+    for colid, taxon in taxons.items():
+        if taxon.accepted != None:
+            accepted = taxons[taxon.accepted]
+            matching_id = find_matching_parent(taxon.rank, taxon.name, accepted, taxons)
+            if matching_id != None:
+                false_synonyms[matching_id] = taxon
+    print_deleted(false_synonyms)
+
+    return { colid: merge_taxon(taxon, false_synonyms) for colid, taxon in taxons.items() if taxon.colid not in false_synonyms}
+
 def export_taxons(filename, taxons):
     with open(filename, 'w+') as fd:
         wr = csv.writer(fd, delimiter='\t', quotechar='"')
@@ -117,8 +147,10 @@ def main():
     for species_id, colid, sciname in read_taxon_tsv(in_file):
         get_taxon_hierarchy(colid, species_id, taxons)
 
+
     pruned_taxons = prune_taxons(taxons)
-    export_taxons(out_file, pruned_taxons)
+    accepted_taxons = delete_false_synonyms(pruned_taxons)
+    export_taxons(out_file, accepted_taxons)
 
     return 0
 
