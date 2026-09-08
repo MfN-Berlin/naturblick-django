@@ -1,5 +1,6 @@
 import csv
 import dataclasses
+from itertools import groupby
 import re
 import sys
 from requests import Session
@@ -111,7 +112,7 @@ def merge_taxon(taxon, synonyms):
 
 def print_deleted(taxons):
     for accepted_id, synonym in taxons.items():
-        print(f"{synonym.name} ({synonym.colid}, {synonym.species_id}) replaced by {accepted_id}")
+        print(f"{synonym.name} ({synonym.colid}, {synonym.species_id}, parent: {synonym.parent}, accepted: {synonym.accepted}) replaced by {accepted_id}")
 
 def find_matching_parent(rank, name, taxon, taxons):
     if taxon.rank == rank and taxon.name == name:
@@ -123,15 +124,56 @@ def find_matching_parent(rank, name, taxon, taxons):
 
 def delete_false_synonyms(taxons):
     false_synonyms = dict()
+    to_delete = list()
     for colid, taxon in taxons.items():
         if taxon.accepted != None:
             accepted = taxons[taxon.accepted]
             matching_id = find_matching_parent(taxon.rank, taxon.name, accepted, taxons)
             if matching_id != None:
                 false_synonyms[matching_id] = taxon
-    print_deleted(false_synonyms)
+                to_delete.append(taxon.colid)
 
-    return { colid: merge_taxon(taxon, false_synonyms) for colid, taxon in taxons.items() if taxon.colid not in false_synonyms}
+    print_deleted(false_synonyms)
+    to_delete_set = set(to_delete)
+    return { colid: merge_taxon(taxon, false_synonyms) for colid, taxon in taxons.items() if taxon.colid not in to_delete_set}
+
+def remove_dangling(taxons):
+    accepted = set(taxon.accepted for colid, taxon in taxons.items() if taxon.accepted != None)
+    parents = set(taxon.parent for colid, taxon in taxons.items() if taxon.parent != None)
+
+    dangling_removed = { colid: taxon for colid, taxon in taxons.items() if colid in accepted or colid in parents or taxon.species_id != None }
+    # If taxons were removed, then more taxons could be dangling
+    if(len(dangling_removed) < len(taxons)):
+        return remove_dangling(dangling_removed)
+    else:
+        return taxons
+
+def remove_lonely_duplicates(taxons):
+    accepted = set(taxon.accepted for colid, taxon in taxons.items() if taxon.accepted != None)
+    parents = set(taxon.parent for colid, taxon in taxons.items() if taxon.parent != None)
+
+    sorted_by_name = list(taxons.items())
+    sorted_by_name.sort(key = lambda item: (item[1].name, item[1].rank, item[1].parent if item[1].parent != None else ""))
+    updated = dict()
+    for group in groupby(sorted_by_name, lambda item: (item[1].name, item[1].rank, item[1].parent if item[1].parent != None else "")):
+        with_same_name = list(group[1])
+        species_id = None
+        keep = dict()
+        if len(with_same_name) > 1:
+            for colid, t in with_same_name:
+                if colid in parents or colid in accepted:
+                    keep[colid] = t
+                # Loneley duplicate, can be dropped
+                elif t.species_id != None:
+                    species_id = t.species_id
+
+            kept_but_no_species_id = next(((colid, k) for colid, k in keep.items() if k.species_id == None), None)
+            if kept_but_no_species_id != None:
+                keep[kept_but_no_species_id[0]] = dataclasses.replace(kept_but_no_species_id[1], species_id = species_id)
+            updated.update(keep)
+        else:
+            updated.update(with_same_name)
+    return updated
 
 def export_taxons(filename, taxons):
     with open(filename, 'w+') as fd:
@@ -150,7 +192,16 @@ def main():
 
     pruned_taxons = prune_taxons(taxons)
     accepted_taxons = delete_false_synonyms(pruned_taxons)
-    export_taxons(out_file, accepted_taxons)
+
+    no_loneley_taxons = remove_lonely_duplicates(accepted_taxons)
+    for colid in set(accepted_taxons.keys()) - set(no_loneley_taxons.keys()):
+        deleted = pruned_taxons[colid]
+        print(f"{deleted.name} ({colid}, {deleted.species_id}) transfered to duplicate since it has no children")
+    cleaned_taxons = remove_dangling(no_loneley_taxons)
+    for colid, taxon in set(no_loneley_taxons.items()) - set(cleaned_taxons.items()):
+        print(f"{taxon.name} ({colid}) deleted since it is no longer required")
+
+    export_taxons(out_file, cleaned_taxons)
 
     return 0
 
