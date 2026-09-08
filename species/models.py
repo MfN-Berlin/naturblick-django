@@ -159,7 +159,6 @@ class Avatar(models.Model):
     class Meta:
         db_table = 'avatar'
 
-
 class Species(models.Model):
     speciesid = models.CharField(max_length=255, unique=True)
     gername = models.CharField(max_length=255, null=True, blank=True, db_index=True, verbose_name='German name')
@@ -330,6 +329,15 @@ class Species(models.Model):
         db_table = 'species'
         verbose_name_plural = "species"
 
+class CoLSpecies(models.Model):
+    colid = models.CharField(max_length=5, unique=True)
+    sciname = models.CharField(max_length=255, verbose_name='Scientific name')
+    group = models.ForeignKey(Group, null=True, on_delete=models.PROTECT)
+    rank = models.CharField(max_length=255)
+    status = models.CharField(max_length=255)
+    parent = models.ForeignKey("self", on_delete=models.PROTECT, blank=True, null=True, related_name="parent_set")
+    accepted = models.ForeignKey("self", on_delete=models.PROTECT, blank=True, null=True, related_name="accepted_set")
+    species = models.ForeignKey(Species, null=True, on_delete=models.PROTECT)
 
 class SpeciesName(models.Model):
     species = models.ForeignKey(Species, on_delete=models.CASCADE)

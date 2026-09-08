@@ -41,4 +41,14 @@ used. Only set for taxons that are synonyms or of non accepted rank.
 Our `species.id`. Only set for taxons that were also present in input.
 
 
+## Import querries
 
+```sql
+create table import_col (colid text not null,  name text not null, rank text not null, status text not null, parent text, accepted text, species_id integer references species (id));
+
+\copy import_col FROM '/tmp/col-all-taxons.tsv' NULL '';
+
+update species set colid = i.colid from import_col where s.id = i.species_id;
+
+insert into species ()
+```

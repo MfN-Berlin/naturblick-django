@@ -122,6 +122,7 @@ def find_matching_parent(rank, name, taxon, taxons):
     else:
         return None
 
+# Delete all syonyms that link to a taxon with the same name and rank
 def delete_false_synonyms(taxons):
     false_synonyms = dict()
     to_delete = list()
@@ -137,17 +138,7 @@ def delete_false_synonyms(taxons):
     to_delete_set = set(to_delete)
     return { colid: merge_taxon(taxon, false_synonyms) for colid, taxon in taxons.items() if taxon.colid not in to_delete_set}
 
-def remove_dangling(taxons):
-    accepted = set(taxon.accepted for colid, taxon in taxons.items() if taxon.accepted != None)
-    parents = set(taxon.parent for colid, taxon in taxons.items() if taxon.parent != None)
-
-    dangling_removed = { colid: taxon for colid, taxon in taxons.items() if colid in accepted or colid in parents or taxon.species_id != None }
-    # If taxons were removed, then more taxons could be dangling
-    if(len(dangling_removed) < len(taxons)):
-        return remove_dangling(dangling_removed)
-    else:
-        return taxons
-
+# Remove taxons with the same name, rank and parent as another taxon, but without children
 def remove_lonely_duplicates(taxons):
     accepted = set(taxon.accepted for colid, taxon in taxons.items() if taxon.accepted != None)
     parents = set(taxon.parent for colid, taxon in taxons.items() if taxon.parent != None)
@@ -175,6 +166,18 @@ def remove_lonely_duplicates(taxons):
             updated.update(with_same_name)
     return updated
 
+# Remove any taxon without species id (not in our DB) and no children
+def remove_dangling(taxons):
+    accepted = set(taxon.accepted for colid, taxon in taxons.items() if taxon.accepted != None)
+    parents = set(taxon.parent for colid, taxon in taxons.items() if taxon.parent != None)
+
+    dangling_removed = { colid: taxon for colid, taxon in taxons.items() if colid in accepted or colid in parents or taxon.species_id != None }
+    # If taxons were removed, then more taxons could be dangling
+    if(len(dangling_removed) < len(taxons)):
+        return remove_dangling(dangling_removed)
+    else:
+        return taxons
+
 def export_taxons(filename, taxons):
     with open(filename, 'w+') as fd:
         wr = csv.writer(fd, delimiter='\t', quotechar='"')
@@ -189,7 +192,6 @@ def main():
     for species_id, colid, sciname in read_taxon_tsv(in_file):
         get_taxon_hierarchy(colid, species_id, taxons)
 
-
     pruned_taxons = prune_taxons(taxons)
     accepted_taxons = delete_false_synonyms(pruned_taxons)
 
@@ -197,6 +199,7 @@ def main():
     for colid in set(accepted_taxons.keys()) - set(no_loneley_taxons.keys()):
         deleted = pruned_taxons[colid]
         print(f"{deleted.name} ({colid}, {deleted.species_id}) transfered to duplicate since it has no children")
+
     cleaned_taxons = remove_dangling(no_loneley_taxons)
     for colid, taxon in set(no_loneley_taxons.items()) - set(cleaned_taxons.items()):
         print(f"{taxon.name} ({colid}) deleted since it is no longer required")
