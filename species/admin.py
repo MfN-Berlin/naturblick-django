@@ -10,7 +10,7 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models, transaction
-from django.db.models import Q
+from django.db.models import Q, F
 from django.forms import Textarea
 from django.forms.models import BaseInlineFormSet
 from django.http import HttpResponseRedirect
@@ -30,7 +30,7 @@ from species import utils
 from .models import Species, SpeciesName, Source, GoodToKnow, SimilarSpecies, AdditionalLink, UnambigousFeature, \
     DescMeta, FunFactMeta, InTheCityMeta, Faunaportrait, Group, Floraportrait, Tag, SourcesImprint, SourcesTranslation, \
     FaunaportraitAudioFile, PlantnetPowoidMapping, Portrait, LeichtPortrait, LeichtDescription, \
-    AudioFile, ImageCrop, ImageFile, BirdnetIdMapping, EvaluationAuthor, CHECKLIST_BANK_DATASET
+    AudioFile, ImageCrop, ImageFile, BirdnetIdMapping, EvaluationAuthor, CHECKLIST_BANK_DATASET, CoLSpecies
 from .utils import cropped_image, find_similar_imagefile
 
 admin.site.unregister(User)
@@ -634,6 +634,65 @@ class SpeciesAdmin(admin.ModelAdmin):
             return format_html(' | '.join(links), urls[0], urls[1], f'/species/portrait/{obj.id}',
                                static('species/logo.svg'))
 
+class ColidDiffer(YesNoFilter):
+    title = "CoL ID differs from species"
+    parameter_name = "colid_differs"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.exclude(
+                species__colid=F("colid")
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                species__colid=F("colid")
+            )
+
+class ScinameDiffer(YesNoFilter):
+    title = "scientific name differs from species"
+    parameter_name = "sciname_differs"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.exclude(
+                species__sciname=F("sciname")
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                species__colid=F("sciname")
+            )
+
+class IsNewTaxon(YesNoFilter):
+    title = "is new"
+    parameter_name = "is_new"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.exclude(
+                species__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                species__isnull=False
+            )
+
+class HasGroup(YesNoFilter):
+    title = "has group"
+    parameter_name = "has_group"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                group__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                group__isnull=True
+            )
+
+@admin.register(CoLSpecies)
+class CoLSpeciesAdmin(admin.ModelAdmin):
+    list_filter = [ColidDiffer, ScinameDiffer, IsNewTaxon, HasGroup, 'group']
 
 #
 # Portrait

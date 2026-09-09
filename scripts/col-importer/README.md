@@ -46,9 +46,9 @@ Our `species.id`. Only set for taxons that were also present in input.
 ```sql
 create table import_col (colid text not null,  name text not null, rank text not null, status text not null, parent text, accepted text, species_id integer references species (id));
 
-\copy import_col FROM '/tmp/col-all-taxons.tsv' NULL '';
+\copy import_col from '/tmp/col-all-taxons.tsv' null '';
 
-update species set colid = i.colid from import_col where s.id = i.species_id;
+insert into col_species (colid, sciname, rank, status, species_id) (select colid, name, rank, status, species_id from import_col);
 
-insert into species ()
+update col_species s set parent_id = (select id from col_species where colid = i.parent), acepted_id = (select id from col_species where colid = i.accept) from import_col i where s.colid = i.colid; 
 ```
