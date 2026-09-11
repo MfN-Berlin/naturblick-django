@@ -739,7 +739,7 @@ class CoLSpeciesAdmin(admin.ModelAdmin):
             "all": ["species/admin.css"],
         }
         
-    search_fields = ['sciname']
+    search_fields = ['sciname', 'colid']
     list_filter = [ParentFilter, AcceptedFilter, 'rank', 'status', ColidDiffer, ScinameDiffer, IsNewTaxon, HasGroup, 'group']
     list_display = ['sciname', 'col', 'rank', 'status', 'species_link', 'group', 'accepted', 'parent_link', 'filter_children', 'filter_synonyms', 'search']
     list_display_links = ['sciname']
