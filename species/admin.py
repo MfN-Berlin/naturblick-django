@@ -711,6 +711,27 @@ class ParentFilter(admin.SimpleListFilter):
         except TypeError:
             return
 
+class AcceptedFilter(admin.SimpleListFilter):
+    title = "synonym of"
+    parameter_name = "accepted_id"
+
+    def lookups(self, request, model_admin):
+        if self.value() is not None:
+            species = CoLSpecies.objects.get(id=int(self.value()))
+            return [
+                (self.value(), str(species)),
+            ]
+        else:
+            return [
+                ("", ""),
+            ]
+
+    def queryset(self, request, queryset):
+        try:
+            return queryset.filter(accepted__id=int(self.value()))
+        except TypeError:
+            return
+
 @admin.register(CoLSpecies)
 class CoLSpeciesAdmin(admin.ModelAdmin):
     class Media:
@@ -719,8 +740,8 @@ class CoLSpeciesAdmin(admin.ModelAdmin):
         }
         
     search_fields = ['sciname']
-    list_filter = [ParentFilter, 'rank', 'status', ColidDiffer, ScinameDiffer, IsNewTaxon, HasGroup, 'group']
-    list_display = ['sciname', 'col', 'rank', 'status', 'species_link', 'group', 'accepted', 'parent_link', 'filter_children', 'search']
+    list_filter = [ParentFilter, AcceptedFilter, 'rank', 'status', ColidDiffer, ScinameDiffer, IsNewTaxon, HasGroup, 'group']
+    list_display = ['sciname', 'col', 'rank', 'status', 'species_link', 'group', 'accepted', 'parent_link', 'filter_children', 'filter_synonyms', 'search']
     list_display_links = ['sciname']
     readonly_fields = ['sciname', 'colid', 'rank', 'status', 'parent', 'accepted']
     raw_id_fields = ['species']
@@ -750,7 +771,15 @@ class CoLSpeciesAdmin(admin.ModelAdmin):
             messages.SUCCESS,
         )
 
-       
+    @admin.display(description="Synonyms")
+    def filter_synonyms(self, obj):
+        synonyms = CoLSpecies.objects.filter(accepted=obj).count()
+        if synonyms > 0:
+            url = reverse('admin:species_colspecies_changelist') + f'?accepted_id={obj.id}'
+            return format_html(f'<a href="{{}}">{synonyms}</a>', url)
+        else:
+            return "-"
+
     @admin.display(description="Children")
     def filter_children(self, obj):
         children = CoLSpecies.objects.filter(parent=obj).count()
