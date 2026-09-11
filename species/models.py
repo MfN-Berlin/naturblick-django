@@ -337,11 +337,19 @@ class CoLSpecies(models.Model):
     status = models.CharField(max_length=255)
     parent = models.ForeignKey("self", on_delete=models.PROTECT, blank=True, null=True, related_name="parent_set")
     accepted = models.ForeignKey("self", on_delete=models.PROTECT, blank=True, null=True, related_name="accepted_set")
-    species = models.ForeignKey(Species, null=True, on_delete=models.PROTECT)
+    species = models.ForeignKey(Species, null=True, blank=True, on_delete=models.PROTECT)
 
     class Meta:
         db_table = "col_species"
         verbose_name="Catalogue of Life taxon"
+
+    def __str__(self):
+        return f"{self.sciname} ({self.colid})"
+
+    def clean(self):
+        super().clean()
+        if self.species != None:
+            self.group = species.group
 
 class SpeciesName(models.Model):
     species = models.ForeignKey(Species, on_delete=models.CASCADE)

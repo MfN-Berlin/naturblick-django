@@ -50,7 +50,7 @@ create table import_col (colid text not null,  name text not null, rank text not
 
 insert into col_species (colid, sciname, rank, status, species_id) (select colid, name, rank, status, species_id from import_col);
 
-update col_species s set parent_id = (select id from col_species where colid = i.parent), acepted_id = (select id from col_species where colid = i.accept) from import_col i where s.colid = i.colid;
+update col_species s set parent_id = (select id from col_species where colid = i.parent), accepted_id = (select id from col_species where colid = i.accepted) from import_col i where s.colid = i.colid;
 
-update col_species c set group_id = s.group_id from species s where s.id = i.species_id;
+update col_species c set group_id = s.group_id from species s where s.id = c.species_id;
 ```

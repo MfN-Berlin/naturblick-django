@@ -690,10 +690,128 @@ class HasGroup(YesNoFilter):
                 group__isnull=True
             )
 
+class ParentFilter(admin.SimpleListFilter):
+    title = "parent"
+    parameter_name = "parent_id"
+
+    def lookups(self, request, model_admin):
+        if self.value() is not None:
+            species = CoLSpecies.objects.get(id=int(self.value()))
+            return [
+                (self.value(), str(species)),
+            ]
+        else:
+            return [
+                ("", ""),
+            ]
+
+    def queryset(self, request, queryset):
+        try:
+            return queryset.filter(parent__id=int(self.value()))
+        except TypeError:
+            return
+
 @admin.register(CoLSpecies)
 class CoLSpeciesAdmin(admin.ModelAdmin):
-    list_filter = [ColidDiffer, ScinameDiffer, IsNewTaxon, HasGroup, 'group']
+    class Media:
+        css = {
+            "all": ["species/admin.css"],
+        }
+        
+    search_fields = ['sciname']
+    list_filter = [ParentFilter, 'rank', 'status', ColidDiffer, ScinameDiffer, IsNewTaxon, HasGroup, 'group']
+    list_display = ['sciname', 'col', 'rank', 'status', 'species_link', 'group', 'accepted', 'parent_link', 'filter_children', 'search']
+    list_display_links = ['sciname']
+    readonly_fields = ['sciname', 'colid', 'rank', 'status', 'parent', 'accepted']
+    raw_id_fields = ['species']
+    actions = ['set_group_for_all_children']
 
+    def set_group(self, queryset, group):
+        taxons = queryset.filter(Q(group__isnull=True) | Q(group=group))
+        if queryset.count() > 0:
+            updated = taxons.update(group=group)
+            return updated + self.set_group(CoLSpecies.objects.filter(parent__in=taxons), group)
+        else:
+            return 0
+        
+    @admin.action(description="Set group of all unset children to parent")
+    def set_group_for_all_children(self, request, queryset):
+        updated = 0
+        for parent in queryset.filter(group__isnull=False):
+            updated += self.set_group(CoLSpecies.objects.filter(parent=parent), parent.group)
+        self.message_user(
+            request,
+            ngettext(
+                "%d taxon was updated.",
+                "%d taxons were updated.",
+                updated,
+            )
+            % updated,
+            messages.SUCCESS,
+        )
+
+       
+    @admin.display(description="Children")
+    def filter_children(self, obj):
+        children = CoLSpecies.objects.filter(parent=obj).count()
+        if children > 0:
+            url = reverse('admin:species_colspecies_changelist') + f'?parent_id={obj.id}'
+            return format_html(f'<a href="{{}}">{children}</a>', url)
+        else:
+            return "-"
+
+    @admin.display(description='Synonym of')
+    def accepted_link(self, obj):
+        if obj.accepted is None:
+            return "-"
+        else:
+            url = reverse('admin:species_colspecies_change', args=(obj.accepted.id,))
+            return format_html(f'<a href="{{}}">{obj.accepted}</a>', url)
+
+
+    @admin.display(description='Parent')
+    def parent_link(self, obj):
+        if obj.parent is None:
+            return "-"
+        else:
+            url = reverse('admin:species_colspecies_change', args=(obj.parent.id,))
+            return format_html(f'<a href="{{}}">{obj.parent}</a>', url)
+    
+    @admin.display(description='Species')
+    def species_link(self, obj):
+        if obj.species_id is None:
+            return "-"
+        else:
+            url = reverse('admin:species_species_change', args=(obj.species.id,))
+            return format_html(f'<a href="{{}}">{obj.species.sciname} ({obj.species.colid})</a>', url)
+    
+    @admin.display(
+        description="COL ID"
+    )
+    def col(self, obj):
+        col_url = f'https://www.checklistbank.org/dataset/{CHECKLIST_BANK_DATASET}/nameusage/{obj.colid}'
+        return format_html(f'<a href="{{}}">{obj.colid}</a>', col_url)
+
+    @admin.display(
+        description='Search'
+    )
+    def search(self, obj):
+        plantnet_url = f'https://identify.plantnet.org/k-world-flora/species?search={obj.sciname}'
+        plantnet_img_url = static('species/plantnet_white_border_marker.png')
+        gbif_url = f'https://old.gbif.org/species/search?q={obj.sciname}'
+        gbif_img_url = static('species/gbif-mark-green-logo.png')
+        col_url = f'https://www.checklistbank.org/dataset/{CHECKLIST_BANK_DATASET}/names?content=SCIENTIFIC_NAME&q={obj.sciname}'
+        col_img_url = static('species/col_square_logo.jpg')
+        scientific_url_name = obj.sciname.replace(' ', '_')
+        wikipedia_url = f'https://en.wikipedia.org/wiki/{scientific_url_name}'
+        wikipedia_img_url = static('species/Wikipedia-logo-v2.svg')
+        scientific_wikimedia_url_name = obj.sciname.replace(' ', '+')
+        wikimedia_url = f'https://commons.wikimedia.org/w/index.php?search={scientific_wikimedia_url_name}&title=Special:MediaSearch&type=image'
+        wikimedia_img_url = static('species/Wikimedia Commons Logo.svg')
+        return format_html(
+            '<a title="GBIF" href="{}"><img class="image-link" src={}></a> | <a title="COL" href="{}"><img class="image-link" src={}></a> | <a title="Wikipedia" href="{}"><img class="image-link" src={}></a> | <a href="{}"><img title="Wikimedia Image Search" class="image-link" src={}></a> | <a title="Plantnet" href="{}"><img class="image-link" src={}></a>',
+            gbif_url, gbif_img_url, col_url, col_img_url, wikipedia_url, wikipedia_img_url, wikimedia_url,
+            wikimedia_img_url, plantnet_url, plantnet_img_url)
 #
 # Portrait
 #
