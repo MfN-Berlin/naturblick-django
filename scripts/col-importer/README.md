@@ -53,4 +53,10 @@ insert into col_species (colid, sciname, rank, status, species_id) (select colid
 update col_species s set parent_id = (select id from col_species where colid = i.parent), accepted_id = (select id from col_species where colid = i.accepted) from import_col i where s.colid = i.colid;
 
 update col_species c set group_id = s.group_id from species s where s.id = c.species_id;
+
+update col_species a set group_id = s.group_id from col_species s where s.accepted_id = a.id and a.rank in ('species', 'subspecies') and a.group_id is null;
+
+update col_species a set group_id = s.group_id from col_species s where s.parent_id = a.id and a.rank in ('species', 'subspecies') and a.group_id is null;
+
+
 ```
