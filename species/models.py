@@ -162,7 +162,7 @@ class Avatar(models.Model):
 class Species(models.Model):
     speciesid = models.CharField(max_length=255, unique=True)
     gername = models.CharField(max_length=255, null=True, blank=True, db_index=True, verbose_name='German name')
-    sciname = models.CharField(max_length=255, unique=True, db_index=True, verbose_name='Scientific name')
+    sciname = models.CharField(max_length=255, verbose_name='Scientific name')
     engname = models.CharField(max_length=255, null=True, blank=True, db_index=True, verbose_name='English name')
     group = models.ForeignKey(Group, on_delete=models.PROTECT)
     nbclassid = models.CharField(max_length=255, blank=True, null=True)
@@ -235,13 +235,13 @@ class Species(models.Model):
                         "colid": f"The CoL accepted taxon ({accepted_colid}) must be present."})
             else:
                 self.accepted_species = None
-                if parent_colid != None and rank in ('species', 'genus'):
+                if parent_colid != None and rank == 'species':
                     try:
-                        self.parent = Species.objects.get(colid=parent_colid)
+                        self.parent = Species.objects.get(colid=parent_colid, rank='genus')
 
                     except Species.DoesNotExist:
                         raise ValidationError({
-                            "colid": f"The CoL parent ({parent_colid}) must be present for all species and genera."})
+                            "colid": f"The CoL parent ({parent_colid}) must be present for all species."})
 
 
             self.rank = rank

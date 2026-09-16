@@ -406,7 +406,7 @@ class SpeciesAdmin(admin.ModelAdmin):
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid', 'rank', 'status']
-    list_display = ['id', 'sciname', 'gername', 'avatar_crop', 'accepted', 'parent', 'filter_children', 'filter_synonyms', 'portrait', 'col', 'search']
+    list_display = ['id', 'sciname', 'rank', 'gername', 'avatar_crop', 'accepted', 'parent', 'filter_children', 'filter_synonyms', 'portrait', 'col', 'search']
     list_display_links = ['id']
     list_filter = ['group__nature', ParentFilter, AcceptedFilter, HasPortraitFilter, HasColidFilter, HasGbifusagekeyFilter, HasPrimaryName, 'primary_name_not_found', HasSynonymsFilter,
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
