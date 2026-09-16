@@ -202,6 +202,8 @@ class Species(models.Model):
     gbif_needs_approval = models.BooleanField(default=False, verbose_name="Gbif needs approval")
     # https://www.catalogueoflife.org/building/identifier
     colid = models.CharField(blank=True, null=True, max_length=5, unique=True)
+    parent = models.ForeignKey("self", on_delete=models.PROTECT, blank=True, null=True, related_name="parent_set")
+
     speciesid.short_description = "Species ID"
 
     def validate_gbif(self):
@@ -213,80 +215,53 @@ class Species(models.Model):
 
             json = response.json()
             sciname = json['name']['scientificName']
+            rank = json["name"]["rank"]
+            status = json["status"]
+            parent_colid = json.get("parentId", None)
+            accepted_colid = json["accepted"]["id"] if "accepted" in json else None
 
             if not (self.sciname == sciname or self.sciname == re.sub(MATCH_COL_PAREN, "", sciname) or self.sciname == sciname.replace("subsp. ", "")):
                 raise ValidationError({
                     "sciname": f"The scientific name returned from checklistbank ({sciname}) does not match the sciname set for the species ({self.sciname}), even after removing genus in parentheses or 'subsp.'"})
 
+            if accepted_colid:
+                self.parent = None # Only accepted species have a parent
+                if not self.id:
+                    raise ValidationError({"colid": "All new species must not be CoL synonyms"})
+                try:
+                    self.accepted_species = Species.objects.get(colid=accepted_colid)
+                except Species.DoesNotExist:
+                    raise ValidationError({
+                        "colid": f"The CoL accepted taxon ({accepted_colid}) must be present."})
+            else:
+                self.accepted_species = None
+                if parent_colid != None and rank in ('species', 'genus'):
+                    try:
+                        self.parent = Species.objects.get(colid=parent_colid)
+
+                    except Species.DoesNotExist:
+                        raise ValidationError({
+                            "colid": f"The CoL parent ({parent_colid}) must be present for all species and genera."})
+
+
+            self.rank = rank
+            self.status = status
+        else:
+            # Only species with colid has rank and status
+            self.rank = None
+            self.status = None
+
+            if not self.id:
+                raise ValidationError({"colid": "All new species must have colid set"})
+
         if self.gbifusagekey:
-
-            if self.gbif_incompatible:
-                raise ValidationError({
-                    "gbif_incompatible": "Can not be set for a species with a gbifusagekey"})
-
             response = requests.get(f"https://api.gbif.org/v1/species/{self.gbifusagekey}")
 
             if response.status_code != 200:
                 raise ValidationError({
                     "gbifusagekey": f"{self.gbifusagekey} could not be validated as a valid GBIF usage key (GBIF returned {response.status_code})"})
 
-            json = response.json()
-
-            is_accepted = not ('acceptedKey' in json)
-            scientific_name = json['canonicalName']
-
-            # Always set rank and status from gbif response
-            self.rank = json['rank']
-            self.status = json['taxonomicStatus']
-
-            if self.accepted_species:
-                if not (json['rank'] in ['SUBSPECIES','VARIETY','FORM']) and is_accepted:
-                    raise ValidationError(
-                        {"gbifusagekey": "Accepted species can only be set for taxon that are accepted if they are SUBSPECIES, VARIETY or FORM"})
-                if self.birdnetid:
-                    raise ValidationError(
-                        {"birdnetid": "Birdnetid can only be set for accepted_species"})
-
-                if self.plantnetpowoid:
-                    raise ValidationError(
-                        {"plantnetpowoid": "Plantnetpowoid  can only be set for accepted_species"})
-            else:
-                if not is_accepted:
-                    raise ValidationError(
-                        {"gbifusagekey": "Accepted species must be set for a GBIF species that is NOT accepted"})
-
-            sciname_is_ok = False
-
-            if scientific_name == self.sciname.replace('×', '') and json['rank'] in ('VARIETY', 'FORM', 'SUBSPECIES', 'SPECIES'):
-                sciname_is_ok = True
-
-            if (scientific_name == self.sciname.replace('var. ', '') and json['rank'] == 'VARIETY'):
-                sciname_is_ok = True
-
-            if (scientific_name == self.sciname.replace('f. ', '') and json['rank'] == 'FORM'):
-                sciname_is_ok = True
-
-            if scientific_name == self.sciname:
-                sciname_is_ok = True
-
-            if not sciname_is_ok:
-                raise ValidationError(
-                    {"sciname": f"The scientific name does not match the canonical name ({scientific_name}) of the provided gbifusagekey."})
-
-            if json['rank'] == 'VARIETY' and 'var.' not in self.sciname:
-                raise ValidationError("A taxon of rank VARIETY must have 'var.' in its scientific name")
-
-            if json['rank'] == 'FORM' and 'f.' not in self.sciname:
-                raise ValidationError("A taxon of rank FORM must have 'f.' in its scientific name")
         else:
-
-            # Only species with gbifusagekey has rank and status
-            self.rank = None
-            self.status = None
-
-            if not self.id:
-                raise ValidationError({"gbifusagekey": "All new species must have gbifusagekey set"})
-
             if self.birdnetid:
                 raise ValidationError(
                     {"birdnetid": "Birdnetid must NOT be set for a species without gbifusagekey"})
@@ -349,7 +324,7 @@ class CoLSpecies(models.Model):
     def clean(self):
         super().clean()
         if self.species != None:
-            self.group = species.group
+            self.group = self.species.group
 
 class SpeciesName(models.Model):
     species = models.ForeignKey(Species, on_delete=models.CASCADE)
