@@ -385,6 +385,21 @@ class AcceptedFilter(admin.SimpleListFilter):
         except TypeError:
             return
 
+class HasParentFilter(YesNoFilter):
+    title = "has parent"
+    parameter_name = "has_parent"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                parent__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                parent__isnull=True
+            )
+
+
 class ImportImageFromWikimediaForm(forms.Form):
     wikimedia_url = forms.URLField(label="Wikimedia image URL")
 
@@ -408,7 +423,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     readonly_fields = ['speciesid', 'rank', 'status']
     list_display = ['id', 'sciname', 'rank', 'gername', 'avatar_crop', 'accepted', 'parent', 'filter_children', 'filter_synonyms', 'portrait', 'col', 'search']
     list_display_links = ['id']
-    list_filter = ['group__nature', ParentFilter, AcceptedFilter, HasPortraitFilter, HasColidFilter, HasGbifusagekeyFilter, HasPrimaryName, 'primary_name_not_found', HasSynonymsFilter,
+    list_filter = ['group__nature', ParentFilter, AcceptedFilter, HasPortraitFilter, HasColidFilter, HasGbifusagekeyFilter, HasPrimaryName, 'primary_name_not_found', HasParentFilter, HasSynonymsFilter,
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
                    HasBirdnetIdFilter,
                    'autoid', HasAvatarFilter, HasFemaleAvatarFilter, 'avatar_not_found', HasAdditionalNames, 'rank', 'status',

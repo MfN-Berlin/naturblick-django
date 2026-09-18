@@ -291,7 +291,7 @@ class Species(models.Model):
         self.generate_id_for_new_species()
 
     def __str__(self):
-        name_list = [item for item in [self.gername, self.sciname, self.speciesid] if item is not None]
+        name_list = [item for item in [self.sciname, self.gername] if item is not None]
         return ' - '.join(name_list)
 
     def name(self, lang):
