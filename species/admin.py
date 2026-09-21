@@ -343,6 +343,63 @@ class HasSpaceFilter(YesNoFilter):
                 sciname__contains=" "
             )
 
+class ParentFilter(admin.SimpleListFilter):
+    title = "parent"
+    parameter_name = "parent_id"
+
+    def lookups(self, request, model_admin):
+        if self.value() is not None:
+            species = Species.objects.get(id=int(self.value()))
+            return [
+                (self.value(), str(species)),
+            ]
+        else:
+            return [
+                ("", ""),
+            ]
+
+    def queryset(self, request, queryset):
+        try:
+            return queryset.filter(parent__id=int(self.value()))
+        except TypeError:
+            return
+
+class AcceptedFilter(admin.SimpleListFilter):
+    title = "synonym of"
+    parameter_name = "accepted_id"
+
+    def lookups(self, request, model_admin):
+        if self.value() is not None:
+            species = Species.objects.get(id=int(self.value()))
+            return [
+                (self.value(), str(species)),
+            ]
+        else:
+            return [
+                ("", ""),
+            ]
+
+    def queryset(self, request, queryset):
+        try:
+            return queryset.filter(accepted_species__id=int(self.value()))
+        except TypeError:
+            return
+
+class HasParentFilter(YesNoFilter):
+    title = "has parent"
+    parameter_name = "has_parent"
+
+    def queryset(self, request, queryset):
+        if self.value() == "y":
+            return queryset.filter(
+                parent__isnull=False
+            )
+        if self.value() == "n":
+            return queryset.filter(
+                parent__isnull=True
+            )
+
+
 class ImportImageFromWikimediaForm(forms.Form):
     wikimedia_url = forms.URLField(label="Wikimedia image URL")
 
@@ -364,14 +421,14 @@ class SpeciesAdmin(admin.ModelAdmin):
         SpeciesNameInline
     ]
     readonly_fields = ['speciesid', 'rank', 'status']
-    list_display = ['id', 'speciesid', 'sciname', 'gername', 'avatar_crop', 'accepted', 'portrait', 'gbif', 'col', 'plantnet', 'search']
-    list_display_links = ['id', 'speciesid']
-    list_filter = ['group__nature', HasPortraitFilter, HasColidFilter, HasGbifusagekeyFilter, HasPrimaryName, 'primary_name_not_found', HasSynonymsFilter,
+    list_display = ['id', 'sciname', 'rank', 'gername', 'avatar_crop', 'accepted', 'parent', 'filter_children', 'filter_synonyms', 'portrait', 'col', 'search']
+    list_display_links = ['id']
+    list_filter = ['group__nature', ParentFilter, AcceptedFilter, HasPortraitFilter, HasColidFilter, HasGbifusagekeyFilter, HasPrimaryName, 'primary_name_not_found', HasParentFilter, HasSynonymsFilter,
                    IsSynonymFilter, HasPlantnetPowoidFilter, HasPlantnetPowoidMappingFilter, HasNbclassidFilter,
                    HasBirdnetIdFilter,
                    'autoid', HasAvatarFilter, HasFemaleAvatarFilter, 'avatar_not_found', HasAdditionalNames, 'rank', 'status',
                    'gbif_incompatible', HasSpaceFilter, 'gbif_needs_approval', 'group']
-    search_fields = ['id', 'speciesid', 'sciname', 'gername', 'gbifusagekey']
+    search_fields = ['id', 'sciname', 'gername', 'colid']
     fields = ['speciesid',
               'group',
               'sciname',
@@ -391,6 +448,7 @@ class SpeciesAdmin(admin.ModelAdmin):
               'rank',
               'status',
               'accepted_species',
+              'parent',
               'plantnetpowoid',
               'birdnetid',
               'is_hidden',
@@ -551,6 +609,24 @@ class SpeciesAdmin(admin.ModelAdmin):
         else:
             return "-"
 
+    @admin.display(description="Synonyms")
+    def filter_synonyms(self, obj):
+        synonyms = Species.objects.filter(accepted_species=obj).count()
+        if synonyms > 0:
+            url = reverse('admin:species_species_changelist') + f'?accepted_id={obj.id}'
+            return format_html(f'<a href="{{}}">{synonyms}</a>', url)
+        else:
+            return "-"
+
+    @admin.display(description="Children")
+    def filter_children(self, obj):
+        children = Species.objects.filter(parent=obj).count()
+        if children > 0:
+            url = reverse('admin:species_species_changelist') + f'?parent_id={obj.id}'
+            return format_html(f'<a href="{{}}">{children}</a>', url)
+        else:
+            return "-"
+
     @admin.display(
         description='Search'
     )
@@ -573,27 +649,6 @@ class SpeciesAdmin(admin.ModelAdmin):
             wikimedia_img_url, plantnet_url, plantnet_img_url)
 
     @admin.display(
-        description='Powo ID'
-    )
-    def plantnet(self, obj):
-        if obj.plantnetpowoid is None:
-            return '-'
-        else:
-            plantnet_url = f'https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:{obj.plantnetpowoid}'
-            return format_html(f'<a href="{{}}">{obj.plantnetpowoid}</a>', plantnet_url)
-
-    @admin.display()
-    def gbif(self, obj):
-        if obj.gbifusagekey is None:
-            if obj.gbif_incompatible:
-                return 'Not compatible'
-            else:
-                return '-'
-        else:
-            gbif_url = f'https://old.gbif.org/species/{obj.gbifusagekey}'
-            return format_html(f'<a href="{{}}">{obj.gbifusagekey}</a>', gbif_url)
-
-    @admin.display(
         description="COL ID"
     )
     def col(self, obj):
@@ -610,6 +665,14 @@ class SpeciesAdmin(admin.ModelAdmin):
         else:
             url = reverse('admin:species_species_change', args=(obj.accepted_species.id,))
             return format_html(f'<a href="{{}}">{obj.accepted_species.sciname}</a>', url)
+
+    @admin.display(description='Parent')
+    def parent(self, obj):
+        if obj.parent is None:
+            return "-"
+        else:
+            url = reverse('admin:species_species_change', args=(obj.parent.id,))
+            return format_html(f'<a href="{{}}">{obj.parent.sciname}</a>', url)
 
     @admin.display()
     def portrait(self, obj):
@@ -690,7 +753,7 @@ class HasGroup(YesNoFilter):
                 group__isnull=True
             )
 
-class ParentFilter(admin.SimpleListFilter):
+class CoLParentFilter(admin.SimpleListFilter):
     title = "parent"
     parameter_name = "parent_id"
 
@@ -711,7 +774,7 @@ class ParentFilter(admin.SimpleListFilter):
         except TypeError:
             return
 
-class AcceptedFilter(admin.SimpleListFilter):
+class CoLAcceptedFilter(admin.SimpleListFilter):
     title = "synonym of"
     parameter_name = "accepted_id"
 
@@ -740,7 +803,7 @@ class CoLSpeciesAdmin(admin.ModelAdmin):
         }
         
     search_fields = ['sciname', 'colid']
-    list_filter = [ParentFilter, AcceptedFilter, 'rank', 'status', ColidDiffer, ScinameDiffer, IsNewTaxon, HasGroup, 'group']
+    list_filter = [CoLParentFilter, CoLAcceptedFilter, 'rank', 'status', ColidDiffer, ScinameDiffer, IsNewTaxon, HasGroup, 'group']
     list_display = ['sciname', 'col', 'rank', 'status', 'species_link', 'group', 'accepted', 'parent_link', 'filter_children', 'filter_synonyms', 'search']
     list_display_links = ['sciname']
     readonly_fields = ['sciname', 'colid', 'rank', 'status', 'parent', 'accepted']

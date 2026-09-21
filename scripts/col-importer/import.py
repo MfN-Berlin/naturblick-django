@@ -78,7 +78,7 @@ def read_taxon_tsv(filename):
         for row in rd:
             yield row
 
-ACCEPTED_RANKS = set(['domain', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'subspecies'])
+ACCEPTED_RANKS = set(['domain', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'])
 
 def find_next_parent(taxon, taxons):
     if taxon.parent != None:
