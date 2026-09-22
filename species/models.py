@@ -224,6 +224,10 @@ class Species(models.Model):
                 raise ValidationError({
                     "sciname": f"The scientific name returned from checklistbank ({sciname}) does not match the sciname set for the species ({self.sciname}), even after removing genus in parentheses or 'subsp.'"})
 
+            # Following ranks always have parent as accepted species
+            if rank in ('subspecies', 'form', 'variety'):
+                accepted_colid = parent_colid
+
             if accepted_colid:
                 self.parent = None # Only accepted species have a parent
                 if not self.id:

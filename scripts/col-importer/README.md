@@ -93,6 +93,9 @@ insert into species (sciname, speciesid, group_id, rank, status, colid, created_
 -- Set parent for all species
 update species s set parent_id = (select id from species where colid = p.colid) from col_species c join col_species p on c.parent_id = p.id where s.colid = c.colid and c.rank = 'species' and p.rank = 'genus' and c.parent_id is not null;
 
+-- Unset accepted for all non synonym taxons
+update species s set accepted_species_id = null from col_species c where s.colid = c.colid and c.accepted_id is null;
+
 -- Set parent as accepted for all subspecies
 update species s set accepted_species_id = (select id from species where colid = p.colid) from col_species c join col_species p on c.parent_id = p.id where s.colid = c.colid and c.rank in  ('subspecies', 'variety', 'form') and p.rank = 'species';
 
