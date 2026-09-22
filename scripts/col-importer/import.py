@@ -46,7 +46,7 @@ def clean_name(name, rank):
     else:
         name_items = cleaned_name.split(' ')
         if len(name_items) != 3:
-            raise ValueError(f"Subspecies: {name} can not be extended with subsp.")
+            return cleaned_name
         name_items.insert(2, "subsp.")
 
         return ' '.join(name_items)
