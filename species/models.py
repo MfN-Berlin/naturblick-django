@@ -159,6 +159,33 @@ class Avatar(models.Model):
     class Meta:
         db_table = 'avatar'
 
+ACCEPTED_RANKS = set(['domain', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'])
+
+def get_col_data(colid):
+    response = requests.get(f"https://api.checklistbank.org/dataset/{CHECKLIST_BANK_DATASET}/nameusage/{colid}")
+    if response.status_code != 200:
+        raise ValidationError({
+            "colid": f"{colid} could not be validated as a valid catalog of life identifier (Checklistbank returned {response.status_code})"})
+    return response.json()
+
+def find_next_parent(taxon):
+    parent_id = taxon.get("parentId", None)
+    if parent_id != None:
+        parent = get_col_data(parent_id)
+        if parent["name"]["rank"] not in ACCEPTED_RANKS:
+            return find_next_parent(parent_id)
+        else:
+            return parent_id
+    else:
+        return None
+
+def find_next_accepted(accepted_id):
+    accepted = get_col_data(accepted_id)
+    if accepted["name"]["rank"] not in ACCEPTED_RANKS:
+        return find_next_parent(accepted)
+    else:
+        return accepted_id
+
 class Species(models.Model):
     speciesid = models.CharField(max_length=255, unique=True)
     gername = models.CharField(max_length=255, null=True, blank=True, db_index=True, verbose_name='German name')
@@ -208,25 +235,22 @@ class Species(models.Model):
 
     def validate_gbif(self):
         if self.colid:
-            response = requests.get(f"https://api.checklistbank.org/dataset/{CHECKLIST_BANK_DATASET}/nameusage/{self.colid}")
-            if response.status_code != 200:
-                raise ValidationError({
-                    "colid": f"{self.colid} could not be validated as a valid catalog of life identifier (Checklistbank returned {response.status_code})"})
-
-            json = response.json()
+            json = get_col_data(self.colid)
             sciname = json['name']['scientificName']
             rank = json["name"]["rank"]
             status = json["status"]
             parent_colid = json.get("parentId", None)
             accepted_colid = json["accepted"]["id"] if "accepted" in json else None
 
-            if not (self.sciname == sciname or self.sciname == re.sub(MATCH_COL_PAREN, "", sciname) or self.sciname == sciname.replace("subsp. ", "")):
-                raise ValidationError({
-                    "sciname": f"The scientific name returned from checklistbank ({sciname}) does not match the sciname set for the species ({self.sciname}), even after removing genus in parentheses or 'subsp.'"})
-
             # Following ranks always have parent as accepted species
             if rank in ('subspecies', 'form', 'variety'):
                 accepted_colid = parent_colid
+
+            accepted_colid = find_next_accepted(accepted_colid)
+
+            if not (self.sciname == sciname or self.sciname == re.sub(MATCH_COL_PAREN, "", sciname) or self.sciname == sciname.replace("subsp. ", "")):
+                raise ValidationError({
+                    "sciname": f"The scientific name returned from checklistbank ({sciname}) does not match the sciname set for the species ({self.sciname}), even after removing genus in parentheses or 'subsp.'"})
 
             if accepted_colid:
                 self.parent = None # Only accepted species have a parent
