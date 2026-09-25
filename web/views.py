@@ -993,7 +993,7 @@ def nb_leicht_ci(request):
 
 def account_activate(request, activation_id):
     if request.method != "HEAD":
-        r = requests.get(f"{settings.PLAYBACK_URL}/account/activate/{activation_id}")
+        r = requests.get(f"{settings.PLAYBACK_URL}account/activate/{activation_id}")
         msg = _("Danke für deine Bestätigung, dein Account ist jetzt aktiviert. Öffne die Naturblick App auf deinem Smartphone und logge dich dort ein.")
         if r.status_code == 400:
             msg = _("Der Link zur Aktivierung des Benutzeraccounts ist ungültig. Vielleicht ist der Account bereits aktiv?")
@@ -1031,7 +1031,7 @@ def account_reset_password(request):
         form = ResetPasswordForm(request.POST)
         if form.is_valid():
             password = form.cleaned_data['password']
-            r = requests.post(f"{settings.PLAYBACK_URL}/password/reset/{request.GET['token']}", {"password": password})
+            r = requests.post(f"{settings.PLAYBACK_URL}password/reset/{request.GET['token']}", {"password": password})
             if r.status_code == 400:
                 msg = _("Der Link zum Zurücksetzen des Passworts ist abgelaufen, bitte fordere eine neue Email zum Zurücksetzen des Passworts an.")
             else:
