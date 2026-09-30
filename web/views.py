@@ -700,17 +700,17 @@ def plausibility(within_timeframe, within_range):
 
 def assessment_text(assessment):
     if assessment is None:
-        return _("Es hat noch kein:e Expert:in die Beobachtung angesehen.")
+        return _("Es hat noch kein*e Expert*in die Beobachtung angesehen.")
     elif assessment == "true":
-        return _("Ein:e Expert:in konnte die Bestimmung bestätigen.")
+        return _("Ein*e Expert*in konnte die Bestimmung bestätigen.")
     elif assessment == "uncertain_true":
         return _(
-            "Ein:e Expert:in konnte die Artbestimmung nicht sicher bestätigen, hält sie aber für wahrscheinlich richtig.")
+            "Ein*e Expert*in konnte die Artbestimmung nicht sicher bestätigen, hält sie aber für wahrscheinlich richtig.")
     elif assessment == "uncertain_false":
         return _(
-            "Ein:e Expert:in konnte die Artbestimmung nicht sicher ausschließen, hält sie aber für wahrscheinlich falsch.")
+            "Ein*e Expert*in konnte die Artbestimmung nicht sicher ausschließen, hält sie aber für wahrscheinlich falsch.")
     elif assessment == "impossible":
-        return _("Ein:e Expert:in ist sich nach Sichtung des Mediums nicht sicher.")
+        return _("Ein*e Expert*in ist sich nach Sichtung des Mediums nicht sicher.")
     else:
         raise ValueError(f"Unexpected assessment value: {assessment}")
 

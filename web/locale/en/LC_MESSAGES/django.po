@@ -255,16 +255,16 @@ msgid "Diese Beobachtung ist nicht plausibel."
 msgstr "This observation is not plausible."
 
 #: views.py:703
-msgid "Es hat noch kein:e Expert:in die Beobachtung angesehen."
+msgid "Es hat noch kein*e Expert*in die Beobachtung angesehen."
 msgstr "No expert has looked at the observation yet."
 
 #: views.py:705
-msgid "Ein:e Expert:in konnte die Bestimmung bestätigen."
+msgid "Ein*e Expert*in konnte die Bestimmung bestätigen."
 msgstr "An expert was able to confirm the identification."
 
 #: views.py:708
 msgid ""
-"Ein:e Expert:in konnte die Artbestimmung nicht sicher bestätigen, hält sie "
+"Ein*e Expert*in konnte die Artbestimmung nicht sicher bestätigen, hält sie "
 "aber für wahrscheinlich richtig."
 msgstr ""
 "An expert could not confirm the identification with certainty, but considers "
@@ -272,14 +272,14 @@ msgstr ""
 
 #: views.py:711
 msgid ""
-"Ein:e Expert:in konnte die Artbestimmung nicht sicher ausschließen, hält sie "
+"Ein:e Expert*in konnte die Artbestimmung nicht sicher ausschließen, hält sie "
 "aber für wahrscheinlich falsch."
 msgstr ""
 "An expert could not confirm the identification with certainty, but considers "
 "it likely to be wrong."
 
 #: views.py:713
-msgid "Ein:e Expert:in ist sich nach Sichtung des Mediums nicht sicher."
+msgid "Ein*e Expert*in ist sich nach Sichtung des Mediums nicht sicher."
 msgstr "An expert is not sure after viewing the medium."
 
 #: views.py:729 views.py:742 views.py:746
