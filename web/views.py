@@ -234,7 +234,7 @@ def portrait(request, id):
                 "unambigousfeature_set",
                 "similarspecies_set__species__avatar_new__imagefile",
             )
-            .get(species_id=species.id, language=language)
+            .get(species_id=species.id, language=language, published=True)
         )
     except:
         if language == 'dels':
