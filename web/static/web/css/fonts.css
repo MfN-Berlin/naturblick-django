@@ -1,0 +1,10 @@
+/* FiraGO by bBox Type, SIL Open Font License 1.1 (see ../fonts/OFL.txt) */
+/* FiraGO runs heavier than Lato, so bold weights are mapped one step lighter:
+   700 -> SemiBold, 900 -> Bold. */
+@font-face { font-family: FiraGO; font-style: normal; font-weight: 300; font-display: swap; src: url("../fonts/FiraGO-Light.woff2") format("woff2"); }
+@font-face { font-family: FiraGO; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/FiraGO-Regular.woff2") format("woff2"); }
+@font-face { font-family: FiraGO; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/FiraGO-Medium.woff2") format("woff2"); }
+@font-face { font-family: FiraGO; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/FiraGO-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: FiraGO; font-style: normal; font-weight: 900; font-display: swap; src: url("../fonts/FiraGO-Bold.woff2") format("woff2"); }
+@font-face { font-family: FiraGO; font-style: italic; font-weight: 400; font-display: swap; src: url("../fonts/FiraGO-Italic.woff2") format("woff2"); }
+@font-face { font-family: FiraGO; font-style: italic; font-weight: 700; font-display: swap; src: url("../fonts/FiraGO-SemiBoldItalic.woff2") format("woff2"); }
