@@ -471,6 +471,9 @@ def kontakt(request):
 def privacy(request):
     return web_render(request, "privacy")
 
+def privacy_entdeckerspiel(request):
+    return web_render(request, "privacy_entdeckerspiel")
+
 
 def imprint(request):
     return web_render(request, "imprint")
