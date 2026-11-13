@@ -20,6 +20,7 @@ urlpatterns = [
     path("about", views.about, name="about"),
     path("kontakt", views.kontakt, name="kontakt"),
     path("privacy", views.privacy, name="privacy"),
+    path("privacy-entdeckerspiel", views.privacy_entdeckerspiel, name="privacy_entdeckerspiel"),
     path("imprint", views.imprint, name="imprint"),
     path("delsbedienung", views.delsbedienung, name="delsbedienung"),
     path("naturespots", views.naturespots, name="naturespots"),

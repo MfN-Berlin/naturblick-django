@@ -1,0 +1,152 @@
+{% load web_tags %}
+{% load i18n static web_tags %}
+
+<!doctype html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Datenschutz Entdecker-Spiel</title>
+    <link rel="icon" href="{% static 'favicon.ico' %}">
+    <script src="https://cdn.usefathom.com/script.js" data-spa="auto" data-site="TZBNRXXT" defer></script>
+    <link rel="stylesheet" href="{% static 'web/css/fonts.css' %}">
+    <link rel="stylesheet" href="{% static 'web/css/variables.css' %}">
+    <link rel="stylesheet" href="{% static 'web/css/base.css' %}">
+    {% if dark %}
+    <link rel="stylesheet" href="{% static 'web/css/dark-background.css' %}">
+    {% endif %}
+    {% block css %}{% endblock %}
+
+    <script src="{% static 'web/js/web.js' %}"></script>
+</head>
+<body>
+  <header>
+    <div id="header-container">
+      <div class="top-bar">
+        <a class="top-left" href="{% url 'index' %}{% keep_only_lang %}">
+          <img src="{% static 'logo.svg' %}">
+          <p>Naturblick</p>
+        </a>
+        
+      </div>
+      {% block header %}
+      <div class="header-title">
+        <h1>Datenschutz</h1>
+      </div>
+      {% endblock %}
+    </div>
+    {% block img %}{% endblock %}
+  </header>
+  <div class="main-container">
+    <main class="text-container">
+    <h3>Datenschutz der App Entdecker-Spiel Naturblick</h3>
+    <p>Hier findest du zuerst den Datenschutz in Leichter Sprache. Darunter steht die ausführliche
+        Datenschutzerklärung.</p>
+
+    <h3 id="leichte-sprache">Datenschutz in Leichter Sprache</h3>
+    <p>Die App speichert nur wenige Daten.
+        <br>Die Daten werden nur auf deinem Gerät gespeichert.</p>
+    <p>Die App speichert:
+        <br>Welche Entdeckungen du gemacht hast.
+        <br>Wann du die Entdeckungen gemacht hast.</p>
+    <p>Die App speichert <strong>keine</strong> persönlichen Daten von dir.</p>
+    <p>Die Daten werden <strong>nicht</strong> an uns geschickt.
+        <br>Die Daten werden <strong>nicht</strong> an andere Personen oder Firmen weitergegeben.
+        <br>Die App benutzt <strong>kein</strong> Tracking.</p>
+    <p>Lösche die App und es werden auch alle gespeicherten Daten gelöscht.</p>
+    <p><strong>Wer ist für den Datenschutz verantwortlich?</strong>
+        <br>Museum für Naturkunde Berlin
+        <br>Invalidenstr. 43
+        <br>10115 Berlin</p>
+    <p>Datenschutzbeauftragter des Museums für Naturkunde:
+        <br>Tel.: 030/889140-8440
+        <br>E-Mail: <a href="mailto:datenschutz@mfn.berlin">datenschutz@mfn.berlin</a></p>
+
+    <h3 id="ausfuehrlich">Ausführliche Datenschutzerklärung</h3>
+    <p><strong>1. Geltungsbereich</strong>
+        <br>Diese Datenschutzerklärung gilt für die Android-App „Entdecker-Spiel Naturblick“
+        (Paketname berlin.mfn.naturblick.leicht) des Museums für Naturkunde Berlin. Für die Websites des Museums gilt
+        die <a href="https://www.museumfuernaturkunde.berlin/datenschutzerklaerung/">Datenschutzerklärung des Museums
+            für Naturkunde Berlin</a>.</p>
+
+    <p><strong>2. Name und Anschrift des für die Verarbeitung Verantwortlichen und Kontaktdaten des
+        Datenschutzbeauftragten</strong>
+        <br>Verantwortlich im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:
+        <br>Museum für Naturkunde Berlin
+        <br>Invalidenstr. 43
+        <br>10115 Berlin</p>
+    <p>Datenschutzbeauftragter des Museums für Naturkunde
+        <br>Tel.: 030/889140-8440
+        <br>E-Mail: <a href="mailto:datenschutz@mfn.berlin">datenschutz@mfn.berlin</a></p>
+
+    <p><strong>3. Welche Daten verarbeitet die App?</strong>
+        <br>Wenn du in der App eine Art als „entdeckt“ markierst, speichert die App in ihrem Natur-Buch:</p>
+    <ul>
+        <li>welche Art entdeckt wurde und</li>
+        <li>Datum und Uhrzeit der Entdeckung.</li>
+    </ul>
+    <p>Diese Daten werden ausschließlich lokal auf deinem Gerät gespeichert. Sie werden nicht an das Museum für
+        Naturkunde Berlin oder an Dritte übertragen. Die App enthält keine Werbung, keine Analyse- oder
+        Tracking-Werkzeuge und keine Nutzerkonten. Ein Personenbezug wird durch das Museum nicht hergestellt.</p>
+    <p>Die App benötigt keine Berechtigungen für Standort, Kamera, Mikrofon, Kontakte oder Speicher und baut für ihre
+        Funktionen keine Verbindung zu Servern des Museums auf. Alle Bilder, Texte und Tierstimmen sind in der App
+        enthalten.</p>
+
+    <p><strong>4. Kinder</strong>
+        <br>Die App richtet sich auch an Kinder. Sie fragt keine persönlichen Daten ab, zum Beispiel keinen Namen, kein
+        Alter, keine E-Mail-Adresse und keinen Standort. Daher werden auch von Kindern keine personenbezogenen Daten
+        erhoben, übermittelt oder weitergegeben. Die App enthält keine Werbung, keine In-App-Käufe, keine Chat- oder
+        Teilen-Funktionen und keine Software von Drittanbietern zur Analyse oder Werbung.</p>
+
+    <p><strong>5. Vorlese-Funktion</strong>
+        <br>Die Vorlese-Funktion nutzt die Sprachausgabe (Text-to-Speech), die auf deinem Gerät installiert ist. Dabei
+        werden nur die Texte der App an diese Sprachausgabe übergeben, keine Daten über dich. Die Sprachausgabe ist
+        Teil deines Geräts und wird nicht vom Museum für Naturkunde Berlin betrieben.</p>
+
+    <p><strong>6. Links zu anderen Websites</strong>
+        <br>Die App enthält Links, zum Beispiel zu Quellen von Bildern und Tierstimmen oder zur Website des Museums.
+        Wenn du einen Link antippst, öffnet sich dein Browser. Für die aufgerufenen Websites gelten die
+        Datenschutzbestimmungen der jeweiligen Anbieter.</p>
+
+    <p><strong>7. Speicherdauer und Löschung</strong>
+        <br>Die Daten bleiben gespeichert, bis du einen Eintrag im Natur-Buch zurücknimmst, die App-Daten in den
+        Android-Einstellungen löschst oder die App deinstallierst. Beim Deinstallieren werden alle gespeicherten Daten
+        der App vom Gerät gelöscht. Die App nimmt nicht an der automatischen Cloud-Sicherung von Android teil.</p>
+
+    <p><strong>8. Deine Rechte</strong>
+        <br>Du hast nach der DSGVO das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung,
+        Datenübertragbarkeit und Widerspruch. Da das Museum keine Daten aus der App erhält, kannst du diese Rechte in
+        der Regel direkt auf deinem Gerät ausüben. Bei Fragen wende dich an
+        <a href="mailto:datenschutz@mfn.berlin">datenschutz@mfn.berlin</a>.</p>
+    <p>Du hast außerdem das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren, zum Beispiel bei der
+        <a href="https://www.datenschutz-berlin.de">Berliner Beauftragten für Datenschutz und Informationsfreiheit</a>.</p>
+
+    <p><strong>9. Änderungen</strong>
+        <br>Wenn sich die Funktionen der App ändern, passen wir diese Datenschutzerklärung an.</p>
+
+    <p>Stand: November 2026</p>
+</main>
+  </div>
+{% block footer %}
+<footer>
+  <div>
+    Naturblick 2020<br>
+    Museum für Naturkunde Berlin
+  </div>
+  <a href="{% if LANGUAGE_CODE == "en" %}https://www.museumfuernaturkunde.berlin/en/{% else %}https://www.museumfuernaturkunde.berlin/{% endif %}">
+    {% if dark %}
+    <img src="{% static 'footer_mfnlogo_inverted.svg' %}">
+    {% else %}
+    <img src="{% static 'footer_mfnlogo.svg' %}">
+    {% endif %}
+  </a>
+</footer>
+{% endblock %}
+</body>
+</html>
+
+
+
+
+
